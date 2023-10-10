@@ -1,0 +1,8 @@
+.main-logo {
+    width: 40px;
+    margin-right: 10px;
+}
+
+.dropdown-toggle, .dropdown-item {
+    cursor: pointer;
+}
