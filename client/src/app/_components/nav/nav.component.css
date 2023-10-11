@@ -1,8 +1,12 @@
 .main-logo {
     width: 40px;
-    margin-right: 10px;
+    margin-right: 14px;
 }
 
 .dropdown-toggle, .dropdown-item {
     cursor: pointer;
+}
+
+.username-text {
+    font-size: larger;
 }
