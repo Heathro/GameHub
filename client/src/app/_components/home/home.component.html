@@ -1,23 +1,10 @@
 <div class="container mt-5">
+    
     <div style="text-align: center;">
 
-        <div 
-            *ngIf="fromParent === 'none'"
-            style="text-align: center;"
-        >
-            <h2>GameHub</h2>
-            <p>Video game distribution hub</p>
-        </div>
-
-        <app-login
-            *ngIf="fromParent === 'login'"
-            (toParent)="setHomepageMode($event)"
-        ></app-login>
-
-        <app-register 
-            *ngIf="fromParent === 'register'"
-            (toParent)="setHomepageMode($event)"
-        ></app-register>
+        <h2>GameHub</h2>
+        <p>Video game distribution hub</p>
 
     </div>
+    
 </div>

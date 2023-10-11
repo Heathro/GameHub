@@ -3,13 +3,18 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { ToastrModule } from 'ngx-toastr';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavComponent } from './_components/nav/nav.component';
 import { HomeComponent } from './_components/home/home.component';
 import { RegisterComponent } from './_components/register/register.component';
 import { LoginComponent } from './_components/login/login.component';
+import { StoreComponent } from './_components/store/store.component';
+import { LibraryComponent } from './_components/library/library.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +22,9 @@ import { LoginComponent } from './_components/login/login.component';
     NavComponent,
     HomeComponent,
     RegisterComponent,
-    LoginComponent
+    LoginComponent,
+    StoreComponent,
+    LibraryComponent
   ],
   imports: [
     BrowserModule,
@@ -25,7 +32,8 @@ import { LoginComponent } from './_components/login/login.component';
     HttpClientModule,
     BrowserAnimationsModule,
     FormsModule,
-    BsDropdownModule.forRoot()
+    BsDropdownModule.forRoot(),
+    ToastrModule.forRoot({ positionClass: 'toast-bottom-left'})
   ],
   providers: [],
   bootstrap: [AppComponent]

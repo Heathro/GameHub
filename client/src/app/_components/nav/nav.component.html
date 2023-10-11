@@ -3,15 +3,17 @@
     <div class="container">
 
         <ul class="navbar-nav me-auto mb-2 mb-md-0">
-            <img class="main-logo" src="assets/dice-black.png" alt="logo">
-            <a class="navbar-brand" href="#">GameHub</a>
+            <img class="main-logo" src="assets/dice.png" alt="logo">
+            <a class="navbar-brand" routerLink="/">GameHub</a>
 
-            <li class="nav-item">
-                <a class="nav-link" href="#">Store</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Library</a>
-            </li>
+            <ng-container *ngIf="accountService.currentUser$ | async">
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/store" routerLinkActive="active">Store</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/library" routerLinkActive="active">Library</a>
+                </li>
+            </ng-container>
         </ul>
 
         <div class="dropdown" *ngIf="accountService.currentUser$ | async" dropdown>
@@ -22,9 +24,19 @@
             </div>
         </div>
 
-        <div class="g-flex" *ngIf="!(accountService.currentUser$ | async)">
-            <a class="btn btn-outline-success me-2" (click)="login()">Login</a>
-            <a class="btn btn-outline-success" (click)="register()">Register</a>
+        <div class="g-flex">
+            <ng-container *ngIf="!(accountService.currentUser$ | async)">
+                <a 
+                    class="btn btn-outline-success me-2" 
+                    routerLink="/login"
+                    routerLinkActive="active"
+                >Login</a>
+                <a 
+                    class="btn btn-outline-success" 
+                    routerLink="/register" 
+                    routerLinkActive="active"
+                >Register</a>
+            </ng-container>
         </div>
 
     </div>

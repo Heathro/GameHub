@@ -1,4 +1,5 @@
-import { Component, Input, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+
 import { AccountService } from './_services/account.service';
 import { User } from './_models/user';
 
@@ -8,7 +9,7 @@ import { User } from './_models/user';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  homepageMode: string = 'none';
+  title = 'GameHub';
 
   constructor(private accountService: AccountService) { }
 
@@ -21,9 +22,5 @@ export class AppComponent implements OnInit {
     if (!userString) return;
     const user: User = JSON.parse(userString);
     this.accountService.setCurrentUser(user);
-  }
-
-  setHomepageMode(event: string) {
-    this.homepageMode = event;
   }
 }

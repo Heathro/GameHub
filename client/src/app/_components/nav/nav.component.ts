@@ -1,4 +1,6 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
 import { AccountService } from '../../_services/account.service';
 
 @Component({
@@ -7,29 +9,14 @@ import { AccountService } from '../../_services/account.service';
   styleUrls: ['./nav.component.css']
 })
 export class NavComponent implements OnInit {
-  @Output() toParent = new EventEmitter();
 
-  constructor(public accountService: AccountService) { }
+  constructor(public accountService: AccountService, private router: Router) { }
 
   ngOnInit(): void {
   }
 
-  login() {
-    this.toParent.emit('login');
-  }
-
-  register() {
-    this.toParent.emit('register');
-  }
-
-  // login() {
-  //   this.accountService.login(this.model).subscribe({
-  //     next: response => console.log(response),
-  //     error: error => console.log(error)
-  //   });
-  // }
-
   logout() {
     this.accountService.logout();
+    this.router.navigateByUrl('/');
   }
 }
