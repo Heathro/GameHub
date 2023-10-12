@@ -4,10 +4,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { ToastrModule } from 'ngx-toastr';
-
 import { AppRoutingModule } from './app-routing.module';
+import { SharedModule } from './_modules/shared.module';
 import { AppComponent } from './app.component';
 import { NavComponent } from './_components/nav/nav.component';
 import { HomeComponent } from './_components/home/home.component';
@@ -32,8 +30,7 @@ import { LibraryComponent } from './_components/library/library.component';
     HttpClientModule,
     BrowserAnimationsModule,
     FormsModule,
-    BsDropdownModule.forRoot(),
-    ToastrModule.forRoot({ positionClass: 'toast-bottom-left'})
+    SharedModule
   ],
   providers: [],
   bootstrap: [AppComponent]
