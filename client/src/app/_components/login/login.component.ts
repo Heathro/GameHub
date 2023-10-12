@@ -21,8 +21,7 @@ export class LoginComponent implements OnInit {
 
   login() {
     this.accountService.login(this.model).subscribe({
-      next: () => this.router.navigateByUrl('/'),
-      error: error => this.toastr.error(error.error)
+      next: () => this.router.navigateByUrl('/')
     });
   }
 }
