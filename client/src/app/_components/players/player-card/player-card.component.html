@@ -1,0 +1,20 @@
+<div class="card mb-4" *ngIf="player">
+    <div class="row">
+
+        <div id="player-card-avatar">
+            <img 
+                class="player-card-img"
+                src="{{player.avatar}}"
+                alt="{{player.username}}"
+            >
+        </div>
+
+        <div id="player-card-username">
+            <h6 class="card-title text-right mt-2 nickname">
+                {{player.username}}
+            </h6>
+            <p class="card-text text-muted text-right lastActive mb-1">{{player.lastActive}}</p>
+        </div>
+
+    </div>
+</div>

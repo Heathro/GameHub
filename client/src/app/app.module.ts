@@ -11,12 +11,15 @@ import { NavComponent } from './_components/basic/nav/nav.component';
 import { HomeComponent } from './_components/basic/home/home.component';
 import { RegisterComponent } from './_components/authorization/register/register.component';
 import { LoginComponent } from './_components/authorization/login/login.component';
-import { StoreComponent } from './_components/sections/store/store.component';
-import { LibraryComponent } from './_components/sections/library/library.component';
+import { StoreComponent } from './_components/games/store/store.component';
+import { LibraryComponent } from './_components/games/library/library.component';
 import { TestErrorComponent } from './_components/errors/test-error/test-error.component';
 import { ErrorInterceptor } from './_interceptors/error.interceptor';
 import { NotFoundComponent } from './_components/errors/not-found/not-found.component';
 import { ServerErrorComponent } from './_components/errors/server-error/server-error.component';
+import { PlayersListComponent } from './_components/players/players-list/players-list.component';
+import { PlayerCardComponent } from './_components/players/player-card/player-card.component';
+import { GameCardComponent } from './_components/games/game-card/game-card.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +32,10 @@ import { ServerErrorComponent } from './_components/errors/server-error/server-e
     LibraryComponent,
     TestErrorComponent,
     NotFoundComponent,
-    ServerErrorComponent
+    ServerErrorComponent,
+    PlayersListComponent,
+    PlayerCardComponent,
+    GameCardComponent
   ],
   imports: [
     BrowserModule,

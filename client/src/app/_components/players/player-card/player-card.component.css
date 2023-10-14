@@ -1,0 +1,20 @@
+.player-card-img {
+    width: 50px;
+    margin: 10px;
+}
+
+#player-card-avatar {
+    width: 20%;
+}
+
+#player-card-username {
+    width: 80%;
+}
+
+.nickname {
+    font-size: larger;
+}
+
+.lastOnline {
+    font-size: smaller
+}
