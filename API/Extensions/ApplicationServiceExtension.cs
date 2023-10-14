@@ -16,6 +16,9 @@ public static class ApplicationServiceExtension
         });
         services.AddCors();
         services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IUsersRepository, UsersRepository>();
+        services.AddScoped<IGamesRepository, GamesRepository>();
+        services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
         return services;
     }

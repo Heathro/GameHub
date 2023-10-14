@@ -1,11 +1,9 @@
-﻿namespace API.Entities;
+﻿namespace API.DTOs;
 
-public class AppUser
+public class PlayerDto
 {
     public int Id { get; set; }
     public string Username { get; set; }
-    public byte[] PasswordHash { get; set; }
-    public byte[] PasswordSalt { get; set; }
     public string Avatar { get; set; }
     public string Country { get; set; }
     public DateTime Created { get; set; } = DateTime.UtcNow;
