@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using API.Interfaces;
 using AutoMapper;
 using API.DTOs;
+using API.Interfaces;
 
 namespace API.Controllers;
 

@@ -1,17 +1,17 @@
-<div class="card mb-4" *ngIf="title" routerLink="/games/{{title.title}}">
+<div class="card mb-4 game-card-button" *ngIf="game" routerLink="/games/{{game.title}}">
     <div class="row">
 
         <div id="game-card-poster">
             <img 
                 class="game-card-img"
-                src="{{title.poster}}"
-                alt="{{title.title}}"
+                src="{{game.poster}}"
+                alt="{{game.title}}"
             >
         </div>
 
         <div id="game-card-title">
             <h3 class="card-title text-right mt-4 mb-4">
-                {{title.title}}
+                {{game.title}}
             </h3>
 
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" 

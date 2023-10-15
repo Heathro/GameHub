@@ -3,8 +3,8 @@ using System.Security.Cryptography;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using API.Data;
-using API.Entities;
 using API.DTOs;
+using API.Entities;
 using API.Interfaces;
 
 namespace API.Controllers;

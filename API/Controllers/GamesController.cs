@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using AutoMapper;
 using API.Interfaces;
 using API.DTOs;
-using AutoMapper;
 
 namespace API.Controllers;
 
@@ -19,14 +19,14 @@ public class GamesController : BaseApiController
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<TitleDto>>> GetGames()
+    public async Task<ActionResult<IEnumerable<GameDto>>> GetGames()
     {
-        return Ok(await _gamesRepository.GetTitlesAsync());
+        return Ok(await _gamesRepository.GetGamesAsync());
     }
 
     [HttpGet("{title}")]
-    public async Task<ActionResult<TitleDto>> GetGame(string title)
+    public async Task<ActionResult<GameDto>> GetGame(string title)
     {
-        return await _gamesRepository.GetTitleAsync(title);
+        return await _gamesRepository.GetGameAsync(title);
     }
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { GamesService } from 'src/app/_services/games.service';
-import { Title } from 'src/app/_models/title';
+import { Game } from 'src/app/_models/game';
 
 @Component({
   selector: 'app-store',
@@ -9,7 +9,7 @@ import { Title } from 'src/app/_models/title';
   styleUrls: ['./store.component.css']
 })
 export class StoreComponent implements OnInit {
-  games: Title[] = [];
+  games: Game[] = [];
 
   constructor(private gamesService: GamesService) { }
 

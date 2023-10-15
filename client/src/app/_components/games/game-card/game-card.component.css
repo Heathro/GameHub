@@ -9,3 +9,7 @@
 #game-card-title {
     width: 50%;
 }
+
+.game-card-button {
+    cursor: pointer;
+}

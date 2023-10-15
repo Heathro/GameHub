@@ -5,11 +5,11 @@ namespace API.Interfaces;
 
 public interface IGamesRepository
 {
-    Task<TitleDto> GetTitleAsync(string title);
-    Task<IEnumerable<TitleDto>> GetTitlesAsync();
+    Task<GameDto> GetGameAsync(string title);
+    Task<IEnumerable<GameDto>> GetGamesAsync();
     Task<Game> GetGameByIdAsync(int id);
     Task<Game> GetGameByTitleAsync(string title);
-    Task<IEnumerable<Game>> GetGamesAsync();
+    Task<IEnumerable<Game>> GetAllGamesAsync();
     void Update(Game game);
     Task<bool> SaveAllAsync();
 }

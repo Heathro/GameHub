@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { Title } from 'src/app/_models/title';
+import { Game } from 'src/app/_models/game';
 
 @Component({
   selector: 'app-game-card',
@@ -8,7 +8,7 @@ import { Title } from 'src/app/_models/title';
   styleUrls: ['./game-card.component.css']
 })
 export class GameCardComponent implements OnInit {
-  @Input() title: Title | undefined;
+  @Input() game: Game | undefined;
 
   constructor() { }
 

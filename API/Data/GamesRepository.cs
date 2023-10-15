@@ -18,18 +18,18 @@ public class GamesRepository : IGamesRepository
         _mapper = mapper;
     }
 
-    public async Task<TitleDto> GetTitleAsync(string title)
+    public async Task<GameDto> GetGameAsync(string title)
     {
         return await _context.Games
             .Where(g => g.Title == title)
-            .ProjectTo<TitleDto>(_mapper.ConfigurationProvider)
+            .ProjectTo<GameDto>(_mapper.ConfigurationProvider)
             .SingleOrDefaultAsync();
     }
 
-    public async Task<IEnumerable<TitleDto>> GetTitlesAsync()
+    public async Task<IEnumerable<GameDto>> GetGamesAsync()
     {
         return await _context.Games
-            .ProjectTo<TitleDto>(_mapper.ConfigurationProvider)
+            .ProjectTo<GameDto>(_mapper.ConfigurationProvider)
             .ToListAsync();
     }
 
@@ -45,7 +45,7 @@ public class GamesRepository : IGamesRepository
             .SingleOrDefaultAsync(game => game.Title == title);
     }
 
-    public async Task<IEnumerable<Game>> GetGamesAsync()
+    public async Task<IEnumerable<Game>> GetAllGamesAsync()
     {
         return await _context.Games
             .Include(s => s.Screenshots)

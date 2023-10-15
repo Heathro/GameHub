@@ -10,7 +10,7 @@ public class AutoMapperProfiles : Profile
     {
         CreateMap<AppUser, PlayerDto>();
 
-        CreateMap<Game, TitleDto>()
+        CreateMap<Game, GameDto>()
             .ForMember(dest => dest.Poster, 
                 opt => opt.MapFrom(src => src.Screenshots.FirstOrDefault(s => s.IsMain).Url));
         

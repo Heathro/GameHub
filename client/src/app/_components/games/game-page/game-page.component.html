@@ -1,4 +1,4 @@
-<div class="row" *ngIf="title">
+<div class="row" *ngIf="game">
     
     <div class="col-8">
         <tabset class="player-tabset">
@@ -17,13 +17,13 @@
     <div class="col-4">
         <div class="card">
             <img 
-                src="{{title.poster || './assets/user.png'}}" 
-                alt="{{title.title}}"
+                src="{{game.poster || './assets/user.png'}}" 
+                alt="{{game.title}}"
                 class="card-img-top img-thumbnail avatar"
             >
             <div class="card-body">
                 <div>
-                    <h3 class="mb-4">{{title.title}}</h3>
+                    <h3 class="mb-4">{{game.title}}</h3>
                 </div>
             </div>
             <div class="card-footer">
