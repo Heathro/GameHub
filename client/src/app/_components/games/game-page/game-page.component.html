@@ -1,1 +1,38 @@
-<p>game-page works!</p>
+<div class="row" *ngIf="title">
+    
+    <div class="col-8">
+        <tabset class="player-tabset">
+            <tab heading="Description">
+                <h4>Description will go here</h4>
+            </tab>
+            <tab heading="Reviews">
+                <h4>Reviews will go here</h4>
+            </tab>
+            <tab heading="Screenshots">
+                <h4>Screenshots will go here</h4>
+            </tab>
+        </tabset>
+    </div>
+    
+    <div class="col-4">
+        <div class="card">
+            <img 
+                src="{{title.poster || './assets/user.png'}}" 
+                alt="{{title.title}}"
+                class="card-img-top img-thumbnail avatar"
+            >
+            <div class="card-body">
+                <div>
+                    <h3 class="mb-4">{{title.title}}</h3>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="btn-group d-flex">
+                    <button class="btn btn-outline-success">Add to library</button>
+                    <button class="btn btn-outline-info">Add to wishlist</button>
+                </div>
+            </div>
+        </div>        
+    </div>
+
+</div>

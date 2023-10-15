@@ -1,1 +1,24 @@
-/* You can add global styles to this file, and also import other style files */
+.nav-tabs > li.open, .player-tabset > .nav-tabs > li:hover {
+  border-bottom: 4px solid #3498D0;
+}
+
+.player-tabset > .nav-tabs > li.open > a, .player-tabset > .nav-tabs > li:hover > a {
+  color: #3498D0;
+}
+
+.player-tabset > .nav-tabs > li.active {
+  border-bottom: 4px solid #00BC6F;
+}
+
+.player-tabset > .nav-tabs > li.active > a {
+  color: #00BC6F;
+}
+
+.player-tabset > .tab-content {
+  background-color: #303030;
+  padding: 10px;
+}
+
+.player-tabset > .nav-tabs .nav-item .nav-link.active {
+  color: #00BC6F;
+}

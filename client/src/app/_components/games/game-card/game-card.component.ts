@@ -8,7 +8,7 @@ import { Title } from 'src/app/_models/title';
   styleUrls: ['./game-card.component.css']
 })
 export class GameCardComponent implements OnInit {
-  @Input() game: Title | undefined;
+  @Input() title: Title | undefined;
 
   constructor() { }
 

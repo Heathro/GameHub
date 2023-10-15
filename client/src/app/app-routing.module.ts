@@ -22,7 +22,7 @@ const routes: Routes = [
     canActivate: [authGuard],
     children: [
       { path: 'store', component: StoreComponent },
-      { path: 'store/:title', component: GamePageComponent },
+      { path: 'games/:title', component: GamePageComponent },
       { path: 'library', component: LibraryComponent },
       { path: 'players', component: PlayersListComponent },
       { path: 'players/:username', component: PlayerProfileComponent }
