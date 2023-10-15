@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { environment } from 'src/environments/environment';
@@ -13,18 +13,10 @@ export class PlayersService {
   constructor(private http: HttpClient) { }
 
   getPlayer(username: string) {
-    return this.http.get<Player>(this.baseUrl + 'users/' + username, this.getHttpOptions());
+    return this.http.get<Player>(this.baseUrl + 'users/' + username);
   }
 
   getPlayers() {
-    return this.http.get<Player[]>(this.baseUrl + 'users', this.getHttpOptions());
-  }
-
-  getHttpOptions() {
-    const userString = localStorage.getItem('user');
-    if (!userString) return;
-
-    const user = JSON.parse(userString);
-    return { headers: new HttpHeaders({ Authorization: 'Bearer ' + user.token }) };
+    return this.http.get<Player[]>(this.baseUrl + 'users');
   }
 }

@@ -20,6 +20,9 @@ import { ServerErrorComponent } from './_components/errors/server-error/server-e
 import { PlayersListComponent } from './_components/players/players-list/players-list.component';
 import { PlayerCardComponent } from './_components/players/player-card/player-card.component';
 import { GameCardComponent } from './_components/games/game-card/game-card.component';
+import { JwtInterceptor } from './_interceptors/jwt.interceptor';
+import { PlayerProfileComponent } from './_components/players/player-profile/player-profile.component';
+import { GamePageComponent } from './_components/games/game-page/game-page.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +38,9 @@ import { GameCardComponent } from './_components/games/game-card/game-card.compo
     ServerErrorComponent,
     PlayersListComponent,
     PlayerCardComponent,
-    GameCardComponent
+    GameCardComponent,
+    PlayerProfileComponent,
+    GamePageComponent
   ],
   imports: [
     BrowserModule,
@@ -46,7 +51,8 @@ import { GameCardComponent } from './_components/games/game-card/game-card.compo
     SharedModule
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })

@@ -12,6 +12,8 @@ import { TestErrorComponent } from './_components/errors/test-error/test-error.c
 import { NotFoundComponent } from './_components/errors/not-found/not-found.component';
 import { ServerErrorComponent } from './_components/errors/server-error/server-error.component';
 import { PlayersListComponent } from './_components/players/players-list/players-list.component';
+import { PlayerProfileComponent } from './_components/players/player-profile/player-profile.component';
+import { GamePageComponent } from './_components/games/game-page/game-page.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -20,8 +22,10 @@ const routes: Routes = [
     canActivate: [authGuard],
     children: [
       { path: 'store', component: StoreComponent },
+      { path: 'store/:title', component: GamePageComponent },
       { path: 'library', component: LibraryComponent },
       { path: 'players', component: PlayersListComponent },
+      { path: 'players/:username', component: PlayerProfileComponent }
     ]
   },
   { path: '',

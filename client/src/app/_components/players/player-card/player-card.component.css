@@ -18,3 +18,7 @@
 .lastOnline {
     font-size: smaller
 }
+
+.player-card-button {
+    cursor: pointer;
+}
