@@ -8,8 +8,8 @@
             <tab heading="Reviews">
                 <h4>Reviews will go here</h4>
             </tab>
-            <tab heading="Screenshots">
-                <h4>Screenshots will go here</h4>
+            <tab heading="Screenshots" #screenshotTab="tab" class="gallery">
+                <gallery *ngIf="screenshotTab.active" [items]="screenshots"></gallery>
             </tab>
         </tabset>
     </div>
@@ -17,7 +17,7 @@
     <div class="col-4">
         <div class="card">
             <img 
-                src="{{game.poster || './assets/user.png'}}" 
+                src="{{game.poster || './assets/avatar.png'}}"
                 alt="{{game.title}}"
                 class="card-img-top img-thumbnail avatar"
             >
@@ -27,7 +27,7 @@
                 </div>
             </div>
             <div class="card-footer">
-                <div class="btn-group d-flex">
+                <div class="btn-group d-flex mb-2">
                     <button class="btn btn-outline-success">Add to library</button>
                     <button class="btn btn-outline-info">Add to wishlist</button>
                 </div>

@@ -22,7 +22,6 @@ import { PlayerCardComponent } from './_components/players/player-card/player-ca
 import { GameCardComponent } from './_components/games/game-card/game-card.component';
 import { JwtInterceptor } from './_interceptors/jwt.interceptor';
 import { PlayerProfileComponent } from './_components/players/player-profile/player-profile.component';
-import { GamePageComponent } from './_components/games/game-page/game-page.component';
 
 @NgModule({
   declarations: [
@@ -39,8 +38,7 @@ import { GamePageComponent } from './_components/games/game-page/game-page.compo
     PlayersListComponent,
     PlayerCardComponent,
     GameCardComponent,
-    PlayerProfileComponent,
-    GamePageComponent
+    PlayerProfileComponent
   ],
   imports: [
     BrowserModule,

@@ -22,3 +22,7 @@
 .player-tabset > .nav-tabs .nav-item .nav-link.active {
   color: #00BC6F;
 }
+
+.gallery {
+  height: 600px;
+}
