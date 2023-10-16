@@ -22,6 +22,7 @@ import { PlayerCardComponent } from './_components/players/player-card/player-ca
 import { GameCardComponent } from './_components/games/game-card/game-card.component';
 import { JwtInterceptor } from './_interceptors/jwt.interceptor';
 import { PlayerProfileComponent } from './_components/players/player-profile/player-profile.component';
+import { PlayerEditComponent } from './_components/players/player-edit/player-edit.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { PlayerProfileComponent } from './_components/players/player-profile/pla
     PlayersListComponent,
     PlayerCardComponent,
     GameCardComponent,
-    PlayerProfileComponent
+    PlayerProfileComponent,
+    PlayerEditComponent
   ],
   imports: [
     BrowserModule,

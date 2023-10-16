@@ -1,5 +1,5 @@
 <div class="row" *ngIf="player">
-    <div class="col-4">
+    <div class="col-3">
         <div class="card">
             <img 
                 src="{{player.avatar || './assets/avatar.png'}}" 
@@ -9,10 +9,6 @@
             <div class="card-body">
                 <div>
                     <h3 class="mb-4">{{player.username}}</h3>
-                </div>
-                <div>
-                    <strong>Location:</strong>
-                    <p>{{player.country}}</p>
                 </div>
                 <div>
                     <strong>Member since:</strong>
@@ -32,17 +28,23 @@
         </div>        
     </div>
 
-    <div class="col-8">
+    <div class="col-9">
         <tabset class="player-tabset">
-            <tab heading="Games">
-                <h4>games will go here</h4>
+
+            <tab heading="About">
+                <h5 class="mt-2">{{player.realname}}</h5>                
+                <p>{{player.summary}}</p>                
+                <h5 class="mt-2">{{player.country}}, {{player.city}}</h5>
             </tab>
+
             <tab heading="Reviews">
                 <h4>messages will go here</h4>
             </tab>
+
             <tab heading="Messages">
                 <h4>messages will go here</h4>
             </tab>
+            
         </tabset>
     </div>
 </div>

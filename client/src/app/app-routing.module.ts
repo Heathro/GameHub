@@ -14,6 +14,7 @@ import { ServerErrorComponent } from './_components/errors/server-error/server-e
 import { PlayersListComponent } from './_components/players/players-list/players-list.component';
 import { PlayerProfileComponent } from './_components/players/player-profile/player-profile.component';
 import { GamePageComponent } from './_components/games/game-page/game-page.component';
+import { PlayerEditComponent } from './_components/players/player-edit/player-edit.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -24,6 +25,7 @@ const routes: Routes = [
       { path: 'store', component: StoreComponent },
       { path: 'library', component: LibraryComponent },
       { path: 'games/:title', component: GamePageComponent },
+      { path: 'edit-profile', component: PlayerEditComponent },
       { path: 'players', component: PlayersListComponent },
       { path: 'players/:username', component: PlayerProfileComponent }
     ]

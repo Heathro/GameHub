@@ -1,0 +1,92 @@
+<div class="row" *ngIf="player">
+    
+    <div class="col-3 mt-2 mb-2">
+        <h2 class="text-center">Edit Profile</h2>
+    </div>
+    <div class="col-9">
+        <div class="alert alert-warning changes-alert mx-1" *ngIf="editForm.dirty">
+            <p>You have made changes. Any unsaved changes will be lost.</p>
+        </div>
+    </div>
+
+    <div class="col-3">
+        <div class="card">
+            <img 
+                src="{{player.avatar || './assets/avatar.png'}}" 
+                alt="{{player.username}}"
+                class="card-img-top img-thumbnail avatar"
+            >
+            <div class="card-body">
+                <div>
+                    <h3 class="mb-4">{{player.username}}</h3>
+                </div>
+                <div>
+                    <strong>Member since:</strong>
+                    <p>{{player.created}}</p>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-outline-danger col-12">Delete profile</button>
+            </div>
+        </div>        
+    </div>
+
+    <div class="col-9">
+        <tabset class="player-tabset">
+
+            <tab heading="About">
+                <form #editForm="ngForm" (ngSubmit)="updatePlayer()">
+                    <h4 class="mt-2">Name: </h4>
+                    <input
+                        class="form-control"
+                        [(ngModel)]="player.realname"
+                        name="realname"
+                    >
+
+                    <h4 class="mt-2">Summary: </h4>
+                    <textarea
+                        class="form-control"
+                        [(ngModel)]="player.summary"
+                        name="summary"
+                        rows="6"
+                    ></textarea>
+                    
+                    <h4 class="mt-2">Location: </h4>
+                    <div class="d-flex flex-row align-items-center">
+                        <label for="country">Country </label>
+                        <input
+                            type="text" 
+                            [(ngModel)]="player.country"
+                            name="country"
+                            class="form-control mx-2"
+                        >
+                        <label for="city">City </label>
+                        <input
+                            type="text" 
+                            [(ngModel)]="player.city"
+                            name="city"
+                            class="form-control mx-2"
+                        >
+                    </div>
+
+                    <div class="row">
+                        <button
+                            class="btn btn-outline-success mt-4 col-4 mx-auto"
+                            type="submit"
+                            [disabled]="!editForm.dirty"
+                        >Save changes</button>
+                    </div>                  
+                </form>
+            </tab>
+
+            <tab heading="Reviews">
+                <h4>reviews will go here</h4>
+            </tab>
+
+            <tab heading="Messages">
+                <h4>messages will go here</h4>
+            </tab>
+            
+        </tabset>
+    </div>
+</div>
