@@ -1,18 +1,16 @@
 <div class="card mb-4 game-card-button" *ngIf="game" routerLink="/games/{{game.title}}">
     <div class="row">
-
-        <div id="game-card-poster">
+        <div class="col-5">
             <img 
                 class="game-card-img"
-                src="{{game.poster}}"
+                src="{{game.poster || './assets/avatar.png'}}"
                 alt="{{game.title}}"
             >
         </div>
-
-        <div id="game-card-title">
-            <h3 class="card-title text-right mt-4 mb-4">
+        <div class="col-7">
+            <h4 class="text-right my-4">
                 {{game.title}}
-            </h3>
+            </h4>
 
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" 
                 fill="currentColor" class="bi bi-windows me-3 mb-2" viewBox="0 0 16 16">
@@ -32,8 +30,7 @@
 
             <h6 class="text-muted mt-4">Platformer, Role-play, Pixel-art, Turn-based</h6>
 
-            <h5 class="mt-4">Free</h5>
+            <h5 style="text-align: right;" class="text-right mt-2 me-4">Free</h5>
         </div>
-
     </div>
 </div>
