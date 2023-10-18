@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
 import { ToastrService } from 'ngx-toastr';
@@ -15,6 +15,9 @@ import { User } from 'src/app/_models/user';
   styleUrls: ['./player-edit.component.css']
 })
 export class PlayerEditComponent implements OnInit {
+  @HostListener('window:beforeunload', ['$event']) unloadNotification($event: any) {
+    if (this.editForm?.dirty) { $event.returnValue = true; }
+  }
   @ViewChild('editForm') editForm: NgForm | undefined;
   user: User | null = null;
   player: Player | undefined;
@@ -38,8 +41,11 @@ export class PlayerEditComponent implements OnInit {
   }
 
   updatePlayer() {
-    console.log(this.player);
-    this.toastr.success('Profile updated');
-    this.editForm?.reset(this.player);
+    this.playersService.updatePlayer(this.editForm?.value).subscribe({
+      next: () => {
+        this.toastr.success('Profile updated');
+        this.editForm?.reset(this.player);
+      }
+    });
   }
 }

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+import { Observable } from 'rxjs';
+
 import { GamesService } from 'src/app/_services/games.service';
 import { Game } from 'src/app/_models/game';
 
@@ -9,17 +11,11 @@ import { Game } from 'src/app/_models/game';
   styleUrls: ['./store.component.css']
 })
 export class StoreComponent implements OnInit {
-  games: Game[] = [];
+  games$: Observable<Game[]> | undefined;
 
   constructor(private gamesService: GamesService) { }
 
   ngOnInit(): void {
-    this.loadGames();
-  }
-
-  loadGames() {
-    this.gamesService.getGames().subscribe({
-      next: games => this.games = games
-    });
+    this.games$ = this.gamesService.getGames();
   }
 }

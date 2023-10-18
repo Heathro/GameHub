@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+import { Observable } from 'rxjs';
+
 import { PlayersService } from 'src/app/_services/players.service';
 import { Player } from 'src/app/_models/player';
 
@@ -9,16 +11,11 @@ import { Player } from 'src/app/_models/player';
   styleUrls: ['./players-list.component.css']
 })
 export class PlayersListComponent implements OnInit {
-  players: Player[] = [];
+  players$: Observable<Player[]> | undefined;
+
   constructor(private playersService: PlayersService) { }
 
   ngOnInit(): void {
-    this.loadPlayers();
-  }
-
-  loadPlayers() {
-    this.playersService.getPlayers().subscribe({
-      next: players => this.players = players
-    });
+    this.players$ = this.playersService.getPlayers();
   }
 }

@@ -8,6 +8,7 @@ import { LoginComponent } from './_components/authorization/login/login.componen
 import { RegisterComponent } from './_components/authorization/register/register.component';
 import { authGuard } from './_guards/auth.guard';
 import { nonAuthGuard } from './_guards/non-auth.guard';
+import { unsavedChangesGuard } from './_guards/unsaved-changes.guard';
 import { TestErrorComponent } from './_components/errors/test-error/test-error.component';
 import { NotFoundComponent } from './_components/errors/not-found/not-found.component';
 import { ServerErrorComponent } from './_components/errors/server-error/server-error.component';
@@ -25,7 +26,7 @@ const routes: Routes = [
       { path: 'store', component: StoreComponent },
       { path: 'library', component: LibraryComponent },
       { path: 'games/:title', component: GamePageComponent },
-      { path: 'edit-profile', component: PlayerEditComponent },
+      { path: 'edit-profile', component: PlayerEditComponent, canDeactivate: [unsavedChangesGuard] },
       { path: 'players', component: PlayersListComponent },
       { path: 'players/:username', component: PlayerProfileComponent }
     ]

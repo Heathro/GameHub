@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-4" *ngFor="let player of players">
+    <div class="col-4" *ngFor="let player of players$ | async">
         <app-player-card [player]="player"></app-player-card>
     </div>
 </div>

@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ToastrModule } from 'ngx-toastr';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
   declarations: [],
@@ -11,12 +12,14 @@ import { ToastrModule } from 'ngx-toastr';
     CommonModule,
     BsDropdownModule.forRoot(),
     TabsModule.forRoot(),
-    ToastrModule.forRoot({ positionClass: 'toast-bottom-left'})
+    ToastrModule.forRoot({ positionClass: 'toast-bottom-left'}),
+    NgxSpinnerModule.forRoot({ type: 'pacman' })
   ],
   exports: [
     BsDropdownModule,
     TabsModule,
-    ToastrModule
+    ToastrModule,
+    NgxSpinnerModule
   ]
 })
 export class SharedModule { }

@@ -9,6 +9,7 @@ public class AutoMapperProfiles : Profile
     public AutoMapperProfiles()
     {
         CreateMap<AppUser, PlayerDto>();
+        CreateMap<PlayerEditDto, AppUser>();
 
         CreateMap<Game, GameDto>()
             .ForMember(dest => dest.Poster, 

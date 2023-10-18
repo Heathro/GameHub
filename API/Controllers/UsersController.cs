@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿
+using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 using API.DTOs;
@@ -28,5 +30,20 @@ public class UsersController : BaseApiController
     public async Task<ActionResult<PlayerDto>> GetUser(string username)
     {
         return await _usersRepository.GetPlayerAsync(username);
+    }
+
+    [HttpPut]
+    public async Task<ActionResult> UpdateUser(PlayerEditDto playerEditDto)
+    {
+        var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var user = await _usersRepository.GetUserByUsernameAsync(username);
+
+        if (user == null) return NotFound();
+
+        _mapper.Map(playerEditDto, user);
+
+        if (await _usersRepository.SaveAllAsync()) return NoContent();
+
+        return BadRequest("Failed to update user");
     }
 }
