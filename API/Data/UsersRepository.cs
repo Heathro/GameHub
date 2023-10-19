@@ -35,17 +35,23 @@ public class UsersRepository : IUsersRepository
 
     public async Task<AppUser> GetUserByIdAsync(int id)
     {
-        return await _context.Users.FindAsync(id);
+        return await _context.Users
+            .Include(a => a.Avatar)
+            .SingleOrDefaultAsync(user => user.Id == id);
     }
 
     public async Task<AppUser> GetUserByUsernameAsync(string username)
     {
-        return await _context.Users.SingleOrDefaultAsync(user => user.Username == username);
+        return await _context.Users
+            .Include(a => a.Avatar)
+            .SingleOrDefaultAsync(user => user.Username == username);
     }
 
     public async Task<IEnumerable<AppUser>> GetUsersAsync()
     {
-        return await _context.Users.ToListAsync();
+        return await _context.Users
+            .Include(a => a.Avatar)
+            .ToListAsync();
     }
 
     public async Task<bool> SaveAllAsync()

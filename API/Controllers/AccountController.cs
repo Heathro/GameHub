@@ -30,7 +30,11 @@ public class AccountController : BaseApiController
         {
             Username = registerDto.Username,
             PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
-            PasswordSalt = hmac.Key
+            PasswordSalt = hmac.Key,
+            Avatar = new Avatar
+            {
+                Url = ""
+            }
         };
 
         _context.Users.Add(user);
