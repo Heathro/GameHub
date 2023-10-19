@@ -12,9 +12,9 @@ public class Seed
     {
         if (await context.Users.AnyAsync()) return;
 
-        var userData = await File.ReadAllTextAsync("Data/UserSeedData.json");
-
         var options = new JsonSerializerOptions{PropertyNameCaseInsensitive = true};
+
+        var userData = await File.ReadAllTextAsync("Data/Seeding/UserSeedData.json");
 
         var users = JsonSerializer.Deserialize<List<AppUser>>(userData, options);
 
@@ -39,12 +39,15 @@ public class Seed
         {
             Id = 1,
             Title = "Lost",
+            Poster = new Poster
+            {
+                Url = "https://img.itch.zone/aW1hZ2UvODEwMTE2LzQ1NDE1MjYucG5n/original/zA28rq.png"
+            },
             Screenshots =
             {
                 new Screenshot
                 {
-                    Url = "https://img.itch.zone/aW1hZ2UvODEwMTE2LzQ1NDE1MjYucG5n/original/zA28rq.png",
-                    IsMain = true
+                    Url = "https://img.itch.zone/aW1hZ2UvODEwMTE2LzQ1NDE1MjYucG5n/original/zA28rq.png"
                 }
             }
         });
@@ -53,12 +56,15 @@ public class Seed
         {
             Id = 2,
             Title = "Dungeon",
+            Poster = new Poster
+            {
+                Url = "https://img.itch.zone/aW1hZ2UvMTg3NjUxMS8xMTAyMzM5Ni5wbmc=/original/Wy0mql.png"
+            },
             Screenshots =
             {
                 new Screenshot
                 {
-                    Url = "https://img.itch.zone/aW1hZ2UvMTg3NjUxMS8xMTAyMzM5Ni5wbmc=/original/Wy0mql.png",
-                    IsMain = true
+                    Url = "https://img.itch.zone/aW1hZ2UvMTg3NjUxMS8xMTAyMzM5Ni5wbmc=/original/Wy0mql.png"
                 }
             }
         });

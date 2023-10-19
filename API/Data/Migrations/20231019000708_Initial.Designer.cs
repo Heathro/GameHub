@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20231014101637_Initial")]
+    [Migration("20231019000708_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -26,7 +26,7 @@ namespace API.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Avatar")
+                    b.Property<string>("City")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Country")
@@ -44,12 +44,41 @@ namespace API.Data.Migrations
                     b.Property<byte[]>("PasswordSalt")
                         .HasColumnType("BLOB");
 
+                    b.Property<string>("Realname")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Summary")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Username")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("API.Entities.Avatar", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("AppUserId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("PublicId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId")
+                        .IsUnique();
+
+                    b.ToTable("Avatars");
                 });
 
             modelBuilder.Entity("API.Entities.Game", b =>
@@ -66,6 +95,29 @@ namespace API.Data.Migrations
                     b.ToTable("Games");
                 });
 
+            modelBuilder.Entity("API.Entities.Poster", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("GameId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("PublicId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GameId")
+                        .IsUnique();
+
+                    b.ToTable("Posters");
+                });
+
             modelBuilder.Entity("API.Entities.Screenshot", b =>
                 {
                     b.Property<int>("Id")
@@ -75,8 +127,8 @@ namespace API.Data.Migrations
                     b.Property<int>("GameId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("IsMain")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("PublicId")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Url")
                         .HasColumnType("TEXT");
@@ -86,6 +138,28 @@ namespace API.Data.Migrations
                     b.HasIndex("GameId");
 
                     b.ToTable("Screenshots");
+                });
+
+            modelBuilder.Entity("API.Entities.Avatar", b =>
+                {
+                    b.HasOne("API.Entities.AppUser", "AppUser")
+                        .WithOne("Avatar")
+                        .HasForeignKey("API.Entities.Avatar", "AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+                });
+
+            modelBuilder.Entity("API.Entities.Poster", b =>
+                {
+                    b.HasOne("API.Entities.Game", "Game")
+                        .WithOne("Poster")
+                        .HasForeignKey("API.Entities.Poster", "GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Game");
                 });
 
             modelBuilder.Entity("API.Entities.Screenshot", b =>
@@ -99,8 +173,15 @@ namespace API.Data.Migrations
                     b.Navigation("Game");
                 });
 
+            modelBuilder.Entity("API.Entities.AppUser", b =>
+                {
+                    b.Navigation("Avatar");
+                });
+
             modelBuilder.Entity("API.Entities.Game", b =>
                 {
+                    b.Navigation("Poster");
+
                     b.Navigation("Screenshots");
                 });
 #pragma warning restore 612, 618

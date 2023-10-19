@@ -1,65 +1,119 @@
 [
+  {
+    "Username": "Bob",
+    "Avatar":
     {
-      "Username": "Bob",
-      "Country": "United Kingdom",
-      "Avatar": "https://randomuser.me/api/portraits/lego/1.jpg",
-      "Created": "2020-03-22",
-      "LastActive": "2020-06-15"
+      "Url": "https://randomuser.me/api/portraits/lego/1.jpg"
     },
+    "Realname": "Bobby Black",
+    "Summary": "Top 1",
+    "Country": "United Kingdom",
+    "City": "London",
+    "Created": "2020-03-22",
+    "LastActive": "2020-06-15"
+  },
+  {
+    "Username": "Sam",
+    "Avatar":
     {
-      "Username": "Sam",
-      "Country": "France",
-      "Avatar": "https://randomuser.me/api/portraits/lego/2.jpg",
-      "Created": "2020-06-25",
-      "LastActive": "2020-05-19"
+      "Url": "https://randomuser.me/api/portraits/lego/2.jpg"
+    },      
+    "Realname": "Sam Green",
+    "Summary": "Top 2",
+    "Country": "France",
+    "City": "Paris",
+    "Created": "2020-06-25",
+    "LastActive": "2020-05-19"
+  },
+  {
+    "Username": "Jim",
+    "Avatar":
+    {
+      "Url": "https://randomuser.me/api/portraits/lego/3.jpg"
+    },     
+    "Realname": "Jim White",
+    "Summary": "Top 3",
+    "Country": "Germany",
+    "City": "Berlin",
+    "Created": "2019-03-17",
+    "LastActive": "2020-06-11"
+  },
+  {
+    "Username": "Paul",
+    "Avatar":
+    {
+      "Url": "https://randomuser.me/api/portraits/lego/4.jpg"
     },
+    "Realname": "Paul Red",
+    "Summary": "Top 4",
+    "Country": "Italy",
+    "City": "Rome",
+    "Created": "2019-10-30",
+    "LastActive": "2020-05-31"
+  },
+  {
+    "Username": "Jack",
+    "Avatar":
     {
-      "Username": "Jim",
-      "Country": "Germany",
-      "Avatar": "https://randomuser.me/api/portraits/lego/3.jpg",
-      "Created": "2019-03-17",
-      "LastActive": "2020-06-11"
+      "Url": "https://randomuser.me/api/portraits/lego/5.jpg"
     },
+    "Realname": "Jack Blue",
+    "Summary": "Top 5",
+    "Country": "Spain",
+    "City": "Madrid",
+    "Created": "2019-05-27",
+    "LastActive": "2020-06-27"
+  },
+  {
+    "Username": "Ray",
+    "Avatar":
     {
-      "Username": "Paul",
-      "Country": "Italy",
-      "Avatar": "https://randomuser.me/api/portraits/lego/4.jpg",
-      "Created": "2019-10-30",
-      "LastActive": "2020-05-31"
+      "Url": "https://randomuser.me/api/portraits/lego/6.jpg"
     },
+    "Realname": "Ray Purple",
+    "Summary": "Top 6",
+    "Country": "Ukraine",
+    "City": "Kiyv",
+    "Created": "2020-02-29",
+    "LastActive": "2020-06-02"
+  },
+  {
+    "Username": "Tom",
+    "Avatar":
     {
-      "Username": "Jack",
-      "Country": "Spain",
-      "Avatar": "https://randomuser.me/api/portraits/lego/5.jpg",
-      "Created": "2019-05-27",
-      "LastActive": "2020-06-27"
+      "Url": "https://randomuser.me/api/portraits/lego/7.jpg"
     },
+    "Realname": "Tom Orange",
+    "Summary": "Top 7",
+    "Country": "Poland",
+    "City": "Warsawa",
+    "Created": "2019-02-16",
+    "LastActive": "2020-06-12"
+  },
+  {
+    "Username": "Lee",
+    "Avatar":
     {
-      "Username": "Ray",
-      "Country": "Russian Federation",
-      "Avatar": "https://randomuser.me/api/portraits/lego/6.jpg",
-      "Created": "2020-02-29",
-      "LastActive": "2020-06-02"
+      "Url": "https://randomuser.me/api/portraits/lego/8.jpg"
     },
+    "Realname": "Lee Yellow",
+    "Summary": "Top 8",
+    "Country": "Japan",
+    "City": "Tokio",
+    "Created": "2019-01-29",
+    "LastActive": "2020-05-29"
+  },
+  {
+    "Username": "Cho",
+    "Avatar":
     {
-      "Username": "Tom",
-      "Country": "Poland",
-      "Avatar": "https://randomuser.me/api/portraits/lego/7.jpg",
-      "Created": "2019-02-16",
-      "LastActive": "2020-06-12"
+      "Url": "https://randomuser.me/api/portraits/lego/9.jpg"
     },
-    {
-      "Username": "Lee",
-      "Country": "Japan",
-      "Avatar": "https://randomuser.me/api/portraits/lego/8.jpg",
-      "Created": "2019-01-29",
-      "LastActive": "2020-05-29"
-    },
-    {
-      "Username": "Cho",
-      "Country": "China",
-      "Avatar": "https://randomuser.me/api/portraits/lego/9.jpg",
-      "Created": "2020-05-05",
-      "LastActive": "2020-06-19"
-    }
+    "Realname": "Cho Grey",
+    "Summary": "Top 9",
+    "Country": "China",
+    "City": "Beijing",
+    "Created": "2020-05-05",
+    "LastActive": "2020-06-19"
+  }
 ]

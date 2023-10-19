@@ -6,7 +6,7 @@ public class AppUser
     public string Username { get; set; }
     public byte[] PasswordHash { get; set; }
     public byte[] PasswordSalt { get; set; }
-    public string Avatar { get; set; }
+    public Avatar Avatar { get; set; }
     public string Realname { get; set; }
     public string Summary { get; set; }
     public string Country { get; set; }
