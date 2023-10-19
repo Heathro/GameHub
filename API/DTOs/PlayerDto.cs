@@ -4,7 +4,7 @@ public class PlayerDto
 {
     public int Id { get; set; }
     public string Username { get; set; }
-    public string Avatar { get; set; }
+    public AvatarDto Avatar { get; set; }
     public string Realname { get; set; }
     public string Summary { get; set; }
     public string Country { get; set; }

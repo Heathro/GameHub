@@ -31,7 +31,7 @@ export class PlayersService {
   }
 
   updatePlayer(player: Player) {
-    return this.http.put(this.baseUrl + 'users', player).pipe(
+    return this.http.put(this.baseUrl + 'users/edit-profile', player).pipe(
       map(() => {
         const index = this.players.indexOf(player);
         this.players[index] = {...this.players[index], ...player};

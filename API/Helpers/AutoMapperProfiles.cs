@@ -8,14 +8,16 @@ public class AutoMapperProfiles : Profile
 {
     public AutoMapperProfiles()
     {
-        CreateMap<AppUser, PlayerDto>()
-            .ForMember(dest => dest.Avatar, opt => opt.MapFrom(src => src.Avatar.Url));
+        CreateMap<AppUser, PlayerDto>();
 
         CreateMap<PlayerEditDto, AppUser>();
 
-        CreateMap<Game, GameDto>()
-            .ForMember(dest => dest.Poster, opt => opt.MapFrom(src => src.Poster.Url));
+        CreateMap<Game, GameDto>();
         
         CreateMap<Screenshot, ScreenshotDto>();
+
+        CreateMap<Avatar, AvatarDto>();
+
+        CreateMap<Poster, PosterDto>();
     }
 }

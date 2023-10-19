@@ -1,7 +1,9 @@
+import { Avatar } from "./avatar";
+
 export interface Player {
   id: number;
   username: string;
-  avatar: string;
+  avatar: Avatar;
   realname: string;
   summary: string;
   country: string;

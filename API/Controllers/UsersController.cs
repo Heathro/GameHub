@@ -13,11 +13,13 @@ public class UsersController : BaseApiController
 {
     private readonly IUsersRepository _usersRepository;
     private readonly IMapper _mapper;
+    private readonly IImageService _imageService;
 
-    public UsersController(IUsersRepository usersRepository, IMapper mapper)
+    public UsersController(IUsersRepository usersRepository, IMapper mapper, IImageService imageService)
     {
         _usersRepository = usersRepository;
         _mapper = mapper;
+        _imageService = imageService;
     }
 
     [HttpGet]
@@ -32,7 +34,7 @@ public class UsersController : BaseApiController
         return await _usersRepository.GetPlayerAsync(username);
     }
 
-    [HttpPut]
+    [HttpPut("edit-profile")]
     public async Task<ActionResult> UpdateUser(PlayerEditDto playerEditDto)
     {
         var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
