@@ -13,3 +13,7 @@
     background-color: #303030;
     border-top: none;
 }
+
+.changes-alert {
+    height: 54px;
+}

@@ -16,6 +16,7 @@ import { PlayersListComponent } from './_components/players/players-list/players
 import { PlayerProfileComponent } from './_components/players/player-profile/player-profile.component';
 import { GamePageComponent } from './_components/games/game-page/game-page.component';
 import { PlayerEditComponent } from './_components/players/player-edit/player-edit.component';
+import { GameEditComponent } from './_components/games/game-edit/game-edit.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -26,9 +27,10 @@ const routes: Routes = [
       { path: 'store', component: StoreComponent },
       { path: 'library', component: LibraryComponent },
       { path: 'games/:title', component: GamePageComponent },
-      { path: 'edit-profile', component: PlayerEditComponent, canDeactivate: [unsavedChangesGuard] },
+      { path: 'games/:title/edit', component: GameEditComponent, canDeactivate: [unsavedChangesGuard] },
       { path: 'players', component: PlayersListComponent },
-      { path: 'players/:username', component: PlayerProfileComponent }
+      { path: 'players/:username', component: PlayerProfileComponent },
+      { path: 'edit-profile', component: PlayerEditComponent, canDeactivate: [unsavedChangesGuard] }
     ]
   },
   { path: '',

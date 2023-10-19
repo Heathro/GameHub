@@ -29,4 +29,13 @@ export class GamesService {
       map(games => this.games = games)
     );
   }
+
+  updateGame(game: Game, title: string) {
+    return this.http.put(this.baseUrl + 'games/' + title + '/edit-game', game).pipe(
+      map(() => {
+        const index = this.games.indexOf(game);
+        this.games[index] = {...this.games[index], ...game};
+      })
+    );
+  }
 }

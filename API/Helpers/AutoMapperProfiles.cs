@@ -9,10 +9,10 @@ public class AutoMapperProfiles : Profile
     public AutoMapperProfiles()
     {
         CreateMap<AppUser, PlayerDto>();
-
         CreateMap<PlayerEditDto, AppUser>();
 
         CreateMap<Game, GameDto>();
+        CreateMap<GameEditDto, Game>();
         
         CreateMap<Screenshot, ScreenshotDto>();
 

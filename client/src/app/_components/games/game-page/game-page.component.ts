@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { GalleryItem, GalleryModule, ImageItem } from 'ng-gallery';
@@ -13,7 +13,7 @@ import { Game } from 'src/app/_models/game';
   standalone: true,
   templateUrl: './game-page.component.html',
   styleUrls: ['./game-page.component.css'],
-  imports: [ CommonModule, TabsModule, GalleryModule ]
+  imports: [ CommonModule, TabsModule, GalleryModule, RouterModule ]
 })
 export class GamePageComponent implements OnInit {
   game: Game | undefined;

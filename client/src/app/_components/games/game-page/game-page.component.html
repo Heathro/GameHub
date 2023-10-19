@@ -1,25 +1,25 @@
 <div class="row" *ngIf="game">
     
     <div class="col-8">
-        <tabset class="player-tabset">
-            <tab heading="Description">
-                <h4>Description will go here</h4>
-            </tab>
-            <tab heading="Reviews">
-                <h4>Reviews will go here</h4>
+        <tabset class="custom-tabset">
+
+            <tab heading="About">
+                <p>{{game.description}}</p>
             </tab>
             <tab heading="Screenshots" #screenshotTab="tab" class="gallery">
                 <gallery *ngIf="screenshotTab.active" [items]="screenshots"></gallery>
             </tab>
+
         </tabset>
     </div>
     
     <div class="col-4">
         <div class="card">
+
             <img 
                 src="{{game.poster.url || './assets/avatar.png'}}"
                 alt="{{game.title}}"
-                class="card-img-top img-thumbnail avatar"
+                class="card-img-top img-thumbnail"
             >
             <div class="card-body">
                 <div>
@@ -29,10 +29,11 @@
             <div class="card-footer">
                 <div class="btn-group d-flex mb-2">
                     <button class="btn btn-outline-success">Add to library</button>
-                    <button class="btn btn-outline-info">Add to wishlist</button>
+                    <button class="btn btn-outline-info" routerLink="/games/{{game.title}}/edit">Edit Game</button>
                 </div>
             </div>
-        </div>        
+
+        </div>   
     </div>
 
 </div>

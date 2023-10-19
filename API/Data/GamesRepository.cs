@@ -35,20 +35,22 @@ public class GamesRepository : IGamesRepository
 
     public async Task<Game> GetGameByIdAsync(int id)
     {
-        return await _context.Games.FindAsync(id);
+        return await _context.Games
+            .Include(s => s.Poster)
+            .SingleOrDefaultAsync(game => game.Id == id);
     }
 
     public async Task<Game> GetGameByTitleAsync(string title)
     {
         return await _context.Games
-            .Include(s => s.Screenshots)
+            .Include(s => s.Poster)
             .SingleOrDefaultAsync(game => game.Title == title);
     }
 
     public async Task<IEnumerable<Game>> GetAllGamesAsync()
     {
         return await _context.Games
-            .Include(s => s.Screenshots)
+            .Include(s => s.Poster)
             .ToListAsync();
     }
 

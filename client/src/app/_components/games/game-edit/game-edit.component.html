@@ -1,0 +1,75 @@
+<div class="row" *ngIf="game">
+        
+    <div class="col-8">
+        <div class="alert alert-warning changes-alert mx-1" *ngIf="editForm.dirty">
+            <p>You have made changes. Any unsaved changes will be lost.</p>
+        </div>
+    </div>
+    <div class="col-4 my-2">
+        <h2 class="text-center">Edit Game</h2>
+    </div>
+    
+    <div class="col-8">
+        <tabset class="custom-tabset">
+
+            <tab heading="About">
+
+                <form #editForm="ngForm" (ngSubmit)="updateGame()">
+
+                    <h4 class="mt-2">Title: </h4>
+                    <input
+                        class="form-control"
+                        [(ngModel)]="game.title"
+                        name="title"
+                    >
+                    
+                    <h4 class="mt-2">Description: </h4>
+                    <textarea
+                        class="form-control"
+                        [(ngModel)]="game.description"
+                        name="description"
+                        rows="6"
+                    ></textarea>
+
+                    <div class="row">
+                        <button
+                            class="btn btn-outline-success mt-4 col-4 mx-auto"
+                            type="submit"
+                            [disabled]="!editForm.dirty"
+                        >Save changes</button>
+                    </div>
+
+                </form>
+
+            </tab>
+
+            <tab heading="Reviews">
+                <h4>Reviews will go here</h4>
+            </tab>
+
+        </tabset>
+    </div>
+    
+    <div class="col-4">
+        <div class="card">
+
+            <img 
+                src="{{game.poster.url || './assets/avatar.png'}}"
+                alt="{{game.title}}"
+                class="card-img-top img-thumbnail"
+            >
+            <div class="card-body">
+                <div>
+                    <h3 class="mb-4">{{game.title}}</h3>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="btn-group d-flex mb-2">
+                    <button class="btn btn-outline-success">Add to library</button>
+                </div>
+            </div>
+
+        </div>   
+    </div>
+
+</div>
