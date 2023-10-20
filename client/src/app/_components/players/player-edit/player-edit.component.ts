@@ -2,8 +2,10 @@ import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
 import { ToastrService } from 'ngx-toastr';
+import { FileUploader } from 'ng2-file-upload';
 import { take } from 'rxjs';
 
+import { environment } from 'src/environments/environment';
 import { AccountService } from 'src/app/_services/account.service';
 import { PlayersService } from 'src/app/_services/players.service';
 import { Player } from 'src/app/_models/player';
@@ -21,6 +23,8 @@ export class PlayerEditComponent implements OnInit {
   @ViewChild('editForm') editForm: NgForm | undefined;
   user: User | null = null;
   player: Player | undefined;
+  uploader: FileUploader | undefined;
+  baseUrl = environment.apiUrl;
 
   constructor(private accountService: AccountService, private playersService: PlayersService,
       private toastr: ToastrService) {
@@ -36,7 +40,10 @@ export class PlayerEditComponent implements OnInit {
   loadPlayer() {
     if (!this.user) return;
     this.playersService.getPlayer(this.user.username).subscribe({
-      next: player => this.player = player
+      next: player => {
+        this.player = player;
+        this.initializeUploader();
+      }
     });
   }
 
@@ -47,5 +54,35 @@ export class PlayerEditComponent implements OnInit {
         this.editForm?.reset(this.player);
       }
     });
+  }
+
+  initializeUploader() {
+    this.uploader = new FileUploader({
+      method: 'PUT',
+      url: this.baseUrl + 'users/update-avatar',
+      authToken: 'Bearer ' + this.user?.token,
+      isHTML5: true,
+      allowedFileType: ['image'],
+      removeAfterUpload: true,
+      autoUpload: false,
+      maxFileSize: 10 * 1024 * 1024
+    });
+
+    this.uploader.onAfterAddingFile = (file) => {
+      file.withCredentials = false;
+    }
+
+    this.uploader.onSuccessItem = (item, response, status, header) => {
+      if (response) {
+        const avatar = JSON.parse(response);
+        if (this.player) this.player.avatar = avatar;
+      }
+    }
+
+    this.uploader.onAfterAddingFile = f => {
+      if (this.uploader && this.uploader?.queue.length > 1) {
+        this.uploader.removeFromQueue(this.uploader.queue[0]);
+      }
+    };
   }
 }

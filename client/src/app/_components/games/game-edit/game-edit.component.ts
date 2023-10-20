@@ -2,10 +2,15 @@ import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 
+import { FileUploader } from 'ng2-file-upload';
 import { ToastrService } from 'ngx-toastr';
+import { take } from 'rxjs';
 
+import { environment } from 'src/environments/environment';
 import { GamesService } from 'src/app/_services/games.service';
+import { AccountService } from 'src/app/_services/account.service';
 import { Game } from 'src/app/_models/game';
+import { User } from 'src/app/_models/user';
 
 @Component({
   selector: 'app-game-edit',
@@ -17,11 +22,18 @@ export class GameEditComponent implements OnInit {
     if (this.editForm?.dirty) { $event.returnValue = true; }
   }
   @ViewChild('editForm') editForm: NgForm | undefined;
+  user: User | null = null;
   game: Game | undefined;
   currentTitle = "";
+  uploader: FileUploader | undefined;
+  baseUrl = environment.apiUrl;
 
   constructor(private gamesService: GamesService, private toastr: ToastrService, 
-    private route: ActivatedRoute, private router: Router) { }
+      private route: ActivatedRoute, private router: Router, private accountService: AccountService) {
+    this.accountService.currentUser$.pipe(take(1)).subscribe({
+      next: user => this.user = user
+    });
+  }
 
   ngOnInit(): void {
     this.loadGame();
@@ -32,8 +44,9 @@ export class GameEditComponent implements OnInit {
     if (!title) return;
     this.gamesService.getGame(title).subscribe({
       next: game => {
-        this.game = game,
+        this.game = game;
         this.currentTitle = game.title;
+        this.initializeUploader();
       }
     });
   }
@@ -54,6 +67,35 @@ export class GameEditComponent implements OnInit {
         }
       });
     }
-    
+  }
+
+  initializeUploader() {
+    this.uploader = new FileUploader({
+      method: 'PUT',
+      url: this.baseUrl + 'games/' + this.game?.title + '/update-poster',
+      authToken: 'Bearer ' + this.user?.token,
+      isHTML5: true,
+      allowedFileType: ['image'],
+      removeAfterUpload: true,
+      autoUpload: false,
+      maxFileSize: 10 * 1024 * 1024
+    });
+
+    this.uploader.onAfterAddingFile = (file) => {
+      file.withCredentials = false;
+    }
+
+    this.uploader.onSuccessItem = (item, response, status, header) => {
+      if (response) {
+        const poster = JSON.parse(response);
+        if (this.game) this.game.poster = poster;
+      }
+    }
+
+    this.uploader.onAfterAddingFile = f => {
+      if (this.uploader && this.uploader?.queue.length > 1) {
+        this.uploader.removeFromQueue(this.uploader.queue[0]);
+      }
+    };
   }
 }

@@ -1,0 +1,20 @@
+input[type=file] {
+    color: transparent;
+}
+
+input[type=file]::file-selector-button {
+  border: 2px solid #3498D0;
+  padding: .2em .4em;
+  border-radius: .2em;
+  background-color: #3498D0;
+}
+
+input[type=file]::file-selector-button:hover {
+  background-color: #00BC6F;
+  border: 2px solid #00BC6F;
+}
+
+.uploader-button {
+    width: 140px;
+    height: 34px;
+}

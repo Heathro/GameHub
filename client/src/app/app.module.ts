@@ -25,6 +25,7 @@ import { GameCardComponent } from './_components/games/game-card/game-card.compo
 import { PlayerProfileComponent } from './_components/players/player-profile/player-profile.component';
 import { PlayerEditComponent } from './_components/players/player-edit/player-edit.component';
 import { GameEditComponent } from './_components/games/game-edit/game-edit.component';
+import { ScreenshotEditorComponent } from './_components/games/screenshot-editor/screenshot-editor.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { GameEditComponent } from './_components/games/game-edit/game-edit.compo
     GameCardComponent,
     PlayerProfileComponent,
     PlayerEditComponent,
-    GameEditComponent
+    GameEditComponent,
+    ScreenshotEditorComponent
   ],
   imports: [
     BrowserModule,
