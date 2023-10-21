@@ -10,14 +10,13 @@ public class AutoMapperProfiles : Profile
     {
         CreateMap<AppUser, PlayerDto>();
         CreateMap<PlayerEditDto, AppUser>();
+        CreateMap<RegisterDto, AppUser>();
 
         CreateMap<Game, GameDto>();
         CreateMap<GameEditDto, Game>();
         
         CreateMap<Screenshot, ScreenshotDto>();
-
         CreateMap<Avatar, AvatarDto>();
-
         CreateMap<Poster, PosterDto>();
     }
 }

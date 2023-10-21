@@ -26,8 +26,11 @@ export class PlayerEditComponent implements OnInit {
   uploader: FileUploader | undefined;
   baseUrl = environment.apiUrl;
 
-  constructor(private accountService: AccountService, private playersService: PlayersService,
-      private toastr: ToastrService) {
+  constructor(
+    private accountService: AccountService, 
+    private playersService: PlayersService,
+    private toastr: ToastrService
+  ) {
     this.accountService.currentUser$.pipe(take(1)).subscribe({
       next: user => this.user = user
     });

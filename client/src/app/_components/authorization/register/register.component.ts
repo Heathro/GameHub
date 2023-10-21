@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 
 import { ToastrService } from 'ngx-toastr';
 
@@ -11,18 +12,64 @@ import { AccountService } from 'src/app/_services/account.service';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
-  model: any = {}
+  registerForm: FormGroup = new FormGroup({});
+  validationErrors: string[] | undefined;
 
-  constructor(private accountService: AccountService, private router: Router, 
-    private toastr: ToastrService) { }
+  constructor(
+    private accountService: AccountService, 
+    private router: Router, 
+    private toastr: ToastrService, 
+    private formBuilder: FormBuilder
+  ) { }
 
   ngOnInit(): void {
+    this.initializeFrom();
+  }
+
+  initializeFrom() {
+    this.registerForm = this.formBuilder.group({
+      username: ['', [
+        Validators.required,
+        this.alphanumeric(),
+        Validators.maxLength(24)
+      ]],
+      password: ['', [
+        Validators.required,
+        Validators.minLength(8),
+        Validators.maxLength(16)
+      ]],
+      confirmPassword: ['', [
+        Validators.required,
+        this.matchValues('password')
+      ]]
+    });
+
+    this.registerForm.controls['password'].valueChanges.subscribe({
+      next: () => this.registerForm.controls['confirmPassword'].updateValueAndValidity()
+    });
+  }
+
+  alphanumeric(): ValidatorFn {
+    return (control: AbstractControl) => {
+      return control.value.match('^[A-Za-z0-9]+$') ? null : {notAlphanumeric: true};
+    }
+  }
+
+  matchValues(matchTo: string): ValidatorFn {
+    return (control: AbstractControl) => {
+      return control.value === control.parent?.get(matchTo)?.value ? null : {notMatching: true};
+    }
   }
 
   register() {
-    this.accountService.register(this.model).subscribe({
-      next: () => this.router.navigateByUrl('/'),
-      error: error => this.toastr.error(error.error)
+    this.accountService.register(this.registerForm.value).subscribe({
+      next: () => {
+        this.router.navigateByUrl('/');
+        this.toastr.success('Register successful');
+      },
+      error: error => {
+        this.validationErrors = error;
+      }
     });
   }
 }

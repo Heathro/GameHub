@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -26,6 +26,7 @@ import { PlayerProfileComponent } from './_components/players/player-profile/pla
 import { PlayerEditComponent } from './_components/players/player-edit/player-edit.component';
 import { GameEditComponent } from './_components/games/game-edit/game-edit.component';
 import { ScreenshotEditorComponent } from './_components/games/screenshot-editor/screenshot-editor.component';
+import { TextInputComponent } from './_forms/text-input/text-input.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { ScreenshotEditorComponent } from './_components/games/screenshot-editor
     PlayerProfileComponent,
     PlayerEditComponent,
     GameEditComponent,
-    ScreenshotEditorComponent
+    ScreenshotEditorComponent,
+    TextInputComponent
   ],
   imports: [
     BrowserModule,
@@ -53,6 +55,7 @@ import { ScreenshotEditorComponent } from './_components/games/screenshot-editor
     HttpClientModule,
     BrowserAnimationsModule,
     FormsModule,
+    ReactiveFormsModule,
     SharedModule
   ],
   providers: [

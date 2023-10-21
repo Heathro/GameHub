@@ -28,8 +28,13 @@ export class GameEditComponent implements OnInit {
   uploader: FileUploader | undefined;
   baseUrl = environment.apiUrl;
 
-  constructor(private gamesService: GamesService, private toastr: ToastrService, 
-      private route: ActivatedRoute, private router: Router, private accountService: AccountService) {
+  constructor(
+    private accountService: AccountService,
+    private gamesService: GamesService, 
+    private toastr: ToastrService, 
+    private route: ActivatedRoute,
+    private router: Router
+  ) {
     this.accountService.currentUser$.pipe(take(1)).subscribe({
       next: user => this.user = user
     });

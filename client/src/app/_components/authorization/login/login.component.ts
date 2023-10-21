@@ -13,15 +13,21 @@ import { AccountService } from 'src/app/_services/account.service';
 export class LoginComponent implements OnInit {
   model: any = {}
 
-  constructor(private accountService: AccountService, private router: Router, 
-    private toastr: ToastrService) { }
+  constructor(
+    private accountService: AccountService, 
+    private router: Router, 
+    private toastr: ToastrService
+  ) { }
 
   ngOnInit(): void {
   }
 
   login() {
     this.accountService.login(this.model).subscribe({
-      next: () => this.router.navigateByUrl('/')
+      next: () => {
+        this.router.navigateByUrl('/');
+        this.toastr.success('Login successful')
+      }
     });
   }
 }

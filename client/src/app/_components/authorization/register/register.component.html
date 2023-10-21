@@ -1,34 +1,46 @@
 <div class="container col-3">
+    <form [formGroup]="registerForm" (ngSubmit)="registerForm.valid && register()" autocomplete="off">
 
-    <form #registerForm="ngForm" (ngSubmit)="register()" autocomplete="off">
+        <h2 class="text-center text-info mb-3">Register</h2>
 
-        <h2 class="text-center text-primary mb-3">Register</h2>
+        <app-text-input
+            [formControl]="$any(registerForm.controls['username'])"
+            [label]="'Username'"
+        ></app-text-input>
 
-        <div class="mb-3">
-            <input
-                name="username"
-                [(ngModel)]="model.username"
-                type="text"
-                class="form-control"
-                placeholder="Username"
-            >
-        </div>
+        <app-text-input
+            [formControl]="$any(registerForm.controls['password'])"
+            [label]="'Password'"
+            [type]="'password'"
+        ></app-text-input>
 
-        <div class="mb-3">
-            <input
-                name="password"
-                [(ngModel)]="model.password"
-                type="password"
-                class="form-control"
-                placeholder="Password"
-            >
+        <app-text-input
+            [formControl]="$any(registerForm.controls['confirmPassword'])"
+            [label]="'Confirm password'"            
+            [type]="'password'"
+        ></app-text-input>
+
+        <div class="row" *ngIf="validationErrors">
+            <ul class="text-danger">
+                <li *ngFor="let error of validationErrors">
+                    {{error}}
+                </li>
+            </ul>
         </div>
 
         <div class="text-center">
-            <button class="btn btn-success me-2" type="submit">Register</button>
-            <button class="btn btn-secondary" type="button" routerLink="/">Cancel</button>
+            <button 
+                [disabled]="!registerForm.valid"
+                class="btn btn-success me-2"
+                type="submit"
+            >Register</button>
+
+            <button
+                class="btn btn-secondary"
+                type="button" 
+                routerLink="/"
+            >Cancel</button>
         </div>
 
     </form>
-
 </div>
