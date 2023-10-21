@@ -75,7 +75,13 @@ export class PlayerEditComponent implements OnInit {
     this.uploader.onSuccessItem = (item, response, status, header) => {
       if (response) {
         const avatar = JSON.parse(response);
-        if (this.player) this.player.avatar = avatar;
+        if (this.player) {
+          this.player.avatar = avatar;
+        }
+        if (this.user) {
+          this.user.avatarUrl = avatar.url;
+          this.accountService.setCurrentUser(this.user);
+        }
       }
     }
 

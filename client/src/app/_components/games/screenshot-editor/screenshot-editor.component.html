@@ -37,7 +37,9 @@
     <div class="col-4" *ngFor="let screenshot of game.screenshots">
         <img src="{{screenshot.url}}" alt="screenshot" class="img-thumbnail mb-1">
         <div class="text-center">
-            <div class="btn btn-outline-danger">Delete&nbsp;&nbsp;&nbsp;<i class="bi bi-trash3"></i></div>
+            <div class="btn btn-outline-danger btn-sm mb-3" (click)="deleteScreenshot(screenshot.id)">
+                Delete&nbsp;&nbsp;&nbsp;<i class="bi bi-trash3"></i>
+            </div>
         </div>
     </div>
 </div>

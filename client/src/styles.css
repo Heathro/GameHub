@@ -22,3 +22,13 @@
 .custom-tabset > .nav-tabs .nav-item .nav-link.active {
   color: #00BC6F;
 }
+
+.form-control {
+  background-color: #404040;
+  color: white;
+}
+
+.form-control:focus {
+  background-color: #505050;
+  color: white;
+}

@@ -60,8 +60,16 @@ public class UsersController : BaseApiController
 
         if (result.Error != null) return BadRequest(result.Error.Message);
 
+        var oldPublicId = user.Avatar.PublicId;
+
         user.Avatar.Url = result.SecureUrl.AbsoluteUri;
         user.Avatar.PublicId = result.PublicId;
+        
+        if (oldPublicId != null)
+        {
+            var deletingResult = await _imageService.DeleteImageAsync(oldPublicId);
+            if (deletingResult.Error != null) return BadRequest(deletingResult.Error.Message);
+        }
 
         if (await _usersRepository.SaveAllAsync()) return _mapper.Map<AvatarDto>(user.Avatar);
 

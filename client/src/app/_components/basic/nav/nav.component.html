@@ -24,6 +24,7 @@
         </ul>
 
         <div class="dropdown" *ngIf="(accountService.currentUser$ | async) as user" dropdown>
+            <img class="avatar-img" src="{{user.avatarUrl || './assets/avatar.png'}}" alt="avatar">
             <a class="dropdown-toggle text-success text-decoration-none username-text" dropdownToggle>
                 {{user.username}}
             </a>

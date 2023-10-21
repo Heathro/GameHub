@@ -3,6 +3,12 @@
     margin-right: 14px;
 }
 
+.avatar-img {
+    max-height: 38px;
+    margin-right: 10px;
+    margin-top: -2px;
+}
+
 .dropdown-toggle, .dropdown-item {
     cursor: pointer;
 }

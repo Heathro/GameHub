@@ -61,8 +61,16 @@ public class GamesController : BaseApiController
 
         if (result.Error != null) return BadRequest(result.Error.Message);
 
+        var oldPublicId = game.Poster.PublicId;
+
         game.Poster.Url = result.SecureUrl.AbsoluteUri;
         game.Poster.PublicId = result.PublicId;
+        
+        if (oldPublicId != null)
+        {
+            var deletingResult = await _imageService.DeleteImageAsync(oldPublicId);
+            if (deletingResult.Error != null) return BadRequest(deletingResult.Error.Message);
+        }
 
         if (await _gamesRepository.SaveAllAsync()) return _mapper.Map<PosterDto>(game.Poster);
 
@@ -99,5 +107,29 @@ public class GamesController : BaseApiController
         }
 
         return BadRequest("Failed to add screenshot");
+    }
+
+    [HttpDelete("{title}/delete-screenshot/{screenshotId}")]
+    public async Task<ActionResult> DeleteScreenshot(string title, int screenshotId)
+    {
+        var game = await _gamesRepository.GetGameByTitleAsync(title);
+
+        if (game == null) return NotFound();
+
+        var screenshot = game.Screenshots.FirstOrDefault(s => s.Id == screenshotId);
+
+        if (screenshot == null) return NotFound();
+
+        if (screenshot.PublicId != null)
+        {
+            var result = await _imageService.DeleteImageAsync(screenshot.PublicId);
+            if (result.Error != null) return BadRequest(result.Error.Message);
+        }
+
+        game.Screenshots.Remove(screenshot);
+
+        if (await _gamesRepository.SaveAllAsync()) return Ok();
+
+        return BadRequest("Failed to delete screenshot");
     }
 }

@@ -5,6 +5,7 @@ import { take } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 import { AccountService } from 'src/app/_services/account.service';
+import { GamesService } from 'src/app/_services/games.service';
 import { User } from 'src/app/_models/user';
 import { Game } from 'src/app/_models/game';
 
@@ -19,7 +20,7 @@ export class ScreenshotEditorComponent implements OnInit {
   uploader: FileUploader | undefined;
   baseUrl = environment.apiUrl;
 
-  constructor(private accountService: AccountService) {
+  constructor(private accountService: AccountService, private gamesService: GamesService) {
     this.accountService.currentUser$.pipe(take(1)).subscribe({
       next: user => { if (user) this.user = user; }
     })
@@ -50,5 +51,16 @@ export class ScreenshotEditorComponent implements OnInit {
         this.game?.screenshots.push(screenshot);
       }
     }
+  }
+
+  deleteScreenshot(screenshotId: number) {
+    if (!this.game) return;
+    this.gamesService.deleteScreenshot(this.game, screenshotId).subscribe({
+      next: () => {
+        if (this.game) {
+          this.game.screenshots = this.game?.screenshots.filter(s => s.id !== screenshotId);
+        }
+      }
+    });
   }
 }

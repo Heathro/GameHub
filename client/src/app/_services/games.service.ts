@@ -38,4 +38,8 @@ export class GamesService {
       })
     );
   }
+
+  deleteScreenshot(game: Game, screenshotId: number) {
+    return this.http.delete(this.baseUrl + 'games/' + game.title + '/delete-screenshot/' + screenshotId);
+  }
 }
