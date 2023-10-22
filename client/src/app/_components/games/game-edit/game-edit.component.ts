@@ -21,7 +21,8 @@ export class GameEditComponent implements OnInit {
   @HostListener('window:beforeunload', ['$event']) unloadNotification($event: any) {
     if (this.editForm?.dirty) { $event.returnValue = true; }
   }
-  @ViewChild('editForm') editForm: NgForm | undefined;
+  @ViewChild('editForm') editForm: NgForm | undefined;  
+  validationErrors: string[] | undefined;
   user: User | null = null;
   game: Game | undefined;
   currentTitle = "";
@@ -58,20 +59,39 @@ export class GameEditComponent implements OnInit {
 
   updateGame() {
     const newTitle: string = this.editForm?.controls['title'].getRawValue();
-    
-    if (newTitle.trim().length === 0) {
+
+    if (newTitle.length === 0) {
       this.toastr.warning('Title required');
+    }
+    else if (newTitle[0] === ' ' || newTitle[newTitle.length-1] === ' ') {
+      this.toastr.warning('Title must not start or end with space');
+    }
+    else if (!this.titleValidator(newTitle)) {
+      this.toastr.warning('Title must contain only letters, numbers and spaces');
+    }
+    else if (newTitle.length > 36) {
+      this.toastr.warning('Title must be at most 36 characters');
     }
     else {
       this.gamesService.updateGame(this.editForm?.value, this.currentTitle).subscribe({
         next: () => {
-          this.toastr.success('Game updated');
-          this.currentTitle = newTitle.trim();
+          this.currentTitle = newTitle;
           this.editForm?.reset(this.game);
           this.router.navigateByUrl('/games/' + this.currentTitle + '/edit');
+          this.toastr.success('Game updated');
+        },
+        error: error => {
+          this.validationErrors = error;
         }
       });
     }
+  }
+
+  titleValidator(input: string): boolean {
+    if (input.length === 0) return false;
+    var regexp = new RegExp('^[A-Za-z0-9 ]+$');
+    var result = regexp.test(input);
+    return result;
   }
 
   initializeUploader() {

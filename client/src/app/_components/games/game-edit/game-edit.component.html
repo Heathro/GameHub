@@ -31,6 +31,14 @@
                         rows="6"
                     ></textarea>
 
+                    <div class="row ms-4" *ngIf="validationErrors">
+                        <ul class="text-danger">
+                            <li *ngFor="let error of validationErrors">
+                                {{error}}
+                            </li>
+                        </ul>
+                    </div>
+
                     <div class="row">
                         <button
                             class="btn btn-outline-success mt-4 col-4 mx-auto"
