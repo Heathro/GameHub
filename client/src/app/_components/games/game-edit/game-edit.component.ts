@@ -58,40 +58,41 @@ export class GameEditComponent implements OnInit {
   }
 
   updateGame() {
-    const newTitle: string = this.editForm?.controls['title'].getRawValue();
+    const newTitle: string = this.editForm?.controls['title'].value;
+    if (!this.titleValidator(newTitle)) return;
 
-    if (newTitle.length === 0) {
-      this.toastr.warning('Title required');
-    }
-    else if (newTitle[0] === ' ' || newTitle[newTitle.length-1] === ' ') {
-      this.toastr.warning('Title must not start or end with space');
-    }
-    else if (!this.titleValidator(newTitle)) {
-      this.toastr.warning('Title must contain only letters, numbers and spaces');
-    }
-    else if (newTitle.length > 36) {
-      this.toastr.warning('Title must be at most 36 characters');
-    }
-    else {
-      this.gamesService.updateGame(this.editForm?.value, this.currentTitle).subscribe({
-        next: () => {
-          this.currentTitle = newTitle;
-          this.editForm?.reset(this.game);
-          this.router.navigateByUrl('/games/' + this.currentTitle + '/edit');
-          this.toastr.success('Game updated');
-        },
-        error: error => {
-          this.validationErrors = error;
-        }
-      });
-    }
+    this.gamesService.updateGame(this.editForm?.value, this.currentTitle).subscribe({
+      next: () => {
+        this.currentTitle = newTitle;
+        this.editForm?.reset(this.game);
+        this.router.navigateByUrl('/games/' + this.currentTitle + '/edit');
+        this.toastr.success('Game updated');
+      },
+      error: error => {
+        this.validationErrors = error;
+      }
+    });
   }
 
   titleValidator(input: string): boolean {
-    if (input.length === 0) return false;
+    if (input.length === 0 || input.trim().length === 0) {
+      this.toastr.warning('Title required');
+      return false;
+    }
+    if (input[0] === ' ' || input[input.length-1] === ' ') {
+      this.toastr.warning('Title must not start or end with space');
+      return false;
+    }
     var regexp = new RegExp('^[A-Za-z0-9 ]+$');
-    var result = regexp.test(input);
-    return result;
+    if (!regexp.test(input)) {
+      this.toastr.warning('Title must contain only letters, numbers and spaces');
+      return false;
+    }    
+    if (input.length > 36) {
+      this.toastr.warning('Title must be at most 36 characters');
+      return false;
+    }
+    return true;
   }
 
   initializeUploader() {
