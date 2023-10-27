@@ -6,6 +6,7 @@ using API.DTOs;
 using API.Interfaces;
 using API.Extensions;
 using API.Entities;
+using API.Helpers;
 
 namespace API.Controllers;
 
@@ -24,9 +25,19 @@ public class UsersController : BaseApiController
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<PlayerDto>>> GetUsers()
+    public async Task<ActionResult<PagedList<PlayerDto>>> GetUsers(
+        [FromQuery]PaginationParams paginationParams)
     {
-        return Ok(await _usersRepository.GetPlayersAsync());
+        var users = await _usersRepository.GetPlayersAsync(paginationParams);
+
+        Response.AddPaginationHeader(new PaginationHeader(
+            users.CurrentPage,
+            users.PageSize,
+            users.TotalCount,
+            users.TotalPages
+        ));
+
+        return Ok(users);
     }
 
     [HttpGet("{username}")]
