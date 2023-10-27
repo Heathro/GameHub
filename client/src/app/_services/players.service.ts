@@ -31,15 +31,16 @@ export class PlayersService {
   }
 
   updatePlayer(player: Player) {
-    
-    console.log('Before: ' + this.players.length);
-    console.log(player);
-    console.log(this.players);
     return this.http.put(this.baseUrl + 'users/edit-profile', player).pipe(
       map(() => {
-        const index = this.players.indexOf(player);
-        console.log('Index: ' + index);
-        this.players[index] = {...this.players[index], ...player};
+        for (let i = 0; i < this.players.length; i++) {
+          if (this.players[i].id === player.id) {
+            this.players[i].realname = player.realname;
+            this.players[i].summary = player.summary;
+            this.players[i].country = player.country;
+            this.players[i].city = player.city;
+          }
+        }
       })
     );
   }

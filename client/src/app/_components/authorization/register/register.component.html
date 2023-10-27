@@ -6,17 +6,20 @@
         <app-text-input
             [formControl]="$any(registerForm.controls['username'])"
             [label]="'Username'"
+            [placeholder]="'Username'"
         ></app-text-input>
 
         <app-text-input
             [formControl]="$any(registerForm.controls['password'])"
             [label]="'Password'"
+            [placeholder]="'Password'"
             [type]="'password'"
         ></app-text-input>
 
         <app-text-input
             [formControl]="$any(registerForm.controls['confirmPassword'])"
-            [label]="'Confirm password'"            
+            [label]="'Confirm password'"  
+            [placeholder]="'Confirm password'"
             [type]="'password'"
         ></app-text-input>
 

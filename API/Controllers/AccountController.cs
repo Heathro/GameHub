@@ -26,8 +26,8 @@ public class AccountController : BaseApiController
     [HttpPost("register")]
     public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
     {
-        if (await UserExists(registerDto.Username)) return BadRequest("Username is taken");
-
+        if (await UserExists(registerDto.Username)) return BadRequest("Username is already taken");
+        
         var user = _mapper.Map<AppUser>(registerDto);
 
         using var hmac = new HMACSHA512();

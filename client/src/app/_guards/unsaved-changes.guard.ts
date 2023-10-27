@@ -1,9 +1,9 @@
 import { CanDeactivateFn } from '@angular/router';
 
-import { PlayerEditComponent } from '../_components/players/player-edit/player-edit.component';
+import { EditComponent } from '../_interfaces/edit-component';
 
-export const unsavedChangesGuard: CanDeactivateFn<PlayerEditComponent> = (component) => {
-  if (component.editForm?.dirty) {
+export const unsavedChangesGuard: CanDeactivateFn<EditComponent> = (component) => {
+  if (component.isDirty()) {
     return confirm('Changes you made may not be saved.');
   }
   return true;

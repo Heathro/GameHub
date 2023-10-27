@@ -35,9 +35,15 @@
         <tabset class="custom-tabset">
 
             <tab heading="About">
-                <h5 class="mt-2">{{player.realname}}</h5>                
+                <h5 class="mt-2">{{player.realname}}</h5>
+
+                <div class="d-flex">
+                    <h6 class="d-inline">{{player.country}}</h6>
+                    <h6 *ngIf="player.country && player.city">,&nbsp;&nbsp;</h6>
+                    <h6>{{player.city}}</h6>
+                </div>
+
                 <p>{{player.summary}}</p>                
-                <h5 class="mt-2">{{player.country}}, {{player.city}}</h5>
             </tab>
 
             <tab heading="Reviews">

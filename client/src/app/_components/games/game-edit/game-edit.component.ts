@@ -1,6 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { FileUploader } from 'ng2-file-upload';
 import { ToastrService } from 'ngx-toastr';
@@ -9,6 +9,7 @@ import { take } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { GamesService } from 'src/app/_services/games.service';
 import { AccountService } from 'src/app/_services/account.service';
+import { EditComponent } from 'src/app/_interfaces/edit-component';
 import { Game } from 'src/app/_models/game';
 import { User } from 'src/app/_models/user';
 import { Location } from '@angular/common';
@@ -18,10 +19,10 @@ import { Location } from '@angular/common';
   templateUrl: './game-edit.component.html',
   styleUrls: ['./game-edit.component.css']
 })
-export class GameEditComponent implements OnInit {
+export class GameEditComponent implements OnInit, EditComponent {
   @HostListener('window:beforeunload', ['$event']) unloadNotification($event: any) {
     if (this.editForm?.dirty) { $event.returnValue = true; }
-  }  
+  }
   editForm: FormGroup = new FormGroup({});
   validationErrors: string[] | undefined;
   user: User | null = null;
@@ -48,6 +49,10 @@ export class GameEditComponent implements OnInit {
     this.loadGame();
   }
 
+  isDirty(): boolean {
+    return this.editForm.dirty;
+  }
+
   loadGame() {
     const title = this.route.snapshot.paramMap.get('title');
     if (!title) return;
@@ -62,22 +67,23 @@ export class GameEditComponent implements OnInit {
     });
   }
 
-  onKeyup(event: KeyboardEvent) {
-    console.log("dddddddd");
-  }
-
   updateGame() {
     this.gamesService.updateGame(this.editForm.value, this.currentTitle).subscribe({
       next: () => {
         this.currentTitle = this.editForm?.controls['title'].value;
-        this.editForm?.reset(this.editForm.value);
         this.location.replaceState('/games/' + this.currentTitle + '/edit');
         this.toastr.success('Game updated');
+        this.resetForm();
       },
       error: error => {
         this.validationErrors = error;
+        this.resetForm();
       }
     });
+  }
+
+  resetForm() {
+    this.editForm?.reset(this.editForm.value);
   }
   
   initializeFrom() {

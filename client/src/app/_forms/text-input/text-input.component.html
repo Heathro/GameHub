@@ -1,11 +1,11 @@
 <div class="mb-3">
 
-    <input
+    <input 
         class="form-control"
         [formControl]="control"
         [class.is-invalid]="control.touched && control.invalid"
         type={{type}}
-        placeholder={{label}}
+        placeholder={{placeholder}}
     >
 
     <div class="invalid-feedback" *ngIf="control.errors?.['required']">

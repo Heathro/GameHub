@@ -1,5 +1,6 @@
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { Component, HostListener, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { ToastrService } from 'ngx-toastr';
 import { FileUploader } from 'ng2-file-upload';
@@ -8,20 +9,21 @@ import { take } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { AccountService } from 'src/app/_services/account.service';
 import { PlayersService } from 'src/app/_services/players.service';
+import { EditComponent } from 'src/app/_interfaces/edit-component';
 import { Player } from 'src/app/_models/player';
 import { User } from 'src/app/_models/user';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-player-edit',
   templateUrl: './player-edit.component.html',
   styleUrls: ['./player-edit.component.css']
 })
-export class PlayerEditComponent implements OnInit {
+export class PlayerEditComponent implements OnInit, EditComponent {
   @HostListener('window:beforeunload', ['$event']) unloadNotification($event: any) {
     if (this.editForm?.dirty) { $event.returnValue = true; }
   }
-  @ViewChild('editForm') editForm: NgForm | undefined;
+  editForm: FormGroup = new FormGroup({});
+  validationErrors: string[] | undefined;
   user: User | null = null;
   player: Player | undefined;
   uploader: FileUploader | undefined;
@@ -31,6 +33,7 @@ export class PlayerEditComponent implements OnInit {
     private accountService: AccountService, 
     private playersService: PlayersService,
     private toastr: ToastrService,
+    private formBuilder: FormBuilder,
     private router: Router
   ) {
     this.accountService.currentUser$.pipe(take(1)).subscribe({
@@ -42,6 +45,10 @@ export class PlayerEditComponent implements OnInit {
     this.loadPlayer();
   }
 
+  isDirty(): boolean {
+    return this.editForm.dirty;
+  }
+
   loadPlayer() {
     if (!this.user) return;
     this.playersService.getPlayer(this.user.username).subscribe({
@@ -49,6 +56,7 @@ export class PlayerEditComponent implements OnInit {
         if (!player) this.router.navigateByUrl('/not-found');
         this.player = player;
         this.initializeUploader();
+        this.initializeFrom();
       }
     });
   }
@@ -57,8 +65,26 @@ export class PlayerEditComponent implements OnInit {
     this.playersService.updatePlayer(this.editForm?.value).subscribe({
       next: () => {
         this.toastr.success('Profile updated');
-        this.editForm?.reset(this.player);
+        this.resetForm();
+      },
+      error: error => {
+        this.validationErrors = error;
+        this.resetForm();
       }
+    });
+  }
+
+  resetForm() {
+    this.editForm?.reset(this.editForm.value);
+  }
+  
+  initializeFrom() {
+    this.editForm = this.formBuilder.group({
+      id: this.player?.id,
+      realname: this.player?.realname,
+      summary: this.player?.summary,
+      country: this.player?.country,
+      city: this.player?.city
     });
   }
 

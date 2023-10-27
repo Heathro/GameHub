@@ -46,7 +46,7 @@ public class UsersController : BaseApiController
 
         if (await _usersRepository.SaveAllAsync()) return NoContent();
 
-        return BadRequest("Failed to update user");
+        return BadRequest("No changes were detected");
     }
 
     [HttpPut("update-avatar")]

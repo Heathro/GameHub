@@ -49,7 +49,7 @@ public class GamesController : BaseApiController
 
         if (await _gamesRepository.SaveAllAsync()) return NoContent();
 
-        return BadRequest("Failed to update game");
+        return BadRequest("No changes were detected");
     }
 
     [HttpPut("{title}/update-poster")]

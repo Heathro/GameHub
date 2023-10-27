@@ -31,12 +31,14 @@ export class ErrorInterceptor implements HttpInterceptor {
                 }
                 throw modelStateErrors.flat();
               } else {
-                this.toastr.error(error.error, error.status.toString());
+                //this.toastr.error(error.error, error.status.toString());
+                this.toastr.warning(error.error);
               }
               break;
 
             case 401:
-              this.toastr.error('Unauthorised', error.status.toString());
+              this.toastr.error('Incorrect username or password');
+              //this.toastr.error('Unauthorised', error.status.toString());
               break;
 
             case 404:

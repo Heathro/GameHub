@@ -71,45 +71,46 @@
         <tabset class="custom-tabset">
 
             <tab heading="About">
-                <form #editForm="ngForm" (ngSubmit)="updatePlayer()">
-                    <h4 class="mt-2">Name: </h4>
-                    <input
-                        class="form-control"
-                        [(ngModel)]="player.realname"
-                        name="realname"
-                    >
-
-                    <h4 class="mt-2">Summary: </h4>
-                    <textarea
-                        class="form-control"
-                        [(ngModel)]="player.summary"
-                        name="summary"
-                        rows="6"
-                    ></textarea>
+                <form [formGroup]="editForm" (ngSubmit)="editForm.valid && updatePlayer()" autocomplete="off">
                     
-                    <h4 class="mt-2">Location: </h4>
-                    <div class="d-flex flex-row align-items-center">
-                        <label for="country">Country </label>
-                        <input
-                            type="text" 
-                            [(ngModel)]="player.country"
-                            name="country"
-                            class="form-control mx-2"
-                        >
-                        <label for="city">City </label>
-                        <input
-                            type="text" 
-                            [(ngModel)]="player.city"
-                            name="city"
-                            class="form-control mx-2"
-                        >
+                    <h4 class="mt-4 text-warning">Real name</h4>
+                    <app-text-input
+                        [formControl]="$any(editForm.get('realname'))"
+                        [label]="'Real name'"
+                    ></app-text-input>
+
+                    <h4 class="mt-4 text-warning">Summary</h4>
+                    <app-textarea-input 
+                        [formControl]="$any(editForm.get('summary'))"
+                    ></app-textarea-input>
+                    
+                    <h4 class="mt-4 text-warning">Location</h4>
+                    <div class="row">
+                        <app-text-input class="col-6"
+                            [formControl]="$any(editForm.get('country'))"
+                            [label]="'Country'"
+                            [placeholder]="'Country'"
+                        ></app-text-input>
+                        <app-text-input class="col-6"
+                            [formControl]="$any(editForm.get('city'))"
+                            [label]="'City'"
+                            [placeholder]="'City'"
+                        ></app-text-input>
+                    </div>
+
+                    <div class="row ms-4" *ngIf="validationErrors">
+                        <ul class="text-danger">
+                            <li *ngFor="let error of validationErrors">
+                                {{error}}
+                            </li>
+                        </ul>
                     </div>
 
                     <div class="text-center">
                         <button
                             class="btn btn-outline-success mt-4 col-4 mx-auto"
                             type="submit"
-                            [disabled]="!editForm.dirty"
+                            [disabled]="!editForm.dirty || !editForm.valid"
                             >Save changes&nbsp;&nbsp;&nbsp;
                             <i class="bi bi-floppy"></i>
                         </button>
