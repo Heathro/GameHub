@@ -39,6 +39,8 @@ public class GamesController : BaseApiController
     [HttpPut("{title}/edit-game")]
     public async Task<ActionResult> UpdateGame(string title, [FromBody]GameEditDto gameEditDto)
     {
+        // TODO same title check
+        
         var game = await _gamesRepository.GetGameByTitleAsync(title);
 
         if (game == null) return NotFound();

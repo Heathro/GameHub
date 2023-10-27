@@ -27,6 +27,8 @@ import { PlayerEditComponent } from './_components/players/player-edit/player-ed
 import { GameEditComponent } from './_components/games/game-edit/game-edit.component';
 import { ScreenshotEditorComponent } from './_components/games/screenshot-editor/screenshot-editor.component';
 import { TextInputComponent } from './_forms/text-input/text-input.component';
+import { CheckboxInputComponent } from './_forms/checkbox-input/checkbox-input.component';
+import { TextareaInputComponent } from './_forms/textarea-input/textarea-input.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +49,9 @@ import { TextInputComponent } from './_forms/text-input/text-input.component';
     PlayerEditComponent,
     GameEditComponent,
     ScreenshotEditorComponent,
-    TextInputComponent
+    TextInputComponent,
+    CheckboxInputComponent,
+    TextareaInputComponent
   ],
   imports: [
     BrowserModule,

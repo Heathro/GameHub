@@ -4,8 +4,31 @@
         <tabset class="custom-tabset">
 
             <tab heading="About">
-                <p>{{game.description}}</p>
+
+                <h6 class="m-4">{{game.description}}</h6>
+
+                <div class="m-4">
+                    <h6 class="text-muted d-inline" *ngIf="game.genres.action">Action&nbsp;&nbsp;</h6>
+                    <h6 class="text-muted d-inline" *ngIf="game.genres.adventure">Adventure&nbsp;&nbsp;</h6>
+                    <h6 class="text-muted d-inline" *ngIf="game.genres.card">Card&nbsp;&nbsp;</h6>
+                    <h6 class="text-muted d-inline" *ngIf="game.genres.educational">Educational&nbsp;&nbsp;</h6>
+                    <h6 class="text-muted d-inline" *ngIf="game.genres.fighting">Fighting&nbsp;&nbsp;</h6>
+                    <h6 class="text-muted d-inline" *ngIf="game.genres.horror">Horror&nbsp;&nbsp;</h6>
+                    <h6 class="text-muted d-inline" *ngIf="game.genres.platformer">Platformer&nbsp;&nbsp;</h6>
+                    <h6 class="text-muted d-inline" *ngIf="game.genres.puzzle">Puzzle&nbsp;&nbsp;</h6>
+                    <h6 class="text-muted d-inline" *ngIf="game.genres.racing">Racing&nbsp;&nbsp;</h6>
+                    <h6 class="text-muted d-inline" *ngIf="game.genres.rhythm">Rhythm&nbsp;&nbsp;</h6>
+                    <h6 class="text-muted d-inline" *ngIf="game.genres.roleplay">Roleplay&nbsp;&nbsp;</h6>
+                    <h6 class="text-muted d-inline" *ngIf="game.genres.shooter">Shooter&nbsp;&nbsp;</h6>
+                    <h6 class="text-muted d-inline" *ngIf="game.genres.simulation">Simulation&nbsp;&nbsp;</h6>
+                    <h6 class="text-muted d-inline" *ngIf="game.genres.sport">Sport&nbsp;&nbsp;</h6>
+                    <h6 class="text-muted d-inline" *ngIf="game.genres.stealth">Stealth&nbsp;&nbsp;</h6>
+                    <h6 class="text-muted d-inline" *ngIf="game.genres.strategy">Strategy&nbsp;&nbsp;</h6>
+                    <h6 class="text-muted d-inline" *ngIf="game.genres.survival">Survival&nbsp;&nbsp;</h6>
+                </div>
+
             </tab>
+
             <tab heading="Screenshots" #screenshotTab="tab" class="gallery">
                 <gallery *ngIf="screenshotTab.active" [items]="screenshots"></gallery>
             </tab>
@@ -25,6 +48,11 @@
                 <div>
                     <h3 class="mb-4">{{game.title}}</h3>
                 </div>
+                <h5 class="mb-4">
+                    <i class="bi bi-windows me-3" *ngIf="game.platforms.windows"></i>
+                    <i class="bi bi-apple me-3" *ngIf="game.platforms.macos"></i>
+                    <i class="fa fa-linux me-3" *ngIf="game.platforms.linux"></i>
+                </h5>
             </div>
             <div class="card-footer">
                 <div class="btn-group d-flex mb-2">

@@ -12,11 +12,18 @@ public class AutoMapperProfiles : Profile
         CreateMap<PlayerEditDto, AppUser>();
         CreateMap<RegisterDto, AppUser>();
 
+        CreateMap<Avatar, AvatarDto>();
+
         CreateMap<Game, GameDto>();
         CreateMap<GameEditDto, Game>();
+
+        CreateMap<Platforms, PlatformsDto>();
+        CreateMap<PlatformsDto, Platforms>();
+
+        CreateMap<Genres, GenresDto>();
+        CreateMap<GenresDto, Genres>();
         
-        CreateMap<Screenshot, ScreenshotDto>();
-        CreateMap<Avatar, AvatarDto>();
         CreateMap<Poster, PosterDto>();
+        CreateMap<Screenshot, ScreenshotDto>();
     }
 }

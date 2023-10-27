@@ -32,3 +32,8 @@
   background-color: #505050;
   color: white;
 }
+
+.form-check-input {
+  background-color: #606060;
+  margin-right: 10px;
+}

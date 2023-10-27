@@ -39,6 +39,33 @@ public class Seed
         {
             Id = 1,
             Title = "Lost",
+            Description = "2D-pixel art",
+            Platforms = new Platforms
+            {
+                Windows = true,
+                Macos = true,
+                Linux = true
+            },
+            Genres = new Genres
+            {
+                Action = false,
+                Adventure = true,
+                Card = false,
+                Educational = false,
+                Fighting = false,
+                Horror = false,
+                Platformer = true,
+                Puzzle = false,
+                Racing = false,
+                Rhythm = false,
+                Roleplay = false,
+                Shooter = false,
+                Simulation = false,
+                Sport = false,
+                Stealth = false,
+                Strategy = false,
+                Survival = false
+            },
             Poster = new Poster
             {
                 Url = "https://img.itch.zone/aW1hZ2UvODEwMTE2LzQ1NDE1MjYucG5n/original/zA28rq.png"
@@ -56,6 +83,33 @@ public class Seed
         {
             Id = 2,
             Title = "Dungeon",
+            Description = "Turn-based",
+            Platforms = new Platforms
+            {
+                Windows = true,
+                Macos = true,
+                Linux = false
+            },
+            Genres = new Genres
+            {
+                Action = false,
+                Adventure = true,
+                Card = false,
+                Educational = false,
+                Fighting = false,
+                Horror = false,
+                Platformer = false,
+                Puzzle = false,
+                Racing = false,
+                Rhythm = false,
+                Roleplay = true,
+                Shooter = false,
+                Simulation = false,
+                Sport = false,
+                Stealth = false,
+                Strategy = false,
+                Survival = false
+            },
             Poster = new Poster
             {
                 Url = "https://img.itch.zone/aW1hZ2UvMTg3NjUxMS8xMTAyMzM5Ni5wbmc=/original/Wy0mql.png"

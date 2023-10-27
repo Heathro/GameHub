@@ -8,28 +8,111 @@
     <div class="col-4 my-2">
         <h2 class="text-center text-info">Edit Game</h2>
     </div>
-    
     <div class="col-8">
         <tabset class="custom-tabset">
-
+            
             <tab heading="About">
+                <form [formGroup]="editForm" (ngSubmit)="editForm.valid && updateGame()" autocomplete="off">
 
-                <form #editForm="ngForm" (ngSubmit)="updateGame()">
+                    <h4 class="mt-4 text-warning">Title</h4>
+                    <app-text-input
+                        [formControl]="$any(editForm.get('title'))"
+                        [label]="'Title'"
+                    ></app-text-input>
 
-                    <h4 class="mt-2">Title: </h4>
-                    <input
-                        class="form-control"
-                        [(ngModel)]="game.title"
-                        name="title"
-                    >
-                    
-                    <h4 class="mt-2">Description: </h4>
-                    <textarea
-                        class="form-control"
-                        [(ngModel)]="game.description"
-                        name="description"
-                        rows="6"
-                    ></textarea>
+                    <h4 class="mt-4 text-warning">Description</h4>
+                    <app-textarea-input 
+                        [formControl]="$any(editForm.get('description'))"
+                        [label]="'Description'"
+                    ></app-textarea-input>
+
+                    <h4 class="mt-4 text-warning">Platforms</h4>
+                    <div class="row" formGroupName="platforms">
+                        <app-checkbox-input class="col-2"
+                            [formControl]="$any(editForm.get('platforms.windows'))"
+                            [label]="'Windows'"
+                        ></app-checkbox-input>
+                        <app-checkbox-input class="col-2"
+                            [formControl]="$any(editForm.get('platforms.macos'))"
+                            [label]="'MacOS'"
+                        ></app-checkbox-input>
+                        <app-checkbox-input class="col-2"
+                            [formControl]="$any(editForm.get('platforms.linux'))"
+                            [label]="'Linux'"
+                        ></app-checkbox-input>
+                    </div>
+
+                    <h4 class="mt-4 text-warning">Genres</h4>
+                    <div class="row" formGroupName="genres">
+                        <app-checkbox-input class="col-2"
+                            [formControl]="$any(editForm.get('genres.action'))"
+                            [label]="'Action'"
+                        ></app-checkbox-input>
+                        <app-checkbox-input class="col-2"
+                            [formControl]="$any(editForm.get('genres.adventure'))"
+                            [label]="'Adventure'"
+                        ></app-checkbox-input>
+                        <app-checkbox-input class="col-2"
+                            [formControl]="$any(editForm.get('genres.card'))"
+                            [label]="'Card'"
+                        ></app-checkbox-input>
+                        <app-checkbox-input class="col-2"
+                            [formControl]="$any(editForm.get('genres.educational'))"
+                            [label]="'Educational'"
+                        ></app-checkbox-input>
+                        <app-checkbox-input class="col-2"
+                            [formControl]="$any(editForm.get('genres.fighting'))"
+                            [label]="'Fighting'"
+                        ></app-checkbox-input>
+                        <app-checkbox-input class="col-2"
+                            [formControl]="$any(editForm.get('genres.horror'))"
+                            [label]="'Horror'"
+                        ></app-checkbox-input>
+                        <app-checkbox-input class="col-2"
+                            [formControl]="$any(editForm.get('genres.platformer'))"
+                            [label]="'Platformer'"
+                        ></app-checkbox-input>
+                        <app-checkbox-input class="col-2"
+                            [formControl]="$any(editForm.get('genres.puzzle'))"
+                            [label]="'Puzzle'"
+                        ></app-checkbox-input>
+                        <app-checkbox-input class="col-2"
+                            [formControl]="$any(editForm.get('genres.racing'))"
+                            [label]="'Racing'"
+                        ></app-checkbox-input>
+                        <app-checkbox-input class="col-2"
+                            [formControl]="$any(editForm.get('genres.rhythm'))"
+                            [label]="'Rhythm'"
+                        ></app-checkbox-input>
+                        <app-checkbox-input class="col-2"
+                            [formControl]="$any(editForm.get('genres.roleplay'))"
+                            [label]="'Roleplay'"
+                        ></app-checkbox-input>
+                        <app-checkbox-input class="col-2"
+                            [formControl]="$any(editForm.get('genres.shooter'))"
+                            [label]="'Shooter'"
+                        ></app-checkbox-input>
+                        <app-checkbox-input class="col-2"
+                            [formControl]="$any(editForm.get('genres.simulation'))"
+                            [label]="'Simulation'"
+                        ></app-checkbox-input>
+                        <app-checkbox-input class="col-2"
+                            [formControl]="$any(editForm.get('genres.sport'))"
+                            [label]="'Sport'"
+                        ></app-checkbox-input>
+                        <app-checkbox-input class="col-2"
+                            [formControl]="$any(editForm.get('genres.stealth'))"
+                            [label]="'Stealth'"
+                        ></app-checkbox-input>
+                        <app-checkbox-input class="col-2"
+                            [formControl]="$any(editForm.get('genres.strategy'))"
+                            [label]="'Strategy'"
+                        ></app-checkbox-input>
+                        <app-checkbox-input class="col-2"
+                            [formControl]="$any(editForm.get('genres.survival'))"
+                            [label]="'Survival'"
+                        ></app-checkbox-input>
+                    </div>
 
                     <div class="row ms-4" *ngIf="validationErrors">
                         <ul class="text-danger">
@@ -43,14 +126,13 @@
                         <button
                             class="btn btn-outline-success mt-4 col-4 mx-auto"
                             type="submit"
-                            [disabled]="!editForm.dirty"
+                            [disabled]="!editForm.dirty || !editForm.valid"
                             >Save changes&nbsp;&nbsp;&nbsp;
                             <i class="bi bi-floppy"></i>
                         </button>
                     </div>
 
                 </form>
-
             </tab>
 
             <tab heading="Screenshots">
@@ -62,6 +144,7 @@
     
     <div class="col-4">
         <div class="card">
+
             <img 
                 src="{{game.poster.url || './assets/poster.png'}}"
                 alt="{{game.title}}"
@@ -113,6 +196,7 @@
                     </button>
                 </div>                
             </div>
+            
         </div>   
     </div>
 

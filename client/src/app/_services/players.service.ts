@@ -31,9 +31,14 @@ export class PlayersService {
   }
 
   updatePlayer(player: Player) {
+    
+    console.log('Before: ' + this.players.length);
+    console.log(player);
+    console.log(this.players);
     return this.http.put(this.baseUrl + 'users/edit-profile', player).pipe(
       map(() => {
         const index = this.players.indexOf(player);
+        console.log('Index: ' + index);
         this.players[index] = {...this.players[index], ...player};
       })
     );

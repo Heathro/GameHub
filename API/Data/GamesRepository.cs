@@ -36,6 +36,8 @@ public class GamesRepository : IGamesRepository
     public async Task<Game> GetGameByIdAsync(int id)
     {
         return await _context.Games
+            .Include(p => p.Platforms)
+            .Include(g => g.Genres)
             .Include(p => p.Poster)
             .Include(s => s.Screenshots)
             .SingleOrDefaultAsync(game => game.Id == id);
@@ -44,6 +46,8 @@ public class GamesRepository : IGamesRepository
     public async Task<Game> GetGameByTitleAsync(string title)
     {
         return await _context.Games
+            .Include(p => p.Platforms)
+            .Include(g => g.Genres)
             .Include(s => s.Poster)
             .Include(s => s.Screenshots)
             .SingleOrDefaultAsync(game => game.Title == title);
@@ -52,6 +56,8 @@ public class GamesRepository : IGamesRepository
     public async Task<IEnumerable<Game>> GetAllGamesAsync()
     {
         return await _context.Games
+            .Include(p => p.Platforms)
+            .Include(g => g.Genres)
             .Include(s => s.Poster)
             .Include(s => s.Screenshots)
             .ToListAsync();

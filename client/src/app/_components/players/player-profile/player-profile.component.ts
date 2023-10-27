@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { Player } from 'src/app/_models/player';
 import { PlayersService } from 'src/app/_services/players.service';
@@ -12,7 +12,11 @@ import { PlayersService } from 'src/app/_services/players.service';
 export class PlayerProfileComponent implements OnInit {
   player: Player | undefined;
 
-  constructor(private playersService: PlayersService, private route: ActivatedRoute) { }
+  constructor(
+    private playersService: PlayersService,
+    private route: ActivatedRoute, 
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.loadPlayer();
@@ -22,7 +26,10 @@ export class PlayerProfileComponent implements OnInit {
     const username = this.route.snapshot.paramMap.get('username');
     if (!username) return;
     this.playersService.getPlayer(username).subscribe({
-      next: player => this.player = player
+      next: player => {
+        if (!player) this.router.navigateByUrl('/not-found');
+        this.player = player;
+      }
     });
   }
 }

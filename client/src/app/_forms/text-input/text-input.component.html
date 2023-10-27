@@ -12,8 +12,23 @@
         {{label}} is required
     </div>
 
-    <div class="invalid-feedback" *ngIf="!control.errors?.['required'] && control.errors?.['notAlphanumeric']">
+    <div 
+        class="invalid-feedback" 
+        *ngIf="!control.errors?.['required'] && control.errors?.['whiteSpace']"
+    >
+        {{label}} must not start or end with whitespace
+    </div>
+
+    <div class="invalid-feedback" 
+        *ngIf="!control.errors?.['required'] && control.errors?.['notAlphaNumeric']"
+    >
         Only letters and numbers allowed
+    </div>
+
+    <div class="invalid-feedback" 
+        *ngIf="!control.errors?.['required'] && control.errors?.['notAlphaNumericSpaceColon']"
+    >
+        Only letters, numbers, space and colon allowed
     </div>
 
     <div class="invalid-feedback" *ngIf="control.errors?.['minlength']">

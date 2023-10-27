@@ -30,7 +30,7 @@ export class RegisterComponent implements OnInit {
     this.registerForm = this.formBuilder.group({
       username: ['', [
         Validators.required,
-        this.alphanumeric(),
+        this.alphaNumeric(),
         Validators.maxLength(24)
       ]],
       password: ['', [
@@ -49,9 +49,9 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-  alphanumeric(): ValidatorFn {
+  alphaNumeric(): ValidatorFn {
     return (control: AbstractControl) => {
-      return control.value.match('^[A-Za-z0-9]+$') ? null : {notAlphanumeric: true};
+      return control.value.match('^[A-Za-z0-9]+$') ? null : {notAlphaNumeric: true};
     }
   }
 

@@ -33,8 +33,32 @@ export class GamesService {
   updateGame(game: Game, title: string) {
     return this.http.put(this.baseUrl + 'games/' + title + '/edit-game', game).pipe(
       map(() => {
-        const index = this.games.indexOf(game);
-        this.games[index] = {...this.games[index], ...game};
+        for (let i = 0; i < this.games.length; i++) {
+          if (this.games[i].id === game.id) {
+            this.games[i].title = game.title;
+            this.games[i].description = game.description;
+            this.games[i].platforms.windows = game.platforms.windows;
+            this.games[i].platforms.macos = game.platforms.macos;
+            this.games[i].platforms.linux = game.platforms.linux;
+            this.games[i].genres.action = game.genres.action;
+            this.games[i].genres.adventure = game.genres.adventure;
+            this.games[i].genres.card = game.genres.card;
+            this.games[i].genres.educational = game.genres.educational;
+            this.games[i].genres.fighting = game.genres.fighting;
+            this.games[i].genres.horror = game.genres.horror;
+            this.games[i].genres.platformer = game.genres.platformer;
+            this.games[i].genres.puzzle = game.genres.puzzle;
+            this.games[i].genres.racing = game.genres.racing;
+            this.games[i].genres.rhythm = game.genres.rhythm;
+            this.games[i].genres.roleplay = game.genres.roleplay;
+            this.games[i].genres.shooter = game.genres.shooter;
+            this.games[i].genres.simulation = game.genres.simulation;
+            this.games[i].genres.sport = game.genres.sport;
+            this.games[i].genres.stealth = game.genres.stealth;
+            this.games[i].genres.strategy = game.genres.strategy;
+            this.games[i].genres.survival = game.genres.survival;
+          }
+        }
       })
     );
   }

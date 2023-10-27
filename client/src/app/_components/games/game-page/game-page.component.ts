@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { GalleryItem, GalleryModule, ImageItem } from 'ng-gallery';
@@ -19,7 +19,7 @@ export class GamePageComponent implements OnInit {
   game: Game | undefined;
   screenshots: GalleryItem[] = [];
 
-  constructor(private gamesService: GamesService, private route: ActivatedRoute) { }
+  constructor(private gamesService: GamesService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
     this.loadGame();
@@ -30,6 +30,7 @@ export class GamePageComponent implements OnInit {
     if (!title) return;
     this.gamesService.getGame(title).subscribe({
       next: game => {
+        if (!game) this.router.navigateByUrl('/not-found');
         this.game = game;
         this.getScreenshots();
       } 

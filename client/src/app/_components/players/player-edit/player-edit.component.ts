@@ -10,6 +10,7 @@ import { AccountService } from 'src/app/_services/account.service';
 import { PlayersService } from 'src/app/_services/players.service';
 import { Player } from 'src/app/_models/player';
 import { User } from 'src/app/_models/user';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-player-edit',
@@ -29,7 +30,8 @@ export class PlayerEditComponent implements OnInit {
   constructor(
     private accountService: AccountService, 
     private playersService: PlayersService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private router: Router
   ) {
     this.accountService.currentUser$.pipe(take(1)).subscribe({
       next: user => this.user = user
@@ -44,6 +46,7 @@ export class PlayerEditComponent implements OnInit {
     if (!this.user) return;
     this.playersService.getPlayer(this.user.username).subscribe({
       next: player => {
+        if (!player) this.router.navigateByUrl('/not-found');
         this.player = player;
         this.initializeUploader();
       }
