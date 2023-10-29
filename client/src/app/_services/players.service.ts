@@ -1,10 +1,11 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { map, of } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 import { Player } from '../_models/player';
+import { PaginatedResult } from '../_models/pagination';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,7 @@ import { Player } from '../_models/player';
 export class PlayersService {
   baseUrl = environment.apiUrl;
   players: Player[] = [];
+  paginationResult: PaginatedResult<Player[]> = new PaginatedResult<Player[]>;
 
   constructor(private http: HttpClient) { }
 
@@ -22,11 +24,25 @@ export class PlayersService {
     return this.http.get<Player>(this.baseUrl + 'users/' + username);
   }
 
-  getPlayers() {
-    if (this.players.length > 0) return of(this.players);
+  getPlayers(page?: number, itemsPerPage?: number) {
+    let params = new HttpParams();
 
-    return this.http.get<Player[]>(this.baseUrl + 'users').pipe(
-      map(players => this.players = players)
+    if (page && itemsPerPage) {
+      params = params.append('pageNumber', page);
+      params = params.append('pageSize', itemsPerPage);
+    }
+
+    return this.http.get<Player[]>(this.baseUrl + 'users', {observe: 'response', params}).pipe(
+      map(response => {
+        if (response.body) {
+          this.paginationResult.result = response.body;
+        }
+        const pagination = response.headers.get('Pagination');
+        if (pagination) {
+          this.paginationResult.pagination = JSON.parse(pagination);
+        }
+        return this.paginationResult;
+      })
     );
   }
 
