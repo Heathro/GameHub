@@ -32,8 +32,8 @@ public class UsersController : BaseApiController
 
         Response.AddPaginationHeader(new PaginationHeader(
             users.CurrentPage,
-            users.PageSize,
-            users.TotalCount,
+            users.ItemsPerPage,
+            users.TotalItems,
             users.TotalPages
         ));
 

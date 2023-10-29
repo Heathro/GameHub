@@ -2,12 +2,12 @@
 
 public class PaginationParams
 {
-    private const int MaxPageSize = 50;
-    private int _pageSize = 12;
-    public int PageNumber { get; set; } = 1;
-    public int PageSize
+    private const int MaxItemsPerPage = 50;
+    private int _itemsPerPage = 12;
+    public int ItemsPerPage
     {
-        get => _pageSize;
-        set => _pageSize = (value > MaxPageSize) ? MaxPageSize : value;
+        get => _itemsPerPage;
+        set => _itemsPerPage = (value > MaxItemsPerPage) ? MaxItemsPerPage : value;
     }
+    public int CurrentPage { get; set; } = 1;
 }

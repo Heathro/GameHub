@@ -15,8 +15,8 @@ export class PlayersListComponent implements OnInit {
   //players$: Observable<Player[]> | undefined;
   players: Player[] = [];
   pagination: Pagination | undefined;
-  pageNumber = 1;
-  pageSize = 5;
+  currentPage = 1;
+  itemsPerPage = 5;
 
   constructor(private playersService: PlayersService) { }
 
@@ -26,7 +26,7 @@ export class PlayersListComponent implements OnInit {
   }
 
   loadPlayers() {
-    this.playersService.getPlayers(this.pageNumber, this.pageSize).subscribe({
+    this.playersService.getPlayers(this.currentPage, this.itemsPerPage).subscribe({
       next: response => {
         if (response.result && response.pagination) {
           this.players = response.result;
@@ -37,8 +37,8 @@ export class PlayersListComponent implements OnInit {
   }
 
   pageChanged(event: any) {
-    if (this.pageNumber !== event.page) {
-      this.pageNumber = event.page;
+    if (this.currentPage !== event.page) {
+      this.currentPage = event.page;
       this.loadPlayers();
     }
   }

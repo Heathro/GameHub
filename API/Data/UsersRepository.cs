@@ -36,8 +36,8 @@ public class UsersRepository : IUsersRepository
         return await PagedList<PlayerDto>.CreateAsync
         (
             query,
-            paginationParams.PageNumber,
-            paginationParams.PageSize
+            paginationParams.CurrentPage,
+            paginationParams.ItemsPerPage
         );
     }
 

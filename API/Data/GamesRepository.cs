@@ -36,8 +36,8 @@ public class GamesRepository : IGamesRepository
         return await PagedList<GameDto>.CreateAsync
         (
             query,
-            paginationParams.PageNumber,
-            paginationParams.PageSize
+            paginationParams.CurrentPage,
+            paginationParams.ItemsPerPage
         );
     }
 

@@ -15,8 +15,8 @@ export class StoreComponent implements OnInit {
   //games$: Observable<Game[]> | undefined;
   games: Game[] = [];
   pagination: Pagination | undefined;
-  pageNumber = 1;
-  pageSize = 1;
+  currentPage = 1;
+  itemsPerPage = 2;
 
   constructor(private gamesService: GamesService) { }
 
@@ -26,7 +26,7 @@ export class StoreComponent implements OnInit {
   }
 
   loadGames() {
-    this.gamesService.getGames(this.pageNumber, this.pageSize).subscribe({
+    this.gamesService.getGames(this.currentPage, this.itemsPerPage).subscribe({
       next: response => {
         if (response.result && response.pagination) {
           this.games = response.result;
@@ -37,8 +37,8 @@ export class StoreComponent implements OnInit {
   }
 
   pageChanged(event: any) {
-    if (this.pageNumber !== event.page) {
-      this.pageNumber = event.page;
+    if (this.currentPage !== event.page) {
+      this.currentPage = event.page;
       this.loadGames();
     }
   }

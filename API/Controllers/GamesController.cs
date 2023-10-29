@@ -32,8 +32,8 @@ public class GamesController : BaseApiController
 
         Response.AddPaginationHeader(new PaginationHeader(
             games.CurrentPage,
-            games.PageSize,
-            games.TotalCount,
+            games.ItemsPerPage,
+            games.TotalItems,
             games.TotalPages
         ));
 

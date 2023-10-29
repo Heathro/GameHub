@@ -4,8 +4,8 @@ import { Injectable } from '@angular/core';
 import { map, of } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
-import { Player } from '../_models/player';
 import { PaginatedResult } from '../_models/pagination';
+import { Player } from '../_models/player';
 
 @Injectable({
   providedIn: 'root'
@@ -24,12 +24,12 @@ export class PlayersService {
     return this.http.get<Player>(this.baseUrl + 'users/' + username);
   }
 
-  getPlayers(page?: number, itemsPerPage?: number) {
+  getPlayers(currentPage?: number, itemsPerPage?: number) {
     let params = new HttpParams();
 
-    if (page && itemsPerPage) {
-      params = params.append('pageNumber', page);
-      params = params.append('pageSize', itemsPerPage);
+    if (currentPage && itemsPerPage) {
+      params = params.append('currentPage', currentPage);
+      params = params.append('itemsPerPage', itemsPerPage);
     }
 
     return this.http.get<Player[]>(this.baseUrl + 'users', {observe: 'response', params}).pipe(
