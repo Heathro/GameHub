@@ -4,6 +4,7 @@ using AutoMapper.QueryableExtensions;
 using API.Entities;
 using API.Interfaces;
 using API.DTOs;
+using API.Helpers;
 
 namespace API.Data;
 
@@ -26,11 +27,18 @@ public class GamesRepository : IGamesRepository
             .SingleOrDefaultAsync();
     }
 
-    public async Task<IEnumerable<GameDto>> GetGamesAsync()
+    public async Task<PagedList<GameDto>> GetGamesAsync(PaginationParams paginationParams)
     {
-        return await _context.Games
+        var query = _context.Games
             .ProjectTo<GameDto>(_mapper.ConfigurationProvider)
-            .ToListAsync();
+            .AsNoTracking();
+
+        return await PagedList<GameDto>.CreateAsync
+        (
+            query,
+            paginationParams.PageNumber,
+            paginationParams.PageSize
+        );
     }
 
     public async Task<Game> GetGameByIdAsync(int id)
@@ -71,5 +79,10 @@ public class GamesRepository : IGamesRepository
     public void Update(Game game)
     {
         _context.Entry(game).State = EntityState.Modified;
+    }
+
+    public async Task<bool> TitleExists(string title)
+    {
+        return await _context.Games.AnyAsync(game => game.Title.ToLower() == title.ToLower());
     }
 }

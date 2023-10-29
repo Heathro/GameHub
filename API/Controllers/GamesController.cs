@@ -6,6 +6,7 @@ using API.DTOs;
 using API.Data;
 using API.Entities;
 using API.Extensions;
+using API.Helpers;
 
 namespace API.Controllers;
 
@@ -25,9 +26,18 @@ public class GamesController : BaseApiController
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<GameDto>>> GetGames()
+    public async Task<ActionResult<PagedList<GameDto>>> GetGames([FromQuery]PaginationParams paginationParams)
     {
-        return Ok(await _gamesRepository.GetGamesAsync());
+        var games = await _gamesRepository.GetGamesAsync(paginationParams);
+
+        Response.AddPaginationHeader(new PaginationHeader(
+            games.CurrentPage,
+            games.PageSize,
+            games.TotalCount,
+            games.TotalPages
+        ));
+
+        return Ok(games);
     }
 
     [HttpGet("{title}")]
@@ -39,7 +49,7 @@ public class GamesController : BaseApiController
     [HttpPut("{title}/edit-game")]
     public async Task<ActionResult> UpdateGame(string title, [FromBody]GameEditDto gameEditDto)
     {
-        // TODO same title check
+        if (await _gamesRepository.TitleExists(gameEditDto.Title)) return BadRequest("Title is taken");
         
         var game = await _gamesRepository.GetGameByTitleAsync(title);
 
