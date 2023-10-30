@@ -1,22 +1,22 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { HomeComponent } from './_components/basic/home/home.component';
-import { StoreComponent } from './_components/games/store/store.component';
-import { LibraryComponent } from './_components/games/library/library.component';
-import { LoginComponent } from './_components/authorization/login/login.component';
-import { RegisterComponent } from './_components/authorization/register/register.component';
-import { authGuard } from './_guards/auth.guard';
-import { nonAuthGuard } from './_guards/non-auth.guard';
-import { unsavedChangesGuard } from './_guards/unsaved-changes.guard';
-import { TestErrorComponent } from './_components/errors/test-error/test-error.component';
-import { NotFoundComponent } from './_components/errors/not-found/not-found.component';
-import { ServerErrorComponent } from './_components/errors/server-error/server-error.component';
-import { PlayersListComponent } from './_components/players/players-list/players-list.component';
-import { PlayerProfileComponent } from './_components/players/player-profile/player-profile.component';
-import { GamePageComponent } from './_components/games/game-page/game-page.component';
-import { PlayerEditComponent } from './_components/players/player-edit/player-edit.component';
-import { GameEditComponent } from './_components/games/game-edit/game-edit.component';
+import { HomeComponent } from './components/basic/home/home.component';
+import { StoreComponent } from './components/games/store/store.component';
+import { LibraryComponent } from './components/games/library/library.component';
+import { LoginComponent } from './components/authorization/login/login.component';
+import { RegisterComponent } from './components/authorization/register/register.component';
+import { authGuard } from './guards/auth.guard';
+import { nonAuthGuard } from './guards/non-auth.guard';
+import { unsavedChangesGuard } from './guards/unsaved-changes.guard';
+import { TestErrorComponent } from './components/errors/test-error/test-error.component';
+import { NotFoundComponent } from './components/errors/not-found/not-found.component';
+import { ServerErrorComponent } from './components/errors/server-error/server-error.component';
+import { PlayersListComponent } from './components/players/players-list/players-list.component';
+import { PlayerProfileComponent } from './components/players/player-profile/player-profile.component';
+import { GamePageComponent } from './components/games/game-page/game-page.component';
+import { PlayerEditComponent } from './components/players/player-edit/player-edit.component';
+import { GameEditComponent } from './components/games/game-edit/game-edit.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
