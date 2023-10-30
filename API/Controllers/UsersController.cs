@@ -23,11 +23,10 @@ public class UsersController : BaseApiController
     }
 
     [HttpGet]
-    public async Task<ActionResult<PagedList<PlayerDto>>> GetUsers([FromQuery]UsersParams usersParams)
+    public async Task<ActionResult<PagedList<PlayerDto>>> GetUsers(
+        [FromQuery]PaginationParams paginationParams)
     {
-        usersParams.CurrentUsername = User.GetUsername();
-
-        var users = await _usersRepository.GetPlayersAsync(usersParams);
+        var users = await _usersRepository.GetPlayersAsync(paginationParams, User.GetUsername());
 
         Response.AddPaginationHeader(new PaginationHeader(
             users.CurrentPage,
