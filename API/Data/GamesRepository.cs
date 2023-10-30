@@ -27,17 +27,24 @@ public class GamesRepository : IGamesRepository
             .SingleOrDefaultAsync();
     }
 
-    public async Task<PagedList<GameDto>> GetGamesAsync(PaginationParams paginationParams)
+    public async Task<PagedList<GameDto>> GetGamesAsync(GamesParams gamesParams)
     {
-        var query = _context.Games
-            .ProjectTo<GameDto>(_mapper.ConfigurationProvider)
-            .AsNoTracking();
+        var query = _context.Games.AsQueryable();
+
+        if (gamesParams.Windows || gamesParams.Macos || gamesParams.Linux)
+        {
+            query = query.Where(g => 
+                (gamesParams.Windows && g.Platforms.Windows) ||
+                (gamesParams.Macos && g.Platforms.Macos) ||
+                (gamesParams.Linux && g.Platforms.Linux)
+            );
+        }
 
         return await PagedList<GameDto>.CreateAsync
         (
-            query,
-            paginationParams.CurrentPage,
-            paginationParams.ItemsPerPage
+            query.AsNoTracking().ProjectTo<GameDto>(_mapper.ConfigurationProvider),
+            gamesParams.CurrentPage,
+            gamesParams.ItemsPerPage
         );
     }
 
@@ -81,8 +88,9 @@ public class GamesRepository : IGamesRepository
         _context.Entry(game).State = EntityState.Modified;
     }
 
-    public async Task<bool> TitleExists(string title)
+    public async Task<bool> TitleExists(int id, string title)
     {
-        return await _context.Games.AnyAsync(game => game.Title.ToLower() == title.ToLower());
+        return await _context.Games
+            .AnyAsync(game => game.Id != id && game.Title.ToLower() == title.ToLower());
     }
 }

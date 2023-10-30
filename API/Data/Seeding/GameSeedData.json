@@ -1,0 +1,275 @@
+[
+    {
+        "Title": "Lost",
+        "Description": "2D-pixel art",
+        "Platforms":
+        {
+            "Windows": true,
+            "Macos": true,
+            "Linux": true
+        },
+        "Genres":
+        {
+            "Action": false,
+            "Adventure": true,
+            "Card": false,
+            "Educational": false,
+            "Fighting": false,
+            "Horror": false,
+            "Platformer": true,
+            "Puzzle": false,
+            "Racing": false,
+            "Rhythm": false,
+            "Roleplay": false,
+            "Shooter": false,
+            "Simulation": false,
+            "Sport": false,
+            "Stealth": false,
+            "Strategy": false,
+            "Survival": false
+        },
+        "Poster":
+        {
+            "Url": "https://img.itch.zone/aW1hZ2UvODEwMTE2LzQ1NDE1MjYucG5n/original/zA28rq.png"
+        },
+        "Screenshots": [
+            {
+              "Url": "https://img.itch.zone/aW1hZ2UvODEwMTE2LzQ1NDE1MjYucG5n/original/zA28rq.png"
+            }
+        ]
+    },
+    {
+        "Title": "Dungeon",
+        "Description": "turn-based",
+        "Platforms":
+        {
+            "Windows": true,
+            "Macos": true,
+            "Linux": false
+        },
+        "Genres":
+        {
+            "Action": false,
+            "Adventure": true,
+            "Card": false,
+            "Educational": false,
+            "Fighting": false,
+            "Horror": false,
+            "Platformer": false,
+            "Puzzle": false,
+            "Racing": false,
+            "Rhythm": false,
+            "Roleplay": true,
+            "Shooter": false,
+            "Simulation": false,
+            "Sport": false,
+            "Stealth": false,
+            "Strategy": false,
+            "Survival": false
+        },
+        "Poster":
+        {
+            "Url": "https://img.itch.zone/aW1hZ2UvMTg3NjUxMS8xMTAyMzM5Ni5wbmc=/original/Wy0mql.png"
+        },
+        "Screenshots": [
+            {
+              "Url": "https://img.itch.zone/aW1hZ2UvMTg3NjUxMS8xMTAyMzM5Ni5wbmc=/original/Wy0mql.png"
+            }
+        ]
+    },
+    {
+        "Title": "Kiko",
+        "Description": "cool",
+        "Platforms":
+        {
+            "Windows": false,
+            "Macos": true,
+            "Linux": false
+        },
+        "Genres":
+        {
+            "Action": false,
+            "Adventure": false,
+            "Card": false,
+            "Educational": false,
+            "Fighting": false,
+            "Horror": false,
+            "Platformer": false,
+            "Puzzle": true,
+            "Racing": false,
+            "Rhythm": false,
+            "Roleplay": false,
+            "Shooter": false,
+            "Simulation": false,
+            "Sport": false,
+            "Stealth": true,
+            "Strategy": false,
+            "Survival": false
+        },
+        "Poster":
+        {
+            "Url": "https://img.itch.zone/aW1hZ2UvODEwMTE2LzQ1NDE1MjYucG5n/original/zA28rq.png"
+        },
+        "Screenshots": [
+            {
+              "Url": "https://img.itch.zone/aW1hZ2UvODEwMTE2LzQ1NDE1MjYucG5n/original/zA28rq.png"
+            }
+        ]
+    },
+    {
+        "Title": "Toto",
+        "Description": "bad",
+        "Platforms":
+        {
+            "Windows": true,
+            "Macos": false,
+            "Linux": false
+        },
+        "Genres":
+        {
+            "Action": false,
+            "Adventure": false,
+            "Card": false,
+            "Educational": false,
+            "Fighting": false,
+            "Horror": false,
+            "Platformer": false,
+            "Puzzle": false,
+            "Racing": true,
+            "Rhythm": true,
+            "Roleplay": false,
+            "Shooter": false,
+            "Simulation": false,
+            "Sport": false,
+            "Stealth": false,
+            "Strategy": false,
+            "Survival": true
+        },
+        "Poster":
+        {
+            "Url": "https://img.itch.zone/aW1hZ2UvODEwMTE2LzQ1NDE1MjYucG5n/original/zA28rq.png"
+        },
+        "Screenshots": [
+            {
+              "Url": "https://img.itch.zone/aW1hZ2UvODEwMTE2LzQ1NDE1MjYucG5n/original/zA28rq.png"
+            }
+        ]
+    },
+    {
+        "Title": "Sing",
+        "Description": "lalala",
+        "Platforms":
+        {
+            "Windows": false,
+            "Macos": false,
+            "Linux": true
+        },
+        "Genres":
+        {
+            "Action": false,
+            "Adventure": false,
+            "Card": false,
+            "Educational": false,
+            "Fighting": false,
+            "Horror": false,
+            "Platformer": false,
+            "Puzzle": false,
+            "Racing": false,
+            "Rhythm": true,
+            "Roleplay": false,
+            "Shooter": false,
+            "Simulation": false,
+            "Sport": false,
+            "Stealth": false,
+            "Strategy": false,
+            "Survival": false
+        },
+        "Poster":
+        {
+            "Url": "https://img.itch.zone/aW1hZ2UvODEwMTE2LzQ1NDE1MjYucG5n/original/zA28rq.png"
+        },
+        "Screenshots": [
+            {
+              "Url": "https://img.itch.zone/aW1hZ2UvODEwMTE2LzQ1NDE1MjYucG5n/original/zA28rq.png"
+            }
+        ]
+    },
+    {
+        "Title": "You",
+        "Description": "Brainstorm",
+        "Platforms":
+        {
+            "Windows": true,
+            "Macos": true,
+            "Linux": true
+        },
+        "Genres":
+        {
+            "Action": false,
+            "Adventure": false,
+            "Card": false,
+            "Educational": false,
+            "Fighting": false,
+            "Horror": false,
+            "Platformer": false,
+            "Puzzle": true,
+            "Racing": false,
+            "Rhythm": false,
+            "Roleplay": false,
+            "Shooter": false,
+            "Simulation": false,
+            "Sport": false,
+            "Stealth": false,
+            "Strategy": true,
+            "Survival": false
+        },
+        "Poster":
+        {
+            "Url": "https://img.itch.zone/aW1hZ2UvODEwMTE2LzQ1NDE1MjYucG5n/original/zA28rq.png"
+        },
+        "Screenshots": [
+            {
+              "Url": "https://img.itch.zone/aW1hZ2UvODEwMTE2LzQ1NDE1MjYucG5n/original/zA28rq.png"
+            }
+        ]
+    },
+    {
+        "Title": "Poll",
+        "Description": "strange",
+        "Platforms":
+        {
+            "Windows": true,
+            "Macos": false,
+            "Linux": true
+        },
+        "Genres":
+        {
+            "Action": false,
+            "Adventure": false,
+            "Card": false,
+            "Educational": false,
+            "Fighting": false,
+            "Horror": false,
+            "Platformer": false,
+            "Puzzle": false,
+            "Racing": false,
+            "Rhythm": false,
+            "Roleplay": false,
+            "Shooter": true,
+            "Simulation": false,
+            "Sport": false,
+            "Stealth": false,
+            "Strategy": false,
+            "Survival": true
+        },
+        "Poster":
+        {
+            "Url": "https://img.itch.zone/aW1hZ2UvODEwMTE2LzQ1NDE1MjYucG5n/original/zA28rq.png"
+        },
+        "Screenshots": [
+            {
+              "Url": "https://img.itch.zone/aW1hZ2UvODEwMTE2LzQ1NDE1MjYucG5n/original/zA28rq.png"
+            }
+        ]
+    }
+]

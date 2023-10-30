@@ -1,6 +1,6 @@
 ﻿namespace API.Helpers;
 
-public class PaginationParams
+public class UsersParams
 {
     private const int MaxItemsPerPage = 50;
     private int _itemsPerPage = 12;
@@ -10,4 +10,5 @@ public class PaginationParams
         set => _itemsPerPage = (value > MaxItemsPerPage) ? MaxItemsPerPage : value;
     }
     public int CurrentPage { get; set; } = 1;
+    public string CurrentUsername { get; set; }
 }

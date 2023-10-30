@@ -16,7 +16,7 @@ export class StoreComponent implements OnInit {
   games: Game[] = [];
   pagination: Pagination | undefined;
   currentPage = 1;
-  itemsPerPage = 2;
+  itemsPerPage = 3;
 
   constructor(private gamesService: GamesService) { }
 

@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 using API.Interfaces;
 using API.DTOs;
-using API.Data;
 using API.Entities;
 using API.Extensions;
 using API.Helpers;
@@ -26,9 +25,9 @@ public class GamesController : BaseApiController
     }
 
     [HttpGet]
-    public async Task<ActionResult<PagedList<GameDto>>> GetGames([FromQuery]PaginationParams paginationParams)
+    public async Task<ActionResult<PagedList<GameDto>>> GetGames([FromQuery]GamesParams gamesParams)
     {
-        var games = await _gamesRepository.GetGamesAsync(paginationParams);
+        var games = await _gamesRepository.GetGamesAsync(gamesParams);
 
         Response.AddPaginationHeader(new PaginationHeader(
             games.CurrentPage,
@@ -49,7 +48,10 @@ public class GamesController : BaseApiController
     [HttpPut("{title}/edit-game")]
     public async Task<ActionResult> UpdateGame(string title, [FromBody]GameEditDto gameEditDto)
     {
-        if (await _gamesRepository.TitleExists(gameEditDto.Title)) return BadRequest("Title is taken");
+        if (await _gamesRepository.TitleExists(gameEditDto.Id, gameEditDto.Title))
+        {
+            return BadRequest("Title is taken");
+        }
         
         var game = await _gamesRepository.GetGameByTitleAsync(title);
 

@@ -7,11 +7,11 @@ namespace API.Interfaces;
 public interface IGamesRepository
 {
     Task<GameDto> GetGameAsync(string title);
-    Task<PagedList<GameDto>> GetGamesAsync(PaginationParams paginationParams);
+    Task<PagedList<GameDto>> GetGamesAsync(GamesParams gamesParams);
     Task<Game> GetGameByIdAsync(int id);
     Task<Game> GetGameByTitleAsync(string title);
     Task<IEnumerable<Game>> GetAllGamesAsync();
     void Update(Game game);
     Task<bool> SaveAllAsync();
-    Task<bool> TitleExists(string title);
+    Task<bool> TitleExists(int id, string title);
 }

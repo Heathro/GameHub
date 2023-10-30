@@ -35,93 +35,13 @@ public class Seed
     {
         if (await context.Games.AnyAsync()) return;
 
-        context.Games.Add(new Game
-        {
-            Id = 1,
-            Title = "Lost",
-            Description = "2D-pixel art",
-            Platforms = new Platforms
-            {
-                Windows = true,
-                Macos = true,
-                Linux = true
-            },
-            Genres = new Genres
-            {
-                Action = false,
-                Adventure = true,
-                Card = false,
-                Educational = false,
-                Fighting = false,
-                Horror = false,
-                Platformer = true,
-                Puzzle = false,
-                Racing = false,
-                Rhythm = false,
-                Roleplay = false,
-                Shooter = false,
-                Simulation = false,
-                Sport = false,
-                Stealth = false,
-                Strategy = false,
-                Survival = false
-            },
-            Poster = new Poster
-            {
-                Url = "https://img.itch.zone/aW1hZ2UvODEwMTE2LzQ1NDE1MjYucG5n/original/zA28rq.png"
-            },
-            Screenshots =
-            {
-                new Screenshot
-                {
-                    Url = "https://img.itch.zone/aW1hZ2UvODEwMTE2LzQ1NDE1MjYucG5n/original/zA28rq.png"
-                }
-            }
-        });
+        var options = new JsonSerializerOptions{PropertyNameCaseInsensitive = true};
 
-        context.Games.Add(new Game
-        {
-            Id = 2,
-            Title = "Dungeon",
-            Description = "Turn-based",
-            Platforms = new Platforms
-            {
-                Windows = true,
-                Macos = true,
-                Linux = false
-            },
-            Genres = new Genres
-            {
-                Action = false,
-                Adventure = true,
-                Card = false,
-                Educational = false,
-                Fighting = false,
-                Horror = false,
-                Platformer = false,
-                Puzzle = false,
-                Racing = false,
-                Rhythm = false,
-                Roleplay = true,
-                Shooter = false,
-                Simulation = false,
-                Sport = false,
-                Stealth = false,
-                Strategy = false,
-                Survival = false
-            },
-            Poster = new Poster
-            {
-                Url = "https://img.itch.zone/aW1hZ2UvMTg3NjUxMS8xMTAyMzM5Ni5wbmc=/original/Wy0mql.png"
-            },
-            Screenshots =
-            {
-                new Screenshot
-                {
-                    Url = "https://img.itch.zone/aW1hZ2UvMTg3NjUxMS8xMTAyMzM5Ni5wbmc=/original/Wy0mql.png"
-                }
-            }
-        });
+        var gameData = await File.ReadAllTextAsync("Data/Seeding/GameSeedData.json");
+
+        var games = JsonSerializer.Deserialize<List<Game>>(gameData, options);
+
+        foreach (var game in games) context.Games.Add(game);
 
         await context.SaveChangesAsync();
     }

@@ -27,17 +27,17 @@ public class UsersRepository : IUsersRepository
             .SingleOrDefaultAsync();
     }
 
-    public async Task<PagedList<PlayerDto>> GetPlayersAsync(PaginationParams paginationParams)
+    public async Task<PagedList<PlayerDto>> GetPlayersAsync(UsersParams usersParams)
     {
-        var query = _context.Users
-            .ProjectTo<PlayerDto>(_mapper.ConfigurationProvider)
-            .AsNoTracking();
+        var query = _context.Users.AsQueryable();
+
+        query = query.Where(u => u.Username != usersParams.CurrentUsername);
 
         return await PagedList<PlayerDto>.CreateAsync
         (
-            query,
-            paginationParams.CurrentPage,
-            paginationParams.ItemsPerPage
+            query.AsNoTracking().ProjectTo<PlayerDto>(_mapper.ConfigurationProvider),
+            usersParams.CurrentPage,
+            usersParams.ItemsPerPage
         );
     }
 

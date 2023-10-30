@@ -1,11 +1,9 @@
-﻿
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 using API.DTOs;
 using API.Interfaces;
 using API.Extensions;
-using API.Entities;
 using API.Helpers;
 
 namespace API.Controllers;
@@ -25,10 +23,11 @@ public class UsersController : BaseApiController
     }
 
     [HttpGet]
-    public async Task<ActionResult<PagedList<PlayerDto>>> GetUsers(
-        [FromQuery]PaginationParams paginationParams)
+    public async Task<ActionResult<PagedList<PlayerDto>>> GetUsers([FromQuery]UsersParams usersParams)
     {
-        var users = await _usersRepository.GetPlayersAsync(paginationParams);
+        usersParams.CurrentUsername = User.GetUsername();
+
+        var users = await _usersRepository.GetPlayersAsync(usersParams);
 
         Response.AddPaginationHeader(new PaginationHeader(
             users.CurrentPage,

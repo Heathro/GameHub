@@ -4,6 +4,7 @@ namespace API.DTOs;
 
 public class GameEditDto
 {
+    public int Id { get; set; }
     [Required]
     [StringLength(32)]
     public string Title { get; set; }
