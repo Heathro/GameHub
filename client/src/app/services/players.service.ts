@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { map, of } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
-import { PaginatedResult } from '../models/pagination';
+import { PaginatedResult, PaginationParams } from '../models/pagination';
 import { Player } from '../models/player';
 
 @Injectable({
@@ -13,7 +13,6 @@ import { Player } from '../models/player';
 export class PlayersService {
   baseUrl = environment.apiUrl;
   players: Player[] = [];
-  paginationResult: PaginatedResult<Player[]> = new PaginatedResult<Player[]>;
 
   constructor(private http: HttpClient) { }
 
@@ -24,24 +23,26 @@ export class PlayersService {
     return this.http.get<Player>(this.baseUrl + 'users/' + username);
   }
 
-  getPlayers(currentPage?: number, itemsPerPage?: number) {
+  getPlayers(paginationParams: PaginationParams) {
+    let params = this.getPaginationHeaders(paginationParams);
+    return this.getPaginatedResult<Player[]>(this.baseUrl + 'users/', params);
+  }
+
+  private getPaginationHeaders(paginationParams: PaginationParams) {
     let params = new HttpParams();
+    params = params.append('currentPage', paginationParams.currentPage);
+    params = params.append('itemsPerPage', paginationParams.itemsPerPage);
+    return params;
+  }
 
-    if (currentPage && itemsPerPage) {
-      params = params.append('currentPage', currentPage);
-      params = params.append('itemsPerPage', itemsPerPage);
-    }
-
-    return this.http.get<Player[]>(this.baseUrl + 'users', {observe: 'response', params}).pipe(
+  getPaginatedResult<T>(url: string, params: HttpParams) {
+    const paginationResult: PaginatedResult<T> = new PaginatedResult<T>;
+    return this.http.get<T>(url, { observe: 'response', params }).pipe(
       map(response => {
-        if (response.body) {
-          this.paginationResult.result = response.body;
-        }
+        if (response.body) paginationResult.result = response.body;
         const pagination = response.headers.get('Pagination');
-        if (pagination) {
-          this.paginationResult.pagination = JSON.parse(pagination);
-        }
-        return this.paginationResult;
+        if (pagination) paginationResult.pagination = JSON.parse(pagination);
+        return paginationResult;
       })
     );
   }
@@ -51,6 +52,8 @@ export class PlayersService {
       map(() => {
         for (let i = 0; i < this.players.length; i++) {
           if (this.players[i].id === player.id) {
+            //this.players[i] = {...this.players[i], ...player};
+            //break;
             this.players[i].realname = player.realname;
             this.players[i].summary = player.summary;
             this.players[i].country = player.country;

@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 
 import { GamesService } from 'src/app/services/games.service';
 import { Game } from 'src/app/models/game';
-import { Pagination } from 'src/app/models/pagination';
+import { Pagination, PaginationParams } from 'src/app/models/pagination';
 
 @Component({
   selector: 'app-store',
@@ -16,12 +16,13 @@ export class StoreComponent implements OnInit {
   //games$: Observable<Game[]> | undefined;
   games: Game[] = [];
   pagination: Pagination | undefined;
-  currentPage = 1;
-  itemsPerPage = 4;
+  paginationParams: PaginationParams;
   filterForm: FormGroup = new FormGroup({});
   loading = false;
 
-  constructor(private gamesService: GamesService, private formBuilder: FormBuilder) { }
+  constructor(private gamesService: GamesService, private formBuilder: FormBuilder) { 
+    this.paginationParams = new PaginationParams(1, 4);
+  }
 
   ngOnInit(): void {
     //this.games$ = this.gamesService.getGames();
@@ -31,7 +32,7 @@ export class StoreComponent implements OnInit {
 
   loadGames() {
     this.loading = true;
-    this.gamesService.getGames(this.filterForm.value, this.currentPage, this.itemsPerPage).subscribe({
+    this.gamesService.getGames(this.filterForm.value, this.paginationParams).subscribe({
       next: response => {
         if (response.result && response.pagination) {
           this.games = response.result;
@@ -43,19 +44,25 @@ export class StoreComponent implements OnInit {
   }
 
   pageChanged(event: any) {
-    if (this.currentPage !== event.page) {
-      this.currentPage = event.page;
+    if (this.paginationParams.currentPage !== event.page) {
+      this.paginationParams.currentPage = event.page;
       this.loadGames();
     }
   }
 
   applyFilters() {
+    this.resetPagination();
     this.loadGames();
   }
 
   resetFilters() {
     this.filterForm.reset();
-    this.loadGames();
+    this.applyFilters();
+  }
+
+  resetPagination() {
+    if (this.pagination) this.pagination.currentPage = 1;
+    this.paginationParams.currentPage = 1;
   }
   
   initializeFrom() {

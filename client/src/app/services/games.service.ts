@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { map, of } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
-import { PaginatedResult } from '../models/pagination';
+import { PaginatedResult, PaginationParams } from '../models/pagination';
 import { Game } from '../models/game';
 import { Filter } from '../models/filter';
 
@@ -14,7 +14,6 @@ import { Filter } from '../models/filter';
 export class GamesService {
   baseUrl = environment.apiUrl;
   games: Game[] = [];
-  paginationResult: PaginatedResult<Game[]> = new PaginatedResult<Game[]>;
 
   constructor(private http: HttpClient) { }
 
@@ -25,23 +24,26 @@ export class GamesService {
     return this.http.get<Game>(this.baseUrl + 'games/' + title);
   }
   
-  getGames(filter: Filter, currentPage?: number, itemsPerPage?: number) {
+  getGames(filter: Filter, paginationParams: PaginationParams) {
+    let params = this.getPaginationHeaders(paginationParams);
+    return this.getPaginatedResult<Game[]>(this.baseUrl + 'games', filter, params);
+  }
+
+  getPaginationHeaders(paginationParams: PaginationParams) {
     let params = new HttpParams();
-    if (currentPage && itemsPerPage) {
-      params = params.append('currentPage', currentPage);
-      params = params.append('itemsPerPage', itemsPerPage);
-    }
-    
-    return this.http.post<Game[]>(this.baseUrl + 'games', filter, {observe: 'response', params}).pipe(
+    params = params.append('currentPage', paginationParams.currentPage);
+    params = params.append('itemsPerPage', paginationParams.itemsPerPage);
+    return params;
+  }
+  
+  getPaginatedResult<T>(url: string, filter: Filter, params: HttpParams) {
+    const paginationResult: PaginatedResult<T> = new PaginatedResult<T>;
+    return this.http.post<T>(url, filter, { observe: 'response', params }).pipe(
       map(response => {
-        if (response.body) {
-          this.paginationResult.result = response.body;
-        }
+        if (response.body) paginationResult.result = response.body;
         const pagination = response.headers.get('Pagination');
-        if (pagination) {
-          this.paginationResult.pagination = JSON.parse(pagination);
-        }
-        return this.paginationResult;
+        if (pagination) paginationResult.pagination = JSON.parse(pagination);
+        return paginationResult;
       })
     );
   }
@@ -51,6 +53,8 @@ export class GamesService {
       map(() => {
         for (let i = 0; i < this.games.length; i++) {
           if (this.games[i].id === game.id) {
+            //this.games[i] = {...this.games[i], ...game};
+            //break;
             this.games[i].title = game.title;
             this.games[i].description = game.description;
             this.games[i].platforms.windows = game.platforms.windows;

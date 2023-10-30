@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 import { PlayersService } from 'src/app/services/players.service';
 import { Player } from 'src/app/models/player';
-import { Pagination } from 'src/app/models/pagination';
+import { Pagination, PaginationParams } from 'src/app/models/pagination';
 
 @Component({
   selector: 'app-players-list',
@@ -15,10 +15,11 @@ export class PlayersListComponent implements OnInit {
   //players$: Observable<Player[]> | undefined;
   players: Player[] = [];
   pagination: Pagination | undefined;
-  currentPage = 1;
-  itemsPerPage = 5;
+  paginationParams: PaginationParams;
 
-  constructor(private playersService: PlayersService) { }
+  constructor(private playersService: PlayersService) {
+    this.paginationParams = new PaginationParams(1, 12);
+  }
 
   ngOnInit(): void {
     //this.players$ = this.playersService.getPlayers();
@@ -26,7 +27,7 @@ export class PlayersListComponent implements OnInit {
   }
 
   loadPlayers() {
-    this.playersService.getPlayers(this.currentPage, this.itemsPerPage).subscribe({
+    this.playersService.getPlayers(this.paginationParams).subscribe({
       next: response => {
         if (response.result && response.pagination) {
           this.players = response.result;
@@ -37,8 +38,8 @@ export class PlayersListComponent implements OnInit {
   }
 
   pageChanged(event: any) {
-    if (this.currentPage !== event.page) {
-      this.currentPage = event.page;
+    if (this.paginationParams.currentPage !== event.page) {
+      this.paginationParams.currentPage = event.page;
       this.loadPlayers();
     }
   }
