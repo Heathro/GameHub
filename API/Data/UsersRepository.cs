@@ -30,20 +30,27 @@ public class UsersRepository : IUsersRepository
     public async Task<PagedList<PlayerDto>> GetPlayersAsync(
         PaginationParams paginationParams, string currentUsername)
     {
-        var query = _context.Users
-            .Where(u => u.Username != currentUsername)
-            .ProjectTo<PlayerDto>(_mapper.ConfigurationProvider)
-            .AsNoTracking();
+        var query = _context.Users.AsQueryable();
 
-        return await PagedList<PlayerDto>
-            .CreateAsync(query, paginationParams.CurrentPage, paginationParams.ItemsPerPage);
+        query = query.Where(u => u.Username != currentUsername);
+
+        query = paginationParams.OrderBy switch
+        {
+            "z-a" => query.OrderByDescending(u => u.Username),
+            _ => query.OrderBy(u => u.Username)
+        };
+
+        return await PagedList<PlayerDto>.CreateAsync
+        (
+            query.ProjectTo<PlayerDto>(_mapper.ConfigurationProvider).AsNoTracking(), 
+            paginationParams.CurrentPage, 
+            paginationParams.ItemsPerPage
+        );
     }
 
     public async Task<AppUser> GetUserByIdAsync(int id)
     {
-        return await _context.Users
-            .Include(a => a.Avatar)
-            .SingleOrDefaultAsync(user => user.Id == id);
+        return await _context.Users.FindAsync(id);
     }
 
     public async Task<AppUser> GetUserByUsernameAsync(string username)

@@ -9,5 +9,6 @@ public class PaginationParams
         get => _itemsPerPage;
         set => _itemsPerPage = (value > MaxItemsPerPage) ? MaxItemsPerPage : value;
     }
-    public int CurrentPage { get; set; } = 1;
+    public int CurrentPage { get; set; } = 1;    
+    public string OrderBy { get; set; } = "a-z";
 }

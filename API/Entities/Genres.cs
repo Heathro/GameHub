@@ -6,7 +6,6 @@ namespace API.Entities;
 public class Genres
 {
     public int Id { get; set; }
-
     public bool Action { get; set; }
     public bool Adventure { get; set; }
     public bool Card { get; set; }
