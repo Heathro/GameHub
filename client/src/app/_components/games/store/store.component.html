@@ -1,10 +1,125 @@
 <div class="row">
-    <div class="col-8" *ngFor="let game of games">
-        <app-game-card [game]="game"></app-game-card>
+    <div class="col-10">
+        <div *ngFor="let game of games">
+            <app-game-card [game]="game"></app-game-card>
+        </div>
+        <div [hidden]="loading" *ngIf="games.length === 0">
+            <h5 class="text-center mt-4">No games found</h5>
+        </div>
+    </div>
+
+    <div class="card mb-2 col-2">
+        <form [formGroup]="filterForm" (ngSubmit)="filterForm.valid && applyFilters()" autocomplete="off">
+            
+            <div class="my-4" formGroupName="platforms">
+                <app-checkbox-input class="d-block ms-4"
+                    [formControl]="$any(filterForm.get('platforms.windows'))"
+                    [label]="'Windows'"
+                ></app-checkbox-input>
+                <app-checkbox-input class="d-block ms-4"
+                    [formControl]="$any(filterForm.get('platforms.macos'))"
+                    [label]="'MacOS'"
+                ></app-checkbox-input>
+                <app-checkbox-input class="d-block ms-4"
+                    [formControl]="$any(filterForm.get('platforms.linux'))"
+                    [label]="'Linux'"
+                ></app-checkbox-input>
+            </div>
+
+            <div class="mb-4" formGroupName="genres">
+                <app-checkbox-input class="d-block ms-4"
+                    [formControl]="$any(filterForm.get('genres.action'))"
+                    [label]="'Action'"
+                ></app-checkbox-input>
+                <app-checkbox-input class="d-block ms-4"
+                    [formControl]="$any(filterForm.get('genres.adventure'))"
+                    [label]="'Adventure'"
+                ></app-checkbox-input>
+                <app-checkbox-input class="d-block ms-4"
+                    [formControl]="$any(filterForm.get('genres.card'))"
+                    [label]="'Card'"
+                ></app-checkbox-input>
+                <app-checkbox-input class="d-block ms-4"
+                    [formControl]="$any(filterForm.get('genres.educational'))"
+                    [label]="'Educational'"
+                ></app-checkbox-input>
+                <app-checkbox-input class="d-block ms-4"
+                    [formControl]="$any(filterForm.get('genres.fighting'))"
+                    [label]="'Fighting'"
+                ></app-checkbox-input>
+                <app-checkbox-input class="d-block ms-4"
+                    [formControl]="$any(filterForm.get('genres.horror'))"
+                    [label]="'Horror'"
+                ></app-checkbox-input>
+                <app-checkbox-input class="d-block ms-4"
+                    [formControl]="$any(filterForm.get('genres.platformer'))"
+                    [label]="'Platformer'"
+                ></app-checkbox-input>
+                <app-checkbox-input class="d-block ms-4"
+                    [formControl]="$any(filterForm.get('genres.puzzle'))"
+                    [label]="'Puzzle'"
+                ></app-checkbox-input>
+                <app-checkbox-input class="d-block ms-4"
+                    [formControl]="$any(filterForm.get('genres.racing'))"
+                    [label]="'Racing'"
+                ></app-checkbox-input>
+                <app-checkbox-input class="d-block ms-4"
+                    [formControl]="$any(filterForm.get('genres.rhythm'))"
+                    [label]="'Rhythm'"
+                ></app-checkbox-input>
+                <app-checkbox-input class="d-block ms-4"
+                    [formControl]="$any(filterForm.get('genres.roleplay'))"
+                    [label]="'Roleplay'"
+                ></app-checkbox-input>
+                <app-checkbox-input class="d-block ms-4"
+                    [formControl]="$any(filterForm.get('genres.shooter'))"
+                    [label]="'Shooter'"
+                ></app-checkbox-input>
+                <app-checkbox-input class="d-block ms-4"
+                    [formControl]="$any(filterForm.get('genres.simulation'))"
+                    [label]="'Simulation'"
+                ></app-checkbox-input>
+                <app-checkbox-input class="d-block ms-4"
+                    [formControl]="$any(filterForm.get('genres.sport'))"
+                    [label]="'Sport'"
+                ></app-checkbox-input>
+                <app-checkbox-input class="d-block ms-4"
+                    [formControl]="$any(filterForm.get('genres.stealth'))"
+                    [label]="'Stealth'"
+                ></app-checkbox-input>
+                <app-checkbox-input class="d-block ms-4"
+                    [formControl]="$any(filterForm.get('genres.strategy'))"
+                    [label]="'Strategy'"
+                ></app-checkbox-input>
+                <app-checkbox-input class="d-block ms-4"
+                    [formControl]="$any(filterForm.get('genres.survival'))"
+                    [label]="'Survival'"
+                ></app-checkbox-input>
+            </div>   
+
+            <div class="row mb-2">
+                <button
+                    class="btn btn-outline-info col-8 mx-auto"
+                    type="submit"
+                    [disabled]="!filterForm.dirty || !filterForm.valid"
+                    >Apply&nbsp;&nbsp;&nbsp;
+                    <i class="bi bi-sliders2"></i>
+                </button>
+            </div>
+
+            <div class="row mb-4">
+                <button
+                    class="btn btn-outline-warning col-8 mx-auto"
+                    (click)="resetFilters()"
+                    >Reset&nbsp;&nbsp;&nbsp;
+                    <i class="bi bi-repeat"></i>
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 
-<div class="d-flex justify-content-center" *ngIf="pagination">
+<div class="d-flex justify-content-center mt-4" *ngIf="pagination">
     <pagination
         [boundaryLinks]="true"
         [totalItems]="pagination.totalItems"

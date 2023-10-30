@@ -28,52 +28,52 @@ public class GamesRepository : IGamesRepository
     }
 
     public async Task<PagedList<GameDto>> GetGamesAsync(
-        PaginationParams paginationParams, GameFilterDto gameFilterDto)
+        PaginationParams paginationParams, GameFilterDto gameFilter)
     {
         var query = _context.Games
             .Include(p => p.Platforms)
             .Include(g => g.Genres)
             .AsQueryable();
 
-        if (gameFilterDto.Platforms.Windows || 
-            gameFilterDto.Platforms.Macos || 
-            gameFilterDto.Platforms.Linux)
+        if (gameFilter.Platforms.Windows || 
+            gameFilter.Platforms.Macos || 
+            gameFilter.Platforms.Linux)
         {
             query = query.Where(g => 
-                (gameFilterDto.Platforms.Windows && g.Platforms.Windows) ||
-                (gameFilterDto.Platforms.Macos && g.Platforms.Macos) ||
-                (gameFilterDto.Platforms.Linux && g.Platforms.Linux)
+                (gameFilter.Platforms.Windows && g.Platforms.Windows) ||
+                (gameFilter.Platforms.Macos   && g.Platforms.Macos)   ||
+                (gameFilter.Platforms.Linux   && g.Platforms.Linux)
             );
         }
 
-        if (gameFilterDto.Genres.Action || gameFilterDto.Genres.Adventure || 
-            gameFilterDto.Genres.Card || gameFilterDto.Genres.Educational || 
-            gameFilterDto.Genres.Fighting || gameFilterDto.Genres.Horror ||
-            gameFilterDto.Genres.Platformer || gameFilterDto.Genres.Puzzle ||
-            gameFilterDto.Genres.Racing || gameFilterDto.Genres.Rhythm ||
-            gameFilterDto.Genres.Roleplay || gameFilterDto.Genres.Shooter ||
-            gameFilterDto.Genres.Simulation || gameFilterDto.Genres.Sport ||
-            gameFilterDto.Genres.Stealth || gameFilterDto.Genres.Strategy ||
-            gameFilterDto.Genres.Survival)
+        if (gameFilter.Genres.Action     || gameFilter.Genres.Adventure   || 
+            gameFilter.Genres.Card       || gameFilter.Genres.Educational || 
+            gameFilter.Genres.Fighting   || gameFilter.Genres.Horror      ||
+            gameFilter.Genres.Platformer || gameFilter.Genres.Puzzle      ||
+            gameFilter.Genres.Racing     || gameFilter.Genres.Rhythm      ||
+            gameFilter.Genres.Roleplay   || gameFilter.Genres.Shooter     ||
+            gameFilter.Genres.Simulation || gameFilter.Genres.Sport       ||
+            gameFilter.Genres.Stealth    || gameFilter.Genres.Strategy    ||
+            gameFilter.Genres.Survival)
         {
             query = query.Where(g =>
-                (gameFilterDto.Genres.Action && g.Genres.Action) ||
-                (gameFilterDto.Genres.Adventure && g.Genres.Adventure) ||
-                (gameFilterDto.Genres.Card && g.Genres.Card) ||
-                (gameFilterDto.Genres.Educational && g.Genres.Educational) ||
-                (gameFilterDto.Genres.Fighting && g.Genres.Fighting) ||
-                (gameFilterDto.Genres.Horror && g.Genres.Horror) ||
-                (gameFilterDto.Genres.Platformer && g.Genres.Platformer) ||
-                (gameFilterDto.Genres.Puzzle && g.Genres.Puzzle) ||
-                (gameFilterDto.Genres.Racing && g.Genres.Racing) ||
-                (gameFilterDto.Genres.Rhythm && g.Genres.Rhythm) ||
-                (gameFilterDto.Genres.Roleplay && g.Genres.Roleplay) ||
-                (gameFilterDto.Genres.Shooter && g.Genres.Shooter) ||
-                (gameFilterDto.Genres.Simulation && g.Genres.Simulation) ||
-                (gameFilterDto.Genres.Sport && g.Genres.Sport) ||
-                (gameFilterDto.Genres.Stealth && g.Genres.Stealth) ||
-                (gameFilterDto.Genres.Strategy && g.Genres.Strategy) ||
-                (gameFilterDto.Genres.Survival && g.Genres.Survival)
+                (gameFilter.Genres.Action      && g.Genres.Action)      ||
+                (gameFilter.Genres.Adventure   && g.Genres.Adventure)   ||
+                (gameFilter.Genres.Card        && g.Genres.Card)        ||
+                (gameFilter.Genres.Educational && g.Genres.Educational) ||
+                (gameFilter.Genres.Fighting    && g.Genres.Fighting)    ||
+                (gameFilter.Genres.Horror      && g.Genres.Horror)      ||
+                (gameFilter.Genres.Platformer  && g.Genres.Platformer)  ||
+                (gameFilter.Genres.Puzzle      && g.Genres.Puzzle)      ||
+                (gameFilter.Genres.Racing      && g.Genres.Racing)      ||
+                (gameFilter.Genres.Rhythm      && g.Genres.Rhythm)      ||
+                (gameFilter.Genres.Roleplay    && g.Genres.Roleplay)    ||
+                (gameFilter.Genres.Shooter     && g.Genres.Shooter)     ||
+                (gameFilter.Genres.Simulation  && g.Genres.Simulation)  ||
+                (gameFilter.Genres.Sport       && g.Genres.Sport)       ||
+                (gameFilter.Genres.Stealth     && g.Genres.Stealth)     ||
+                (gameFilter.Genres.Strategy    && g.Genres.Strategy)    ||
+                (gameFilter.Genres.Survival    && g.Genres.Survival)
             );
         }
 
@@ -125,9 +125,12 @@ public class GamesRepository : IGamesRepository
         _context.Entry(game).State = EntityState.Modified;
     }
 
-    public async Task<bool> TitleExists(int id, string title)
+    public async Task<bool> TitleExists(GameEditDto gameEditDto)
     {
         return await _context.Games
-            .AnyAsync(game => game.Id != id && game.Title.ToLower() == title.ToLower());
+            .AnyAsync(
+                game => game.Id != gameEditDto.Id && 
+                game.Title.ToLower() == gameEditDto.Title.ToLower()
+            );
     }
 }

@@ -1,7 +1,7 @@
 [
     {
         "Title": "Lost",
-        "Description": "2D-pixel art",
+        "Description": "Pixel art",
         "Platforms":
         {
             "Windows": true,
@@ -40,7 +40,7 @@
     },
     {
         "Title": "Dungeon",
-        "Description": "turn-based",
+        "Description": "turn-based rpg",
         "Platforms":
         {
             "Windows": true,
@@ -78,129 +78,51 @@
         ]
     },
     {
-        "Title": "Kiko",
-        "Description": "cool",
+        "Title": "Counter Zero",
+        "Description": "multiplayer shooter",
         "Platforms":
         {
-            "Windows": false,
-            "Macos": true,
+            "Windows": true,
+            "Macos": false,
             "Linux": false
         },
         "Genres":
         {
-            "Action": false,
+            "Action": true,
             "Adventure": false,
             "Card": false,
             "Educational": false,
             "Fighting": false,
             "Horror": false,
             "Platformer": false,
-            "Puzzle": true,
+            "Puzzle": false,
             "Racing": false,
             "Rhythm": false,
             "Roleplay": false,
-            "Shooter": false,
+            "Shooter": true,
             "Simulation": false,
             "Sport": false,
-            "Stealth": true,
+            "Stealth": false,
             "Strategy": false,
             "Survival": false
         },
         "Poster":
         {
-            "Url": "https://img.itch.zone/aW1hZ2UvODEwMTE2LzQ1NDE1MjYucG5n/original/zA28rq.png"
+            "Url": ""
         },
         "Screenshots": [
             {
-              "Url": "https://img.itch.zone/aW1hZ2UvODEwMTE2LzQ1NDE1MjYucG5n/original/zA28rq.png"
+              "Url": ""
             }
         ]
     },
     {
-        "Title": "Toto",
-        "Description": "bad",
-        "Platforms":
-        {
-            "Windows": true,
-            "Macos": false,
-            "Linux": false
-        },
-        "Genres":
-        {
-            "Action": false,
-            "Adventure": false,
-            "Card": false,
-            "Educational": false,
-            "Fighting": false,
-            "Horror": false,
-            "Platformer": false,
-            "Puzzle": false,
-            "Racing": true,
-            "Rhythm": true,
-            "Roleplay": false,
-            "Shooter": false,
-            "Simulation": false,
-            "Sport": false,
-            "Stealth": false,
-            "Strategy": false,
-            "Survival": true
-        },
-        "Poster":
-        {
-            "Url": "https://img.itch.zone/aW1hZ2UvODEwMTE2LzQ1NDE1MjYucG5n/original/zA28rq.png"
-        },
-        "Screenshots": [
-            {
-              "Url": "https://img.itch.zone/aW1hZ2UvODEwMTE2LzQ1NDE1MjYucG5n/original/zA28rq.png"
-            }
-        ]
-    },
-    {
-        "Title": "Sing",
-        "Description": "lalala",
+        "Title": "Find rabbit",
+        "Description": "challenging game",
         "Platforms":
         {
             "Windows": false,
             "Macos": false,
-            "Linux": true
-        },
-        "Genres":
-        {
-            "Action": false,
-            "Adventure": false,
-            "Card": false,
-            "Educational": false,
-            "Fighting": false,
-            "Horror": false,
-            "Platformer": false,
-            "Puzzle": false,
-            "Racing": false,
-            "Rhythm": true,
-            "Roleplay": false,
-            "Shooter": false,
-            "Simulation": false,
-            "Sport": false,
-            "Stealth": false,
-            "Strategy": false,
-            "Survival": false
-        },
-        "Poster":
-        {
-            "Url": "https://img.itch.zone/aW1hZ2UvODEwMTE2LzQ1NDE1MjYucG5n/original/zA28rq.png"
-        },
-        "Screenshots": [
-            {
-              "Url": "https://img.itch.zone/aW1hZ2UvODEwMTE2LzQ1NDE1MjYucG5n/original/zA28rq.png"
-            }
-        ]
-    },
-    {
-        "Title": "You",
-        "Description": "Brainstorm",
-        "Platforms":
-        {
-            "Windows": true,
-            "Macos": true,
             "Linux": true
         },
         "Genres":
@@ -225,17 +147,95 @@
         },
         "Poster":
         {
-            "Url": "https://img.itch.zone/aW1hZ2UvODEwMTE2LzQ1NDE1MjYucG5n/original/zA28rq.png"
+            "Url": ""
         },
         "Screenshots": [
             {
-              "Url": "https://img.itch.zone/aW1hZ2UvODEwMTE2LzQ1NDE1MjYucG5n/original/zA28rq.png"
+              "Url": ""
             }
         ]
     },
     {
-        "Title": "Poll",
-        "Description": "strange",
+        "Title": "Sing a song",
+        "Description": "Karaoke super star",
+        "Platforms":
+        {
+            "Windows": false,
+            "Macos": true,
+            "Linux": true
+        },
+        "Genres":
+        {
+            "Action": false,
+            "Adventure": false,
+            "Card": false,
+            "Educational": false,
+            "Fighting": false,
+            "Horror": false,
+            "Platformer": false,
+            "Puzzle": false,
+            "Racing": false,
+            "Rhythm": true,
+            "Roleplay": false,
+            "Shooter": false,
+            "Simulation": true,
+            "Sport": false,
+            "Stealth": false,
+            "Strategy": false,
+            "Survival": false
+        },
+        "Poster":
+        {
+            "Url": ""
+        },
+        "Screenshots": [
+            {
+              "Url": ""
+            }
+        ]
+    },
+    {
+        "Title": "Casino 777",
+        "Description": "Best poker in wild west",
+        "Platforms":
+        {
+            "Windows": true,
+            "Macos": true,
+            "Linux": true
+        },
+        "Genres":
+        {
+            "Action": false,
+            "Adventure": false,
+            "Card": true,
+            "Educational": false,
+            "Fighting": false,
+            "Horror": false,
+            "Platformer": false,
+            "Puzzle": false,
+            "Racing": false,
+            "Rhythm": false,
+            "Roleplay": false,
+            "Shooter": false,
+            "Simulation": true,
+            "Sport": false,
+            "Stealth": false,
+            "Strategy": false,
+            "Survival": false
+        },
+        "Poster":
+        {
+            "Url": ""
+        },
+        "Screenshots": [
+            {
+              "Url": ""
+            }
+        ]
+    },
+    {
+        "Title": "Hot Pursuit: Revenge",
+        "Description": "Super puper rally",
         "Platforms":
         {
             "Windows": true,
@@ -245,6 +245,45 @@
         "Genres":
         {
             "Action": false,
+            "Adventure": false,
+            "Card": false,
+            "Educational": false,
+            "Fighting": false,
+            "Horror": false,
+            "Platformer": false,
+            "Puzzle": false,
+            "Racing": true,
+            "Rhythm": false,
+            "Roleplay": false,
+            "Shooter": false,
+            "Simulation": true,
+            "Sport": false,
+            "Stealth": false,
+            "Strategy": false,
+            "Survival": false
+        },
+        "Poster":
+        {
+            "Url": ""
+        },
+        "Screenshots": [
+            {
+              "Url": ""
+            }
+        ]
+    },
+    {
+        "Title": "Day X",
+        "Description": "Zombie attacks!",
+        "Platforms":
+        {
+            "Windows": true,
+            "Macos": true,
+            "Linux": false
+        },
+        "Genres":
+        {
+            "Action": true,
             "Adventure": false,
             "Card": false,
             "Educational": false,
@@ -264,11 +303,11 @@
         },
         "Poster":
         {
-            "Url": "https://img.itch.zone/aW1hZ2UvODEwMTE2LzQ1NDE1MjYucG5n/original/zA28rq.png"
+            "Url": ""
         },
         "Screenshots": [
             {
-              "Url": "https://img.itch.zone/aW1hZ2UvODEwMTE2LzQ1NDE1MjYucG5n/original/zA28rq.png"
+              "Url": ""
             }
         ]
     }

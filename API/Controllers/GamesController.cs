@@ -24,7 +24,7 @@ public class GamesController : BaseApiController
         _imageService = imageService;
     }
 
-    [HttpGet]
+    [HttpPost]
     public async Task<ActionResult<PagedList<GameDto>>> GetGames(
         [FromQuery]PaginationParams paginationParams, [FromBody]GameFilterDto gameFilterDto)
     {
@@ -49,9 +49,9 @@ public class GamesController : BaseApiController
     [HttpPut("{title}/edit-game")]
     public async Task<ActionResult> UpdateGame(string title, [FromBody]GameEditDto gameEditDto)
     {
-        if (await _gamesRepository.TitleExists(gameEditDto.Id, gameEditDto.Title))
+        if (await _gamesRepository.TitleExists(gameEditDto))
         {
-            return BadRequest("Title is taken");
+            return BadRequest("Title is already taken");
         }
         
         var game = await _gamesRepository.GetGameByTitleAsync(title);

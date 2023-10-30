@@ -1,41 +1,41 @@
-<div class="card mb-4 game-card-button" *ngIf="game" routerLink="/games/{{game.title}}">
+<div class="card mb-2 me-2 game-card-button" *ngIf="game" routerLink="/games/{{game.title}}">
     <div class="row">
-        <div class="col-5">
+        <div class="col-4">
             <img 
                 class="game-card-img"
                 src="{{game.poster.url || './assets/poster.png'}}"
                 alt="{{game.title}}"
             >
         </div>
-        <div class="col-7">
-            <h4 class="text-right my-4">
+        <div class="col-8">
+            <h4 class="text-right ms-2 my-4">
                 {{game.title}}
             </h4>
 
             <h5>
-                <i class="bi bi-windows me-3" *ngIf="game.platforms.windows"></i>
-                <i class="bi bi-apple me-3" *ngIf="game.platforms.macos"></i>
-                <i class="fa fa-linux me-3" *ngIf="game.platforms.linux"></i>
+                <i class="bi bi-windows m-2" *ngIf="game.platforms.windows"></i>
+                <i class="bi bi-apple m-2" *ngIf="game.platforms.macos"></i>
+                <i class="fa fa-linux m-2" *ngIf="game.platforms.linux"></i>
             </h5>           
 
             <div class="mt-4">
-                <h6 class="text-muted d-inline" *ngIf="game.genres.action">Action&nbsp;&nbsp;</h6>
-                <h6 class="text-muted d-inline" *ngIf="game.genres.adventure">Adventure&nbsp;&nbsp;</h6>
-                <h6 class="text-muted d-inline" *ngIf="game.genres.card">Card&nbsp;&nbsp;</h6>
-                <h6 class="text-muted d-inline" *ngIf="game.genres.educational">Educational&nbsp;&nbsp;</h6>
-                <h6 class="text-muted d-inline" *ngIf="game.genres.fighting">Fighting&nbsp;&nbsp;</h6>
-                <h6 class="text-muted d-inline" *ngIf="game.genres.horror">Horror&nbsp;&nbsp;</h6>
-                <h6 class="text-muted d-inline" *ngIf="game.genres.platformer">Platformer&nbsp;&nbsp;</h6>
-                <h6 class="text-muted d-inline" *ngIf="game.genres.puzzle">Puzzle&nbsp;&nbsp;</h6>
-                <h6 class="text-muted d-inline" *ngIf="game.genres.racing">Racing&nbsp;&nbsp;</h6>
-                <h6 class="text-muted d-inline" *ngIf="game.genres.rhythm">Rhythm&nbsp;&nbsp;</h6>
-                <h6 class="text-muted d-inline" *ngIf="game.genres.roleplay">Roleplay&nbsp;&nbsp;</h6>
-                <h6 class="text-muted d-inline" *ngIf="game.genres.shooter">Shooter&nbsp;&nbsp;</h6>
-                <h6 class="text-muted d-inline" *ngIf="game.genres.simulation">Simulation&nbsp;&nbsp;</h6>
-                <h6 class="text-muted d-inline" *ngIf="game.genres.sport">Sport&nbsp;&nbsp;</h6>
-                <h6 class="text-muted d-inline" *ngIf="game.genres.stealth">Stealth&nbsp;&nbsp;</h6>
-                <h6 class="text-muted d-inline" *ngIf="game.genres.strategy">Strategy&nbsp;&nbsp;</h6>
-                <h6 class="text-muted d-inline" *ngIf="game.genres.survival">Survival&nbsp;&nbsp;</h6>
+                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.action">Action&nbsp;&nbsp;</h6>
+                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.adventure">Adventure&nbsp;&nbsp;</h6>
+                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.card">Card&nbsp;&nbsp;</h6>
+                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.educational">Educational&nbsp;&nbsp;</h6>
+                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.fighting">Fighting&nbsp;&nbsp;</h6>
+                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.horror">Horror&nbsp;&nbsp;</h6>
+                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.platformer">Platformer&nbsp;&nbsp;</h6>
+                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.puzzle">Puzzle&nbsp;&nbsp;</h6>
+                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.racing">Racing&nbsp;&nbsp;</h6>
+                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.rhythm">Rhythm&nbsp;&nbsp;</h6>
+                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.roleplay">Roleplay&nbsp;&nbsp;</h6>
+                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.shooter">Shooter&nbsp;&nbsp;</h6>
+                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.simulation">Simulation&nbsp;&nbsp;</h6>
+                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.sport">Sport&nbsp;&nbsp;</h6>
+                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.stealth">Stealth&nbsp;&nbsp;</h6>
+                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.strategy">Strategy&nbsp;&nbsp;</h6>
+                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.survival">Survival&nbsp;&nbsp;</h6>
             </div>
 
             <h5 style="text-align: right;" class="text-right mt-2 me-4">Free</h5>
