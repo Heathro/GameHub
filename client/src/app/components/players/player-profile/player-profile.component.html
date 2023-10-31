@@ -14,11 +14,11 @@
                 </div>
                 <div>
                     <strong>Member since:</strong>
-                    <p>{{player.created}}</p>
+                    <p>{{player.created | date: 'dd MMMM yyyy'}}</p>
                 </div>
                 <div>
                     <strong>Last active:</strong>
-                    <p>{{player.lastActive}}</p>
+                    <p>{{player.lastActive + 'Z' | timeago}}</p>
                 </div>
             </div>
             <div class="card-footer">

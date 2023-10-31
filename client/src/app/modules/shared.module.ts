@@ -7,6 +7,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { FileUploadModule } from 'ng2-file-upload';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { TimeagoModule } from 'ngx-timeago';
 
 @NgModule({
   declarations: [],
@@ -17,7 +18,8 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
     ToastrModule.forRoot({ positionClass: 'toast-bottom-left'}),
     NgxSpinnerModule.forRoot({ type: 'pacman' }),
     FileUploadModule,
-    PaginationModule.forRoot()
+    PaginationModule.forRoot(),
+    TimeagoModule.forRoot()
   ],
   exports: [
     BsDropdownModule,
@@ -25,7 +27,8 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
     ToastrModule,
     NgxSpinnerModule,
     FileUploadModule,
-    PaginationModule
+    PaginationModule,
+    TimeagoModule
   ]
 })
 export class SharedModule { }
