@@ -1,3 +1,18 @@
+<div class="row mb-4">
+    <div class="me-2">
+        <div class="dropdown" dropdown>
+            <button class="btn btn-info col-1" dropdownToggle
+                >Sort&nbsp;&nbsp;&nbsp;
+                <i class="bi bi-sort-alpha-down"></i>
+            </button>
+            <div class="dropdown-menu" *dropdownMenu>
+                <a class="dropdown-item" (click)="sortPlayers('a-z')">A <i class="bi bi-arrow-right"></i> Z</a>
+                <a class="dropdown-item" (click)="sortPlayers('z-a')">Z <i class="bi bi-arrow-right"></i> A</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="row">
     <div class="col-4" *ngFor="let player of players">
         <app-player-card [player]="player"></app-player-card>

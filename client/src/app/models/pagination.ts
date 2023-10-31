@@ -13,9 +13,9 @@ export class PaginatedResult<T> {
 export class PaginationParams {
   currentPage = 1;
   itemsPerPage = 4;
+  orderBy = "a-z";
 
-  constructor(currentPage: number, itemsPerPage: number) {
-    this.currentPage = currentPage;
+  constructor(itemsPerPage: number) {
     this.itemsPerPage = itemsPerPage;
   }
 }

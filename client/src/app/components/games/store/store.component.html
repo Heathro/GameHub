@@ -11,7 +11,23 @@
     <div class="card mb-2 col-2">
         <form [formGroup]="filterForm" (ngSubmit)="filterForm.valid && applyFilters()" autocomplete="off">
             
-            <div class="my-4" formGroupName="platforms">
+            <div class="my-4">
+                <div class="dropdown row" dropdown>
+                    <button 
+                        type="button"
+                        class="btn btn-info col-8 mx-auto" 
+                        dropdownToggle
+                        >Sort&nbsp;&nbsp;&nbsp;
+                        <i class="bi bi-sort-alpha-down"></i>
+                    </button>
+                    <div class="dropdown-menu" *dropdownMenu>
+                        <a class="dropdown-item" (click)="sortGames('a-z')">A <i class="bi bi-arrow-right"></i> Z</a>
+                        <a class="dropdown-item" (click)="sortGames('z-a')">Z <i class="bi bi-arrow-right"></i> A</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-4" formGroupName="platforms">
                 <app-checkbox-input class="d-block ms-4"
                     [formControl]="$any(filterForm.get('platforms.windows'))"
                     [label]="'Windows'"

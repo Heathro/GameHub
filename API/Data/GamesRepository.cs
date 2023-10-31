@@ -77,6 +77,12 @@ public class GamesRepository : IGamesRepository
             );
         }
 
+        query = paginationParams.OrderBy switch
+        {
+            "z-a" => query.OrderByDescending(g => g.Title),
+            _ => query.OrderBy(g => g.Title)
+        };
+
         return await PagedList<GameDto>.CreateAsync
         (
             query.AsNoTracking().ProjectTo<GameDto>(_mapper.ConfigurationProvider),

@@ -32,6 +32,7 @@ export class PlayersService {
     let params = new HttpParams();
     params = params.append('currentPage', paginationParams.currentPage);
     params = params.append('itemsPerPage', paginationParams.itemsPerPage);
+    params = params.append('orderBy', paginationParams.orderBy);
     return params;
   }
 

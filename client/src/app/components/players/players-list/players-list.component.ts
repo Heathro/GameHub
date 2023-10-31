@@ -18,7 +18,7 @@ export class PlayersListComponent implements OnInit {
   paginationParams: PaginationParams;
 
   constructor(private playersService: PlayersService) {
-    this.paginationParams = new PaginationParams(1, 12);
+    this.paginationParams = new PaginationParams(3);
   }
 
   ngOnInit(): void {
@@ -37,10 +37,21 @@ export class PlayersListComponent implements OnInit {
     });
   }
 
+  sortPlayers(order: string) {
+    this.resetPagination();
+    this.paginationParams.orderBy = order;
+    this.loadPlayers();
+  }
+
   pageChanged(event: any) {
     if (this.paginationParams.currentPage !== event.page) {
       this.paginationParams.currentPage = event.page;
       this.loadPlayers();
     }
+  }
+
+  resetPagination() {
+    if (this.pagination) this.pagination.currentPage = 1;
+    this.paginationParams.currentPage = 1;
   }
 }
