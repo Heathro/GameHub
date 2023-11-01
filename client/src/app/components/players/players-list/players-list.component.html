@@ -6,8 +6,16 @@
                 <i class="bi bi-sort-alpha-down"></i>
             </button>
             <div class="dropdown-menu" *dropdownMenu>
-                <a class="dropdown-item" (click)="sortPlayers('a-z')">A <i class="bi bi-arrow-right"></i> Z</a>
-                <a class="dropdown-item" (click)="sortPlayers('z-a')">Z <i class="bi bi-arrow-right"></i> A</a>
+                <a 
+                    class="dropdown-item"
+                    (click)="sortPlayers('az')"
+                    >A <i class="bi bi-arrow-right"></i> Z
+                </a>
+                <a 
+                    class="dropdown-item" 
+                    (click)="sortPlayers('za')"
+                    >Z <i class="bi bi-arrow-right"></i> A
+                </a>
             </div>
         </div>
     </div>

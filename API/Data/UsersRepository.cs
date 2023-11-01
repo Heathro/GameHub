@@ -36,7 +36,7 @@ public class UsersRepository : IUsersRepository
 
         query = paginationParams.OrderBy switch
         {
-            "z-a" => query.OrderByDescending(u => u.Username),
+            "za" => query.OrderByDescending(u => u.Username),
             _ => query.OrderBy(u => u.Username)
         };
 

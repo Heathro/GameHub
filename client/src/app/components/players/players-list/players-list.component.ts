@@ -15,10 +15,9 @@ export class PlayersListComponent implements OnInit {
   //players$: Observable<Player[]> | undefined;
   players: Player[] = [];
   pagination: Pagination | undefined;
-  paginationParams: PaginationParams;
 
   constructor(private playersService: PlayersService) {
-    this.paginationParams = new PaginationParams(3);
+    //this.paginationParams = playersService.getPaginationParams();
   }
 
   ngOnInit(): void {
@@ -27,7 +26,8 @@ export class PlayersListComponent implements OnInit {
   }
 
   loadPlayers() {
-    this.playersService.getPlayers(this.paginationParams).subscribe({
+    //this.playersService.setPaginationParams(this.paginationParams);
+    this.playersService.getPlayers().subscribe({
       next: response => {
         if (response.result && response.pagination) {
           this.players = response.result;
@@ -38,20 +38,16 @@ export class PlayersListComponent implements OnInit {
   }
 
   sortPlayers(order: string) {
-    this.resetPagination();
-    this.paginationParams.orderBy = order;
+    this.playersService.setPaginationPage(1);
+    this.playersService.setPaginationOrder(order);
     this.loadPlayers();
+    if (this.pagination) this.pagination.currentPage = 1;
   }
 
   pageChanged(event: any) {
-    if (this.paginationParams.currentPage !== event.page) {
-      this.paginationParams.currentPage = event.page;
+    if (this.playersService.getPaginationParams().currentPage !== event.page) {
+      this.playersService.setPaginationPage(event.page);
       this.loadPlayers();
     }
-  }
-
-  resetPagination() {
-    if (this.pagination) this.pagination.currentPage = 1;
-    this.paginationParams.currentPage = 1;
   }
 }

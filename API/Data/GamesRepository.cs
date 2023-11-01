@@ -79,7 +79,7 @@ public class GamesRepository : IGamesRepository
 
         query = paginationParams.OrderBy switch
         {
-            "z-a" => query.OrderByDescending(g => g.Title),
+            "za" => query.OrderByDescending(g => g.Title),
             _ => query.OrderBy(g => g.Title)
         };
 

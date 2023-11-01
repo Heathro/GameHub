@@ -21,7 +21,7 @@ export class StoreComponent implements OnInit {
   loading = false;
 
   constructor(private gamesService: GamesService, private formBuilder: FormBuilder) { 
-    this.paginationParams = new PaginationParams(4);
+    this.paginationParams = new PaginationParams(4, 'az');
   }
 
   ngOnInit(): void {
