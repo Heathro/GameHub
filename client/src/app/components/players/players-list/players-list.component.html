@@ -1,20 +1,24 @@
 <div class="row mb-4">
     <div class="me-2">
-        <div class="dropdown" dropdown>
-            <button class="btn btn-info col-1" dropdownToggle
-                >Sort&nbsp;&nbsp;&nbsp;
-                <i class="bi bi-sort-alpha-down"></i>
-            </button>
-            <div class="dropdown-menu" *dropdownMenu>
+        <div class="dropdown row" dropdown>
+            <button 
+                type="button"
+                class="btn btn-info col-1 ms-4"
+                dropdownToggle
+                [innerHTML]="getSortingType()"
+            ></button>
+            <div class="dropdown-menu dropdown-menu-left col-1" *dropdownMenu>
                 <a 
-                    class="dropdown-item"
+                    class="dropdown-item text-center"
                     (click)="sortPlayers('az')"
-                    >A <i class="bi bi-arrow-right"></i> Z
+                >
+                    A&ensp;<i class="bi bi-arrow-right"></i>&ensp;Z
                 </a>
-                <a 
-                    class="dropdown-item" 
+                <a
+                    class="dropdown-item text-center" 
                     (click)="sortPlayers('za')"
-                    >Z <i class="bi bi-arrow-right"></i> A
+                >
+                    Z&ensp;<i class="bi bi-arrow-right"></i>&ensp;A
                 </a>
             </div>
         </div>

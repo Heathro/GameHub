@@ -15,14 +15,23 @@
                 <div class="dropdown row" dropdown>
                     <button 
                         type="button"
-                        class="btn btn-info col-8 mx-auto" 
+                        class="btn btn-info col-8 mx-auto"
                         dropdownToggle
-                        >Sort&nbsp;&nbsp;&nbsp;
-                        <i class="bi bi-sort-alpha-down"></i>
-                    </button>
-                    <div class="dropdown-menu" *dropdownMenu>
-                        <a class="dropdown-item" (click)="sortGames('az')">A <i class="bi bi-arrow-right"></i> Z</a>
-                        <a class="dropdown-item" (click)="sortGames('za')">Z <i class="bi bi-arrow-right"></i> A</a>
+                        [innerHTML]="getSortingType()"
+                    ></button>
+                    <div class="dropdown-menu dropdown-menu-right col-8" *dropdownMenu>
+                        <a 
+                            class="dropdown-item text-center"
+                            (click)="sortGames('az')"
+                        >
+                            A&ensp;<i class="bi bi-arrow-right"></i>&ensp;Z
+                        </a>
+                        <a
+                            class="dropdown-item text-center" 
+                            (click)="sortGames('za')"
+                        >
+                            Z&ensp;<i class="bi bi-arrow-right"></i>&ensp;A
+                        </a>
                     </div>
                 </div>
             </div>

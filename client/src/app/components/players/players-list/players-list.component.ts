@@ -12,21 +12,16 @@ import { Pagination, PaginationParams } from 'src/app/models/pagination';
   styleUrls: ['./players-list.component.css']
 })
 export class PlayersListComponent implements OnInit {
-  //players$: Observable<Player[]> | undefined;
   players: Player[] = [];
   pagination: Pagination | undefined;
 
-  constructor(private playersService: PlayersService) {
-    //this.paginationParams = playersService.getPaginationParams();
-  }
+  constructor(private playersService: PlayersService) { }
 
   ngOnInit(): void {
-    //this.players$ = this.playersService.getPlayers();
     this.loadPlayers();
   }
 
   loadPlayers() {
-    //this.playersService.setPaginationParams(this.paginationParams);
     this.playersService.getPlayers().subscribe({
       next: response => {
         if (response.result && response.pagination) {
@@ -48,6 +43,13 @@ export class PlayersListComponent implements OnInit {
     if (this.playersService.getPaginationParams().currentPage !== event.page) {
       this.playersService.setPaginationPage(event.page);
       this.loadPlayers();
+    }
+  }  
+
+  getSortingType() {
+    switch (this.playersService.getPaginationParams().orderBy) {
+      case 'za': return 'Z&ensp;<i class="bi bi-arrow-right"></i>&ensp;A';
+      default:   return 'A&ensp;<i class="bi bi-arrow-right"></i>&ensp;Z';
     }
   }
 }

@@ -13,26 +13,21 @@ import { Pagination, PaginationParams } from 'src/app/models/pagination';
   styleUrls: ['./store.component.css']
 })
 export class StoreComponent implements OnInit {
-  //games$: Observable<Game[]> | undefined;
   games: Game[] = [];
   pagination: Pagination | undefined;
-  paginationParams: PaginationParams;
   filterForm: FormGroup = new FormGroup({});
   loading = false;
 
-  constructor(private gamesService: GamesService, private formBuilder: FormBuilder) { 
-    this.paginationParams = new PaginationParams(4, 'az');
-  }
+  constructor(private gamesService: GamesService, private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
-    //this.games$ = this.gamesService.getGames();
-    this.initializeFrom();
+    this.initializeFrom(true);
     this.loadGames();
   }
 
   loadGames() {
     this.loading = true;
-    this.gamesService.getGames(this.filterForm.value, this.paginationParams).subscribe({
+    this.gamesService.getGames(this.filterForm.value).subscribe({
       next: response => {
         if (response.result && response.pagination) {
           this.games = response.result;
@@ -44,58 +39,65 @@ export class StoreComponent implements OnInit {
   }
   
   sortGames(order: string) {
-    this.resetPagination();
-    this.paginationParams.orderBy = order;
+    this.gamesService.setPaginationPage(1);
+    this.gamesService.setPaginationOrder(order);
     this.loadGames();
+    if (this.pagination) this.pagination.currentPage = 1;
   }
 
   pageChanged(event: any) {
-    if (this.paginationParams.currentPage !== event.page) {
-      this.paginationParams.currentPage = event.page;
+    if (this.gamesService.getPaginationParams().currentPage !== event.page) {
+      this.gamesService.setPaginationPage(event.page);
       this.loadGames();
     }
   }
 
   applyFilters() {
-    this.resetPagination();
+    this.gamesService.setPaginationPage(1);
+    this.gamesService.setFilter(this.filterForm.value);
     this.loadGames();
+    if (this.pagination) this.pagination.currentPage = 1;
   }
 
   resetFilters() {
-    this.filterForm.reset();
+    this.initializeFrom(false);
     this.applyFilters();
   }
 
-  resetPagination() {
-    if (this.pagination) this.pagination.currentPage = 1;
-    this.paginationParams.currentPage = 1;
+  getSortingType() {
+    switch (this.gamesService.getPaginationParams().orderBy) {
+      case 'za': return 'Z&ensp;<i class="bi bi-arrow-right"></i>&ensp;A';
+      default:   return 'A&ensp;<i class="bi bi-arrow-right"></i>&ensp;Z';
+    }
   }
   
-  initializeFrom() {
+  initializeFrom(initial: boolean) {
+    const filter = this.gamesService.getFilter();
+
     this.filterForm = this.formBuilder.group({
       platforms: this.formBuilder.group({
-        windows: [false, { nonNullable: true }],
-        macos: [false, { nonNullable: true }],
-        linux:  [false, { nonNullable: true }]
+        windows: [filter && initial ? filter.platforms.windows : false, { nonNullable: true }],
+        macos: [filter && initial ? filter?.platforms.macos : false, { nonNullable: true }],
+        linux:  [filter && initial ? filter?.platforms.linux : false, { nonNullable: true }]
       }),
       genres: this.formBuilder.group({
-        action: [false, { nonNullable: true }],
-        adventure: [false, { nonNullable: true }],
-        card: [false, { nonNullable: true }],
-        educational: [false, { nonNullable: true }],
-        fighting: [false, { nonNullable: true }],
-        horror: [false, { nonNullable: true }],
-        platformer: [false, { nonNullable: true }],
-        puzzle: [false, { nonNullable: true }],
-        racing: [false, { nonNullable: true }],
-        rhythm: [false, { nonNullable: true }],
-        roleplay: [false, { nonNullable: true }],
-        shooter: [false, { nonNullable: true }],
-        simulation: [false, { nonNullable: true }],
-        sport: [false, { nonNullable: true }],
-        stealth: [false, { nonNullable: true }],
-        strategy: [false, { nonNullable: true }],
-        survival: [false, { nonNullable: true }]
+        action: [filter && initial ? filter.genres.action : false, { nonNullable: true }],
+        adventure: [filter && initial ? filter.genres.adventure : false, { nonNullable: true }],
+        card: [filter && initial ? filter.genres.card : false, { nonNullable: true }],
+        educational: [filter && initial ? filter.genres.educational : false, { nonNullable: true }],
+        fighting: [filter && initial ? filter.genres.fighting : false, { nonNullable: true }],
+        horror: [filter && initial ? filter.genres.horror : false, { nonNullable: true }],
+        platformer: [filter && initial ? filter.genres.platformer : false, { nonNullable: true }],
+        puzzle: [filter && initial ? filter.genres.puzzle : false, { nonNullable: true }],
+        racing: [filter && initial ? filter.genres.racing : false, { nonNullable: true }],
+        rhythm: [filter && initial ? filter.genres.rhythm : false, { nonNullable: true }],
+        roleplay: [filter && initial ? filter.genres.roleplay : false, { nonNullable: true }],
+        shooter: [filter && initial ? filter.genres.shooter : false, { nonNullable: true }],
+        simulation: [filter && initial ? filter.genres.simulation : false, { nonNullable: true }],
+        sport: [filter && initial ? filter.genres.sport : false, { nonNullable: true }],
+        stealth: [filter && initial ? filter.genres.stealth : false, { nonNullable: true }],
+        strategy: [filter && initial ? filter.genres.strategy : false, { nonNullable: true }],
+        survival: [filter && initial ? filter.genres.survival : false, { nonNullable: true }]
       })
     });
   }
