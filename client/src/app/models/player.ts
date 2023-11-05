@@ -11,3 +11,10 @@ export interface Player {
   created: string;
   lastActive: string;
 }
+
+export interface LikedPlayer {
+  id: number;
+  username: string;
+  avatar: Avatar;
+  lastActive: string;
+}

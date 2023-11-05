@@ -33,6 +33,7 @@ public class GamesRepository : IGamesRepository
         var query = _context.Games
             .Include(p => p.Platforms)
             .Include(g => g.Genres)
+            .Include(l => l.LikedUsers)
             .AsQueryable();
 
         if (gameFilter.Platforms.Windows || 
@@ -94,10 +95,6 @@ public class GamesRepository : IGamesRepository
     public async Task<Game> GetGameByIdAsync(int id)
     {
         return await _context.Games
-            .Include(p => p.Platforms)
-            .Include(g => g.Genres)
-            .Include(p => p.Poster)
-            .Include(s => s.Screenshots)
             .SingleOrDefaultAsync(game => game.Id == id);
     }
 

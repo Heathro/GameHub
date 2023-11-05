@@ -9,6 +9,6 @@ public class PlayerDto
     public string Summary { get; set; }
     public string Country { get; set; }
     public string City { get; set; }
-    public DateTime Created { get; set; } = DateTime.UtcNow;
-    public DateTime LastActive { get; set; } = DateTime.UtcNow;
+    public DateTime Created { get; set; }
+    public DateTime LastActive { get; set; }
 }

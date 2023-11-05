@@ -15,30 +15,45 @@
             <h5>
                 <i class="bi bi-windows m-2" *ngIf="game.platforms.windows"></i>
                 <i class="bi bi-apple m-2" *ngIf="game.platforms.macos"></i>
-                <i class="fa fa-linux m-2" *ngIf="game.platforms.linux"></i>
+                <i class="bi bi-ubuntu m-2" *ngIf="game.platforms.linux"></i>
             </h5>           
 
             <div class="mt-4">
-                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.action">Action&nbsp;&nbsp;</h6>
-                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.adventure">Adventure&nbsp;&nbsp;</h6>
-                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.card">Card&nbsp;&nbsp;</h6>
-                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.educational">Educational&nbsp;&nbsp;</h6>
-                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.fighting">Fighting&nbsp;&nbsp;</h6>
-                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.horror">Horror&nbsp;&nbsp;</h6>
-                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.platformer">Platformer&nbsp;&nbsp;</h6>
-                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.puzzle">Puzzle&nbsp;&nbsp;</h6>
-                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.racing">Racing&nbsp;&nbsp;</h6>
-                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.rhythm">Rhythm&nbsp;&nbsp;</h6>
-                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.roleplay">Roleplay&nbsp;&nbsp;</h6>
-                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.shooter">Shooter&nbsp;&nbsp;</h6>
-                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.simulation">Simulation&nbsp;&nbsp;</h6>
-                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.sport">Sport&nbsp;&nbsp;</h6>
-                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.stealth">Stealth&nbsp;&nbsp;</h6>
-                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.strategy">Strategy&nbsp;&nbsp;</h6>
-                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.survival">Survival&nbsp;&nbsp;</h6>
+                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.action">Action</h6>
+                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.adventure">Adventure</h6>
+                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.card">Card</h6>
+                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.educational">Educational</h6>
+                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.fighting">Fighting</h6>
+                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.horror">Horror</h6>
+                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.platformer">Platformer</h6>
+                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.puzzle">Puzzle</h6>
+                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.racing">Racing</h6>
+                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.rhythm">Rhythm</h6>
+                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.roleplay">Roleplay</h6>
+                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.shooter">Shooter</h6>
+                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.simulation">Simulation</h6>
+                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.sport">Sport</h6>
+                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.stealth">Stealth</h6>
+                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.strategy">Strategy</h6>
+                <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.survival">Survival</h6>
             </div>
 
-            <h5 style="text-align: right;" class="text-right mt-2 me-4">Free</h5>
+            <div class="d-flex flex-row-reverse mt-4 me-4">
+                <h6 class="d-inline" (click)="likeGame();$event.stopPropagation()">
+                    {{game.likes}}
+                </h6>
+                <h6 class="d-inline" (click)="likeGame();$event.stopPropagation()">
+                    <i class="bi bi-hand-thumbs-up-fill mx-2" *ngIf="isLiked"></i>
+                    <i class="bi bi-hand-thumbs-up mx-2" *ngIf="!isLiked"></i>
+                </h6>
+            </div>
         </div>
     </div>
 </div>
+
+<!--
+    hand-thumbs-down
+    hand-thumbs-down-fill
+    hand-thumbs-up
+    hand-thumbs-down-fill
+-->

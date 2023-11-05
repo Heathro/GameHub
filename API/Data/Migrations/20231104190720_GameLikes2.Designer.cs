@@ -3,6 +3,7 @@ using System;
 using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20231104190720_GameLikes2")]
+    partial class GameLikes2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.11");
@@ -95,6 +98,21 @@ namespace API.Data.Migrations
                     b.ToTable("Games");
                 });
 
+            modelBuilder.Entity("API.Entities.GameLike", b =>
+                {
+                    b.Property<int>("SourceUserId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TargetGameId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("SourceUserId", "TargetGameId");
+
+                    b.HasIndex("TargetGameId");
+
+                    b.ToTable("GameLikes");
+                });
+
             modelBuilder.Entity("API.Entities.Genres", b =>
                 {
                     b.Property<int>("Id")
@@ -161,21 +179,6 @@ namespace API.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Genres");
-                });
-
-            modelBuilder.Entity("API.Entities.Like", b =>
-                {
-                    b.Property<int>("SourceUserId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("TargetGameId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("SourceUserId", "TargetGameId");
-
-                    b.HasIndex("TargetGameId");
-
-                    b.ToTable("Likes");
                 });
 
             modelBuilder.Entity("API.Entities.Platforms", b =>
@@ -260,6 +263,25 @@ namespace API.Data.Migrations
                     b.Navigation("AppUser");
                 });
 
+            modelBuilder.Entity("API.Entities.GameLike", b =>
+                {
+                    b.HasOne("API.Entities.AppUser", "SourceUser")
+                        .WithMany("LikedGames")
+                        .HasForeignKey("SourceUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("API.Entities.Game", "TargetGame")
+                        .WithMany("UserLikes")
+                        .HasForeignKey("TargetGameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SourceUser");
+
+                    b.Navigation("TargetGame");
+                });
+
             modelBuilder.Entity("API.Entities.Genres", b =>
                 {
                     b.HasOne("API.Entities.Game", "Game")
@@ -269,25 +291,6 @@ namespace API.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Game");
-                });
-
-            modelBuilder.Entity("API.Entities.Like", b =>
-                {
-                    b.HasOne("API.Entities.AppUser", "SourceUser")
-                        .WithMany("LikedGames")
-                        .HasForeignKey("SourceUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("API.Entities.Game", "TargetGame")
-                        .WithMany("LikedUsers")
-                        .HasForeignKey("TargetGameId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("SourceUser");
-
-                    b.Navigation("TargetGame");
                 });
 
             modelBuilder.Entity("API.Entities.Platforms", b =>
@@ -334,13 +337,13 @@ namespace API.Data.Migrations
                 {
                     b.Navigation("Genres");
 
-                    b.Navigation("LikedUsers");
-
                     b.Navigation("Platforms");
 
                     b.Navigation("Poster");
 
                     b.Navigation("Screenshots");
+
+                    b.Navigation("UserLikes");
                 });
 #pragma warning restore 612, 618
         }

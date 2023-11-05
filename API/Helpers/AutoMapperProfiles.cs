@@ -14,7 +14,7 @@ public class AutoMapperProfiles : Profile
 
         CreateMap<Avatar, AvatarDto>();
 
-        CreateMap<Game, GameDto>();
+        CreateMap<Game, GameDto>().ForMember(d => d.Likes, o => o.MapFrom(s => s.LikedUsers.Count));
         CreateMap<GameEditDto, Game>();
 
         CreateMap<Platforms, PlatformsDto>();

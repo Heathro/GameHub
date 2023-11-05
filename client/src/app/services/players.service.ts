@@ -12,7 +12,6 @@ import { Player } from '../models/player';
 })
 export class PlayersService {
   baseUrl = environment.apiUrl;
-  players: Player[] = [];
   playersCache = new Map();
   paginationParams: PaginationParams;
 

@@ -3,6 +3,7 @@ using System;
 using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20231104191149_GameLikes4")]
+    partial class GameLikes4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.11");
@@ -175,7 +178,7 @@ namespace API.Data.Migrations
 
                     b.HasIndex("TargetGameId");
 
-                    b.ToTable("Likes");
+                    b.ToTable("GameLikes");
                 });
 
             modelBuilder.Entity("API.Entities.Platforms", b =>
@@ -280,7 +283,7 @@ namespace API.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("API.Entities.Game", "TargetGame")
-                        .WithMany("LikedUsers")
+                        .WithMany("UserLikes")
                         .HasForeignKey("TargetGameId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -334,13 +337,13 @@ namespace API.Data.Migrations
                 {
                     b.Navigation("Genres");
 
-                    b.Navigation("LikedUsers");
-
                     b.Navigation("Platforms");
 
                     b.Navigation("Poster");
 
                     b.Navigation("Screenshots");
+
+                    b.Navigation("UserLikes");
                 });
 #pragma warning restore 612, 618
         }

@@ -7,20 +7,20 @@ import { environment } from 'src/environments/environment';
 import { PaginatedResult, PaginationParams } from '../models/pagination';
 import { Game } from '../models/game';
 import { Filter } from '../models/filter';
-import { query } from '@angular/animations';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GamesService {
   baseUrl = environment.apiUrl;
-  games: Game[] = [];
+  likedGames: number[] = []; // TODO clean cache after user logout
   gamesCache = new Map();
   paginationParams: PaginationParams;
   filter: Filter | undefined;
 
   constructor(private http: HttpClient) {
     this.paginationParams = new PaginationParams(4, 'az');
+    this.loadLikedGames();
   }
 
   getGame(title: string) {
@@ -44,6 +44,42 @@ export class GamesService {
       map(response => {
         this.gamesCache.set(queryString, response);
         return response;
+      })
+    );
+  } 
+  
+  loadLikedGames() {
+    this.http.get<number[]>(this.baseUrl + 'likes/games').subscribe({
+      next: likedGames => this.likedGames = likedGames
+    });
+  }
+
+  isGameLiked(id: number) {
+    return this.likedGames.includes(id);
+  }
+
+  likeGame(id: number) {
+    return this.http.post<number>(this.baseUrl + 'likes/' + id, {}).pipe(
+      map(id => {
+        if (this.isGameLiked(id)) {
+          this.likedGames = this.likedGames.filter(g => g !== id);
+          this.gamesCache.forEach(q => {
+            q.result.forEach((g: Game) => {
+              if (g.id === id) {              
+                g.likes--;
+              }
+            });
+          });
+        } else {
+          this.likedGames.push(id);        
+          this.gamesCache.forEach(q => {
+            q.result.forEach((g: Game) => {
+              if (g.id === id) {              
+                g.likes++;
+              }
+            });
+          });
+        }
       })
     );
   }

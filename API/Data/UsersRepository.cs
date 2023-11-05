@@ -50,7 +50,8 @@ public class UsersRepository : IUsersRepository
 
     public async Task<AppUser> GetUserByIdAsync(int id)
     {
-        return await _context.Users.FindAsync(id);
+        return await _context.Users
+            .SingleOrDefaultAsync(user => user.Id == id);
     }
 
     public async Task<AppUser> GetUserByUsernameAsync(string username)
