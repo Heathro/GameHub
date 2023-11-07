@@ -14,4 +14,6 @@ public class AppUser
     public DateTime Created { get; set; } = DateTime.UtcNow;
     public DateTime LastActive { get; set; } = DateTime.UtcNow;
     public List<Like> LikedGames { get; set; } = new();
+    public List<Message> MessagesSent { get; set; } = new();
+    public List<Message> MessagesReceived { get; set; } = new();
 }
