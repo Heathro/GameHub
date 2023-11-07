@@ -28,7 +28,7 @@ export class GameCardComponent implements OnInit {
 
   checkLikes() {
     if (this.game) {
-      this.isLiked = this.gamesService.isGameLiked(this.game.id);
+      this.isLiked = this.gamesService.isGameLiked(this.game);
     }
   }
 }

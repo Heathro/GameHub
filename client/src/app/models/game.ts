@@ -7,7 +7,7 @@ export interface Game {
   id: number;
   title: string;
   description: string;
-  likes: number;
+  likes: number[];
   platforms: Platforms;
   genres: Genres;
   poster: Poster;

@@ -5,6 +5,7 @@ import { BehaviorSubject, map } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 import { User } from '../models/user';
+import { GamesService } from './games.service';
 
 @Injectable({
   providedIn: 'root'

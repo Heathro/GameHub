@@ -1,26 +1,34 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { map, of } from 'rxjs';
+import { map, of, take } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
+import { AccountService } from './account.service';
 import { PaginatedResult, PaginationParams } from '../models/pagination';
 import { Game } from '../models/game';
 import { Filter } from '../models/filter';
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GamesService {
   baseUrl = environment.apiUrl;
-  likedGames: number[] = []; // TODO clean cache after user logout
   gamesCache = new Map();
   paginationParams: PaginationParams;
   filter: Filter | undefined;
+  user: User | undefined;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private accountService: AccountService) {
     this.paginationParams = new PaginationParams(4, 'az');
-    this.loadLikedGames();
+    this.accountService.currentUser$.pipe(take(1)).subscribe({
+      next: user => {
+        if (user) {
+          this.user = user;
+        }
+      }
+    });
   }
 
   getGame(title: string) {
@@ -46,40 +54,30 @@ export class GamesService {
         return response;
       })
     );
-  } 
-  
-  loadLikedGames() {
-    this.http.get<number[]>(this.baseUrl + 'likes/games').subscribe({
-      next: likedGames => this.likedGames = likedGames
-    });
   }
 
-  isGameLiked(id: number) {
-    return this.likedGames.includes(id);
+  isGameLiked(game: Game) {
+    if (!this.user) return false;
+    return game.likes.includes(this.user.id);
   }
 
-  likeGame(id: number) {
-    return this.http.post<number>(this.baseUrl + 'likes/' + id, {}).pipe(
-      map(id => {
-        if (this.isGameLiked(id)) {
-          this.likedGames = this.likedGames.filter(g => g !== id);
-          this.gamesCache.forEach(q => {
-            q.result.forEach((g: Game) => {
-              if (g.id === id) {              
-                g.likes--;
+  likeGame(gameId: number) {
+    return this.http.post<number>(this.baseUrl + 'likes/' + gameId, {}).pipe(
+      map(gameId => {
+        if (!this.user) return;
+        const userId = this.user.id;
+
+        this.gamesCache.forEach(q => {
+          q.result.forEach((g: Game) => {
+            if (g.id === gameId) {
+              if (this.isGameLiked(g)) {
+                g.likes = g.likes.filter(l => l !== userId);
+              } else {
+                g.likes.push(userId);
               }
-            });
+            }
           });
-        } else {
-          this.likedGames.push(id);        
-          this.gamesCache.forEach(q => {
-            q.result.forEach((g: Game) => {
-              if (g.id === id) {              
-                g.likes++;
-              }
-            });
-          });
-        }
+        });
       })
     );
   }

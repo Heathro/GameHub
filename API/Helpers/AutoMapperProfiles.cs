@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using API.DTOs;
 using API.Entities;
+using API.Extensions;
 
 namespace API.Helpers;
 
@@ -11,18 +12,15 @@ public class AutoMapperProfiles : Profile
         CreateMap<AppUser, PlayerDto>();
         CreateMap<PlayerEditDto, AppUser>();
         CreateMap<RegisterDto, AppUser>();
-
         CreateMap<Avatar, AvatarDto>();
 
-        CreateMap<Game, GameDto>().ForMember(d => d.Likes, o => o.MapFrom(s => s.LikedUsers.Count));
+        CreateMap<Game, GameDto>()
+            .ForMember(d => d.Likes, o => o.MapFrom(s => s.GetLikedUsers()));
         CreateMap<GameEditDto, Game>();
-
         CreateMap<Platforms, PlatformsDto>();
         CreateMap<PlatformsDto, Platforms>();
-
         CreateMap<Genres, GenresDto>();
-        CreateMap<GenresDto, Genres>();
-        
+        CreateMap<GenresDto, Genres>();        
         CreateMap<Poster, PosterDto>();
         CreateMap<Screenshot, ScreenshotDto>();
     }

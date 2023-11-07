@@ -41,6 +41,7 @@ public class AccountController : BaseApiController
 
         return new UserDto
         {
+            Id = user.Id,
             Username = user.Username,
             Token = _tokenService.CreateToken(user),
             AvatarUrl = user.Avatar.Url
@@ -65,6 +66,7 @@ public class AccountController : BaseApiController
 
         return new UserDto
         {
+            Id = user.Id,
             Username = user.Username,
             Token = _tokenService.CreateToken(user),
             AvatarUrl = user.Avatar.Url

@@ -54,7 +54,7 @@ public class LikesController : BaseApiController
     }
 
     [HttpGet("users/{gameId}")]
-    public async Task<ActionResult<IEnumerable<LikedUserDto>>> GetLikedUsers(int gameId)
+    public async Task<ActionResult<IEnumerable<int>>> GetLikedUsers(int gameId)
     {
         var users = await _likesRepository.GetLikedUsers(gameId);
         return Ok(users);

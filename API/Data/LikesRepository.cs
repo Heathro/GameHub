@@ -30,19 +30,11 @@ public class LikesRepository : ILikesRepository
         return await games.Select(g => g.Id).ToListAsync();
     }
 
-    public async Task<IEnumerable<LikedUserDto>> GetLikedUsers(int gameId)
+    public async Task<IEnumerable<int>> GetLikedUsers(int gameId)
     {
         var likes = _context.Likes.Where(l => l.TargetGameId == gameId);
         var users = likes.Select(l => l.SourceUser);
-
-        return await users.Select(u => new LikedUserDto
-        {
-            Id = u.Id,
-            Username = u.Username,
-            Avatar = _mapper.Map<AvatarDto>(u.Avatar),
-            LastActive = u.LastActive
-        })
-        .ToListAsync();
+        return await users.Select(u => u.Id).ToListAsync();
     }
 
     public async Task<AppUser> GetUserWithLikes(int userId)
