@@ -17,6 +17,7 @@ import { PlayerProfileComponent } from './components/players/player-profile/play
 import { GamePageComponent } from './components/games/game-page/game-page.component';
 import { PlayerEditComponent } from './components/players/player-edit/player-edit.component';
 import { GameEditComponent } from './components/games/game-edit/game-edit.component';
+import { MessengerComponent } from './components/messages/messenger/messenger.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -30,7 +31,8 @@ const routes: Routes = [
       { path: 'games/:title/edit', component: GameEditComponent, canDeactivate: [unsavedChangesGuard] },
       { path: 'players', component: PlayersListComponent },
       { path: 'players/:username', component: PlayerProfileComponent },
-      { path: 'edit-profile', component: PlayerEditComponent, canDeactivate: [unsavedChangesGuard] }
+      { path: 'edit-profile', component: PlayerEditComponent, canDeactivate: [unsavedChangesGuard] },
+      { path: 'messenger', component: MessengerComponent }
     ]
   },
   { path: '',

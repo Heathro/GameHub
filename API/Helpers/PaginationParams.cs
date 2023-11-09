@@ -2,7 +2,7 @@
 
 public class PaginationParams
 {
-    private const int MaxItemsPerPage = 50;
+    private const int MaxItemsPerPage = 100;
     private int _itemsPerPage = 12;
     public int ItemsPerPage
     {

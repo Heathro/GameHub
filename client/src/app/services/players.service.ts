@@ -4,7 +4,8 @@ import { Injectable } from '@angular/core';
 import { map, of } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
-import { PaginatedResult, PaginationParams } from '../models/pagination';
+import { getPaginatedResult, getPaginationHeaders } from '../helpers/paginationHelper';
+import { PaginationParams } from '../models/pagination';
 import { Player } from '../models/player';
 
 @Injectable({
@@ -35,8 +36,9 @@ export class PlayersService {
     const response = this.playersCache.get(queryString);
     if (response) return of(response);
 
-    let params = this.getPaginationHeaders(this.paginationParams);
-    return this.getPaginatedResult<Player[]>(this.baseUrl + 'users/', params).pipe(
+    let params = getPaginationHeaders(this.paginationParams);
+
+    return getPaginatedResult<Player[]>(this.baseUrl + 'users/', params, this.http).pipe(
       map(response => {
         this.playersCache.set(queryString, response);
         return response;
@@ -58,28 +60,5 @@ export class PlayersService {
 
   getPaginationParams() {
     return this.paginationParams;
-  }
-
-  private getPaginationHeaders(paginationParams: PaginationParams) {
-    let params = new HttpParams();
-
-    params = params.append('currentPage', paginationParams.currentPage);
-    params = params.append('itemsPerPage', paginationParams.itemsPerPage);
-    params = params.append('orderBy', paginationParams.orderBy);
-
-    return params;
-  }
-
-  private getPaginatedResult<T>(url: string, params: HttpParams) {
-    const paginationResult: PaginatedResult<T> = new PaginatedResult<T>;
-
-    return this.http.get<T>(url, { observe: 'response', params }).pipe(
-      map(response => {
-        if (response.body) paginationResult.result = response.body;
-        const pagination = response.headers.get('Pagination');
-        if (pagination) paginationResult.pagination = JSON.parse(pagination);
-        return paginationResult;
-      })
-    );
   }
 }

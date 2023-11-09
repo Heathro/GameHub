@@ -4,8 +4,9 @@ import { Injectable } from '@angular/core';
 import { map, of, take } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
+import { getFilteredPaginatedResult, getPaginationHeaders } from '../helpers/paginationHelper';
 import { AccountService } from './account.service';
-import { PaginatedResult, PaginationParams } from '../models/pagination';
+import { PaginationParams } from '../models/pagination';
 import { Game } from '../models/game';
 import { Filter } from '../models/filter';
 import { User } from '../models/user';
@@ -47,8 +48,9 @@ export class GamesService {
     const response = this.gamesCache.get(queryString);
     if (response) return of(response);
 
-    let params = this.getPaginationHeaders(this.paginationParams);
-    return this.getPaginatedResult<Game[]>(this.baseUrl + 'games', params, filter).pipe(
+    let params = getPaginationHeaders(this.paginationParams);
+
+    return getFilteredPaginatedResult<Game[]>(this.baseUrl + 'games', params, this.http, filter).pipe(
       map(response => {
         this.gamesCache.set(queryString, response);
         return response;
@@ -139,29 +141,6 @@ export class GamesService {
 
   getFilter() {
     return this.filter;
-  }
- 
-  private getPaginationHeaders(paginationParams: PaginationParams) {
-    let params = new HttpParams();
-
-    params = params.append('currentPage', paginationParams.currentPage);
-    params = params.append('itemsPerPage', paginationParams.itemsPerPage);
-    params = params.append('orderBy', paginationParams.orderBy);
-
-    return params;
-  }
-  
-  private getPaginatedResult<T>(url: string, params: HttpParams, filter: Filter) {
-    const paginationResult: PaginatedResult<T> = new PaginatedResult<T>;
-
-    return this.http.post<T>(url, filter, { observe: 'response', params }).pipe(
-      map(response => {
-        if (response.body) paginationResult.result = response.body;
-        const pagination = response.headers.get('Pagination');
-        if (pagination) paginationResult.pagination = JSON.parse(pagination);
-        return paginationResult;
-      })
-    );
   }
 
   private stringifyFilter(filters: Filter): string {

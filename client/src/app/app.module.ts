@@ -29,6 +29,7 @@ import { ScreenshotEditorComponent } from './components/games/screenshot-editor/
 import { TextInputComponent } from './forms/text-input/text-input.component';
 import { CheckboxInputComponent } from './forms/checkbox-input/checkbox-input.component';
 import { TextareaInputComponent } from './forms/textarea-input/textarea-input.component';
+import { MessengerComponent } from './components/messages/messenger/messenger.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { TextareaInputComponent } from './forms/textarea-input/textarea-input.co
     ScreenshotEditorComponent,
     TextInputComponent,
     CheckboxInputComponent,
-    TextareaInputComponent
+    TextareaInputComponent,
+    MessengerComponent
   ],
   imports: [
     BrowserModule,
