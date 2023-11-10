@@ -14,6 +14,7 @@ import { Pagination, PaginationParams } from 'src/app/models/pagination';
 export class PlayersListComponent implements OnInit {
   players: Player[] = [];
   pagination: Pagination | undefined;
+  loading = false;
 
   constructor(private playersService: PlayersService) { }
 
@@ -22,11 +23,13 @@ export class PlayersListComponent implements OnInit {
   }
 
   loadPlayers() {
+    this.loading = true;
     this.playersService.getPlayers().subscribe({
       next: response => {
         if (response.result && response.pagination) {
           this.players = response.result;
           this.pagination = response.pagination;
+          this.loading = false;
         }
       }
     });

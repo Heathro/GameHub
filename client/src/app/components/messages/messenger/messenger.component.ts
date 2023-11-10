@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 
 import { take } from 'rxjs';
 
@@ -16,19 +16,20 @@ import { MessageComponent } from '../message/message.component';
   templateUrl: './messenger.component.html',
   styleUrls: ['./messenger.component.css']
 })
-export class MessengerComponent implements OnInit, AfterViewInit {
+export class MessengerComponent implements OnInit {
   @ViewChildren(MessageComponent) messageComponents: QueryList<MessageComponent> | undefined;
   @ViewChild('messageForm') messageForm?: NgForm;
   friends?: Player[];
   messages?: Message[];
   user: User | null = null;
   content = '';
+  loading = false;
 
   constructor(
     private accountService: AccountService,
     private messagesService: MessagesService,
     private playersService: PlayersService
-  ) { 
+  ) {
     this.accountService.currentUser$.pipe(take(1)).subscribe({
       next: user => this.user = user
     });
@@ -36,9 +37,6 @@ export class MessengerComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.loadFriends();    
-  }
-  
-  ngAfterViewInit(): void {
   }
 
   loadFriends() {
@@ -53,8 +51,12 @@ export class MessengerComponent implements OnInit, AfterViewInit {
   }
 
   loadMessages(username: string) {
+    this.loading = true;
     this.messagesService.getMessages(username).subscribe({
-      next: messages => this.messages = messages
+      next: messages => {
+        this.messages = messages;
+        this.loading = false;
+      }
     });
   }
 

@@ -25,13 +25,13 @@
     </div>
 </div>
 
-<div class="row">
+<div class="row" *ngIf="!loading && players.length !== 0">
     <div class="col-4" *ngFor="let player of players">
         <app-player-card [player]="player"></app-player-card>
     </div>
 </div>
 
-<div class="d-flex justify-content-center" *ngIf="pagination">
+<div class="d-flex justify-content-center" *ngIf="!loading && players.length !== 0 && pagination">
     <pagination
         [boundaryLinks]="true"
         [totalItems]="pagination.totalItems"
