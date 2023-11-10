@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Player } from 'src/app/models/player';
+import { MessagesService } from 'src/app/services/messages.service';
 import { PlayersService } from 'src/app/services/players.service';
 
 @Component({
@@ -14,6 +15,7 @@ export class PlayerProfileComponent implements OnInit {
 
   constructor(
     private playersService: PlayersService,
+    private messageService: MessagesService,
     private route: ActivatedRoute, 
     private router: Router
   ) { }
@@ -31,5 +33,11 @@ export class PlayerProfileComponent implements OnInit {
         this.player = player;
       }
     });
+  }
+
+  messagePlayer() {
+    if (!this.player) return;
+    this.messageService.setLastConversant(this.player.username);
+    this.router.navigateByUrl('/messenger');
   }
 }

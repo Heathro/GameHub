@@ -40,6 +40,10 @@ export class MessagesService {
     );
   }
 
+  setLastConversant(username: string) {
+    this.lastConversant = username;
+  }
+
   getLastConversant() {
     return this.lastConversant;
   }

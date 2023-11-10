@@ -14,7 +14,7 @@
                 </div>
                 <div>
                     <strong>Member since:</strong>
-                    <p>{{player.created | date: 'dd MMMM yyyy'}}</p>
+                    <p>{{player.created | date: 'd MMMM yyyy'}}</p>
                 </div>
                 <div>
                     <strong>Last active:</strong>
@@ -24,7 +24,7 @@
             <div class="card-footer">
                 <div class="btn-group d-flex">
                     <button class="btn btn-outline-success">Add Friend</button>
-                    <button class="btn btn-outline-info">Message</button>
+                    <button class="btn btn-outline-info" (click)="messagePlayer()">Message</button>
                 </div>
             </div>
             
@@ -46,12 +46,12 @@
                 <p class="m-4">{{player.summary}}</p>                
             </tab>
 
-            <tab heading="Reviews">
-                <h4>messages will go here</h4>
+            <tab heading="Games">
+                <h4>games</h4>
             </tab>
 
-            <tab heading="Messages">
-                <h4>messages will go here</h4>
+            <tab heading="Review">
+                <h4>reviews</h4>
             </tab>
             
         </tabset>
