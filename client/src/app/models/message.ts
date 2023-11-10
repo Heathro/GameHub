@@ -9,6 +9,6 @@ export interface Message {
   recipientUsername: string;
   recipientAvatar: Avatar;
   content: string;
-  messageSent?: Date;
-  messageRead: Date;
+  messageSent: Date;
+  messageRead?: Date;
 }

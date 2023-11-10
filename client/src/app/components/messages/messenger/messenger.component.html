@@ -12,9 +12,14 @@
         
         <div class="card">
 
-            <div class="card-body">
-                <div *ngFor="let message of messages">
-                    <app-message [message]="message" [currentUser]="user?.username"></app-message>
+            <div class="card-body" *ngIf="messages">
+                <div *ngFor="let message of messages; let i = index">
+                    <app-message
+                        [previousMessage]="i === 0 ? undefined : messages[i-1]"
+                        [message]="messages[i]"
+                        [nextMessage]="i === messages.length ? undefined : messages[i+1]"
+                        [currentUser]="user?.username"
+                    ></app-message>
                 </div>
             </div>
 

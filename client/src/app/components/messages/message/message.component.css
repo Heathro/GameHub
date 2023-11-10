@@ -4,6 +4,10 @@
   border-radius: 50%;
 }
 
+.avatar-placeholder {
+  width: 40px;
+}
+
 .message-text-recipient {
 	color: #3498D0;
 }
