@@ -30,6 +30,8 @@ import { TextInputComponent } from './forms/text-input/text-input.component';
 import { CheckboxInputComponent } from './forms/checkbox-input/checkbox-input.component';
 import { TextareaInputComponent } from './forms/textarea-input/textarea-input.component';
 import { MessengerComponent } from './components/messages/messenger/messenger.component';
+import { MessageComponent } from './components/messages/message/message.component';
+import { ContactCardComponent } from './components/messages/contact-card/contact-card.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +55,9 @@ import { MessengerComponent } from './components/messages/messenger/messenger.co
     TextInputComponent,
     CheckboxInputComponent,
     TextareaInputComponent,
-    MessengerComponent
+    MessengerComponent,
+    MessageComponent,
+    ContactCardComponent
   ],
   imports: [
     BrowserModule,

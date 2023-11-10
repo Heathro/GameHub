@@ -1,8 +1,8 @@
-<div class="card mb-4 player-card-button" *ngIf="player" routerLink="/players/{{player.username}}">
+<div class="card mb-2 me-2 contact-card-button" *ngIf="player" (click)="changeDialogue()">
     <div class="row">
         <div class="col-3">
             <img 
-                class="player-card-img ms-4"
+                class="contact-card-img ms-4"
                 src="{{player.avatar.url || './assets/avatar.png'}}"
                 alt="{{player.username}}"
             >

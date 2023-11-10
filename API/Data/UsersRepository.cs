@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using API.Entities;
@@ -46,6 +47,14 @@ public class UsersRepository : IUsersRepository
             paginationParams.CurrentPage, 
             paginationParams.ItemsPerPage
         );
+    }
+
+    public async Task<ActionResult<IEnumerable<PlayerDto>>> GetFriendsAsync(string username)
+    {
+        return await _context.Users
+            .Where(u => u.Username != username)
+            .ProjectTo<PlayerDto>(_mapper.ConfigurationProvider)
+            .ToListAsync();
     }
 
     public async Task<AppUser> GetUserByIdAsync(int id)

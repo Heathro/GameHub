@@ -1,7 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { Message } from 'src/app/models/message';
-import { Pagination, PaginationParams } from 'src/app/models/pagination';
+
+import { take } from 'rxjs';
+
+import { AccountService } from 'src/app/services/account.service';
 import { MessagesService } from 'src/app/services/messages.service';
+import { PlayersService } from 'src/app/services/players.service';
+import { Message } from 'src/app/models/message';
+import { User } from 'src/app/models/user';
+import { Player } from 'src/app/models/player';
 
 @Component({
   selector: 'app-messenger',
@@ -9,28 +15,38 @@ import { MessagesService } from 'src/app/services/messages.service';
   styleUrls: ['./messenger.component.css']
 })
 export class MessengerComponent implements OnInit {
+  friends?: Player[];
   messages?: Message[];
-  pagination?: Pagination;
+  user: User | null = null;
 
-  constructor(private messagesService: MessagesService) { }
-
-  ngOnInit(): void {
-    this.loadMessages();
+  constructor(
+    private accountService: AccountService,
+    private messagesService: MessagesService,
+    private playersService: PlayersService
+  ) { 
+    this.accountService.currentUser$.pipe(take(1)).subscribe({
+      next: user => this.user = user
+    });
   }
 
-  loadMessages() {
-    this.messagesService.getMessages().subscribe({
-      next: response => {
-        this.messages = response.result;
-        this.pagination = response.pagination;
+  ngOnInit(): void {
+    this.loadFriends();    
+  }
+
+  loadFriends() {
+    this.playersService.getFriends().subscribe({
+      next: friends => {
+        this.friends = friends;
+
+        const lastConversant = this.messagesService.getLastConversant();
+        this.loadMessages(lastConversant.length > 0 ? lastConversant : this.friends[0].username);
       }
     });
   }
 
-  pageChanged(event: any) {
-    if (this.messagesService.getPaginationParams().currentPage !== event.page) {
-      this.messagesService.setPaginationPage(event.page);
-      this.loadMessages();
-    }
-  } 
+  loadMessages(username: string) {
+    this.messagesService.getMessages(username).subscribe({
+      next: messages => this.messages = messages
+    });
+  }
 }

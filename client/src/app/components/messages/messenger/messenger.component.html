@@ -1,1 +1,29 @@
-<p *ngFor="let message of messages">{{message.content}}</p>
+<div class="row">
+
+    <div class="col-4">
+
+        <div *ngFor="let friend of friends">
+            <app-contact-card (loadMessages)="loadMessages($event)" [player]="friend"></app-contact-card>
+        </div>
+
+    </div>
+
+    <div class="col-8">
+        
+        <div class="card">
+
+            <div class="card-body">
+                <div *ngFor="let message of messages">
+                    <app-message [message]="message" [currentUser]="user?.username"></app-message>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                
+            </div>
+            
+        </div>  
+
+    </div>
+
+</div>

@@ -13,6 +13,7 @@ import { Player } from '../models/player';
 })
 export class PlayersService {
   baseUrl = environment.apiUrl;
+  friends: Player[] = [];
   playersCache = new Map();
   paginationParams: PaginationParams;
 
@@ -41,6 +42,17 @@ export class PlayersService {
     return getPaginatedResult<Player[]>(this.baseUrl + 'users/', params, this.http).pipe(
       map(response => {
         this.playersCache.set(queryString, response);
+        return response;
+      })
+    );
+  }
+
+  getFriends() {    
+    if (this.friends.length > 0) return of(this.friends);
+
+    return this.http.get<Player[]>(this.baseUrl + 'users/friends').pipe(
+      map(response => {
+        this.friends = response;
         return response;
       })
     );

@@ -1,0 +1,13 @@
+.message-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.message-text-recipient {
+	color: #3498D0;
+}
+
+.message-text-currentuser {
+	color: #00BC6F;
+}

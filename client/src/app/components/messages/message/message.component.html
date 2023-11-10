@@ -1,0 +1,27 @@
+<div class="d-flex mt-3 mx-4" *ngIf="message && message.senderUsername !== currentUser">
+
+    <img 
+        class="message-avatar"
+        src="{{message.senderAvatar.url || './assets/poster.png'}}"
+        alt="{{message.senderUsername}}"
+    >
+
+    <h6 class="d-inline ms-3 mt-1 message-text-recipient">{{message.content}}</h6>
+
+    <div class="col-4"></div>
+
+</div>
+
+<div class="d-flex mt-3 mx-4 flex-row-reverse" *ngIf="message && message.senderUsername === currentUser">
+
+    <img 
+        class="message-avatar"
+        src="{{message.senderAvatar.url || './assets/poster.png'}}"
+        alt="{{message.senderUsername}}"
+    >
+        
+    <h6 class="d-inline me-3 mt-1 message-text-currentuser">{{message.content}}</h6>
+
+    <div class="col-4"></div>
+
+</div>
