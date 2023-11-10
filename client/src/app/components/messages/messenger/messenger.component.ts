@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 
 import { take } from 'rxjs';
 
@@ -8,16 +8,21 @@ import { PlayersService } from 'src/app/services/players.service';
 import { Message } from 'src/app/models/message';
 import { User } from 'src/app/models/user';
 import { Player } from 'src/app/models/player';
+import { NgForm } from '@angular/forms';
+import { MessageComponent } from '../message/message.component';
 
 @Component({
   selector: 'app-messenger',
   templateUrl: './messenger.component.html',
   styleUrls: ['./messenger.component.css']
 })
-export class MessengerComponent implements OnInit {
+export class MessengerComponent implements OnInit, AfterViewInit {
+  @ViewChildren(MessageComponent) messageComponents: QueryList<MessageComponent> | undefined;
+  @ViewChild('messageForm') messageForm?: NgForm;
   friends?: Player[];
   messages?: Message[];
   user: User | null = null;
+  content = '';
 
   constructor(
     private accountService: AccountService,
@@ -31,6 +36,9 @@ export class MessengerComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadFriends();    
+  }
+  
+  ngAfterViewInit(): void {
   }
 
   loadFriends() {
@@ -48,5 +56,27 @@ export class MessengerComponent implements OnInit {
     this.messagesService.getMessages(username).subscribe({
       next: messages => this.messages = messages
     });
+  }
+
+  sendMessage() {
+    this.messagesService.sendMessage(this.content).subscribe({
+      next: message => {
+        this.messages?.push(message);
+        this.updateLastMessage();
+        this.messageForm?.reset();
+      }
+    })
+  }
+
+  updateLastMessage() {
+    if (!this.messages || !this.messageComponents) return;
+
+    const messageComponentsArray = this.messageComponents.toArray();
+    const lastIndex = messageComponentsArray.length - 1;
+    const newMessage = this.messages[this.messages.length - 1];
+
+    if (messageComponentsArray[lastIndex]) {
+      messageComponentsArray[lastIndex].updateNextMessage(newMessage);
+    }
   }
 }

@@ -16,7 +16,7 @@
                 <div *ngFor="let message of messages; let i = index">
                     <app-message
                         [previousMessage]="i === 0 ? undefined : messages[i-1]"
-                        [message]="messages[i]"
+                        [currentMessage]="messages[i]"
                         [nextMessage]="i === messages.length ? undefined : messages[i+1]"
                         [currentUser]="user?.username"
                     ></app-message>
@@ -24,11 +24,21 @@
             </div>
 
             <div class="card-footer">
-                <form>
+                <form #messageForm="ngForm" (ngSubmit)="sendMessage()" autocomplete="off">
                     <div class="input-group">
-                        <input type="text" class="form-control input-sm">
+                        <input 
+                            name="content"
+                            required
+                            [(ngModel)]="content"
+                            type="text"
+                            class="form-control input-sm"
+                        >
                         <div class="input-group-append">
-                            <button class="btn btn-success ms-2" type="submit">
+                            <button 
+                                [disabled]="!messageForm.valid"
+                                class="btn btn-success ms-2"
+                                type="submit"
+                            >
                                 <i class="bi bi-caret-right-fill"></i>
                             </button>
                         </div>

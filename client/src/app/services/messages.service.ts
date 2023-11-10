@@ -40,6 +40,11 @@ export class MessagesService {
     );
   }
 
+  sendMessage(content: string) {
+    return this.http.post<Message>(
+      this.baseUrl + 'messages', {recipientUsername: this.lastConversant, content});
+  }
+
   setLastConversant(username: string) {
     this.lastConversant = username;
   }
