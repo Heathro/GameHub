@@ -11,3 +11,17 @@
 .message-text-currentuser {
 	color: #00BC6F;
 }
+
+.message-timestamp {
+  font-size: smaller;
+  margin-top: 12px;
+}
+
+.message-read {
+  font-size: xx-large;
+  color: #3498D0;
+}
+
+.message-not-read {
+  font-size: xx-large;
+}

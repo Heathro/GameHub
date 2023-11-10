@@ -7,7 +7,6 @@ import { environment } from 'src/environments/environment';
 import { getPaginatedResult, getPaginationHeaders } from '../helpers/paginationHelper';
 import { PaginationParams } from '../models/pagination';
 import { Message } from '../models/message';
-import { PlayersService } from './players.service';
 
 @Injectable({
   providedIn: 'root'

@@ -37,7 +37,7 @@ export class MessengerComponent implements OnInit {
     this.playersService.getFriends().subscribe({
       next: friends => {
         this.friends = friends;
-
+        
         const lastConversant = this.messagesService.getLastConversant();
         this.loadMessages(lastConversant.length > 0 ? lastConversant : this.friends[0].username);
       }
