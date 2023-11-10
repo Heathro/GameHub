@@ -5,7 +5,6 @@ import { map, of, take } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 import { getFilteredPaginatedResult, getPaginationHeaders } from '../helpers/paginationHelper';
-import { AccountService } from './account.service';
 import { PaginationParams } from '../models/pagination';
 import { Game } from '../models/game';
 import { Filter } from '../models/filter';
@@ -21,15 +20,12 @@ export class GamesService {
   filter: Filter | undefined;
   user: User | undefined;
 
-  constructor(private http: HttpClient, private accountService: AccountService) {
-    this.paginationParams = new PaginationParams(4, 'az');
-    this.accountService.currentUser$.pipe(take(1)).subscribe({
-      next: user => {
-        if (user) {
-          this.user = user;
-        }
-      }
-    });
+  constructor(private http: HttpClient) {
+    this.paginationParams = this.initializePaginationParams();
+  }
+
+  setCurrentUser(user: User) {
+    this.user = user;
   }
 
   getGame(title: string) {
@@ -141,6 +137,17 @@ export class GamesService {
 
   getFilter() {
     return this.filter;
+  }
+
+  clearPrivateData() {
+    this.gamesCache = new Map();
+    this.paginationParams = this.initializePaginationParams();
+    this.filter = undefined;
+    this.user = undefined;
+  }
+
+  private initializePaginationParams() {
+    return new PaginationParams(4, 'az');
   }
 
   private stringifyFilter(filters: Filter): string {

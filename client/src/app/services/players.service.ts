@@ -18,7 +18,7 @@ export class PlayersService {
   paginationParams: PaginationParams;
 
   constructor(private http: HttpClient) {
-    this.paginationParams = new PaginationParams(3, 'az');
+    this.paginationParams = this.initializePaginationParams();
   }
 
   getPlayer(username: string) {
@@ -72,5 +72,15 @@ export class PlayersService {
 
   getPaginationParams() {
     return this.paginationParams;
+  }
+
+  clearPrivateData() {
+    this.friends.length = 0;
+    this.playersCache = new Map();
+    this.paginationParams = this.initializePaginationParams();
+  }
+
+  private initializePaginationParams() {
+    return new PaginationParams(3, 'az');
   }
 }

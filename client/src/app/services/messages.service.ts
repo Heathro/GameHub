@@ -18,7 +18,7 @@ export class MessagesService {
   paginationParams: PaginationParams;
 
   constructor(private http: HttpClient) {
-    this.paginationParams = new PaginationParams(100);
+    this.paginationParams = this.initializePaginationParams();
   }
 
   getPaginatedMessages() {
@@ -63,5 +63,15 @@ export class MessagesService {
 
   getPaginationParams() {
     return this.paginationParams;
+  }
+
+  clearPrivateData() {
+    this.messagesCache = new Map();
+    this.lastConversant = '';
+    this.paginationParams = this.initializePaginationParams();
+  }
+
+  private initializePaginationParams() {
+    return new PaginationParams(100);
   }
 }

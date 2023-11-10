@@ -4,7 +4,10 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, map } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
+import { GamesService } from './games.service';
 import { User } from '../models/user';
+import { MessagesService } from './messages.service';
+import { PlayersService } from './players.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,9 +17,15 @@ export class AccountService {
   private currentUserSource = new BehaviorSubject<User | null>(null);
   currentUser$ = this.currentUserSource.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient, 
+    private gamesService: GamesService,
+    private messagesService: MessagesService,
+    private playerService: PlayersService
+  ) { }
 
   login(model: any) {
+    this.clearPrivateData();
     return this.http.post<User>(this.baseUrl + 'account/login', model).pipe(
       map((user) => {
         if (user) this.setCurrentUser(user);
@@ -25,6 +34,7 @@ export class AccountService {
   }
 
   register(model: any) {
+    this.clearPrivateData();
     return this.http.post<User>(this.baseUrl + 'account/register', model).pipe(
       map(user => {
         if (user) this.setCurrentUser(user);
@@ -32,13 +42,21 @@ export class AccountService {
     );
   }
 
+  logout() {
+    this.clearPrivateData();
+    localStorage.removeItem('user');
+    this.currentUserSource.next(null);
+  }
+
   setCurrentUser(user: User) {
     localStorage.setItem('user', JSON.stringify(user));
     this.currentUserSource.next(user);
+    this.gamesService.setCurrentUser(user);
   }
 
-  logout() {
-    localStorage.removeItem('user');
-    this.currentUserSource.next(null);
+  clearPrivateData() {
+    this.gamesService.clearPrivateData();
+    this.messagesService.clearPrivateData();
+    this.playerService.clearPrivateData();
   }
 }
