@@ -4,7 +4,7 @@
         <h2 class="text-center text-info">Edit Profile</h2>
     </div>
     <div class="col-9">
-        <div class="alert alert-warning changes-alert mx-1" *ngIf="editForm.dirty">
+        <div class="alert alert-warning changes-alert mx-1" *ngIf="isDirty()">
             <p>You have made changes. Any unsaved changes will be lost.</p>
         </div>
     </div>
@@ -110,7 +110,7 @@
                         <button
                             class="btn btn-outline-success mt-4 col-4 mx-auto"
                             type="submit"
-                            [disabled]="!editForm.dirty || !editForm.valid || updating"
+                            [disabled]="!isDirty() || !editForm.valid || updating"
                             >Save changes&nbsp;&nbsp;&nbsp;
                             <i class="bi bi-floppy"></i>
                         </button>

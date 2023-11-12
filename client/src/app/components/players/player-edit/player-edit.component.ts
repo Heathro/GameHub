@@ -12,6 +12,7 @@ import { PlayersService } from 'src/app/services/players.service';
 import { EditComponent } from 'src/app/interfaces/edit-component';
 import { Player } from 'src/app/models/player';
 import { User } from 'src/app/models/user';
+import { deepEqual } from 'src/app/helpers/compareHelper';
 
 @Component({
   selector: 'app-player-edit',
@@ -20,9 +21,10 @@ import { User } from 'src/app/models/user';
 })
 export class PlayerEditComponent implements OnInit, EditComponent {
   @HostListener('window:beforeunload', ['$event']) unloadNotification($event: any) {
-    if (this.editForm?.dirty) { $event.returnValue = true; }
+    if (this.isDirty()) { $event.returnValue = true; }
   }
   editForm: FormGroup = new FormGroup({});
+  initialForm: any;
   validationErrors: string[] | undefined;
   user: User | null = null;
   player: Player | undefined;
@@ -47,7 +49,7 @@ export class PlayerEditComponent implements OnInit, EditComponent {
   }
 
   isDirty(): boolean {
-    return this.editForm.dirty;
+    return !deepEqual(this.editForm.value, this.initialForm);
   }
 
   loadPlayer() {
@@ -80,6 +82,7 @@ export class PlayerEditComponent implements OnInit, EditComponent {
 
   resetForm() {
     this.editForm?.reset(this.editForm.value);
+    this.initialForm = this.editForm.value;
   }
   
   initializeFrom() {
@@ -90,6 +93,8 @@ export class PlayerEditComponent implements OnInit, EditComponent {
       country: this.player?.country,
       city: this.player?.city
     });
+
+    this.initialForm = this.editForm.value;
   }
 
   initializeUploader() {

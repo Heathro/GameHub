@@ -13,6 +13,7 @@ import { AccountService } from 'src/app/services/account.service';
 import { EditComponent } from 'src/app/interfaces/edit-component';
 import { Game } from 'src/app/models/game';
 import { User } from 'src/app/models/user';
+import { deepEqual } from 'src/app/helpers/compareHelper';
 
 @Component({
   selector: 'app-game-edit',
@@ -21,9 +22,10 @@ import { User } from 'src/app/models/user';
 })
 export class GameEditComponent implements OnInit, EditComponent {
   @HostListener('window:beforeunload', ['$event']) unloadNotification($event: any) {
-    if (this.editForm?.dirty) { $event.returnValue = true; }
+    if (this.isDirty()) { $event.returnValue = true; }
   }
   editForm: FormGroup = new FormGroup({});
+  initialForm: any;
   validationErrors: string[] | undefined;
   user: User | null = null;
   game: Game | undefined;
@@ -51,7 +53,7 @@ export class GameEditComponent implements OnInit, EditComponent {
   }
 
   isDirty(): boolean {
-    return this.editForm.dirty;
+    return !deepEqual(this.editForm.value, this.initialForm);
   }
 
   loadGame() {
@@ -88,6 +90,7 @@ export class GameEditComponent implements OnInit, EditComponent {
 
   resetForm() {
     this.editForm?.reset(this.editForm.value);
+    this.initialForm = this.editForm.value;
   }
   
   initializeFrom() {
@@ -125,6 +128,8 @@ export class GameEditComponent implements OnInit, EditComponent {
         survival: this.game?.genres.survival
       })
     });
+    
+    this.initialForm = this.editForm.value;
   }
 
   alphaNumericSpaceColon(): ValidatorFn {

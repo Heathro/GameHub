@@ -10,12 +10,15 @@
         <div>
             <div class="row">
                 <h4 
-                    class="d-inline text-info ms-4 mt-2 col-9"
-                >&nbsp;&nbsp;&nbsp;{{getCurrentConversant()}}</h4>
+                    class="d-inline text-info ms-4 mt-2 col-8"
+                >   
+                    &nbsp;&nbsp;<i class="bi bi-chat-dots"></i>
+                    &nbsp;&nbsp;{{getCurrentConversant()}}
+                </h4>
                 <button 
-                    class="btn btn-outline-danger mb-2 col-2"
+                    class="btn btn-outline-danger mb-2 col-3"
                     (click)="deleteMessages()"
-                >Clear Messages</button>
+                >Clear Messages&nbsp;&nbsp;&nbsp;<i class="bi bi-trash3"></i></button>
             </div>
 
             <div class="card">
