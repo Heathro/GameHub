@@ -14,6 +14,7 @@ import { AccountService } from 'src/app/services/account.service';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup = new FormGroup({});
   validationErrors: string[] | undefined;
+  loging = false;
 
   constructor(
     private accountService: AccountService, 
@@ -34,13 +35,16 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
+    this.loging = true;
     this.accountService.login(this.loginForm.value).subscribe({
       next: () => {
         this.router.navigateByUrl('/');
-        this.toastr.success('Login successful')
+        this.toastr.success('Login successful');
+        this.loging = false;
       },
       error: error => {
         this.validationErrors = error;
+        this.loging = false;
       }
     });
   }  

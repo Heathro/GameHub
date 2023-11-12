@@ -24,6 +24,7 @@ export class MessengerComponent implements OnInit {
   user: User | null = null;
   content = '';
   loading = false;
+  sending = false;
 
   constructor(
     private accountService: AccountService,
@@ -42,8 +43,7 @@ export class MessengerComponent implements OnInit {
   loadFriends() {
     this.playersService.getFriends().subscribe({
       next: friends => {
-        this.friends = friends;
-        
+        this.friends = friends;        
         const lastConversant = this.messagesService.getLastConversant();
         this.loadMessages(lastConversant.length > 0 ? lastConversant : this.friends[0].username);
       }
@@ -61,16 +61,40 @@ export class MessengerComponent implements OnInit {
   }
 
   sendMessage() {
+    this.sending = true;
     this.messagesService.sendMessage(this.content).subscribe({
       next: message => {
         this.messages?.push(message);
         this.updateLastMessage();
         this.messageForm?.reset();
+        this.sending = false;
       }
     })
   }
 
-  updateLastMessage() {
+  deleteMessage(id: number) {
+    this.messagesService.deleteMessage(id).subscribe({
+      next: () => {
+        if (!this.messages) return;
+        const currentMessageIndex = this.messages.findIndex(m => m.id === id);
+        this.updatePreviousMessage(currentMessageIndex - 1);
+        this.updateNextMessage(currentMessageIndex + 1);
+        this.messages.splice(currentMessageIndex, 1);
+      }
+    });
+  }
+
+  deleteMessages() {
+    this.messagesService.deleteMessages().subscribe({
+      next: () => this.messages = []
+    });
+  }
+
+  getCurrentConversant() {
+    return this.messagesService.getLastConversant();
+  }
+  
+  private updateLastMessage() {
     if (!this.messages || !this.messageComponents) return;
 
     const messageComponentsArray = this.messageComponents.toArray();
@@ -79,6 +103,32 @@ export class MessengerComponent implements OnInit {
 
     if (messageComponentsArray[lastIndex]) {
       messageComponentsArray[lastIndex].updateNextMessage(newMessage);
+    }
+  }
+
+  private updatePreviousMessage(index: number) {
+    if (!this.messages || !this.messageComponents) return;
+    if (index < 0) return;
+
+    const messageComponentsArray = this.messageComponents.toArray();
+
+    const newMessage = index + 2 < this.messages.length ? this.messages[index + 2] : undefined;
+
+    if (messageComponentsArray[index]) {
+      messageComponentsArray[index].updateNextMessage(newMessage);
+    }
+  }
+
+  private updateNextMessage(index: number) {
+    if (!this.messages || !this.messageComponents) return;
+    if (index >= this.messageComponents.length) return;
+
+    const messageComponentsArray = this.messageComponents.toArray();
+
+    const previousMessage = index - 2 >= 0 ? this.messages[index - 2] : undefined;
+
+    if (messageComponentsArray[index]) {
+      messageComponentsArray[index].updatePreviousMessage(previousMessage);
     }
   }
 }

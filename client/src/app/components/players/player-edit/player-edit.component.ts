@@ -28,6 +28,7 @@ export class PlayerEditComponent implements OnInit, EditComponent {
   player: Player | undefined;
   uploader: FileUploader | undefined;
   baseUrl = environment.apiUrl;
+  updating = false;
 
   constructor(
     private accountService: AccountService, 
@@ -62,14 +63,17 @@ export class PlayerEditComponent implements OnInit, EditComponent {
   }
 
   updatePlayer() {
+    this.updating = true;
     this.playersService.updatePlayer(this.editForm?.value).subscribe({
       next: () => {
         this.toastr.success('Profile updated');
         this.resetForm();
+        this.updating = false;
       },
       error: error => {
         this.validationErrors = error;
         this.resetForm();
+        this.updating = false;
       }
     });
   }

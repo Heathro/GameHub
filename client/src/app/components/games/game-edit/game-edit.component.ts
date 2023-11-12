@@ -30,6 +30,7 @@ export class GameEditComponent implements OnInit, EditComponent {
   currentTitle = "";
   uploader: FileUploader | undefined;
   baseUrl = environment.apiUrl;
+  updating = false;
 
   constructor(
     private accountService: AccountService,
@@ -68,16 +69,19 @@ export class GameEditComponent implements OnInit, EditComponent {
   }
 
   updateGame() {
+    this.updating = true;
     this.gamesService.updateGame(this.editForm.value, this.currentTitle).subscribe({
       next: () => {
         this.currentTitle = this.editForm?.controls['title'].value;
         this.location.replaceState('/games/' + this.currentTitle + '/edit');
         this.toastr.success('Game updated');
         this.resetForm();
+        this.updating = false;
       },
       error: error => {
         this.validationErrors = error;
         this.resetForm();
+        this.updating = false;
       }
     });
   }

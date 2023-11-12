@@ -1,52 +1,62 @@
 <div class="row">
 
     <div class="col-4">
-
         <div *ngFor="let friend of friends">
             <app-contact-card (loadMessages)="loadMessages($event)" [player]="friend"></app-contact-card>
         </div>
-
     </div>
 
     <div class="col-8">
-        
-        <div class="card">
-
-            <div class="card-body" *ngIf="!loading && messages && messages.length !== 0">
-                <div *ngFor="let message of messages; let i = index">
-                    <app-message
-                        [previousMessage]="i === 0 ? undefined : messages[i-1]"
-                        [currentMessage]="messages[i]"
-                        [nextMessage]="i === messages.length ? undefined : messages[i+1]"
-                        [currentUser]="user?.username"
-                    ></app-message>
-                </div>
+        <div>
+            <div class="row">
+                <h4 
+                    class="d-inline text-info ms-4 mt-2 col-9"
+                >&nbsp;&nbsp;&nbsp;{{getCurrentConversant()}}</h4>
+                <button 
+                    class="btn btn-outline-danger mb-2 col-2"
+                    (click)="deleteMessages()"
+                >Clear Messages</button>
             </div>
 
-            <div class="card-footer">
-                <form #messageForm="ngForm" (ngSubmit)="sendMessage()" autocomplete="off">
-                    <div class="input-group">
-                        <input 
-                            name="content"
-                            required
-                            [(ngModel)]="content"
-                            type="text"
-                            class="form-control input-sm"
-                        >
-                        <div class="input-group-append">
-                            <button 
-                                [disabled]="!messageForm.valid"
-                                class="btn btn-success ms-2"
-                                type="submit"
-                            >
-                                <i class="bi bi-caret-right-fill"></i>
-                            </button>
-                        </div>
+            <div class="card">
+
+                <div class="card-body" *ngIf="!loading && messages && messages.length !== 0">
+                    <div *ngFor="let message of messages; let i = index">
+                        <app-message
+                            (deleteMessage)="deleteMessage($event)"
+                            [previousMessage]="i === 0 ? undefined : messages[i-1]"
+                            [currentMessage]="messages[i]"
+                            [nextMessage]="i === messages.length ? undefined : messages[i+1]"
+                            [currentUser]="user?.username"
+                        ></app-message>
                     </div>
-                </form>
+                </div>
+
+                <div class="card-footer">
+                    <form #messageForm="ngForm" (ngSubmit)="sendMessage()" autocomplete="off">
+                        <div class="input-group">
+                            <input 
+                                name="content"
+                                required
+                                [(ngModel)]="content"
+                                type="text"
+                                class="form-control input-sm"
+                            >
+                            <div class="input-group-append">
+                                <button 
+                                    [disabled]="!messageForm.valid || sending"
+                                    class="btn btn-success ms-2"
+                                    type="submit"
+                                >
+                                    <i class="bi bi-caret-right-fill"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
             </div>
-            
-        </div>  
+        </div>
 
     </div>
 

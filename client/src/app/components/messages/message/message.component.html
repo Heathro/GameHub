@@ -1,6 +1,9 @@
 <div *ngIf="currentMessage">
 
-    <div class="d-flex mx-4" *ngIf="currentMessage.senderUsername !== currentUser">
+    <div class="d-flex" *ngIf="currentMessage.senderUsername !== currentUser">
+        <button class="btn btn-danger-outline message-delete-button-left" (click)="deleteCurrentMessage()">
+            <i class="bi bi-trash3"></i>
+        </button>
         <img *ngIf="avatarRequired"
             class="message-avatar"
             src="{{currentMessage.senderAvatar.url || './assets/poster.png'}}"
@@ -9,10 +12,12 @@
         <div class="avatar-placeholder" *ngIf="!avatarRequired"></div>
         <h6 class="d-inline ms-3 mt-2 message-text-recipient" *ngIf="avatarRequired">{{currentMessage.content}}</h6>
         <h6 class="d-inline ms-3 message-text-recipient" *ngIf="!avatarRequired">{{currentMessage.content}}</h6>
-        <div class="col-4"></div>
     </div>
 
-    <div class="d-flex mx-4 flex-row-reverse" *ngIf="currentMessage.senderUsername === currentUser">
+    <div class="d-flex flex-row-reverse" *ngIf="currentMessage.senderUsername === currentUser">
+        <button class="btn btn-danger-outline message-delete-button-right" (click)="deleteCurrentMessage()">
+            <i class="bi bi-trash3"></i>
+        </button>
         <img *ngIf="avatarRequired"
             class="message-avatar"
             src="{{currentMessage.senderAvatar.url || './assets/poster.png'}}"
@@ -21,7 +26,6 @@
         <div class="avatar-placeholder" *ngIf="!avatarRequired"></div>
         <h6 class="d-inline me-3 mt-2 message-text-currentuser" *ngIf="avatarRequired">{{currentMessage.content}}</h6>        
         <h6 class="d-inline me-3 message-text-currentuser" *ngIf="!avatarRequired">{{currentMessage.content}}</h6>
-        <div class="col-4"></div>
     </div>
 
     <div class="d-flex" *ngIf="timeRequired && currentMessage.senderUsername !== currentUser">
@@ -38,6 +42,6 @@
         <h6 class="text-muted text-right me-1 message-timestamp">
             {{currentMessage.messageSent + 'Z' | date:getDateFormat()}}
         </h6>
-    </div> 
+    </div>
 
 </div>

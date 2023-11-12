@@ -45,6 +45,24 @@ export class MessagesService {
       this.baseUrl + 'messages', {recipientUsername: this.lastConversant, content});
   }
 
+  deleteMessage(id: number) {
+    return this.http.delete(this.baseUrl + 'messages/' + id).pipe(
+      map(() => {
+        this.messagesCache.set(this.lastConversant, 
+          this.messagesCache.get(this.lastConversant).filter((m: Message) => m.id !== id)
+        );
+      })
+    );
+  }
+
+  deleteMessages() {
+    return this.http.delete(this.baseUrl + 'messages/' + this.lastConversant).pipe(
+      map(() => {
+        this.messagesCache.set(this.lastConversant, []);
+      })
+    );
+  }
+
   setLastConversant(username: string) {
     this.lastConversant = username;
   }

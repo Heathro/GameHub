@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Message } from 'src/app/models/message';
 
 @Component({
@@ -7,6 +7,7 @@ import { Message } from 'src/app/models/message';
   styleUrls: ['./message.component.css']
 })
 export class MessageComponent implements OnInit {
+  @Output() deleteMessage = new EventEmitter<number>();
   @Input() previousMessage: Message | undefined;
   @Input() currentMessage: Message | undefined;
   @Input() nextMessage: Message | undefined;
@@ -18,28 +19,36 @@ export class MessageComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {    
+    this.checkRequirements();
+  }
+
+  checkRequirements() {
     this.avatarRequired = this.isAvatarRequired();
     this.timeRequired = this.isTimeRequired();
   }
 
+  updatePreviousMessage(message?: Message) {
+    this.previousMessage = message;
+    this.avatarRequired = this.isAvatarRequired();
+  }
+
+  updateNextMessage(message?: Message) {
+    this.nextMessage = message;
+    this.timeRequired = this.isTimeRequired();
+  }
+
+  deleteCurrentMessage() {
+    if (this.currentMessage) this.deleteMessage.next(this.currentMessage.id);
+  }
+
   isAvatarRequired() {
-    if (!this.previousMessage) return true;
-    if (!this.currentMessage) return true;
+    if (!this.previousMessage || !this.currentMessage) return true;
 
-    const previousMessageDate = new Date(this.previousMessage.messageSent);
-    const currentMessageDate = new Date(this.currentMessage?.messageSent);
-
-    return !(this.previousMessage.senderId     === this.currentMessage?.senderId    &&
-             previousMessageDate.getFullYear() === currentMessageDate.getFullYear() &&
-             previousMessageDate.getMonth()    === currentMessageDate.getMonth()    &&
-             previousMessageDate.getDay()      === currentMessageDate.getDay()      &&
-             previousMessageDate.getHours()    === currentMessageDate.getHours()    &&
-             previousMessageDate.getMinutes()  === currentMessageDate.getMinutes());
+    return this.previousMessage.senderId !== this.currentMessage?.senderId;
   }
 
   isTimeRequired() {
-    if (!this.nextMessage) return true;
-    if (!this.currentMessage) return true;
+    if (!this.nextMessage || !this.currentMessage) return true;
 
     const currentMessageDate = new Date(this.currentMessage?.messageSent);
     const nextMessageDate = new Date(this.nextMessage.messageSent);
@@ -50,11 +59,6 @@ export class MessageComponent implements OnInit {
              nextMessageDate.getDay()      === currentMessageDate.getDay()      &&
              nextMessageDate.getHours()    === currentMessageDate.getHours()    &&
              nextMessageDate.getMinutes()  === currentMessageDate.getMinutes());
-  }
-
-  updateNextMessage(message: Message) {
-    this.nextMessage = message;
-    this.timeRequired = this.isTimeRequired();
   }
 
   getDateFormat() {

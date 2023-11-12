@@ -10,10 +10,13 @@
 
 .message-text-recipient {
 	color: #3498D0;
+  width: 500px;
 }
 
 .message-text-currentuser {
 	color: #00BC6F;
+  width: 500px;
+  text-align: right;
 }
 
 .message-timestamp {
@@ -28,4 +31,18 @@
 
 .message-not-read {
   font-size: xx-large;
+}
+
+.message-delete-button-right {
+  font-size: small;
+  color: #e74d3c95;
+  margin-top: -6px;
+  margin-right: -20px;
+}
+
+.message-delete-button-left {
+  font-size: small;
+  color: #e74d3c95;
+  margin-top: -6px;
+  margin-left: -20px;
 }

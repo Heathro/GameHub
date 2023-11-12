@@ -14,6 +14,7 @@ import { AccountService } from 'src/app/services/account.service';
 export class RegisterComponent implements OnInit {
   registerForm: FormGroup = new FormGroup({});
   validationErrors: string[] | undefined;
+  registering = false;
 
   constructor(
     private accountService: AccountService, 
@@ -24,6 +25,21 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeFrom();
+  }
+
+  register() {
+    this.registering = true;
+    this.accountService.register(this.registerForm.value).subscribe({
+      next: () => {
+        this.router.navigateByUrl('/');
+        this.toastr.success('Register successful');
+        this.registering = false;
+      },
+      error: error => {
+        this.validationErrors = error;
+        this.registering = false;
+      }
+    });
   }
 
   initializeFrom() {
@@ -59,17 +75,5 @@ export class RegisterComponent implements OnInit {
     return (control: AbstractControl) => {
       return control.value === control.parent?.get(matchTo)?.value ? null : {notMatching: true};
     }
-  }
-
-  register() {
-    this.accountService.register(this.registerForm.value).subscribe({
-      next: () => {
-        this.router.navigateByUrl('/');
-        this.toastr.success('Register successful');
-      },
-      error: error => {
-        this.validationErrors = error;
-      }
-    });
   }
 }

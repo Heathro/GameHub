@@ -110,7 +110,7 @@
                         <button
                             class="btn btn-outline-success mt-4 col-4 mx-auto"
                             type="submit"
-                            [disabled]="!editForm.dirty || !editForm.valid"
+                            [disabled]="!editForm.dirty || !editForm.valid || updating"
                             >Save changes&nbsp;&nbsp;&nbsp;
                             <i class="bi bi-floppy"></i>
                         </button>

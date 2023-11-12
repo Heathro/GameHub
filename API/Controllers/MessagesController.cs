@@ -76,4 +76,50 @@ public class MessagesController : BaseApiController
     {
         return Ok(await _messagesRepository.GetMessageThread(User.GetUsername(), username));
     }
+
+    [HttpDelete("{id:int}")]
+    public async Task<ActionResult> DeleteMessage(int id)
+    {
+        var username = User.GetUsername();
+        var message = await _messagesRepository.GetMessage(id);
+
+        if (message.SenderUsername != username && message.RecipientUsername != username)
+        {
+            return Unauthorized();
+        }
+
+        if (message.SenderUsername == username) message.SenderDeleted = true;
+        if (message.RecipientUsername == username) message.RecipientDeleted = true;
+
+        if (message.SenderDeleted && message.RecipientDeleted)
+        {
+            _messagesRepository.DeleteMessage(message);
+        }
+
+        if (await _messagesRepository.SaveAllAsync()) return Ok();
+
+        return BadRequest("Failed to delete message");
+    }
+
+    [HttpDelete("{recipientUsername}")]
+    public async Task<ActionResult> DeleteMessages(string recipientUsername)
+    {
+        var currentUsername = User.GetUsername();
+        var messages = await _messagesRepository.GetMessages(currentUsername, recipientUsername);
+
+        foreach (var message in messages)
+        {
+            if (message.SenderUsername == currentUsername) message.SenderDeleted = true;
+            if (message.RecipientUsername == currentUsername) message.RecipientDeleted = true;
+
+            if (message.SenderDeleted && message.RecipientDeleted)
+            {
+                _messagesRepository.DeleteMessage(message);
+            }
+        }
+        
+        if (await _messagesRepository.SaveAllAsync()) return Ok();
+
+        return BadRequest("Failed to delete messages");
+    }
 }
