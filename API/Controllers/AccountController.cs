@@ -2,11 +2,11 @@
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 using API.Data;
 using API.DTOs;
 using API.Entities;
 using API.Interfaces;
-using AutoMapper;
 
 namespace API.Controllers;
 
@@ -26,7 +26,7 @@ public class AccountController : BaseApiController
     [HttpPost("register")]
     public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
     {
-        if (await UserExists(registerDto.Username)) return BadRequest("Username is already taken");
+        if (await UserExists(registerDto.UserName)) return BadRequest("Username is already taken");
         
         var user = _mapper.Map<AppUser>(registerDto);
 
@@ -35,6 +35,10 @@ public class AccountController : BaseApiController
         user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password));
         user.PasswordSalt = hmac.Key;
         user.Avatar = new Avatar();
+        user.Realname = "";
+        user.Summary = "";
+        user.Country = "";
+        user.City = "";
 
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
@@ -42,7 +46,7 @@ public class AccountController : BaseApiController
         return new UserDto
         {
             Id = user.Id,
-            Username = user.Username,
+            UserName = user.UserName,
             Token = _tokenService.CreateToken(user),
             AvatarUrl = user.Avatar.Url
         };
@@ -53,7 +57,7 @@ public class AccountController : BaseApiController
     {
         var user = await _context.Users
             .Include(a => a.Avatar)
-            .SingleOrDefaultAsync(user => user.Username == loginDto.Username);
+            .SingleOrDefaultAsync(user => user.UserName == loginDto.UserName);
             
         if (user == null) return Unauthorized("Invalid username");
 
@@ -67,7 +71,7 @@ public class AccountController : BaseApiController
         return new UserDto
         {
             Id = user.Id,
-            Username = user.Username,
+            UserName = user.UserName,
             Token = _tokenService.CreateToken(user),
             AvatarUrl = user.Avatar.Url
         };
@@ -75,6 +79,6 @@ public class AccountController : BaseApiController
 
     private async Task<bool> UserExists(string username)
     {
-        return await _context.Users.AnyAsync(user => user.Username.ToLower() == username.ToLower());
+        return await _context.Users.AnyAsync(user => user.UserName.ToLower() == username.ToLower());
     }
 }

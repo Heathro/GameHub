@@ -2,7 +2,7 @@ import { Avatar } from "./avatar";
 
 export interface Player {
   id: number;
-  username: string;
+  userName: string;
   avatar: Avatar;
   realname: string;
   summary: string;

@@ -17,6 +17,6 @@ export class ContactCardComponent implements OnInit {
   }
 
   changeDialogue() {
-    if (this.player) this.loadMessages.next(this.player.username);
+    if (this.player) this.loadMessages.next(this.player.userName);
   }
 }

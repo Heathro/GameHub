@@ -6,7 +6,7 @@ public class RegisterDto
 {
     [Required]
     [StringLength(24)]
-    public string Username { get; set; }
+    public string UserName { get; set; }
     [Required]
     [StringLength(16, MinimumLength = 8)]
     public string Password { get; set; }

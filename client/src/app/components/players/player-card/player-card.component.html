@@ -1,15 +1,15 @@
-<div class="card mb-4 player-card-button" *ngIf="player" routerLink="/players/{{player.username}}">
+<div class="card mb-4 player-card-button" *ngIf="player" routerLink="/players/{{player.userName}}">
     <div class="row">
         <div class="col-3">
             <img 
                 class="player-card-img ms-4"
                 src="{{player.avatar.url || './assets/avatar.png'}}"
-                alt="{{player.username}}"
+                alt="{{player.userName}}"
             >
         </div>
         <div class="col-9">
             <h5 class="text-right mt-3">
-                {{player.username}}
+                {{player.userName}}
             </h5>
             <h6 class="text-muted text-right">Last Online: {{player.lastActive + 'Z' | timeago}}</h6>
         </div>

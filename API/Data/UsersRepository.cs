@@ -23,7 +23,7 @@ public class UsersRepository : IUsersRepository
     public async Task<PlayerDto> GetPlayerAsync(string username)
     {
         return await _context.Users
-            .Where(u => u.Username == username)
+            .Where(u => u.UserName == username)
             .ProjectTo<PlayerDto>(_mapper.ConfigurationProvider)
             .SingleOrDefaultAsync();
     }
@@ -33,12 +33,12 @@ public class UsersRepository : IUsersRepository
     {
         var query = _context.Users.AsQueryable();
 
-        query = query.Where(u => u.Username != currentUsername);
+        query = query.Where(u => u.UserName != currentUsername);
 
         query = paginationParams.OrderBy switch
         {
-            "za" => query.OrderByDescending(u => u.Username),
-            _ => query.OrderBy(u => u.Username)
+            "za" => query.OrderByDescending(u => u.UserName),
+            _ => query.OrderBy(u => u.UserName)
         };
 
         return await PagedList<PlayerDto>.CreateAsync
@@ -52,7 +52,7 @@ public class UsersRepository : IUsersRepository
     public async Task<ActionResult<IEnumerable<PlayerDto>>> GetFriendsAsync(string username)
     {
         return await _context.Users
-            .Where(u => u.Username != username)
+            .Where(u => u.UserName != username)
             .ProjectTo<PlayerDto>(_mapper.ConfigurationProvider)
             .ToListAsync();
     }
@@ -67,7 +67,7 @@ public class UsersRepository : IUsersRepository
     {
         return await _context.Users
             .Include(a => a.Avatar)
-            .SingleOrDefaultAsync(user => user.Username == username);
+            .SingleOrDefaultAsync(user => user.UserName == username);
     }
 
     public async Task<IEnumerable<AppUser>> GetUsersAsync()

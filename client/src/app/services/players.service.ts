@@ -24,7 +24,7 @@ export class PlayersService {
   getPlayer(username: string) {
     const player = [...this.playersCache.values()]
       .reduce((array, element) => array.concat(element.result), [])
-      .find((player: Player) => player.username === username);
+      .find((player: Player) => player.userName === username);
 
     if (player) return of(player);
 

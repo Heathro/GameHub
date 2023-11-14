@@ -54,7 +54,7 @@ export class PlayerEditComponent implements OnInit, EditComponent {
 
   loadPlayer() {
     if (!this.user) return;
-    this.playersService.getPlayer(this.user.username).subscribe({
+    this.playersService.getPlayer(this.user.userName).subscribe({
       next: player => {
         if (!player) this.router.navigateByUrl('/not-found');
         this.player = player;
