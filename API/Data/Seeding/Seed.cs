@@ -3,14 +3,15 @@ using System.Text.Json;
 using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using API.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace API.Data.Seeding;
 
 public class Seed
 {
-    public static async Task SeedUsers(DataContext context)
+    public static async Task SeedUsers(UserManager<AppUser> userManager)
     {
-        if (await context.Users.AnyAsync()) return;
+        if (await userManager.Users.AnyAsync()) return;
 
         var options = new JsonSerializerOptions{PropertyNameCaseInsensitive = true};
 
@@ -20,15 +21,8 @@ public class Seed
 
         foreach (var user in users)
         {
-            using var hmac = new HMACSHA512();
-
-            user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes("Pa$$w0rd"));
-            user.PasswordSalt = hmac.Key;
-
-            context.Users.Add(user);
+            await userManager.CreateAsync(user, "Pa$$w0rd");
         }
-
-        await context.SaveChangesAsync();
     }
 
     public static async Task SeedGames(DataContext context)

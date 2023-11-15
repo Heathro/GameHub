@@ -1,7 +1,9 @@
 using API.Data;
 using API.Data.Seeding;
+using API.Entities;
 using API.Extensions;
 using API.Middleware;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,7 +33,8 @@ try
 {
     var context = services.GetRequiredService<DataContext>();
     await context.Database.MigrateAsync();
-    await Seed.SeedUsers(context);
+    var userManager = services.GetRequiredService<UserManager<AppUser>>();
+    await Seed.SeedUsers(userManager);
     await Seed.SeedGames(context);
 }
 catch (Exception ex)
