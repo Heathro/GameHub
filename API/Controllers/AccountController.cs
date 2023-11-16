@@ -1,13 +1,10 @@
-﻿using System.Text;
-using System.Security.Cryptography;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
-using API.Data;
 using API.DTOs;
 using API.Entities;
 using API.Interfaces;
-using Microsoft.AspNetCore.Identity;
 
 namespace API.Controllers;
 
@@ -36,15 +33,19 @@ public class AccountController : BaseApiController
         user.Summary = "";
         user.Country = "";
         user.City = "";
+        user.Created = DateTime.UtcNow;
 
         var result = await _userManager.CreateAsync(user, registerDto.Password);
         if (!result.Succeeded) return BadRequest(result.Errors);
+
+        var roleResult = await _userManager.AddToRoleAsync(user, "Player");
+        if (!roleResult.Succeeded) return BadRequest(result.Errors);
 
         return new UserDto
         {
             Id = user.Id,
             UserName = user.UserName,
-            Token = _tokenService.CreateToken(user),
+            Token = await _tokenService.CreateToken(user),
             AvatarUrl = user.Avatar.Url
         };
     }
@@ -65,7 +66,7 @@ public class AccountController : BaseApiController
         {
             Id = user.Id,
             UserName = user.UserName,
-            Token = _tokenService.CreateToken(user),
+            Token = await _tokenService.CreateToken(user),
             AvatarUrl = user.Avatar.Url
         };
     }
