@@ -12,10 +12,11 @@ public static class IdentityServiceExtensions
     public static IServiceCollection AddIdentityServices(this IServiceCollection services,
         IConfiguration config)
     {
-        services.AddIdentityCore<AppUser>(o => 
+        services
+            .AddIdentityCore<AppUser>(options => 
             {
-                o.Password.RequiredLength = 8;
-                o.User.AllowedUserNameCharacters = 
+                options.Password.RequiredLength = 8;
+                options.User.AllowedUserNameCharacters = 
                     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             })
             .AddRoles<AppRole>()
@@ -33,6 +34,13 @@ public static class IdentityServiceExtensions
                     ValidateIssuer = false,
                     ValidateAudience = false
                 };
+            });
+
+        services
+            .AddAuthorization(options => 
+            {
+                options.AddPolicy("AdminRole", policy => policy.RequireRole("Admin"));
+                options.AddPolicy("AdminModeratorRole", policy => policy.RequireRole("Admin", "Moderator"));
             });
 
         return services;
