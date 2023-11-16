@@ -17,6 +17,7 @@
                 </h4>
                 <button 
                     class="btn btn-outline-danger mb-2 col-3"
+                    [disabled]="messages?.length === 0"
                     (click)="deleteMessages()"
                 >Clear Messages&nbsp;&nbsp;&nbsp;<i class="bi bi-trash3"></i></button>
             </div>

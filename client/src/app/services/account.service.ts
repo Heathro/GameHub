@@ -49,9 +49,17 @@ export class AccountService {
   }
 
   setCurrentUser(user: User) {
+    user.roles = [];
+    const roles = this.getDecodetToken(user.token).role;
+    Array.isArray(roles) ? user.roles = roles : user.roles.push(roles);
+
     localStorage.setItem('user', JSON.stringify(user));
     this.currentUserSource.next(user);
     this.gamesService.setCurrentUser(user);
+  }
+
+  private getDecodetToken(token: string) {
+    return JSON.parse(atob(token.split('.')[1]));
   }
 
   clearPrivateData() {

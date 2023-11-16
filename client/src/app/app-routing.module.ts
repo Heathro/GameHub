@@ -18,6 +18,8 @@ import { GamePageComponent } from './components/games/game-page/game-page.compon
 import { PlayerEditComponent } from './components/players/player-edit/player-edit.component';
 import { GameEditComponent } from './components/games/game-edit/game-edit.component';
 import { MessengerComponent } from './components/messages/messenger/messenger.component';
+import { AdminPanelComponent } from './components/admin/admin-panel/admin-panel.component';
+import { adminGuard } from './guards/admin.guard';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -32,7 +34,8 @@ const routes: Routes = [
       { path: 'players', component: PlayersListComponent },
       { path: 'players/:username', component: PlayerProfileComponent },
       { path: 'edit-profile', component: PlayerEditComponent, canDeactivate: [unsavedChangesGuard] },
-      { path: 'messenger', component: MessengerComponent }
+      { path: 'messenger', component: MessengerComponent },
+      { path: 'admin', component: AdminPanelComponent, canActivate: [adminGuard] }
     ]
   },
   { path: '',

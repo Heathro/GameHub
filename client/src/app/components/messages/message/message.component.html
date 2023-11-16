@@ -6,7 +6,7 @@
         </button>
         <img *ngIf="avatarRequired"
             class="message-avatar"
-            src="{{currentMessage.senderAvatar.url || './assets/poster.png'}}"
+            src="{{currentMessage.senderAvatar.url || './assets/avatar.png'}}"
             alt="{{currentMessage.senderUsername}}"
         >
         <div class="avatar-placeholder" *ngIf="!avatarRequired"></div>
@@ -20,7 +20,7 @@
         </button>
         <img *ngIf="avatarRequired"
             class="message-avatar"
-            src="{{currentMessage.senderAvatar.url || './assets/poster.png'}}"
+            src="{{currentMessage.senderAvatar.url || './assets/avatar.png'}}"
             alt="{{currentMessage.senderUsername}}"
         >
         <div class="avatar-placeholder" *ngIf="!avatarRequired"></div>

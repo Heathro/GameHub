@@ -32,6 +32,8 @@ import { TextareaInputComponent } from './forms/textarea-input/textarea-input.co
 import { MessengerComponent } from './components/messages/messenger/messenger.component';
 import { MessageComponent } from './components/messages/message/message.component';
 import { ContactCardComponent } from './components/messages/contact-card/contact-card.component';
+import { AdminPanelComponent } from './components/admin/admin-panel/admin-panel.component';
+import { HasRoleDirective } from './directives/has-role.directive';
 
 @NgModule({
   declarations: [
@@ -57,7 +59,9 @@ import { ContactCardComponent } from './components/messages/contact-card/contact
     TextareaInputComponent,
     MessengerComponent,
     MessageComponent,
-    ContactCardComponent
+    ContactCardComponent,
+    AdminPanelComponent,
+    HasRoleDirective
   ],
   imports: [
     BrowserModule,
