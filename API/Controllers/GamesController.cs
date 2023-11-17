@@ -147,4 +147,16 @@ public class GamesController : BaseApiController
 
         return BadRequest("Failed to delete screenshot");
     }
+
+    [HttpDelete("{title}/delete-game")]
+    public async Task<ActionResult> DeleteGame(string title)
+    {
+        var game = await _gamesRepository.GetGameByTitleAsync(title);
+
+        _gamesRepository.DeleteGame(game);
+
+        if (await _gamesRepository.SaveAllAsync()) return Ok();
+
+        return BadRequest("Failed to delete game");
+    }
 }

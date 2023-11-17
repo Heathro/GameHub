@@ -118,6 +118,11 @@ public class GamesRepository : IGamesRepository
             .ToListAsync();
     }
 
+    public void DeleteGame(Game game)
+    {
+        _context.Games.Remove(game);
+    }
+
     public async Task<bool> SaveAllAsync()
     {
         return await _context.SaveChangesAsync() > 0;
