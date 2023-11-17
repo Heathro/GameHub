@@ -26,6 +26,7 @@ public class AdminController : BaseApiController
             {
                 u.Id,
                 u.UserName,
+                AvatarUrl = u.Avatar.Url,
                 Roles = u.UserRoles.Select(r => r.Role.Name).ToList()
             })
             .ToListAsync();

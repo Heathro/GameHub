@@ -1,0 +1,42 @@
+<div class="card mb-1" *ngIf="user">
+    <div class="row">
+
+        <div class="col-1">
+            <img 
+                class="role-card-img"
+                src="{{user.avatarUrl || './assets/avatar.png'}}"
+                alt="{{user.userName}}"
+            >
+        </div>
+
+        <div class="col-3">
+            <h5 class="role-card-name">
+                {{user.userName}}
+            </h5>
+        </div>
+
+        <div class="col-4 role-card-checkboxes">            
+            <app-checkbox-input class="d-inline ms-4"
+                [formControl]="$any(roleForm.get('player'))"
+                [label]="'Player'"
+            ></app-checkbox-input>
+            <app-checkbox-input class="d-inline ms-4"
+                [formControl]="$any(roleForm.get('moderator'))"
+                [label]="'Moderator'"
+            ></app-checkbox-input>
+            <app-checkbox-input class="d-inline ms-4"
+                [formControl]="$any(roleForm.get('admin'))"
+                [label]="'Admin'"
+            ></app-checkbox-input>
+        </div>
+
+        <div class="col-2 role-button-row">
+            <button class="btn btn-outline-info" (click)="editRoles()">Edit Roles</button>
+        </div>
+
+        <div class="col-2 role-button-row">
+            <button class="btn btn-outline-danger">Delete User</button>
+        </div>
+
+    </div>
+</div>

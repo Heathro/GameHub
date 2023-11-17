@@ -36,6 +36,7 @@ import { AdminPanelComponent } from './components/admin/admin-panel/admin-panel.
 import { HasRoleDirective } from './directives/has-role.directive';
 import { UserManagementComponent } from './components/admin/user-management/user-management.component';
 import { GameManagementComponent } from './components/admin/game-management/game-management.component';
+import { RoleCardComponent } from './components/admin/role-card/role-card.component';
 
 @NgModule({
   declarations: [
@@ -65,7 +66,8 @@ import { GameManagementComponent } from './components/admin/game-management/game
     AdminPanelComponent,
     HasRoleDirective,
     UserManagementComponent,
-    GameManagementComponent
+    GameManagementComponent,
+    RoleCardComponent
   ],
   imports: [
     BrowserModule,

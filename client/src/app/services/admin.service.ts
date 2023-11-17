@@ -16,8 +16,8 @@ export class AdminService {
     return this.http.get<User[]>(this.baseUrl + 'admin/users-with-roles');
   }
 
-  editRoles() {
-
+  editRoles(userName: string, roles: string) {
+    return this.http.post<string[]>(this.baseUrl + 'admin/edit-roles/' + userName + '?roles=' + roles, {});
   }
 
   getGamesForModeration() {
