@@ -13,6 +13,7 @@ public interface IUsersRepository
     Task<AppUser> GetUserByIdAsync(int id);
     Task<AppUser> GetUserByUsernameAsync(string username);
     Task<IEnumerable<AppUser>> GetUsersAsync();
+    Task DeleteUser(string username);
     void Update(AppUser user);
     Task<bool> SaveAllAsync();
 }

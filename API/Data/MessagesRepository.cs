@@ -31,10 +31,7 @@ public class MessagesRepository : IMessagesRepository
 
     public void DeleteMessages(IEnumerable<Message> messages)
     {
-        foreach (var message in messages)
-        {
-            _context.Messages.Remove(message);
-        }
+        _context.Messages.RemoveRange(messages);
     }
 
     public async Task<Message> GetMessage(int id)
@@ -48,6 +45,15 @@ public class MessagesRepository : IMessagesRepository
             m.RecipientUsername == currentUsername && m.SenderUsername == recipientUsername ||
             m.RecipientUsername == recipientUsername && m.SenderUsername == currentUsername
         ).ToListAsync();
+    }
+
+    public async Task DeleteUserMessages(string username)
+    {
+        var messages = await _context.Messages
+            .Where(m => m.SenderUsername == username || m.RecipientUsername == username)
+            .ToListAsync();
+
+        _context.Messages.RemoveRange(messages);
     }
 
     public async Task<PagedList<MessageDto>> GetMessagesForUser(

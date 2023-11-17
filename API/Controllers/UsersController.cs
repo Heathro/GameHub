@@ -90,4 +90,14 @@ public class UsersController : BaseApiController
 
         return BadRequest("Failed to update photo");
     }
+
+    [HttpDelete("delete-user")]
+    public async Task<ActionResult> DeleteUser()
+    {
+        await _usersRepository.DeleteUser(User.GetUsername());
+
+        if (await _usersRepository.SaveAllAsync()) return BadRequest("Failed to delete user");
+        
+        return Ok();
+    }
 }

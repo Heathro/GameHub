@@ -26,7 +26,7 @@ public class Seed
         foreach (var role in roles)
         {
             await roleManager.CreateAsync(role);
-        }
+        }    
 
         foreach (var user in users)
         {

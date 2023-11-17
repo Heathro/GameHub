@@ -5,16 +5,19 @@ using Microsoft.EntityFrameworkCore;
 using API.Controllers;
 using API.Entities;
 using API.Extensions;
+using API.Interfaces;
 
 namespace API;
 
 public class AdminController : BaseApiController
 {
     private readonly UserManager<AppUser> _userManager;
+    private readonly IUsersRepository _usersRepository;
 
-    public AdminController(UserManager<AppUser> userManager)
+    public AdminController(UserManager<AppUser> userManager, IUsersRepository usersRepository)
     {
         _userManager = userManager;
+        _usersRepository = usersRepository;
     }
 
     [Authorize(Policy = "AdminRole")]
@@ -55,6 +58,17 @@ public class AdminController : BaseApiController
         if (!result.Succeeded) return BadRequest("Failed to remove roles");
 
         return Ok(await _userManager.GetRolesAsync(user));
+    }
+
+    [Authorize(Policy = "AdminRole")]
+    [HttpDelete("delete-user/{username}")]
+    public async Task<ActionResult> DeleteUser(string username)
+    {
+        await _usersRepository.DeleteUser(username);
+
+        if (await _usersRepository.SaveAllAsync()) return BadRequest("Failed to delete user");
+
+        return Ok();
     }
 
     [Authorize(Policy = "AdminModeratorRole")]
