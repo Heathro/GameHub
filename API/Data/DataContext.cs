@@ -21,6 +21,7 @@ public class DataContext : IdentityDbContext
     {
     }
 
+    public DbSet<Friendship> Friendships { get; set; }
     public DbSet<Game> Games { get; set; }
     public DbSet<Like> Likes { get; set; }
     public DbSet<Message> Messages { get; set; }
@@ -52,6 +53,19 @@ public class DataContext : IdentityDbContext
             .HasOne(l => l.TargetGame)
             .WithMany(l => l.LikedUsers)
             .HasForeignKey(l => l.TargetGameId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Friendship>()
+            .HasKey(f => new {f.InviterId, f.InviteeId, f.Accepted});
+        modelBuilder.Entity<Friendship>()
+            .HasOne(f => f.Inviter)
+            .WithMany(f => f.Invitees)
+            .HasForeignKey(f => f.InviterId)
+            .OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<Friendship>()
+            .HasOne(f => f.Invitee)
+            .WithMany(f => f.Inviters)
+            .HasForeignKey(f => f.InviteeId)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Message>()
