@@ -31,7 +31,13 @@
         </div>
 
         <div class="col-2 role-button-row">
-            <button class="btn btn-outline-info" (click)="editRoles()">Edit Roles</button>
+            <button 
+                class="btn btn-outline-info" 
+                [disabled]="!isDirty()" 
+                (click)="editRoles()"
+            >
+                Edit Roles
+            </button>
         </div>
 
         <div class="col-2 role-button-row">

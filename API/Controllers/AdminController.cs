@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using API.Controllers;
 using API.Entities;
+using API.Extensions;
 
 namespace API;
 
@@ -21,6 +22,7 @@ public class AdminController : BaseApiController
     public async Task<ActionResult> GetUsersWithRoles()
     {
         var users = await _userManager.Users
+            .Where(u => u.UserName != User.GetUsername() && u.UserName != "Admin")
             .OrderBy(u => u.UserName)
             .Select(u => new
             {
