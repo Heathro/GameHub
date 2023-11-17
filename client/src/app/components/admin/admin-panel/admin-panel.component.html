@@ -1,1 +1,17 @@
-<p>admin-panel works!</p>
+<div class="tab-panel">
+    <tabset class="custom-tabset">
+
+        <tab heading="Users" *HasRole="['Admin']">
+            <div class="container">
+                <app-user-management></app-user-management>
+            </div>
+        </tab>
+
+        <tab heading="Games" *HasRole="['Admin', 'Moderator']">
+            <div class="container">
+                <app-game-management></app-game-management>
+            </div>
+        </tab>
+
+    </tabset>
+</div>

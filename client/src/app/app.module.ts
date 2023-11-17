@@ -34,6 +34,8 @@ import { MessageComponent } from './components/messages/message/message.componen
 import { ContactCardComponent } from './components/messages/contact-card/contact-card.component';
 import { AdminPanelComponent } from './components/admin/admin-panel/admin-panel.component';
 import { HasRoleDirective } from './directives/has-role.directive';
+import { UserManagementComponent } from './components/admin/user-management/user-management.component';
+import { GameManagementComponent } from './components/admin/game-management/game-management.component';
 
 @NgModule({
   declarations: [
@@ -61,7 +63,9 @@ import { HasRoleDirective } from './directives/has-role.directive';
     MessageComponent,
     ContactCardComponent,
     AdminPanelComponent,
-    HasRoleDirective
+    HasRoleDirective,
+    UserManagementComponent,
+    GameManagementComponent
   ],
   imports: [
     BrowserModule,
