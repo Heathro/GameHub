@@ -9,6 +9,7 @@ import { AdminService } from 'src/app/services/admin.service';
 })
 export class UserManagementComponent implements OnInit {
   users: User[] = [];
+  loading = false;
 
   constructor(private adminService: AdminService) { }
 
@@ -17,8 +18,18 @@ export class UserManagementComponent implements OnInit {
   }
 
   getUsersWithRoles() {
+    this.loading = true;
     this.adminService.getUsersWithRoles().subscribe({
-      next: users => this.users = users
+      next: users => {
+        this.users = users;
+        this.loading = false;
+      }
     });
+  }
+
+  deleteUser(userName: string) {
+    this.adminService.deleteUser(userName).subscribe({
+      next: () => this.users = this.users.filter(u => u.userName != userName)
+    })
   }
 }

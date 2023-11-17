@@ -1,7 +1,5 @@
-<div class="row" >
+<div class="row" *ngIf="!loading && users">
     <div class="col-12" *ngFor="let user of users">
-        <app-role-card [user]="user"></app-role-card>
+        <app-role-card (deleteUser)="deleteUser($event)" [user]="user"></app-role-card>
     </div>
 </div>
-
-<!--*ngIf="!loading && players.length !== 0"-->

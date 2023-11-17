@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { AdminService } from 'src/app/services/admin.service';
@@ -12,6 +12,7 @@ import { deepEqual } from 'src/app/helpers/compareHelper';
   styleUrls: ['./role-card.component.css']
 })
 export class RoleCardComponent implements OnInit {
+  @Output() deleteUser = new EventEmitter<string>();
   @Input() user: User | undefined;
   roleForm: FormGroup = new FormGroup({});
   initialForm: any;
@@ -45,6 +46,10 @@ export class RoleCardComponent implements OnInit {
         this.resetForm();
       }
     });
+  }
+
+  deleteCurrentUser() {
+    if (this.user) this.deleteUser.next(this.user.userName);
   }
 
   isDirty(): boolean {

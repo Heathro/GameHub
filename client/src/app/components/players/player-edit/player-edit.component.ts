@@ -80,6 +80,15 @@ export class PlayerEditComponent implements OnInit, EditComponent {
     });
   }
 
+  deleteUser() {
+    this.playersService.deletePlayer().subscribe({
+      next: () => {
+        this.accountService.logout();
+        this.router.navigateByUrl('/');
+      }
+    })
+  }
+
   resetForm() {
     this.editForm?.reset(this.editForm.value);
     this.initialForm = this.editForm.value;

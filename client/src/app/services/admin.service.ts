@@ -20,6 +20,10 @@ export class AdminService {
     return this.http.post<string[]>(this.baseUrl + 'admin/edit-roles/' + userName + '?roles=' + roles, {});
   }
 
+  deleteUser(userName: string) {
+    return this.http.delete(this.baseUrl + 'admin/delete-user/' + userName);
+  }
+
   getGamesForModeration() {
 
   }

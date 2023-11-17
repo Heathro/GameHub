@@ -62,6 +62,10 @@ export class PlayersService {
     return this.http.put(this.baseUrl + 'users/edit-profile', player);
   }
 
+  deletePlayer() {
+    return this.http.delete(this.baseUrl + 'users/delete-user');
+  }
+
   setPaginationPage(currentPage: number) {
     this.paginationParams.currentPage = currentPage;
   }
