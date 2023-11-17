@@ -115,6 +115,14 @@ export class GamesService {
     );
   }
 
+  deleteGame(game: Game) {
+    return this.http.delete(this.baseUrl + 'games/' + game.title + '/delete-game').pipe(
+      map(() => {
+        this.gamesCache.forEach(q => q.result = q.result.filter((g: Game) => g.title != game.title));
+      })
+    );
+  }
+
   deleteScreenshot(game: Game, screenshotId: number) {
     return this.http.delete(this.baseUrl + 'games/' + game.title + '/delete-screenshot/' + screenshotId);
   }

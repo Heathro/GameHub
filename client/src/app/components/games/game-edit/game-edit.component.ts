@@ -88,6 +88,13 @@ export class GameEditComponent implements OnInit, EditComponent {
     });
   }
 
+  deleteGame() {
+    if (!this.game) return;
+    this.gamesService.deleteGame(this.game).subscribe({
+      next: () => this.router.navigateByUrl('/store')
+    });
+  }
+
   resetForm() {
     this.editForm?.reset(this.editForm.value);
     this.initialForm = this.editForm.value;
