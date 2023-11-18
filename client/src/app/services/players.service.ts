@@ -8,6 +8,7 @@ import { getPaginatedResult, getPaginationHeaders } from '../helpers/paginationH
 import { PaginationParams } from '../models/pagination';
 import { Player } from '../models/player';
 import { Friend } from '../models/friend';
+import { FriendStatus } from '../helpers/friendStatus';
 
 @Injectable({
   providedIn: 'root'
@@ -48,10 +49,10 @@ export class PlayersService {
     );
   }
 
-  getFriends() {    
+  getFriends(status: FriendStatus) {    
     if (this.friends.length > 0) return of(this.friends);
 
-    return this.http.get<Friend[]>(this.baseUrl + 'friends/active-friends').pipe(
+    return this.http.get<Friend[]>(this.baseUrl + 'friends/with-status/' + status).pipe(
       map(response => {
         this.friends = response;
         return response;

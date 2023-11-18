@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FriendStatus } from 'src/app/helpers/friendStatus';
 
 import { Friend } from 'src/app/models/friend';
 import { PlayersService } from 'src/app/services/players.service';
@@ -20,7 +21,7 @@ export class FriendsListComponent implements OnInit {
 
   loadFriends() {
     this.loading = true;
-    this.playersService.getFriends().subscribe({
+    this.playersService.getFriends(FriendStatus.active).subscribe({
       next: friends => {
         this.friends = friends;
         this.loading = false;     

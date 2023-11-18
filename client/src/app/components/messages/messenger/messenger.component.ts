@@ -11,6 +11,7 @@ import { Player } from 'src/app/models/player';
 import { NgForm } from '@angular/forms';
 import { MessageComponent } from '../message/message.component';
 import { Friend } from 'src/app/models/friend';
+import { FriendStatus } from 'src/app/helpers/friendStatus';
 
 @Component({
   selector: 'app-messenger',
@@ -42,7 +43,7 @@ export class MessengerComponent implements OnInit {
   }
 
   loadFriends() {
-    this.playersService.getFriends().subscribe({
+    this.playersService.getFriends(FriendStatus.active).subscribe({
       next: friends => {
         this.friends = friends;        
         const lastConversant = this.messagesService.getLastConversant();

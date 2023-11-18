@@ -63,7 +63,8 @@ public class FriendsController : BaseApiController
     }
 
     [HttpPost("update-status/{inviterUsername}/{status}")]
-    public async Task<ActionResult<FriendshipDto>> UpdateFriendStatus(string inviterUsername, FriendStatus status)
+    public async Task<ActionResult<FriendshipDto>> UpdateFriendStatus(
+        string inviterUsername, FriendStatus status)
     {
         var currentUserId = User.GetUserId();
         var currentUser = await _friendsRepository.GetUserWithFriends(currentUserId);
@@ -119,15 +120,9 @@ public class FriendsController : BaseApiController
         };
     }
 
-    [HttpGet("active-friends")]
-    public async Task<IEnumerable<FriendshipDto>> GetActiveFriends()
+    [HttpGet("with-status/{status}")]
+    public async Task<IEnumerable<FriendshipDto>> GetActiveFriends(FriendStatus status)
     {
-        return await _friendsRepository.GetFriendsWithStatus(User.GetUserId(), FriendStatus.Active);
-    }
-
-    [HttpGet("pending-requests")]
-    public async Task<IEnumerable<FriendshipDto>> GetPendingRequests()
-    {
-        return await _friendsRepository.GetFriendsWithStatus(User.GetUserId(), FriendStatus.Pending);
+        return await _friendsRepository.GetFriendsWithStatus(User.GetUserId(), status);
     }
 }
