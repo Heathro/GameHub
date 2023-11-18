@@ -23,7 +23,7 @@ public class FriendsController : BaseApiController
     }
 
     [HttpPost("add-friend/{inviteeUsername}")]
-    public async Task<ActionResult> AddFriend(string inviteeUsername)
+    public async Task<ActionResult<FriendshipDto>> AddFriend(string inviteeUsername)
     {
         var inviterId = User.GetUserId();
         var inviter = await _friendsRepository.GetUserWithFriends(inviterId);
@@ -51,13 +51,19 @@ public class FriendsController : BaseApiController
             inviter.Invitees.Add(friendship);
         }
 
-        if (await _friendsRepository.SaveAllAsync()) return Ok();
+        var friendshipDto = new FriendshipDto
+        {
+            Player = _mapper.Map<PlayerDto>(invitee),
+            Status = FriendStatus.Pending
+        };
+
+        if (await _friendsRepository.SaveAllAsync()) return Ok(friendshipDto);
 
         return BadRequest("Failed to add friend");
     }
 
     [HttpPost("update-status/{inviterUsername}/{status}")]
-    public async Task<ActionResult> UpdateFriendStatus(string inviterUsername, FriendStatus status)
+    public async Task<ActionResult<FriendshipDto>> UpdateFriendStatus(string inviterUsername, FriendStatus status)
     {
         var currentUserId = User.GetUserId();
         var currentUser = await _friendsRepository.GetUserWithFriends(currentUserId);
@@ -82,7 +88,13 @@ public class FriendsController : BaseApiController
         currentUser.Inviters.Remove(friendship);
         currentUser.Inviters.Add(updatedFriendship);
 
-        if (await _friendsRepository.SaveAllAsync()) return Ok();
+        var friendshipDto = new FriendshipDto
+        {
+            Player = _mapper.Map<PlayerDto>(inviter),
+            Status = status
+        };
+
+        if (await _friendsRepository.SaveAllAsync()) return Ok(friendshipDto);
 
         return BadRequest("Failed to update status");
     }
