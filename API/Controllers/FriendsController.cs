@@ -79,6 +79,6 @@ public class FriendsController : BaseApiController
     [HttpGet("active-friends")]
     public async Task<IEnumerable<FriendshipDto>> GetFriends()
     {
-        return await _friendsRepository.GetActiveFriends(User.GetUserId());
+        return await _friendsRepository.GetFriendsWithStatus(User.GetUserId(), FriendStatus.Active);
     }
 }

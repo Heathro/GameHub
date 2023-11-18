@@ -48,16 +48,14 @@ public class FriendsRepository : IFriendsRepository
         };
     }
 
-    public async Task<IEnumerable<FriendshipDto>> GetActiveFriends(int userId)
+    public async Task<IEnumerable<FriendshipDto>> GetFriendsWithStatus(int userId, FriendStatus status)
     {
         var friendships = await _context.Friendships
             .Include(f => f.Invitee)
             .Include(f => f.Invitee.Avatar)
             .Include(f => f.Inviter)
             .Include(f => f.Inviter.Avatar)
-            .Where(f => 
-                (f.InviterId == userId || f.InviteeId == userId) && f.Status == FriendStatus.Active
-            )
+            .Where(f => (f.InviterId == userId || f.InviteeId == userId) && f.Status == status)
             .ToListAsync();
 
         var friends = new List<FriendshipDto>();
@@ -75,11 +73,6 @@ public class FriendsRepository : IFriendsRepository
         }
 
         return friends;
-    }
-
-    public Task<IEnumerable<Friendship>> GetFriendRequests(int userId)
-    {
-        throw new NotImplementedException();
     }
 
     public async Task<AppUser> GetUserWithInvitees(int userId)
