@@ -116,7 +116,7 @@ public class GamesController : BaseApiController
             return CreatedAtAction
             (
                 nameof(GetGame),
-                new { title = game.Title},
+                new { title = game.Title },
                 _mapper.Map<ScreenshotDto>(screenshot)
             );
         }

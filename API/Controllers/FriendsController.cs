@@ -55,19 +55,18 @@ public class FriendsController : BaseApiController
         return BadRequest("Failed to add Friend");
     }
 
-    [HttpGet("candidate/{candidateId}")]
-    public async Task<ActionResult<FriendshipDto>> GetFriend(int candidateId)
+    [HttpGet("candidate/{candidateUsername}")]
+    public async Task<ActionResult<FriendshipDto>> GetFriend(string candidateUsername)
     {
         var currentUserId = User.GetUserId();
 
-        if (candidateId == currentUserId) return BadRequest("Cant friend yourself");
-
-        var friend = await _friendsRepository.GetFriend(currentUserId, candidateId);
-
-        if (friend != null) return friend;
-
-        var candidate = await _usersRepository.GetUserByIdAsync(candidateId);
+        var candidate = await _usersRepository.GetUserByUsernameAsync(candidateUsername);
         if (candidate == null) return NotFound();
+
+        if (candidate.Id == currentUserId) return BadRequest("You cannot get yourself");
+
+        var friendship = await _friendsRepository.GetFriend(currentUserId, candidate.Id);
+        if (friendship != null) return friendship;
 
         return new FriendshipDto
         {
@@ -77,8 +76,14 @@ public class FriendsController : BaseApiController
     }
 
     [HttpGet("active-friends")]
-    public async Task<IEnumerable<FriendshipDto>> GetFriends()
+    public async Task<IEnumerable<FriendshipDto>> GetActiveFriends()
     {
         return await _friendsRepository.GetFriendsWithStatus(User.GetUserId(), FriendStatus.Active);
+    }
+
+    [HttpGet("pending-requests")]
+    public async Task<IEnumerable<FriendshipDto>> GetPendingRequests()
+    {
+        return await _friendsRepository.GetFriendsWithStatus(User.GetUserId(), FriendStatus.Pending);
     }
 }
