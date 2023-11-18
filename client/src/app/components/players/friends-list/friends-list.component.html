@@ -1,0 +1,5 @@
+<div class="row" *ngIf="!loading && friends.length !== 0">
+    <div class="col-4" *ngFor="let friend of friends">
+        <app-player-card [player]="friend"></app-player-card>
+    </div>
+</div>

@@ -37,6 +37,8 @@ import { HasRoleDirective } from './directives/has-role.directive';
 import { UserManagementComponent } from './components/admin/user-management/user-management.component';
 import { GameManagementComponent } from './components/admin/game-management/game-management.component';
 import { RoleCardComponent } from './components/admin/role-card/role-card.component';
+import { FriendsListComponent } from './components/players/friends-list/friends-list.component';
+import { FriendsPanelComponent } from './components/players/friends-panel/friends-panel.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +69,9 @@ import { RoleCardComponent } from './components/admin/role-card/role-card.compon
     HasRoleDirective,
     UserManagementComponent,
     GameManagementComponent,
-    RoleCardComponent
+    RoleCardComponent,
+    FriendsListComponent,
+    FriendsPanelComponent
   ],
   imports: [
     BrowserModule,

@@ -9,6 +9,7 @@ import { RegisterComponent } from './components/authorization/register/register.
 import { authGuard } from './guards/auth.guard';
 import { nonAuthGuard } from './guards/non-auth.guard';
 import { unsavedChangesGuard } from './guards/unsaved-changes.guard';
+import { adminGuard } from './guards/admin.guard';
 import { TestErrorComponent } from './components/errors/test-error/test-error.component';
 import { NotFoundComponent } from './components/errors/not-found/not-found.component';
 import { ServerErrorComponent } from './components/errors/server-error/server-error.component';
@@ -19,7 +20,7 @@ import { PlayerEditComponent } from './components/players/player-edit/player-edi
 import { GameEditComponent } from './components/games/game-edit/game-edit.component';
 import { MessengerComponent } from './components/messages/messenger/messenger.component';
 import { AdminPanelComponent } from './components/admin/admin-panel/admin-panel.component';
-import { adminGuard } from './guards/admin.guard';
+import { FriendsPanelComponent } from './components/players/friends-panel/friends-panel.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -31,6 +32,7 @@ const routes: Routes = [
       { path: 'library', component: LibraryComponent },
       { path: 'games/:title', component: GamePageComponent },
       { path: 'games/:title/edit', component: GameEditComponent, canDeactivate: [unsavedChangesGuard] },
+      { path: 'friends', component: FriendsPanelComponent },
       { path: 'players', component: PlayersListComponent },
       { path: 'players/:username', component: PlayerProfileComponent },
       { path: 'edit-profile', component: PlayerEditComponent, canDeactivate: [unsavedChangesGuard] },
