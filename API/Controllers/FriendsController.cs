@@ -26,7 +26,8 @@ public class FriendsController : BaseApiController
     public async Task<ActionResult> AddFriend(string inviteeUsername)
     {
         var inviterId = User.GetUserId();
-        var inviter = await _friendsRepository.GetUserWithInvitees(inviterId);
+        var inviter = await _friendsRepository.GetUserWithFriends(inviterId);
+        if (inviter == null) return NotFound();
 
         var invitee = await _usersRepository.GetUserByUsernameAsync(inviteeUsername);
         if (invitee == null) return NotFound();
@@ -52,7 +53,38 @@ public class FriendsController : BaseApiController
 
         if (await _friendsRepository.SaveAllAsync()) return Ok();
 
-        return BadRequest("Failed to add Friend");
+        return BadRequest("Failed to add friend");
+    }
+
+    [HttpPost("update-status/{inviterUsername}/{status}")]
+    public async Task<ActionResult> UpdateFriendStatus(string inviterUsername, FriendStatus status)
+    {
+        var currentUserId = User.GetUserId();
+        var currentUser = await _friendsRepository.GetUserWithFriends(currentUserId);
+        if (currentUser == null) return NotFound();
+
+        var inviter = await _usersRepository.GetUserByUsernameAsync(inviterUsername);
+        if (inviter == null) return NotFound();
+
+        var friendship = await _friendsRepository.GetFriendship(inviter.Id, currentUserId);
+        if (friendship == null) return NotFound();
+
+        if (friendship.Status == status) return BadRequest("Nothing to change");
+
+        var updatedFriendship = new Friendship
+        {
+            Inviter = friendship.Inviter,
+            InviterId = friendship.InviterId,
+            Invitee = friendship.Invitee,
+            InviteeId = friendship.InviteeId,
+            Status = status
+        };
+        currentUser.Inviters.Remove(friendship);
+        currentUser.Inviters.Add(updatedFriendship);
+
+        if (await _friendsRepository.SaveAllAsync()) return Ok();
+
+        return BadRequest("Failed to update status");
     }
 
     [HttpGet("candidate/{candidateUsername}")]

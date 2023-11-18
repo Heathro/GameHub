@@ -75,9 +75,10 @@ public class FriendsRepository : IFriendsRepository
         return friends;
     }
 
-    public async Task<AppUser> GetUserWithInvitees(int userId)
+    public async Task<AppUser> GetUserWithFriends(int userId)
     {
         return await _context.Users
+            .Include(u => u.Inviters)
             .Include(u => u.Invitees)
             .FirstOrDefaultAsync(u => u.Id == userId);
     }
