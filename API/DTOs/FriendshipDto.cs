@@ -1,7 +1,9 @@
-﻿namespace API.DTOs;
+﻿using API.Helpers;
+
+namespace API.DTOs;
 
 public class FriendshipDto
 {
     public PlayerDto Player { get; set; }
-    public int Status { get; set; }
+    public FriendStatus Status { get; set; }
 }

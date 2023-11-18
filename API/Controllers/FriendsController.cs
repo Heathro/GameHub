@@ -4,6 +4,7 @@ using API.Extensions;
 using API.Entities;
 using API.DTOs;
 using AutoMapper;
+using API.Helpers;
 
 namespace API.Controllers;
 
@@ -44,7 +45,7 @@ public class FriendsController : BaseApiController
             {
                 InviterId = inviterId,
                 InviteeId = invitee.Id,
-                Status = 0
+                Status = FriendStatus.Pending
             };
             inviter.Invitees.Add(friendship);
         }
@@ -71,7 +72,7 @@ public class FriendsController : BaseApiController
         return new FriendshipDto
         {
             Player = _mapper.Map<PlayerDto>(candidate),
-            Status = -1
+            Status = FriendStatus.None
         };
     }
 

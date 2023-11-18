@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 using API.DTOs;
 using API.Entities;
 using API.Interfaces;
-using AutoMapper.QueryableExtensions;
-using AutoMapper;
+using API.Helpers;
 
 namespace API.Data;
 
@@ -55,7 +55,9 @@ public class FriendsRepository : IFriendsRepository
             .Include(f => f.Invitee.Avatar)
             .Include(f => f.Inviter)
             .Include(f => f.Inviter.Avatar)
-            .Where(f => (f.InviterId == userId || f.InviteeId == userId) && f.Status == 0)
+            .Where(f => 
+                (f.InviterId == userId || f.InviteeId == userId) && f.Status == FriendStatus.Active
+            )
             .ToListAsync();
 
         var friends = new List<FriendshipDto>();
