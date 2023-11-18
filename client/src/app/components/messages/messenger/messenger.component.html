@@ -2,7 +2,7 @@
 
     <div class="col-4">
         <div *ngFor="let friend of friends">
-            <app-contact-card (loadMessages)="loadMessages($event)" [player]="friend"></app-contact-card>
+            <app-contact-card (loadMessages)="loadMessages($event)" [player]="friend.player"></app-contact-card>
         </div>
     </div>
 
@@ -17,7 +17,7 @@
                 </h4>
                 <button 
                     class="btn btn-outline-danger mb-2 col-3"
-                    [disabled]="messages?.length === 0"
+                    [disabled]="messages.length === 0"
                     (click)="deleteMessages()"
                 >Clear Messages&nbsp;&nbsp;&nbsp;<i class="bi bi-trash3"></i></button>
             </div>

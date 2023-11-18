@@ -42,7 +42,7 @@ public class FriendsRepository : IFriendsRepository
             {
                 Player = _mapper.Map<PlayerDto>
                 (
-                   userId == friendship.InviteeId ? friendship.Invitee : friendship.Inviter
+                   userId == friendship.InviterId ? friendship.Invitee : friendship.Inviter
                 ),
                 Status = friendship.Status
             });

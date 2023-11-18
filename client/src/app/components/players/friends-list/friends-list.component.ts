@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Player } from 'src/app/models/player';
+
+import { Friend } from 'src/app/models/friend';
 import { PlayersService } from 'src/app/services/players.service';
 
 @Component({
@@ -8,7 +9,7 @@ import { PlayersService } from 'src/app/services/players.service';
   styleUrls: ['./friends-list.component.css']
 })
 export class FriendsListComponent implements OnInit {  
-  friends: Player[] = [];
+  friends: Friend[] = [];
   loading = false;
 
   constructor(private playersService: PlayersService) { }

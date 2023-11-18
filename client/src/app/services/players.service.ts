@@ -7,13 +7,14 @@ import { environment } from 'src/environments/environment';
 import { getPaginatedResult, getPaginationHeaders } from '../helpers/paginationHelper';
 import { PaginationParams } from '../models/pagination';
 import { Player } from '../models/player';
+import { Friend } from '../models/friend';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PlayersService {
   baseUrl = environment.apiUrl;
-  friends: Player[] = [];
+  friends: Friend[] = [];
   playersCache = new Map();
   paginationParams: PaginationParams;
 
@@ -50,7 +51,7 @@ export class PlayersService {
   getFriends() {    
     if (this.friends.length > 0) return of(this.friends);
 
-    return this.http.get<Player[]>(this.baseUrl + 'users/friends').pipe(
+    return this.http.get<Friend[]>(this.baseUrl + 'friends/active-friends').pipe(
       map(response => {
         this.friends = response;
         return response;

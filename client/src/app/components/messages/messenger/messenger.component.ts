@@ -10,6 +10,7 @@ import { User } from 'src/app/models/user';
 import { Player } from 'src/app/models/player';
 import { NgForm } from '@angular/forms';
 import { MessageComponent } from '../message/message.component';
+import { Friend } from 'src/app/models/friend';
 
 @Component({
   selector: 'app-messenger',
@@ -19,8 +20,8 @@ import { MessageComponent } from '../message/message.component';
 export class MessengerComponent implements OnInit {
   @ViewChildren(MessageComponent) messageComponents: QueryList<MessageComponent> | undefined;
   @ViewChild('messageForm') messageForm?: NgForm;
-  friends?: Player[];
-  messages?: Message[];
+  friends: Friend[] = [];
+  messages: Message[] = [];
   user: User | null = null;
   content = '';
   loading = false;
@@ -45,7 +46,7 @@ export class MessengerComponent implements OnInit {
       next: friends => {
         this.friends = friends;        
         const lastConversant = this.messagesService.getLastConversant();
-        this.loadMessages(lastConversant.length > 0 ? lastConversant : this.friends[0].userName);
+        this.loadMessages(lastConversant.length > 0 ? lastConversant : this.friends[0].player.userName);
       }
     });
   }
