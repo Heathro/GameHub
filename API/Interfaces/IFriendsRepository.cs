@@ -1,12 +1,13 @@
-﻿using API.Entities;
+﻿using API.DTOs;
+using API.Entities;
 
 namespace API.Interfaces;
 
 public interface IFriendsRepository
 {
     Task<Friendship> GetFriendship(int inviterId, int inviteeId);
-    Task<IEnumerable<Friendship>> GetInviters(int userId);
-    Task<IEnumerable<Friendship>> GetInvitees(int gameId);
+    Task<IEnumerable<FriendshipDto>> GetActiveFriends(int userId);
+    Task<IEnumerable<Friendship>> GetFriendRequests(int userId);
     Task<AppUser> GetUserWithInvitees(int userId);
     Task<bool> SaveAllAsync();
 }

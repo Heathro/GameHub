@@ -56,7 +56,7 @@ public class DataContext : IdentityDbContext
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Friendship>()
-            .HasKey(f => new {f.InviterId, f.InviteeId, f.Accepted});
+            .HasKey(f => new {f.InviterId, f.InviteeId, f.Status});
         modelBuilder.Entity<Friendship>()
             .HasOne(f => f.Inviter)
             .WithMany(f => f.Invitees)

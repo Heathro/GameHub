@@ -6,5 +6,5 @@ public class Friendship
     public int InviterId { get; set; }
     public AppUser Invitee { get; set; }
     public int InviteeId { get; set; }
-    public bool Accepted { get; set; }
+    public int Status { get; set; }
 }

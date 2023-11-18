@@ -1,16 +1,21 @@
-﻿using API.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using API.DTOs;
+using API.Entities;
 using API.Interfaces;
-using Microsoft.EntityFrameworkCore;
+using AutoMapper.QueryableExtensions;
+using AutoMapper;
 
 namespace API.Data;
 
 public class FriendsRepository : IFriendsRepository
 {
     private readonly DataContext _context;
+    private readonly IMapper _mapper;
 
-    public FriendsRepository(DataContext context)
+    public FriendsRepository(DataContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
     public async Task<Friendship> GetFriendship(int inviterId, int inviteeId)
@@ -19,12 +24,34 @@ public class FriendsRepository : IFriendsRepository
             .FirstOrDefaultAsync(f => f.InviterId == inviterId && f.InviteeId == inviteeId);
     }
 
-    public Task<IEnumerable<Friendship>> GetInviters(int userId)
+    public async Task<IEnumerable<FriendshipDto>> GetActiveFriends(int userId)
     {
-        throw new NotImplementedException();
+        var friendships = await _context.Friendships
+            .Include(f => f.Invitee)
+            .Include(f => f.Invitee.Avatar)
+            .Include(f => f.Inviter)
+            .Include(f => f.Inviter.Avatar)
+            .Where(f => (f.InviterId == userId || f.InviteeId == userId) && f.Status == 0)
+            .ToListAsync();
+
+        var friends = new List<FriendshipDto>();
+
+        foreach (var friendship in friendships)
+        {
+            friends.Add(new FriendshipDto
+            {
+                Player = _mapper.Map<PlayerDto>
+                (
+                   userId == friendship.InviteeId ? friendship.Invitee : friendship.Inviter
+                ),
+                Status = friendship.Status
+            });
+        }
+
+        return friends;
     }
 
-    public Task<IEnumerable<Friendship>> GetInvitees(int gameId)
+    public Task<IEnumerable<Friendship>> GetFriendRequests(int userId)
     {
         throw new NotImplementedException();
     }

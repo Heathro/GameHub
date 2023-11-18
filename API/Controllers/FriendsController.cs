@@ -2,6 +2,7 @@
 using API.Interfaces;
 using API.Extensions;
 using API.Entities;
+using API.DTOs;
 
 namespace API.Controllers;
 
@@ -16,7 +17,7 @@ public class FriendsController : BaseApiController
         _usersRepository = usersRepository;
     }
 
-    [HttpPost("{inviteeUsername}")]
+    [HttpPost("add-friend/{inviteeUsername}")]
     public async Task<ActionResult> AddFriend(string inviteeUsername)
     {
         var inviterId = User.GetUserId();
@@ -39,7 +40,7 @@ public class FriendsController : BaseApiController
             {
                 InviterId = inviterId,
                 InviteeId = invitee.Id,
-                Accepted = false
+                Status = 0
             };
             inviter.Invitees.Add(friendship);
         }
@@ -47,5 +48,11 @@ public class FriendsController : BaseApiController
         if (await _friendsRepository.SaveAllAsync()) return Ok();
 
         return BadRequest("Failed to add Friend");
+    }
+
+    [HttpGet("active-friends")]
+    public async Task<IEnumerable<FriendshipDto>> GetFriends()
+    {
+        return await _friendsRepository.GetActiveFriends(User.GetUserId());
     }
 }
