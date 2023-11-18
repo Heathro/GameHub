@@ -3,17 +3,21 @@ using API.Interfaces;
 using API.Extensions;
 using API.Entities;
 using API.DTOs;
+using AutoMapper;
 
 namespace API.Controllers;
 
 public class FriendsController : BaseApiController
 {
     private readonly IFriendsRepository _friendsRepository;
+    private readonly IMapper _mapper;
     private readonly IUsersRepository _usersRepository;
 
-    public FriendsController(IFriendsRepository friendsRepository, IUsersRepository usersRepository)
+    public FriendsController(IFriendsRepository friendsRepository, IMapper mapper,
+        IUsersRepository usersRepository)
     {
         _friendsRepository = friendsRepository;
+        _mapper = mapper;
         _usersRepository = usersRepository;
     }
 
@@ -48,6 +52,27 @@ public class FriendsController : BaseApiController
         if (await _friendsRepository.SaveAllAsync()) return Ok();
 
         return BadRequest("Failed to add Friend");
+    }
+
+    [HttpGet("candidate/{candidateId}")]
+    public async Task<ActionResult<FriendshipDto>> GetFriend(int candidateId)
+    {
+        var currentUserId = User.GetUserId();
+
+        if (candidateId == currentUserId) return BadRequest("Cant friend yourself");
+
+        var friend = await _friendsRepository.GetFriend(currentUserId, candidateId);
+
+        if (friend != null) return friend;
+
+        var candidate = await _usersRepository.GetUserByIdAsync(candidateId);
+        if (candidate == null) return NotFound();
+
+        return new FriendshipDto
+        {
+            Player = _mapper.Map<PlayerDto>(candidate),
+            Status = -1
+        };
     }
 
     [HttpGet("active-friends")]

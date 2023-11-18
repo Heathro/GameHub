@@ -24,6 +24,30 @@ public class FriendsRepository : IFriendsRepository
             .FirstOrDefaultAsync(f => f.InviterId == inviterId && f.InviteeId == inviteeId);
     }
 
+    public async Task<FriendshipDto> GetFriend(int currentUserId, int candidateId)
+    {
+        var friendship = await _context.Friendships
+            .Include(f => f.Invitee)
+            .Include(f => f.Invitee.Avatar)
+            .Include(f => f.Inviter)
+            .Include(f => f.Inviter.Avatar)
+            .FirstOrDefaultAsync(f => 
+                (f.InviterId == currentUserId && f.InviteeId == candidateId) ||
+                (f.InviteeId == currentUserId && f.InviterId == candidateId)
+            );
+
+        if (friendship == null) return null;
+        
+        return new FriendshipDto
+        {
+            Player = _mapper.Map<PlayerDto>
+            (
+               candidateId == friendship.InviteeId ? friendship.Invitee : friendship.Inviter
+            ),
+            Status = friendship.Status
+        };
+    }
+
     public async Task<IEnumerable<FriendshipDto>> GetActiveFriends(int userId)
     {
         var friendships = await _context.Friendships

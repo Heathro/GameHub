@@ -67,6 +67,7 @@ public class UsersRepository : IUsersRepository
     public async Task<AppUser> GetUserByIdAsync(int id)
     {
         return await _context.Users
+            .Include(a => a.Avatar)
             .SingleOrDefaultAsync(user => user.Id == id);
     }
 
