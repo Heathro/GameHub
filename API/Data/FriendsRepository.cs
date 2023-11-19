@@ -21,7 +21,10 @@ public class FriendsRepository : IFriendsRepository
     public async Task<Friendship> GetFriendship(int inviterId, int inviteeId)
     {
         return await _context.Friendships
-            .FirstOrDefaultAsync(f => f.InviterId == inviterId && f.InviteeId == inviteeId);
+            .FirstOrDefaultAsync(f => 
+                (f.InviterId == inviterId && f.InviteeId == inviteeId) ||
+                (f.InviteeId == inviterId && f.InviterId == inviteeId)
+            );
     }
 
     public async Task<FriendshipDto> GetFriend(int currentUserId, int candidateId)

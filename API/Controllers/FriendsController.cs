@@ -24,7 +24,7 @@ public class FriendsController : BaseApiController
 
     [HttpPost("add-friend/{inviteeUsername}")]
     public async Task<ActionResult<FriendshipDto>> AddFriend(string inviteeUsername)
-    { // TODO DELETE DRRIEND METHOD
+    {
         var inviterId = User.GetUserId();
         var inviter = await _friendsRepository.GetUserWithFriends(inviterId);
         if (inviter == null) return NotFound();
