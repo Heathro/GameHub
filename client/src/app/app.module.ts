@@ -39,6 +39,8 @@ import { GameManagementComponent } from './components/admin/game-management/game
 import { RoleCardComponent } from './components/admin/role-card/role-card.component';
 import { FriendsListComponent } from './components/players/friends-list/friends-list.component';
 import { FriendsPanelComponent } from './components/players/friends-panel/friends-panel.component';
+import { IncomeRequestsComponent } from './components/players/income-requests/income-requests.component';
+import { OutcomeRequestsComponent } from './components/players/outcome-requests/outcome-requests.component';
 
 @NgModule({
   declarations: [
@@ -71,7 +73,9 @@ import { FriendsPanelComponent } from './components/players/friends-panel/friend
     GameManagementComponent,
     RoleCardComponent,
     FriendsListComponent,
-    FriendsPanelComponent
+    FriendsPanelComponent,
+    IncomeRequestsComponent,
+    OutcomeRequestsComponent
   ],
   imports: [
     BrowserModule,

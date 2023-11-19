@@ -9,13 +9,16 @@ import { PaginationParams } from '../models/pagination';
 import { Player } from '../models/player';
 import { Friend } from '../models/friend';
 import { FriendStatus } from '../helpers/friendStatus';
+import { FriendRequestType } from '../helpers/friendRequestType';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PlayersService {
   baseUrl = environment.apiUrl;
-  friends: Friend[] = [];
+  activeFriends: Friend[] = [];
+  incomeRequests: Friend[] = [];
+  outcomeRequests: Friend[] = [];
   playersCache = new Map();
   paginationParams: PaginationParams;
 
@@ -42,20 +45,100 @@ export class PlayersService {
     let params = getPaginationHeaders(this.paginationParams);
 
     return getPaginatedResult<Player[]>(this.baseUrl + 'users/', params, this.http).pipe(
-      map(response => {
-        this.playersCache.set(queryString, response);
-        return response;
+      map(players => {
+        this.playersCache.set(queryString, players);
+        return players;
       })
     );
   }
 
-  getFriends(status: FriendStatus) {    
-    if (this.friends.length > 0) return of(this.friends);
+  isIncomeRequest(userName: string) {
+    return this.incomeRequests.find((friend: Friend) => friend.player.userName === userName);
+  }
 
-    return this.http.get<Friend[]>(this.baseUrl + 'friends/with-status/' + status).pipe(
-      map(response => {
-        this.friends = response;
-        return response;
+  addFriend(userName: string) {
+    return this.http.post<Friend>(this.baseUrl + 'friends/add-friend/' + userName, {}).pipe(
+      map(friend => {
+        this.outcomeRequests.push(friend);
+        return friend;
+      })
+    );
+  }
+
+  deleteFriend(userName: string) {
+    return this.http.post<Friend>(this.baseUrl + 'friends/add-friend/' + userName, {}).pipe(
+      map(friend => {
+        this.activeFriends = this.activeFriends.filter(f => f.player.userName !== userName);
+        return friend;
+      })
+    );
+  }
+
+  acceptRequest(userName: string) {
+    this.incomeRequests = this.incomeRequests.filter(f => f.player.userName !== userName);
+    return this.http.post<Friend>(
+      this.baseUrl + 'friends/update-status/' + userName + '/' + FriendStatus.active, {}
+    ).pipe(
+      map(friend => {
+        this.activeFriends.push(friend);
+        return friend;
+      })
+    );
+  }
+
+  cancelRequest(userName: string) {
+    return this.http.post<Friend>(this.baseUrl + 'friends/add-friend/' + userName, {}).pipe(
+      map(friend => {
+        this.outcomeRequests = this.activeFriends.filter(f => f.player.userName !== userName);
+        return friend;
+      }
+    ));
+  }
+
+  getFriend(userName: string) {
+    const activeFriend = this.activeFriends.find((friend: Friend) => friend.player.userName === userName);
+    if (activeFriend) return of(activeFriend);
+
+    const incomeRequest = this.incomeRequests.find((friend: Friend) => friend.player.userName === userName);
+    if (incomeRequest) return of(incomeRequest);
+
+    const outcomeRequest = this.outcomeRequests.find((friend: Friend) => friend.player.userName === userName);
+    if (outcomeRequest) return of(outcomeRequest);
+
+    return this.http.get<Friend>(this.baseUrl + 'friends/candidate/' + userName).pipe(
+      map(friend => {
+        return friend;
+      })
+    );
+  }
+
+  getFriends(status: FriendStatus, type: FriendRequestType) {
+    if (status === FriendStatus.active) {
+      if (this.activeFriends.length > 0) return of(this.activeFriends);
+    }
+    else if (status === FriendStatus.pending) {
+      if (type === FriendRequestType.income && this.incomeRequests.length > 0) {
+        return of(this.incomeRequests);
+      }
+      else if (type === FriendRequestType.outcome && this.outcomeRequests.length > 0) {
+        return of(this.outcomeRequests);
+      }
+    }
+
+    return this.http.get<Friend[]>(this.baseUrl + 'friends/list/' + status + '/' + type).pipe(
+      map(friends => {
+        if (status == FriendStatus.active) {
+          this.activeFriends = friends;
+        }
+        else if (status === FriendStatus.pending) {
+          if (type == FriendRequestType.income) {
+            this.incomeRequests = friends;
+          }
+          else if (type === FriendRequestType.outcome) {
+            this.outcomeRequests = friends;
+          }
+        }
+        return friends;
       })
     );
   }
@@ -81,7 +164,9 @@ export class PlayersService {
   }
 
   clearPrivateData() {
-    this.friends.length = 0;
+    this.activeFriends.length = 0;
+    this.incomeRequests.length = 0;
+    this.outcomeRequests.length = 0;
     this.playersCache = new Map();
     this.paginationParams = this.initializePaginationParams();
   }

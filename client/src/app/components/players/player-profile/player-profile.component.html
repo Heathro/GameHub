@@ -1,35 +1,64 @@
-<div class="row" *ngIf="player">
+<div class="row" *ngIf="friend">
 
     <div class="col-3">
         <div class="card">
 
             <img 
-                src="{{player.avatar.url || './assets/avatar.png'}}" 
-                alt="{{player.userName}}"
+                src="{{friend.player.avatar.url || './assets/avatar.png'}}" 
+                alt="{{friend.player.userName}}"
                 class="card-img-top img-thumbnail"
             >
             <div class="card-body">
                 <div>
-                    <h3 class="mb-4">{{player.userName}}</h3>
+                    <h3 class="mb-4">{{friend.player.userName}}</h3>
                 </div>
                 <div>
                     <strong>Member since:</strong>
-                    <p>{{player.created + 'Z' | date: 'd MMMM yyyy'}}</p>
+                    <p>{{friend.player.created + 'Z' | date: 'd MMMM yyyy'}}</p>
                 </div>
                 <div>
                     <strong>Last active:</strong>
-                    <p>{{player.lastActive + 'Z' | timeago}}</p>
+                    <p>{{friend.player.lastActive + 'Z' | timeago}}</p>
                 </div>
             </div>
             <div class="card-footer">
                 <div class="btn-group d-flex">
-                    <button class="btn btn-outline-success">Add Friend</button>
+
+                    <button *ngIf="friend.status === 3"
+                        class="btn btn-outline-danger"
+                        (click)="deleteFriend()"
+                    >
+                        Delete Friend&nbsp;&nbsp;&nbsp;<i class="bi bi-person-slash"></i>
+                    </button>
+
+                    <button *ngIf="friend.status === 0"
+                        class="btn btn-outline-success"
+                        (click)="addFriend()"
+                    >
+                        Add Friend&nbsp;&nbsp;&nbsp;<i class="bi bi-person"></i>
+                    </button>
+
+                    <button *ngIf="friend.status === 2 && !isIncomeRequest"
+                        class="btn btn-outline-warning"
+                        (click)="cancelRequest()"
+                    >
+                        Cancel Request&nbsp;&nbsp;&nbsp;<i class="bi bi-person-slash"></i>
+                    </button>
+
+                    <button *ngIf="friend.status === 2 && isIncomeRequest"
+                        class="btn btn-outline-success"
+                        (click)="acceptRequest()"
+                    >
+                        Accept Request&nbsp;&nbsp;&nbsp;<i class="bi bi-person"></i>
+                    </button>
+
                     <button 
                         class="btn btn-outline-info" 
                         (click)="messagePlayer()"
                     >
                         Message&nbsp;&nbsp;&nbsp;<i class="bi bi-chat-dots"></i>
                     </button>
+
                 </div>
             </div>
             
@@ -40,15 +69,15 @@
         <tabset class="custom-tabset">
 
             <tab heading="About">
-                <h5 class="m-4">{{player.realname}}</h5>
+                <h5 class="m-4">{{friend.player.realname}}</h5>
 
                 <div class="d-flex m-4">
-                    <h6>{{player.country}}</h6>
-                    <h6 *ngIf="player.country && player.city">,&nbsp;&nbsp;</h6>
-                    <h6>{{player.city}}</h6>
+                    <h6>{{friend.player.country}}</h6>
+                    <h6 *ngIf="friend.player.country && friend.player.city">,&nbsp;&nbsp;</h6>
+                    <h6>{{friend.player.city}}</h6>
                 </div>
 
-                <p class="m-4">{{player.summary}}</p>                
+                <p class="m-4">{{friend.player.summary}}</p>                
             </tab>
 
             <tab heading="Games">

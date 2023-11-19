@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Friend } from 'src/app/models/friend';
 
 import { Player } from 'src/app/models/player';
 import { MessagesService } from 'src/app/services/messages.service';
@@ -11,7 +12,8 @@ import { PlayersService } from 'src/app/services/players.service';
   styleUrls: ['./player-profile.component.css']
 })
 export class PlayerProfileComponent implements OnInit {
-  player: Player | undefined;
+  friend: Friend | undefined;
+  isIncomeRequest = false;
 
   constructor(
     private playersService: PlayersService,
@@ -22,22 +24,56 @@ export class PlayerProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadPlayer();
+    this.checkIncomeRequest();
   }
 
   loadPlayer() {
     const username = this.route.snapshot.paramMap.get('username');
     if (!username) return;
-    this.playersService.getPlayer(username).subscribe({
-      next: player => {
-        if (!player) this.router.navigateByUrl('/not-found');
-        this.player = player;
+    this.playersService.getFriend(username).subscribe({
+      next: friend => {
+        if (!friend) this.router.navigateByUrl('/not-found');
+        this.friend = friend;
       }
     });
   }
 
+  addFriend() {
+    if (!this.friend) return;
+    this.playersService.addFriend(this.friend.player.userName).subscribe({
+      next: friend => this.friend = friend
+    });
+  }
+
+  deleteFriend() {
+    if (!this.friend) return;
+    this.playersService.deleteFriend(this.friend.player.userName).subscribe({
+      next: friend => this.friend = friend
+    });
+  }
+
+  acceptRequest() {
+    if (!this.friend) return;
+    this.playersService.acceptRequest(this.friend.player.userName).subscribe({
+      next: friend => this.friend = friend
+    });
+  }
+
+  cancelRequest() {
+    if (!this.friend) return;
+    this.playersService.cancelRequest(this.friend.player.userName).subscribe({
+      next: friend => this.friend = friend
+    });
+  }
+
+  checkIncomeRequest() {
+    if (!this.friend) return;
+    this.isIncomeRequest = this.playersService.isIncomeRequest(this.friend.player.userName) ? true : false;
+  }
+
   messagePlayer() {
-    if (!this.player) return;
-    this.messageService.setLastConversant(this.player.userName);
+    if (!this.friend) return;
+    this.messageService.setLastConversant(this.friend.player.userName);
     this.router.navigateByUrl('/messenger');
   }
 }

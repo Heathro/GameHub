@@ -6,11 +6,11 @@ import { FriendStatus } from 'src/app/helpers/friendStatus';
 import { FriendRequestType } from 'src/app/helpers/friendRequestType';
 
 @Component({
-  selector: 'app-friends-list',
-  templateUrl: './friends-list.component.html',
-  styleUrls: ['./friends-list.component.css']
+  selector: 'app-income-requests',
+  templateUrl: './income-requests.component.html',
+  styleUrls: ['./income-requests.component.css']
 })
-export class FriendsListComponent implements OnInit {  
+export class IncomeRequestsComponent implements OnInit {  
   friends: Friend[] = [];
   loading = false;
 
@@ -22,7 +22,7 @@ export class FriendsListComponent implements OnInit {
 
   loadFriends() {
     this.loading = true;
-    this.playersService.getFriends(FriendStatus.active, FriendRequestType.all).subscribe({
+    this.playersService.getFriends(FriendStatus.pending, FriendRequestType.income).subscribe({
       next: friends => {
         this.friends = friends;
         this.loading = false;     

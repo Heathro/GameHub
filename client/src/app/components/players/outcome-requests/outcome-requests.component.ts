@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 
-import { PlayersService } from 'src/app/services/players.service';
 import { Friend } from 'src/app/models/friend';
-import { FriendStatus } from 'src/app/helpers/friendStatus';
+import { PlayersService } from 'src/app/services/players.service';
 import { FriendRequestType } from 'src/app/helpers/friendRequestType';
+import { FriendStatus } from 'src/app/helpers/friendStatus';
 
 @Component({
-  selector: 'app-friends-list',
-  templateUrl: './friends-list.component.html',
-  styleUrls: ['./friends-list.component.css']
+  selector: 'app-outcome-requests',
+  templateUrl: './outcome-requests.component.html',
+  styleUrls: ['./outcome-requests.component.css']
 })
-export class FriendsListComponent implements OnInit {  
+export class OutcomeRequestsComponent implements OnInit {  
   friends: Friend[] = [];
   loading = false;
 
@@ -22,7 +22,7 @@ export class FriendsListComponent implements OnInit {
 
   loadFriends() {
     this.loading = true;
-    this.playersService.getFriends(FriendStatus.active, FriendRequestType.all).subscribe({
+    this.playersService.getFriends(FriendStatus.pending, FriendRequestType.outcome).subscribe({
       next: friends => {
         this.friends = friends;
         this.loading = false;     

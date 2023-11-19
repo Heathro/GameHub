@@ -24,7 +24,7 @@ public class FriendsController : BaseApiController
 
     [HttpPost("add-friend/{inviteeUsername}")]
     public async Task<ActionResult<FriendshipDto>> AddFriend(string inviteeUsername)
-    {
+    { // TODO DELETE DRRIEND METHOD
         var inviterId = User.GetUserId();
         var inviter = await _friendsRepository.GetUserWithFriends(inviterId);
         if (inviter == null) return NotFound();
@@ -35,13 +35,15 @@ public class FriendsController : BaseApiController
         if (inviter.UserName == inviteeUsername) return BadRequest("You cannot add yourself");
 
         var friendship = await _friendsRepository.GetFriendship(inviterId, invitee.Id);
-
+        
+        var deleting = false;
         if (friendship != null)
         {
+            deleting = true;
             inviter.Invitees.Remove(friendship);
         }
         else
-        {
+        {   
             friendship = new Friendship
             {
                 InviterId = inviterId,
@@ -50,11 +52,11 @@ public class FriendsController : BaseApiController
             };
             inviter.Invitees.Add(friendship);
         }
-
+            
         var friendshipDto = new FriendshipDto
         {
             Player = _mapper.Map<PlayerDto>(invitee),
-            Status = FriendStatus.Pending
+            Status = deleting ? FriendStatus.None : friendship.Status
         };
 
         if (await _friendsRepository.SaveAllAsync()) return Ok(friendshipDto);
@@ -120,9 +122,9 @@ public class FriendsController : BaseApiController
         };
     }
 
-    [HttpGet("with-status/{status}")]
-    public async Task<IEnumerable<FriendshipDto>> GetActiveFriends(FriendStatus status)
+    [HttpGet("list/{status}/{type}")]
+    public async Task<IEnumerable<FriendshipDto>> GetFriends(FriendStatus status, FriendRequestType type)
     {
-        return await _friendsRepository.GetFriendsWithStatus(User.GetUserId(), status);
+        return await _friendsRepository.GetFriends(User.GetUserId(), status, type);
     }
 }
