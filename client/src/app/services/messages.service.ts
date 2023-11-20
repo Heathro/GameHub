@@ -74,11 +74,7 @@ export class MessagesService {
   }
 
   deleteMessages() {
-    return this.http.delete(this.baseUrl + 'messages/' + this.lastCompanion).pipe(
-      map(() => {
-        this.messagesCache.set(this.lastCompanion, []);
-      })
-    );
+    return this.http.delete(this.baseUrl + 'messages/' + this.lastCompanion);
   }
 
   clearPrivateData() {

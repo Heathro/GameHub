@@ -81,7 +81,7 @@ export class MessengerComponent implements OnInit {
 
   deleteMessages() {
     this.messagesService.deleteMessages().subscribe({
-      next: () => this.messages = []
+      next: () => this.messages.length = 0
     });
   }
 
