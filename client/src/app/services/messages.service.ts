@@ -7,6 +7,8 @@ import { environment } from 'src/environments/environment';
 import { getPaginatedResult, getPaginationHeaders } from '../helpers/paginationHelper';
 import { PaginationParams } from '../models/pagination';
 import { Message } from '../models/message';
+import { Player } from '../models/player';
+import { PlayersService } from './players.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,9 +18,22 @@ export class MessagesService {
   messagesCache = new Map();
   lastConversant = '';
   paginationParams: PaginationParams;
+  companions: Player[] = [];
+  companionsInitialLoad = false;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private playersService: PlayersService) {
     this.paginationParams = this.initializePaginationParams();
+  }
+
+  getCompanions() {
+    if (this.companionsInitialLoad) return of(this.companions);
+    return this.http.get<Player[]>(this.baseUrl + 'messages/companions').pipe(
+      map(companions => {
+        this.companionsInitialLoad = true;
+        this.companions = companions;
+        return companions;
+      })
+    );
   }
 
   getPaginatedMessages() {
@@ -41,8 +56,17 @@ export class MessagesService {
   }
 
   sendMessage(content: string) {
-    return this.http.post<Message>(
-      this.baseUrl + 'messages', {recipientUsername: this.lastConversant, content});
+    const messageDto = { recipientUsername: this.lastConversant, content };
+    return this.http.post<Message>(this.baseUrl + 'messages', messageDto).pipe(
+      map(message => {
+        if (!this.companions.find(c => c.userName === this.lastConversant)) {
+          this.playersService.getPlayer(message.recipientUsername).subscribe({
+            next: player => this.companions.push(player)
+          });
+        }
+        return message;
+      })
+    );
   }
 
   deleteMessage(id: number) {
@@ -87,6 +111,8 @@ export class MessagesService {
     this.messagesCache = new Map();
     this.lastConversant = '';
     this.paginationParams = this.initializePaginationParams();
+    this.companions.length = 0;
+    this.companionsInitialLoad = false;
   }
 
   private initializePaginationParams() {

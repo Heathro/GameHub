@@ -12,6 +12,7 @@ public interface IMessagesRepository
     Task<Message> GetMessage(int id);
     Task<IEnumerable<Message>> GetMessages(string currentUsername, string recipientUsername);
     Task DeleteUserMessages(string username);
+    Task<IEnumerable<PlayerDto>> GetCompanions(string username);
     Task<PagedList<MessageDto>> GetMessagesForUser(PaginationParams paginationParams, string username);
     Task<IEnumerable<MessageDto>> GetMessageThread(string currentUsername, string recipientUsername);
     Task<bool> SaveAllAsync();

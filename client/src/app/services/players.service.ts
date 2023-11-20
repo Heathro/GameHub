@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { map, of } from 'rxjs';
@@ -55,47 +55,12 @@ export class PlayersService {
     );
   }
 
-  isIncomeRequest(userName: string) {
-    return this.incomeRequests.find((friend: Friend) => friend.player.userName === userName);
+  updatePlayer(player: Player) {
+    return this.http.put(this.baseUrl + 'users/edit-profile', player);
   }
 
-  addFriend(userName: string) {
-    return this.http.post<Friend>(this.baseUrl + 'friends/add-friend/' + userName, {}).pipe(
-      map(friend => {
-        this.outcomeRequests.push(friend);
-        return friend;
-      })
-    );
-  }
-
-  deleteFriend(userName: string) {
-    return this.http.post<Friend>(this.baseUrl + 'friends/add-friend/' + userName, {}).pipe(
-      map(friend => {
-        this.activeFriends = this.activeFriends.filter(f => f.player.userName !== userName);
-        return friend;
-      })
-    );
-  }
-
-  acceptRequest(userName: string) {
-    this.incomeRequests = this.incomeRequests.filter(f => f.player.userName !== userName);
-    return this.http.post<Friend>(
-      this.baseUrl + 'friends/update-status/' + userName + '/' + FriendStatus.active, {}
-    ).pipe(
-      map(friend => {
-        this.activeFriends.push(friend);
-        return friend;
-      })
-    );
-  }
-
-  cancelRequest(userName: string) {
-    return this.http.post<Friend>(this.baseUrl + 'friends/add-friend/' + userName, {}).pipe(
-      map(friend => {
-        this.outcomeRequests = this.outcomeRequests.filter(f => f.player.userName !== userName);
-        return friend;
-      }
-    ));
+  deletePlayer() {
+    return this.http.delete(this.baseUrl + 'users/delete-user');
   }
 
   getFriend(userName: string) {
@@ -158,12 +123,47 @@ export class PlayersService {
     );
   }
 
-  updatePlayer(player: Player) {
-    return this.http.put(this.baseUrl + 'users/edit-profile', player);
+  addFriend(userName: string) {
+    return this.http.post<Friend>(this.baseUrl + 'friends/add-friend/' + userName, {}).pipe(
+      map(friend => {
+        this.outcomeRequests.push(friend);
+        return friend;
+      })
+    );
   }
 
-  deletePlayer() {
-    return this.http.delete(this.baseUrl + 'users/delete-user');
+  deleteFriend(userName: string) {
+    return this.http.post<Friend>(this.baseUrl + 'friends/add-friend/' + userName, {}).pipe(
+      map(friend => {
+        this.activeFriends = this.activeFriends.filter(f => f.player.userName !== userName);
+        return friend;
+      })
+    );
+  }
+
+  acceptRequest(userName: string) {
+    this.incomeRequests = this.incomeRequests.filter(f => f.player.userName !== userName);
+    return this.http.post<Friend>(
+      this.baseUrl + 'friends/update-status/' + userName + '/' + FriendStatus.active, {}
+    ).pipe(
+      map(friend => {
+        this.activeFriends.push(friend);
+        return friend;
+      })
+    );
+  }
+
+  cancelRequest(userName: string) {
+    return this.http.post<Friend>(this.baseUrl + 'friends/add-friend/' + userName, {}).pipe(
+      map(friend => {
+        this.outcomeRequests = this.outcomeRequests.filter(f => f.player.userName !== userName);
+        return friend;
+      }
+    ));
+  }
+
+  isIncomeRequest(userName: string) {
+    return this.incomeRequests.find((friend: Friend) => friend.player.userName === userName);
   }
 
   setPaginationPage(currentPage: number) {
@@ -180,8 +180,11 @@ export class PlayersService {
 
   clearPrivateData() {
     this.activeFriends.length = 0;
+    this.activeFriendsInitialLoad = false;
     this.incomeRequests.length = 0;
+    this.incomeRequestsInitialLoad = false;
     this.outcomeRequests.length = 0;
+    this.outcomeRequestsInitialLoad = false;
     this.playersCache = new Map();
     this.paginationParams = this.initializePaginationParams();
   }

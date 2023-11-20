@@ -77,6 +77,12 @@ public class MessagesController : BaseApiController
         return Ok(await _messagesRepository.GetMessageThread(User.GetUsername(), username));
     }
 
+    [HttpGet("companions")]
+    public async Task<ActionResult<IEnumerable<PlayerDto>>> GetCompanions()
+    {
+        return Ok(await _messagesRepository.GetCompanions(User.GetUsername()));
+    }
+
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteMessage(int id)
     {

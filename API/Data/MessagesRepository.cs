@@ -56,6 +56,24 @@ public class MessagesRepository : IMessagesRepository
         _context.Messages.RemoveRange(messages);
     }
 
+    public async Task<IEnumerable<PlayerDto>> GetCompanions(string username)
+    {        
+        var companions = await _context.Messages            
+            .Where(m => 
+                (m.SenderUsername == username && !m.SenderDeleted) ||
+                (m.RecipientUsername == username && !m.RecipientDeleted)
+            )
+            .Select(u => u.SenderUsername == username ? u.RecipientId : u.SenderId)
+            .Distinct()
+            .ToListAsync();
+
+        return await _context.Users
+            .Include(u => u.Avatar)
+            .Where(u => companions.Contains(u.Id))
+            .ProjectTo<PlayerDto>(_mapper.ConfigurationProvider)
+            .ToListAsync();
+    }
+
     public async Task<PagedList<MessageDto>> GetMessagesForUser(
         PaginationParams paginationParams, string username)
     {

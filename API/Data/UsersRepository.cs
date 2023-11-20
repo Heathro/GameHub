@@ -40,7 +40,7 @@ public class UsersRepository : IUsersRepository
     {
         var query = _context.Users.AsQueryable();
 
-        query = query.Where(u => u.UserName != currentUsername);
+        query = query.Where(u => u.UserName != currentUsername && u.UserName != "Admin");
 
         query = paginationParams.OrderBy switch
         {
@@ -54,14 +54,6 @@ public class UsersRepository : IUsersRepository
             paginationParams.CurrentPage, 
             paginationParams.ItemsPerPage
         );
-    }
-
-    public async Task<ActionResult<IEnumerable<PlayerDto>>> GetFriendsAsync(string username)
-    {
-        return await _context.Users
-            .Where(u => u.UserName != username)
-            .ProjectTo<PlayerDto>(_mapper.ConfigurationProvider)
-            .ToListAsync();
     }
 
     public async Task<AppUser> GetUserByIdAsync(int id)

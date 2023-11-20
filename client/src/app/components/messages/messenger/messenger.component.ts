@@ -2,6 +2,7 @@ import { Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/
 
 import { take } from 'rxjs';
 
+import { MessageComponent } from '../message/message.component';
 import { AccountService } from 'src/app/services/account.service';
 import { MessagesService } from 'src/app/services/messages.service';
 import { PlayersService } from 'src/app/services/players.service';
@@ -9,10 +10,6 @@ import { Message } from 'src/app/models/message';
 import { User } from 'src/app/models/user';
 import { Player } from 'src/app/models/player';
 import { NgForm } from '@angular/forms';
-import { MessageComponent } from '../message/message.component';
-import { Friend } from 'src/app/models/friend';
-import { FriendStatus } from 'src/app/helpers/friendStatus';
-import { FriendRequestType } from 'src/app/helpers/friendRequestType';
 
 @Component({
   selector: 'app-messenger',
@@ -22,7 +19,7 @@ import { FriendRequestType } from 'src/app/helpers/friendRequestType';
 export class MessengerComponent implements OnInit {
   @ViewChildren(MessageComponent) messageComponents: QueryList<MessageComponent> | undefined;
   @ViewChild('messageForm') messageForm?: NgForm;
-  friends: Friend[] = [];
+  companions: Player[] = [];
   messages: Message[] = [];
   user: User | null = null;
   content = '';
@@ -30,7 +27,7 @@ export class MessengerComponent implements OnInit {
   sending = false;
 
   constructor(
-    private accountService: AccountService,
+    private accountService: AccountService, 
     private messagesService: MessagesService,
     private playersService: PlayersService
   ) {
@@ -40,15 +37,15 @@ export class MessengerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadFriends();    
+    this.loadCompanions();    
   }
 
-  loadFriends() {
-    this.playersService.getFriends(FriendStatus.active, FriendRequestType.all).subscribe({
-      next: friends => {
-        this.friends = friends;        
+  loadCompanions() {
+    this.messagesService.getCompanions().subscribe({
+      next: companions => {
+        this.companions = companions;        
         const lastConversant = this.messagesService.getLastConversant();
-        this.loadMessages(lastConversant.length > 0 ? lastConversant : this.friends[0].player.userName);
+        this.loadMessages(lastConversant.length > 0 ? lastConversant : this.companions[0].userName);
       }
     });
   }
@@ -71,6 +68,11 @@ export class MessengerComponent implements OnInit {
         this.updateLastMessage();
         this.messageForm?.reset();
         this.sending = false;
+        if (!this.companions.find(c => c.userName === message.recipientUsername)) {
+          this.playersService.getPlayer(message.recipientUsername).subscribe({
+            next: player => this.companions.push(player)
+          });
+        }
       }
     })
   }

@@ -44,12 +44,6 @@ public class UsersController : BaseApiController
         return await _usersRepository.GetPlayerAsync(username);
     }
 
-    [HttpGet("friends")]
-    public async Task<ActionResult<IEnumerable<PlayerDto>>> GetFriends()
-    {
-        return await _usersRepository.GetFriendsAsync(User.GetUsername());
-    }
-
     [HttpPut("edit-profile")]
     public async Task<ActionResult> UpdateUser(PlayerEditDto playerEditDto)
     {

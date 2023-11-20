@@ -11,7 +11,7 @@ public class AutoMapperProfiles : Profile
     {
         CreateMap<AppUser, PlayerDto>();
         CreateMap<PlayerEditDto, AppUser>();
-
+        
         CreateMap<RegisterDto, AppUser>();
 
         CreateMap<Avatar, AvatarDto>();
