@@ -63,6 +63,7 @@ public class MessagesRepository : IMessagesRepository
                 (m.SenderUsername == username && !m.SenderDeleted) ||
                 (m.RecipientUsername == username && !m.RecipientDeleted)
             )
+            .OrderByDescending(m => m.MessageSent)
             .Select(u => u.SenderUsername == username ? u.RecipientId : u.SenderId)
             .Distinct()
             .ToListAsync();

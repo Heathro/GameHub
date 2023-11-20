@@ -26,11 +26,7 @@ export class MessengerComponent implements OnInit {
   loading = false;
   sending = false;
 
-  constructor(
-    private accountService: AccountService, 
-    private messagesService: MessagesService,
-    private playersService: PlayersService
-  ) {
+  constructor(private accountService: AccountService, private messagesService: MessagesService) {
     this.accountService.currentUser$.pipe(take(1)).subscribe({
       next: user => this.user = user
     });
@@ -44,8 +40,8 @@ export class MessengerComponent implements OnInit {
     this.messagesService.getCompanions().subscribe({
       next: companions => {
         this.companions = companions;        
-        const lastConversant = this.messagesService.getLastConversant();
-        this.loadMessages(lastConversant.length > 0 ? lastConversant : this.companions[0].userName);
+        const lastCompanion = this.messagesService.getLastCompanion();
+        this.loadMessages(lastCompanion.length > 0 ? lastCompanion : this.companions[0].userName);
       }
     });
   }
@@ -64,15 +60,10 @@ export class MessengerComponent implements OnInit {
     this.sending = true;
     this.messagesService.sendMessage(this.content).subscribe({
       next: message => {
-        this.messages?.push(message);
+        this.messages.push(message);
         this.updateLastMessage();
         this.messageForm?.reset();
         this.sending = false;
-        if (!this.companions.find(c => c.userName === message.recipientUsername)) {
-          this.playersService.getPlayer(message.recipientUsername).subscribe({
-            next: player => this.companions.push(player)
-          });
-        }
       }
     })
   }
@@ -80,7 +71,6 @@ export class MessengerComponent implements OnInit {
   deleteMessage(id: number) {
     this.messagesService.deleteMessage(id).subscribe({
       next: () => {
-        if (!this.messages) return;
         const currentMessageIndex = this.messages.findIndex(m => m.id === id);
         this.updatePreviousMessage(currentMessageIndex - 1);
         this.updateNextMessage(currentMessageIndex + 1);
@@ -96,7 +86,7 @@ export class MessengerComponent implements OnInit {
   }
 
   getCurrentConversant() {
-    return this.messagesService.getLastConversant();
+    return this.messagesService.getLastCompanion();
   }
   
   private updateLastMessage() {

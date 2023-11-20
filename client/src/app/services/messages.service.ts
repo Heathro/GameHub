@@ -16,14 +16,11 @@ import { PlayersService } from './players.service';
 export class MessagesService {
   baseUrl = environment.apiUrl;
   messagesCache = new Map();
-  lastConversant = '';
-  paginationParams: PaginationParams;
+  lastCompanion = '';
   companions: Player[] = [];
   companionsInitialLoad = false;
 
-  constructor(private http: HttpClient, private playersService: PlayersService) {
-    this.paginationParams = this.initializePaginationParams();
-  }
+  constructor(private http: HttpClient, private playersService: PlayersService) { }
 
   getCompanions() {
     if (this.companionsInitialLoad) return of(this.companions);
@@ -36,14 +33,26 @@ export class MessagesService {
     );
   }
 
-  getPaginatedMessages() {
-    let params = getPaginationHeaders(this.paginationParams);
-    return getPaginatedResult<Message[]>(this.baseUrl + 'messages', params, this.http);
+  setLastCompanion(userName: string) {
+    this.lastCompanion = userName;
+    if (!this.companions.find(c => c.userName === userName)) {
+      this.playersService.getPlayer(userName).subscribe({
+        next: player => this.companions.unshift(player)
+      });
+    }
+  }
+
+  getLastCompanion() {
+    return this.lastCompanion;
+  }
+
+  deleteCompanion(userName: string) {
+    this.companions = this.companions.filter(c => c.userName !== userName);
   }
 
   getMessages(username: string) {
-    this.lastConversant = username;
-    
+    this.lastCompanion = username;
+
     const response = this.messagesCache.get(username);
     if (response) return of(response);
 
@@ -56,66 +65,26 @@ export class MessagesService {
   }
 
   sendMessage(content: string) {
-    const messageDto = { recipientUsername: this.lastConversant, content };
-    return this.http.post<Message>(this.baseUrl + 'messages', messageDto).pipe(
-      map(message => {
-        if (!this.companions.find(c => c.userName === this.lastConversant)) {
-          this.playersService.getPlayer(message.recipientUsername).subscribe({
-            next: player => this.companions.push(player)
-          });
-        }
-        return message;
-      })
-    );
+    const messageDto = { recipientUsername: this.lastCompanion, content };
+    return this.http.post<Message>(this.baseUrl + 'messages', messageDto);
   }
 
   deleteMessage(id: number) {
-    return this.http.delete(this.baseUrl + 'messages/' + id).pipe(
-      map(() => {
-        this.messagesCache.set(this.lastConversant, 
-          this.messagesCache.get(this.lastConversant).filter((m: Message) => m.id !== id)
-        );
-      })
-    );
+    return this.http.delete(this.baseUrl + 'messages/' + id);
   }
 
   deleteMessages() {
-    return this.http.delete(this.baseUrl + 'messages/' + this.lastConversant).pipe(
+    return this.http.delete(this.baseUrl + 'messages/' + this.lastCompanion).pipe(
       map(() => {
-        this.messagesCache.set(this.lastConversant, []);
+        this.messagesCache.set(this.lastCompanion, []);
       })
     );
-  }
-
-  setLastConversant(username: string) {
-    this.lastConversant = username;
-  }
-
-  getLastConversant() {
-    return this.lastConversant;
-  }
-
-  setPaginationPage(currentPage: number) {
-    this.paginationParams.currentPage = currentPage;
-  }
-
-  setPaginationOrder(orderBy: string) {
-    this.paginationParams.orderBy = orderBy;
-  }
-
-  getPaginationParams() {
-    return this.paginationParams;
   }
 
   clearPrivateData() {
     this.messagesCache = new Map();
-    this.lastConversant = '';
-    this.paginationParams = this.initializePaginationParams();
+    this.lastCompanion = '';
     this.companions.length = 0;
     this.companionsInitialLoad = false;
-  }
-
-  private initializePaginationParams() {
-    return new PaginationParams(100);
   }
 }

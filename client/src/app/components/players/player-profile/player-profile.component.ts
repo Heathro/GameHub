@@ -73,7 +73,7 @@ export class PlayerProfileComponent implements OnInit {
 
   messagePlayer() {
     if (!this.friend) return;
-    this.messageService.setLastConversant(this.friend.player.userName);
+    this.messageService.setLastCompanion(this.friend.player.userName);
     this.router.navigateByUrl('/messenger');
   }
 }
