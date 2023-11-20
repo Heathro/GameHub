@@ -46,8 +46,14 @@ export class MessagesService {
     return this.lastCompanion;
   }
 
-  deleteCompanion(userName: string) {
-    this.companions = this.companions.filter(c => c.userName !== userName);
+  deleteCompanion() {
+    return this.http.delete(this.baseUrl + 'messages/' + this.lastCompanion).pipe(
+      map(() => {
+        this.companions = this.companions.filter(c => c.userName !== this.lastCompanion);
+        this.messagesCache.delete(this.lastCompanion);
+        this.lastCompanion = this.companions.length > 0 ? this.companions[0].userName : '';
+      })
+    );
   }
 
   getMessages(username: string) {

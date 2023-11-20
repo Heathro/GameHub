@@ -10,16 +10,25 @@
         <div>
             <div class="row">
                 <h4 
-                    class="d-inline text-info ms-4 mt-2 col-8"
+                    class="d-inline text-info ms-4 mt-2 col-7"
                 >   
                     &nbsp;&nbsp;<i class="bi bi-chat-dots"></i>
                     &nbsp;&nbsp;{{getCurrentConversant()}}
                 </h4>
                 <button 
-                    class="btn btn-outline-danger mb-2 col-3"
+                    class="btn btn-outline-danger mb-2 col-2 me-1"
                     [disabled]="messages.length === 0"
                     (click)="deleteMessages()"
-                >Clear Messages&nbsp;&nbsp;&nbsp;<i class="bi bi-trash3"></i></button>
+                >
+                    Clear Chat&nbsp;&nbsp;&nbsp;<i class="bi bi-trash3"></i>
+                </button>
+                <button 
+                    class="btn btn-outline-danger mb-2 col-2"
+                    [disabled]="messages.length === 0"
+                    (click)="deleteCompanion()"
+                >   
+                    Delete Chat&nbsp;&nbsp;&nbsp;<i class="bi bi-trash3"></i>
+                </button>
             </div>
 
             <div class="card">
@@ -48,7 +57,7 @@
                             >
                             <div class="input-group-append">
                                 <button 
-                                    [disabled]="!messageForm.valid || sending"
+                                    [disabled]="!messageForm.valid || sending || getCurrentConversant().length === 0"
                                     class="btn btn-success ms-2"
                                     type="submit"
                                 >

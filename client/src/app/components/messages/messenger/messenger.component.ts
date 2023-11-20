@@ -85,6 +85,15 @@ export class MessengerComponent implements OnInit {
     });
   }
 
+  deleteCompanion() {
+    this.messagesService.deleteCompanion().subscribe({
+      next: () => {
+        this.messages = [];
+        this.loadCompanions();
+      } 
+    });
+  }
+
   getCurrentConversant() {
     return this.messagesService.getLastCompanion();
   }
