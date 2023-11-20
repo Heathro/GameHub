@@ -25,31 +25,31 @@
                 <div class="btn-group d-flex">
 
                     <button *ngIf="friend.status === 3"
-                        class="btn btn-outline-danger"
+                        class="btn btn-outline-danger me-1"
                         (click)="deleteFriend()"
                     >
-                        Delete Friend&nbsp;&nbsp;&nbsp;<i class="bi bi-person-slash"></i>
+                        Delete&nbsp;&nbsp;&nbsp;<i class="bi bi-person-slash"></i>
                     </button>
 
                     <button *ngIf="friend.status === 0"
-                        class="btn btn-outline-success"
+                        class="btn btn-outline-success me-1"
                         (click)="addFriend()"
                     >
-                        Add Friend&nbsp;&nbsp;&nbsp;<i class="bi bi-person"></i>
+                        Add&nbsp;&nbsp;&nbsp;<i class="bi bi-person"></i>
                     </button>
 
                     <button *ngIf="friend.status === 2 && !isIncomeRequest"
-                        class="btn btn-outline-warning"
+                        class="btn btn-outline-warning me-1"
                         (click)="cancelRequest()"
                     >
-                        Cancel Request&nbsp;&nbsp;&nbsp;<i class="bi bi-person-slash"></i>
+                        Cancel&nbsp;&nbsp;&nbsp;<i class="bi bi-person-slash"></i>
                     </button>
 
                     <button *ngIf="friend.status === 2 && isIncomeRequest"
-                        class="btn btn-outline-success"
+                        class="btn btn-outline-success me-1"
                         (click)="acceptRequest()"
                     >
-                        Accept Request&nbsp;&nbsp;&nbsp;<i class="bi bi-person"></i>
+                        Accept&nbsp;&nbsp;&nbsp;<i class="bi bi-person"></i>
                     </button>
 
                     <button 
