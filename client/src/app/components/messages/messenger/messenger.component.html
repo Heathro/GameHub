@@ -1,8 +1,27 @@
 <div class="row">
 
-    <div class="col-4">
+    <div class="col-4" *ngIf="companions.length > 0">
         <div *ngFor="let companion of companions">
             <app-contact-card (loadMessages)="loadMessages($event)" [player]="companion"></app-contact-card>
+        </div>
+    </div>
+
+    <div class="col-4"*ngIf="companions.length === 0">
+        <div class="card me-2">
+            <h4 class="my-4 text-center text-warning">No Chats</h4>
+
+            <button 
+                class="my-4 btn btn-outline-info col-6 mx-auto"
+                routerLink="/players"
+            >
+                Browse Players&nbsp;&nbsp;&nbsp;<i class="bi bi-people"></i>
+            </button>
+            <button 
+                class="mb-4 btn btn-outline-info col-6 mx-auto"
+                routerLink="/friends"
+            >
+                Browse Friends&nbsp;&nbsp;&nbsp;<i class="bi bi-people-fill"></i>
+            </button>
         </div>
     </div>
 
