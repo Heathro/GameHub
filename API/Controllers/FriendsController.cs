@@ -22,41 +22,31 @@ public class FriendsController : BaseApiController
         _usersRepository = usersRepository;
     }
 
-    [HttpPost("add-friend/{inviteeUsername}")]
-    public async Task<ActionResult<FriendshipDto>> AddFriend(string inviteeUsername)
+    [HttpPost("add-friend/{username}")]
+    public async Task<ActionResult<FriendshipDto>> AddFriend(string username)
     {
-        var inviterId = User.GetUserId();
-        var inviter = await _friendsRepository.GetUserWithFriends(inviterId);
-        if (inviter == null) return NotFound();
+        var currentUserId = User.GetUserId();
+        var currentUser = await _friendsRepository.GetUserWithFriends(currentUserId);        
+        if (currentUser.UserName == username) return BadRequest("You cannot add yourself");
 
-        var invitee = await _usersRepository.GetUserByUsernameAsync(inviteeUsername);
-        if (invitee == null) return NotFound();
+        var userToAdd = await _usersRepository.GetUserByUsernameAsync(username);
+        if (userToAdd == null) return NotFound();
 
-        if (inviter.UserName == inviteeUsername) return BadRequest("You cannot add yourself");
-
-        var friendship = await _friendsRepository.GetFriendship(inviterId, invitee.Id);
+        var friendship = await _friendsRepository.GetFriendship(currentUserId, userToAdd.Id);
+        if (friendship != null) return BadRequest("You already send request");
         
-        var deleting = false;
-        if (friendship != null)
+        friendship = new Friendship
         {
-            deleting = true;
-            inviter.Invitees.Remove(friendship);
-        }
-        else
-        {   
-            friendship = new Friendship
-            {
-                InviterId = inviterId,
-                InviteeId = invitee.Id,
-                Status = FriendStatus.Pending
-            };
-            inviter.Invitees.Add(friendship);
-        }
+            InviterId = currentUserId,
+            InviteeId = userToAdd.Id,
+            Status = FriendStatus.Pending
+        };
+        currentUser.Invitees.Add(friendship);
             
         var friendshipDto = new FriendshipDto
         {
-            Player = _mapper.Map<PlayerDto>(invitee),
-            Status = deleting ? FriendStatus.None : friendship.Status
+            Player = _mapper.Map<PlayerDto>(userToAdd),
+            Status = friendship.Status
         };
 
         if (await _friendsRepository.SaveAllAsync()) return Ok(friendshipDto);
@@ -64,18 +54,50 @@ public class FriendsController : BaseApiController
         return BadRequest("Failed to add friend");
     }
 
-    [HttpPost("update-status/{inviterUsername}/{status}")]
-    public async Task<ActionResult<FriendshipDto>> UpdateFriendStatus(
-        string inviterUsername, FriendStatus status)
+    [HttpDelete("delete-friend/{username}")]
+    public async Task<ActionResult<FriendshipDto>> DeleteFriend(string username)
     {
         var currentUserId = User.GetUserId();
         var currentUser = await _friendsRepository.GetUserWithFriends(currentUserId);
-        if (currentUser == null) return NotFound();
+        if (currentUser.UserName == username) return BadRequest("You cannot delete yourself");
 
-        var inviter = await _usersRepository.GetUserByUsernameAsync(inviterUsername);
-        if (inviter == null) return NotFound();
+        var userToDelete = await _usersRepository.GetUserByUsernameAsync(username);
+        if (userToDelete == null) return NotFound();
 
-        var friendship = await _friendsRepository.GetFriendship(inviter.Id, currentUserId);
+        var friendship = await _friendsRepository.GetFriendship(currentUserId, userToDelete.Id);
+        if (friendship == null) return NotFound();
+
+        if (friendship.InviterId == currentUserId)
+        {
+            currentUser.Invitees.Remove(friendship);
+        }
+        else
+        {
+            currentUser.Inviters.Remove(friendship);
+        }
+
+        var friendshipDto = new FriendshipDto
+        {
+            Player = _mapper.Map<PlayerDto>(userToDelete),
+            Status = FriendStatus.None
+        };
+
+        if (await _friendsRepository.SaveAllAsync()) return Ok(friendshipDto);
+
+        return BadRequest("Failed to delete friend");
+    }
+
+    [HttpPost("update-status/{username}/{status}")]
+    public async Task<ActionResult<FriendshipDto>> UpdateFriendStatus(string username, FriendStatus status)
+    {
+        var currentUserId = User.GetUserId();
+        var currentUser = await _friendsRepository.GetUserWithFriends(currentUserId);
+        if (currentUser.UserName == username) return BadRequest("You cannot update yourself");
+
+        var userToUpdate = await _usersRepository.GetUserByUsernameAsync(username);
+        if (userToUpdate == null) return NotFound();
+
+        var friendship = await _friendsRepository.GetFriendship(userToUpdate.Id, currentUserId);
         if (friendship == null) return NotFound();
 
         if (friendship.Status == status) return BadRequest("Nothing to change");
@@ -93,7 +115,7 @@ public class FriendsController : BaseApiController
 
         var friendshipDto = new FriendshipDto
         {
-            Player = _mapper.Map<PlayerDto>(inviter),
+            Player = _mapper.Map<PlayerDto>(userToUpdate),
             Status = status
         };
 
@@ -102,22 +124,22 @@ public class FriendsController : BaseApiController
         return BadRequest("Failed to update status");
     }
 
-    [HttpGet("candidate/{candidateUsername}")]
-    public async Task<ActionResult<FriendshipDto>> GetFriend(string candidateUsername)
+    [HttpGet("player-with-status/{username}")]
+    public async Task<ActionResult<FriendshipDto>> GetPlayerWithStatus(string username)
     {
+        if (username == User.GetUsername()) return BadRequest("You cannot request yourself");
+        
         var currentUserId = User.GetUserId();
 
-        var candidate = await _usersRepository.GetUserByUsernameAsync(candidateUsername);
-        if (candidate == null) return NotFound();
+        var userToReturn = await _usersRepository.GetUserByUsernameAsync(username);
+        if (userToReturn == null) return NotFound();
 
-        if (candidate.Id == currentUserId) return BadRequest("You cannot get yourself");
-
-        var friendship = await _friendsRepository.GetFriend(currentUserId, candidate.Id);
+        var friendship = await _friendsRepository.GetFriend(currentUserId, userToReturn.Id);
         if (friendship != null) return friendship;
 
         return new FriendshipDto
         {
-            Player = _mapper.Map<PlayerDto>(candidate),
+            Player = _mapper.Map<PlayerDto>(userToReturn),
             Status = FriendStatus.None
         };
     }

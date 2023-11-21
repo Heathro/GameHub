@@ -30,7 +30,7 @@ export class PlayerProfileComponent implements OnInit {
   loadPlayer() {
     const username = this.route.snapshot.paramMap.get('username');
     if (!username) return;
-    this.playersService.getFriend(username).subscribe({
+    this.playersService.getPlayerWithFriendStatus(username).subscribe({
       next: friend => {
         if (!friend) this.router.navigateByUrl('/not-found');
         this.friend = friend;

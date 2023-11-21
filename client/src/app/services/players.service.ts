@@ -63,7 +63,7 @@ export class PlayersService {
     return this.http.delete(this.baseUrl + 'users/delete-user');
   }
 
-  getFriend(userName: string) {
+  getPlayerWithFriendStatus(userName: string) {
     const activeFriend = this.activeFriends.find((friend: Friend) => friend.player.userName === userName);
     if (activeFriend) return of(activeFriend);
 
@@ -82,7 +82,7 @@ export class PlayersService {
       status: FriendStatus.none
     });
     
-    return this.http.get<Friend>(this.baseUrl + 'friends/candidate/' + userName).pipe(
+    return this.http.get<Friend>(this.baseUrl + 'friends/player-with-status/' + userName).pipe(
       map(friend => {
         return friend;
       })
@@ -133,7 +133,7 @@ export class PlayersService {
   }
 
   deleteFriend(userName: string) {
-    return this.http.post<Friend>(this.baseUrl + 'friends/add-friend/' + userName, {}).pipe(
+    return this.http.delete<Friend>(this.baseUrl + 'friends/delete-friend/' + userName).pipe(
       map(friend => {
         this.activeFriends = this.activeFriends.filter(f => f.player.userName !== userName);
         return friend;
@@ -154,7 +154,7 @@ export class PlayersService {
   }
 
   cancelRequest(userName: string) {
-    return this.http.post<Friend>(this.baseUrl + 'friends/add-friend/' + userName, {}).pipe(
+    return this.http.delete<Friend>(this.baseUrl + 'friends/delete-friend/' + userName).pipe(
       map(friend => {
         this.outcomeRequests = this.outcomeRequests.filter(f => f.player.userName !== userName);
         return friend;
