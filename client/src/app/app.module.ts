@@ -41,6 +41,7 @@ import { FriendsListComponent } from './components/players/friends-list/friends-
 import { FriendsPanelComponent } from './components/players/friends-panel/friends-panel.component';
 import { IncomeRequestsComponent } from './components/players/income-requests/income-requests.component';
 import { OutcomeRequestsComponent } from './components/players/outcome-requests/outcome-requests.component';
+import { FriendCardComponent } from './components/players/friend-card/friend-card.component';
 
 @NgModule({
   declarations: [
@@ -75,7 +76,8 @@ import { OutcomeRequestsComponent } from './components/players/outcome-requests/
     FriendsListComponent,
     FriendsPanelComponent,
     IncomeRequestsComponent,
-    OutcomeRequestsComponent
+    OutcomeRequestsComponent,
+    FriendCardComponent
   ],
   imports: [
     BrowserModule,

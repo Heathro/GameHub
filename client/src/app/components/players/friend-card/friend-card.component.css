@@ -1,0 +1,15 @@
+.friend-card-body {
+    background-color: #222222;
+    cursor: pointer;
+}
+
+.friend-card-img {
+    width: 60px;
+    margin: 10px;
+    border-radius: 25%;
+}
+
+.friend-card-buttons {
+    margin-top: 12px;
+    margin-left: -25px;
+}

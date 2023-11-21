@@ -28,28 +28,28 @@
                         class="btn btn-outline-danger me-1"
                         (click)="deleteFriend()"
                     >
-                        Delete&nbsp;&nbsp;&nbsp;<i class="bi bi-person-slash"></i>
+                        Delete&nbsp;&nbsp;&nbsp;<i class="bi bi-person-x"></i>
                     </button>
 
                     <button *ngIf="friend.status === 0"
                         class="btn btn-outline-success me-1"
                         (click)="addFriend()"
                     >
-                        Add&nbsp;&nbsp;&nbsp;<i class="bi bi-person"></i>
+                        Add&nbsp;&nbsp;&nbsp;<i class="bi bi-person-add"></i>
                     </button>
 
                     <button *ngIf="friend.status === 2 && !isIncomeRequest"
                         class="btn btn-outline-warning me-1"
                         (click)="cancelRequest()"
                     >
-                        Cancel&nbsp;&nbsp;&nbsp;<i class="bi bi-person-slash"></i>
+                        Cancel&nbsp;&nbsp;&nbsp;<i class="bi bi-person-dash"></i>
                     </button>
 
                     <button *ngIf="friend.status === 2 && isIncomeRequest"
                         class="btn btn-outline-success me-1"
                         (click)="acceptRequest()"
                     >
-                        Accept&nbsp;&nbsp;&nbsp;<i class="bi bi-person"></i>
+                        Accept&nbsp;&nbsp;&nbsp;<i class="bi bi-person-check"></i>
                     </button>
 
                     <button 
