@@ -24,7 +24,6 @@ export class PlayerProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadPlayer();
-    this.checkIncomeRequest();
   }
 
   loadPlayer() {
@@ -34,6 +33,9 @@ export class PlayerProfileComponent implements OnInit {
       next: friend => {
         if (!friend) this.router.navigateByUrl('/not-found');
         this.friend = friend;
+        this.playersService.isIncomeRequest(this.friend.player.userName).subscribe({
+          next: isIncomeRequest => this.isIncomeRequest = isIncomeRequest
+        });
       }
     });
   }
@@ -64,11 +66,6 @@ export class PlayerProfileComponent implements OnInit {
     this.playersService.cancelRequest(this.friend.player.userName).subscribe({
       next: friend => this.friend = friend
     });
-  }
-
-  checkIncomeRequest() {
-    if (!this.friend) return;
-    this.isIncomeRequest = this.playersService.isIncomeRequest(this.friend.player.userName) ? true : false;
   }
 
   messagePlayer() {

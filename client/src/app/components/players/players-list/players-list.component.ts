@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { PlayersService } from 'src/app/services/players.service';
 import { Player } from 'src/app/models/player';
 import { Pagination, PaginationParams } from 'src/app/models/pagination';
+import { Friend } from 'src/app/models/friend';
 
 @Component({
   selector: 'app-players-list',
@@ -12,7 +13,7 @@ import { Pagination, PaginationParams } from 'src/app/models/pagination';
   styleUrls: ['./players-list.component.css']
 })
 export class PlayersListComponent implements OnInit {
-  players: Player[] = [];
+  players: Friend[] = [];
   pagination: Pagination | undefined;
   loading = false;
 

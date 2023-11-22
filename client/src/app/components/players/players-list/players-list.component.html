@@ -27,7 +27,7 @@
 
 <div class="row" *ngIf="!loading && players.length !== 0">
     <div class="col-4" *ngFor="let player of players">
-        <app-player-card [player]="player"></app-player-card>
+        <app-player-card [player]="player.player"></app-player-card>
     </div>
 </div>
 

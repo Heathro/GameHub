@@ -149,4 +149,20 @@ public class FriendsController : BaseApiController
     {
         return await _friendsRepository.GetFriends(User.GetUserId(), status, type);
     }
+
+    [HttpGet("players")]
+    public async Task<ActionResult<PagedList<FriendshipDto>>> GetUsers(
+        [FromQuery]PaginationParams paginationParams)
+    {
+        var users = await _friendsRepository.GetFriendsAsync(paginationParams, User.GetUserId());
+
+        Response.AddPaginationHeader(new PaginationHeader(
+            users.CurrentPage,
+            users.ItemsPerPage,
+            users.TotalItems,
+            users.TotalPages
+        ));
+
+        return Ok(users);
+    }
 }

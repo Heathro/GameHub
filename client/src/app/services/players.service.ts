@@ -47,7 +47,7 @@ export class PlayersService {
 
     let params = getPaginationHeaders(this.paginationParams);
 
-    return getPaginatedResult<Player[]>(this.baseUrl + 'users/', params, this.http).pipe(
+    return getPaginatedResult<Friend[]>(this.baseUrl + 'friends/players', params, this.http).pipe(
       map(players => {
         this.playersCache.set(queryString, players);
         return players;
@@ -64,23 +64,25 @@ export class PlayersService {
   }
 
   getPlayerWithFriendStatus(userName: string) {
-    const activeFriend = this.activeFriends.find((friend: Friend) => friend.player.userName === userName);
-    if (activeFriend) return of(activeFriend);
+    if (this.activeFriendsInitialLoad) {
+      const activeFriend = this.activeFriends.find((friend: Friend) => friend.player.userName === userName);
+      if (activeFriend) return of(activeFriend);
+    }
+    
+    if (this.incomeRequestsInitialLoad) {
+      const incomeRequest = this.incomeRequests.find((friend: Friend) => friend.player.userName === userName);
+      if (incomeRequest) return of(incomeRequest);
+    }
 
-    const incomeRequest = this.incomeRequests.find((friend: Friend) => friend.player.userName === userName);
-    if (incomeRequest) return of(incomeRequest);
-
-    const outcomeRequest = this.outcomeRequests.find((friend: Friend) => friend.player.userName === userName);
-    if (outcomeRequest) return of(outcomeRequest);
-
+    if (this.outcomeRequestsInitialLoad) {
+      const outcomeRequest = this.outcomeRequests.find((friend: Friend) => friend.player.userName === userName);
+      if (outcomeRequest) return of(outcomeRequest);      
+    } 
+    
     const player: Player = [...this.playersCache.values()]
       .reduce((array, element) => array.concat(element.result), [])
       .find((player: Player) => player.userName === userName);
-
-    if (player) return of({
-      player: player,
-      status: FriendStatus.none
-    });
+    if (player) return of({ player: player, status: FriendStatus.none });
     
     return this.http.get<Friend>(this.baseUrl + 'friends/player-with-status/' + userName).pipe(
       map(friend => {
@@ -142,11 +144,11 @@ export class PlayersService {
   }
 
   acceptRequest(userName: string) {
-    this.incomeRequests = this.incomeRequests.filter(f => f.player.userName !== userName);
     return this.http.post<Friend>(
       this.baseUrl + 'friends/update-status/' + userName + '/' + FriendStatus.active, {}
     ).pipe(
       map(friend => {
+        this.incomeRequests = this.incomeRequests.filter(f => f.player.userName !== userName);
         this.activeFriends.push(friend);
         return friend;
       })
@@ -163,7 +165,21 @@ export class PlayersService {
   }
 
   isIncomeRequest(userName: string) {
-    return this.incomeRequests.find((friend: Friend) => friend.player.userName === userName);
+    if (this.incomeRequestsInitialLoad) {
+      return of(this.incomeRequests
+        .find((friend: Friend) => friend.player.userName === userName) ? true : false);
+    }
+    
+    return this.http.get<Friend[]>(
+      this.baseUrl + 'friends/list/' + FriendStatus.pending + '/' + FriendRequestType.income
+    ).pipe(
+      map(friends => {
+        this.incomeRequestsInitialLoad = true;
+        this.incomeRequests = friends;
+        return this.incomeRequests
+          .find((friend: Friend) => friend.player.userName === userName) ? true : false;
+      })
+    );
   }
 
   setPaginationPage(currentPage: number) {

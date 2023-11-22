@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Friend } from 'src/app/models/friend';
 import { MessagesService } from 'src/app/services/messages.service';
@@ -9,7 +9,8 @@ import { PlayersService } from 'src/app/services/players.service';
   templateUrl: './friend-card.component.html',
   styleUrls: ['./friend-card.component.css']
 })
-export class FriendCardComponent implements OnInit {
+export class FriendCardComponent implements OnInit {  
+  @Output() redraw = new EventEmitter<any>();
   @Input() friend: Friend | undefined;
   isIncomeRequest = false;
 
@@ -20,39 +21,54 @@ export class FriendCardComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.checkIncomeRequest();
   }
 
   addFriend() {
     if (!this.friend) return;
     this.playersService.addFriend(this.friend.player.userName).subscribe({
-      next: friend => this.friend = friend
+      next: friend => {
+        this.friend = friend
+        this.redraw.emit();
+      }
     });
   }
 
   deleteFriend() {
     if (!this.friend) return;
     this.playersService.deleteFriend(this.friend.player.userName).subscribe({
-      next: friend => this.friend = friend
+      next: friend => {
+        this.friend = friend
+        this.redraw.emit();
+      }
     });
   }
 
   acceptRequest() {
     if (!this.friend) return;
     this.playersService.acceptRequest(this.friend.player.userName).subscribe({
-      next: friend => this.friend = friend
+      next: friend => {
+        this.friend = friend
+        this.redraw.emit();
+      }
     });
   }
 
   cancelRequest() {
     if (!this.friend) return;
     this.playersService.cancelRequest(this.friend.player.userName).subscribe({
-      next: friend => this.friend = friend
+      next: friend => {
+        this.friend = friend
+        this.redraw.emit();
+      }
     });
   }
 
   checkIncomeRequest() {
     if (!this.friend) return;
-    this.isIncomeRequest = this.playersService.isIncomeRequest(this.friend.player.userName) ? true : false;
+    this.playersService.isIncomeRequest(this.friend.player.userName).subscribe({
+      next: isIncomeRequest => this.isIncomeRequest = isIncomeRequest
+    });
   }
 
   messagePlayer() {

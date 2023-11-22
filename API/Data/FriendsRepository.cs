@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using API.DTOs;
 using API.Entities;
 using API.Interfaces;
@@ -84,6 +85,54 @@ public class FriendsRepository : IFriendsRepository
     public async Task<bool> SaveAllAsync()
     {
         return await _context.SaveChangesAsync() > 0;
+    }
+
+    public async Task<PagedList<FriendshipDto>> GetFriendsAsync(
+        PaginationParams paginationParams, int currentUserId)
+    {     
+        var query = _context.Users.AsQueryable();
+        query = query.Where(u => u.Id != currentUserId && u.UserName != "Admin");
+        query = paginationParams.OrderBy switch
+        {
+            "za" => query.OrderByDescending(u => u.UserName),
+            _ => query.OrderBy(u => u.UserName)
+        };
+
+        var users = await PagedList<PlayerDto>.CreateAsync
+        (
+            query.ProjectTo<PlayerDto>(_mapper.ConfigurationProvider).AsNoTracking(), 
+            paginationParams.CurrentPage, 
+            paginationParams.ItemsPerPage
+        );
+
+        var usersIds = users.Select(u => u.Id).ToList();
+
+        var friendships = await _context.Friendships
+            .Where(f => 
+                (f.InviterId == currentUserId && usersIds.Contains(f.InviteeId)) ||
+                (f.InviteeId == currentUserId && usersIds.Contains(f.InviterId))
+            )
+            .ToListAsync();
+
+        var friends = new List<FriendshipDto>();
+        foreach (var user in users)
+        {
+            var friendship = friendships.Find(f => f.InviterId == user.Id || f.InviteeId == user.Id);
+
+            friends.Add(new FriendshipDto
+            {
+                Player = _mapper.Map<PlayerDto>(user),
+                Status = friendship == null ? FriendStatus.None : friendship.Status
+            });
+        }
+
+        return new PagedList<FriendshipDto>
+        (
+            friends, 
+            users.TotalItems, 
+            users.CurrentPage, 
+            users.ItemsPerPage
+        );
     }
 
     private List<FriendshipDto> ProjectToFriendshipDto(IEnumerable<Friendship> friendships, int userId)

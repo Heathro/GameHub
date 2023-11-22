@@ -12,4 +12,5 @@ public interface IFriendsRepository
         FriendStatus friendStatus, FriendRequestType requestType);
     Task<AppUser> GetUserWithFriends(int userId);
     Task<bool> SaveAllAsync();
+    Task<PagedList<FriendshipDto>> GetFriendsAsync(PaginationParams paginationParams, int currentUserId);
 }
