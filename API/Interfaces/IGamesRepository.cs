@@ -11,8 +11,7 @@ public interface IGamesRepository
     Task<Game> GetGameByIdAsync(int id);
     Task<Game> GetGameByTitleAsync(string title);
     Task<IEnumerable<Game>> GetAllGamesAsync();
-    void Update(Game game);
+    Task<bool> TitleExistsAsync(GameEditDto gameEditDto);
     void DeleteGame(Game game);
     Task<bool> SaveAllAsync();
-    Task<bool> TitleExists(GameEditDto gameEditDto);
 }

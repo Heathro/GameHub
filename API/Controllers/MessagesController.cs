@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
 using API.Controllers;
 using API.Interfaces;
-using AutoMapper;
 using API.DTOs;
 using API.Extensions;
 using API.Entities;
-using API.Helpers;
 
 namespace API;
 
@@ -54,40 +53,23 @@ public class MessagesController : BaseApiController
         return BadRequest("Failed to create message");
     }
 
-    [HttpGet]
-    public async Task<ActionResult<PagedList<MessageDto>>> GetMessagesForUser(
-        [FromQuery]PaginationParams paginationParams)
-    {
-        var messages = await _messagesRepository.GetMessagesForUser(paginationParams, User.GetUsername());
-
-        Response.AddPaginationHeader(new PaginationHeader
-        (
-            messages.CurrentPage,
-            messages.ItemsPerPage,
-            messages.TotalItems,
-            messages.TotalPages
-        ));
-
-        return messages;
-    }
-
     [HttpGet("thread/{username}")]
     public async Task<ActionResult<IEnumerable<MessageDto>>> GetMessageThread(string username)
     {
-        return Ok(await _messagesRepository.GetMessageThread(User.GetUsername(), username));
+        return Ok(await _messagesRepository.GetMessageThreadAsync(User.GetUsername(), username));
     }
 
     [HttpGet("companions")]
     public async Task<ActionResult<IEnumerable<PlayerDto>>> GetCompanions()
     {
-        return Ok(await _messagesRepository.GetCompanions(User.GetUsername()));
+        return Ok(await _messagesRepository.GetCompanionsAsync(User.GetUsername()));
     }
 
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteMessage(int id)
     {
         var username = User.GetUsername();
-        var message = await _messagesRepository.GetMessage(id);
+        var message = await _messagesRepository.GetMessageAsync(id);
 
         if (message.SenderUsername != username && message.RecipientUsername != username)
         {
@@ -111,7 +93,7 @@ public class MessagesController : BaseApiController
     public async Task<ActionResult> DeleteMessages(string recipientUsername)
     {
         var currentUsername = User.GetUsername();
-        var messages = await _messagesRepository.GetMessages(currentUsername, recipientUsername);
+        var messages = await _messagesRepository.GetMessagesAsync(currentUsername, recipientUsername);
 
         foreach (var message in messages)
         {

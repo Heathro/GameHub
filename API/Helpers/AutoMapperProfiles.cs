@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using API.DTOs;
 using API.Entities;
-using API.Extensions;
 
 namespace API.Helpers;
 
@@ -17,7 +16,7 @@ public class AutoMapperProfiles : Profile
         CreateMap<Avatar, AvatarDto>();
 
         CreateMap<Game, GameDto>()
-            .ForMember(d => d.Likes, o => o.MapFrom(s => s.GetLikedUsers()));
+            .ForMember(d => d.Likes, o => o.MapFrom(s => s.LikedUsers.Select(l => l.SourceUserId)));
         CreateMap<GameEditDto, Game>();
 
         CreateMap<Platforms, PlatformsDto>();

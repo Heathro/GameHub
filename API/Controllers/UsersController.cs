@@ -12,36 +12,38 @@ namespace API.Controllers;
 public class UsersController : BaseApiController
 {
     private readonly IUsersRepository _usersRepository;
-    private readonly IMapper _mapper;
     private readonly IImageService _imageService;
+    private readonly IMapper _mapper;
 
-    public UsersController(IUsersRepository usersRepository, IMapper mapper, IImageService imageService)
+    public UsersController(IUsersRepository usersRepository, IImageService imageService, IMapper mapper)
     {
         _usersRepository = usersRepository;
-        _mapper = mapper;
         _imageService = imageService;
-    }
+        _mapper = mapper;
+    }    
 
-    [HttpGet]
-    public async Task<ActionResult<PagedList<PlayerDto>>> GetUsers(
+    [HttpGet("players")]
+    public async Task<ActionResult<PagedList<PlayerDto>>> GetPlayersAsync(
         [FromQuery]PaginationParams paginationParams)
     {
-        var users = await _usersRepository.GetPlayersAsync(paginationParams, User.GetUsername());
+        var players = await _usersRepository.GetPlayersAsync(paginationParams, User.GetUserId());
 
         Response.AddPaginationHeader(new PaginationHeader(
-            users.CurrentPage,
-            users.ItemsPerPage,
-            users.TotalItems,
-            users.TotalPages
+            players.CurrentPage,
+            players.ItemsPerPage,
+            players.TotalItems,
+            players.TotalPages
         ));
 
-        return Ok(users);
+        return Ok(players);
     }
 
-    [HttpGet("{username}")]
-    public async Task<ActionResult<PlayerDto>> GetUser(string username)
+    [HttpGet("player/{username}")]
+    public async Task<ActionResult<PlayerDto>> GetPlayerAsync(string username)
     {
-        return await _usersRepository.GetPlayerAsync(username);
+        var player = await _usersRepository.GetPlayerAsync(User.GetUserId(), username);
+
+        return Ok(player);
     }
 
     [HttpPut("edit-profile")]
@@ -88,7 +90,7 @@ public class UsersController : BaseApiController
     [HttpDelete("delete-user")]
     public async Task<ActionResult> DeleteUser()
     {
-        await _usersRepository.DeleteUser(User.GetUsername());
+        await _usersRepository.DeleteUserAsync(User.GetUsername());
 
         if (await _usersRepository.SaveAllAsync()) return BadRequest("Failed to delete user");
         

@@ -3,8 +3,8 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using API.Entities;
 using API.Interfaces;
-using API.DTOs;
 using API.Helpers;
+using API.DTOs;
 
 namespace API.Data;
 
@@ -118,6 +118,15 @@ public class GamesRepository : IGamesRepository
             .ToListAsync();
     }
 
+    public async Task<bool> TitleExistsAsync(GameEditDto gameEditDto)
+    {
+        return await _context.Games
+            .AnyAsync(
+                game => game.Id != gameEditDto.Id && 
+                game.Title.ToLower() == gameEditDto.Title.ToLower()
+            );
+    }
+
     public void DeleteGame(Game game)
     {
         _context.Games.Remove(game);
@@ -126,19 +135,5 @@ public class GamesRepository : IGamesRepository
     public async Task<bool> SaveAllAsync()
     {
         return await _context.SaveChangesAsync() > 0;
-    }
-
-    public void Update(Game game)
-    {
-        _context.Entry(game).State = EntityState.Modified;
-    }
-
-    public async Task<bool> TitleExists(GameEditDto gameEditDto)
-    {
-        return await _context.Games
-            .AnyAsync(
-                game => game.Id != gameEditDto.Id && 
-                game.Title.ToLower() == gameEditDto.Title.ToLower()
-            );
     }
 }

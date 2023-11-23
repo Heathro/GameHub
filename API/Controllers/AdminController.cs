@@ -64,7 +64,7 @@ public class AdminController : BaseApiController
     [HttpDelete("delete-user/{username}")]
     public async Task<ActionResult> DeleteUser(string username)
     {
-        await _usersRepository.DeleteUser(username);
+        await _usersRepository.DeleteUserAsync(username);
 
         if (await _usersRepository.SaveAllAsync()) return BadRequest("Failed to delete user");
 

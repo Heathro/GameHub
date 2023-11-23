@@ -1,7 +1,7 @@
-﻿using API.Entities;
+﻿using Microsoft.AspNetCore.Mvc;
+using API.Entities;
 using API.Extensions;
 using API.Interfaces;
-using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
@@ -20,12 +20,12 @@ public class LikesController : BaseApiController
     public async Task<ActionResult<int>> LikeGame(int gameId)
     {
         var sourceUserId = User.GetUserId();
-        var sourceUser = await _likesRepository.GetUserWithLikes(sourceUserId);
+        var sourceUser = await _likesRepository.GetUserWithLikesAsync(sourceUserId);
 
         var targetGame = await _gamesRepository.GetGameByIdAsync(gameId);        
         if (targetGame == null) return NotFound();
 
-        var like = await _likesRepository.GetLike(sourceUserId, targetGame.Id);
+        var like = await _likesRepository.GetLikeAsync(sourceUserId, targetGame.Id);
         if (like != null)
         {
             sourceUser.LikedGames.Remove(like);
@@ -48,14 +48,14 @@ public class LikesController : BaseApiController
     [HttpGet("games")]
     public async Task<ActionResult<IEnumerable<int>>> GetLikedGames()
     {
-        var games = await _likesRepository.GetLikedGames(User.GetUserId());
+        var games = await _likesRepository.GetLikedGamesAsync(User.GetUserId());
         return Ok(games);
     }
 
     [HttpGet("users/{gameId}")]
     public async Task<ActionResult<IEnumerable<int>>> GetLikedUsers(int gameId)
     {
-        var users = await _likesRepository.GetLikedUsers(gameId);
+        var users = await _likesRepository.GetLikedUsersAsync(gameId);
         return Ok(users);
     }
 }

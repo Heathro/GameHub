@@ -1,10 +1,9 @@
-﻿using API.DTOs;
-using API.Entities;
-using API.Helpers;
-using API.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Microsoft.EntityFrameworkCore;
+using API.DTOs;
+using API.Entities;
+using API.Interfaces;
 
 namespace API.Data;
 
@@ -34,12 +33,12 @@ public class MessagesRepository : IMessagesRepository
         _context.Messages.RemoveRange(messages);
     }
 
-    public async Task<Message> GetMessage(int id)
+    public async Task<Message> GetMessageAsync(int id)
     {
         return await _context.Messages.FindAsync(id);
     }
 
-    public async Task<IEnumerable<Message>> GetMessages(string currentUsername, string recipientUsername)
+    public async Task<IEnumerable<Message>> GetMessagesAsync(string currentUsername, string recipientUsername)
     {
         return await _context.Messages.Where(m => 
             m.RecipientUsername == currentUsername && m.SenderUsername == recipientUsername ||
@@ -47,53 +46,8 @@ public class MessagesRepository : IMessagesRepository
         ).ToListAsync();
     }
 
-    public async Task DeleteUserMessages(string username)
-    {
-        var messages = await _context.Messages
-            .Where(m => m.SenderUsername == username || m.RecipientUsername == username)
-            .ToListAsync();
-
-        _context.Messages.RemoveRange(messages);
-    }
-
-    public async Task<IEnumerable<PlayerDto>> GetCompanions(string username)
-    {        
-        var companions = await _context.Messages            
-            .Where(m => 
-                (m.SenderUsername == username && !m.SenderDeleted) ||
-                (m.RecipientUsername == username && !m.RecipientDeleted)
-            )
-            .OrderByDescending(m => m.MessageSent)
-            .Select(u => u.SenderUsername == username ? u.RecipientId : u.SenderId)
-            .Distinct()
-            .ToListAsync();
-
-        return await _context.Users
-            .Include(u => u.Avatar)
-            .Where(u => companions.Contains(u.Id))
-            .ProjectTo<PlayerDto>(_mapper.ConfigurationProvider)
-            .ToListAsync();
-    }
-
-    public async Task<PagedList<MessageDto>> GetMessagesForUser(
-        PaginationParams paginationParams, string username)
-    {
-        var query = _context.Messages
-            .Where(m => 
-                (m.SenderUsername == username && !m.SenderDeleted) ||
-                (m.RecipientUsername == username && !m.RecipientDeleted)
-            )
-            .OrderBy(m => m.MessageSent).AsQueryable();
-
-        return await PagedList<MessageDto>.CreateAsync
-        (
-            query.ProjectTo<MessageDto>(_mapper.ConfigurationProvider).AsNoTracking(), 
-            paginationParams.CurrentPage, 
-            paginationParams.ItemsPerPage
-        );
-    }
-
-    public async Task<IEnumerable<MessageDto>> GetMessageThread(string currentUsername, string recipientUsername)
+    public async Task<IEnumerable<MessageDto>> GetMessageThreadAsync(
+        string currentUsername, string recipientUsername)
     {
         var messages = await _context.Messages
             .Include(m => m.Sender).ThenInclude(u => u.Avatar)
@@ -121,6 +75,34 @@ public class MessagesRepository : IMessagesRepository
         }
 
         return _mapper.Map<IEnumerable<MessageDto>>(messages);
+    }
+
+    public async Task DeleteUserMessagesAsync(string username)
+    {
+        var messages = await _context.Messages
+            .Where(m => m.SenderUsername == username || m.RecipientUsername == username)
+            .ToListAsync();
+
+        _context.Messages.RemoveRange(messages);
+    }
+
+    public async Task<IEnumerable<PlayerDto>> GetCompanionsAsync(string username)
+    {        
+        var companions = await _context.Messages            
+            .Where(m => 
+                (m.SenderUsername == username && !m.SenderDeleted) ||
+                (m.RecipientUsername == username && !m.RecipientDeleted)
+            )
+            .OrderByDescending(m => m.MessageSent)
+            .Select(u => u.SenderUsername == username ? u.RecipientId : u.SenderId)
+            .Distinct()
+            .ToListAsync();
+
+        return await _context.Users
+            .Include(u => u.Avatar)
+            .Where(u => companions.Contains(u.Id))
+            .ProjectTo<PlayerDto>(_mapper.ConfigurationProvider)
+            .ToListAsync();
     }
 
     public async Task<bool> SaveAllAsync()

@@ -1,5 +1,5 @@
-﻿using API.Helpers;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using API.Helpers;
 
 namespace API.Controllers;
 
