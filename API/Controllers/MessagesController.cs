@@ -22,7 +22,7 @@ public class MessagesController : BaseApiController
         _mapper = mapper;
     }
 
-    [HttpPost]
+    [HttpPost("new")]
     public async Task<ActionResult<MessageDto>> CreateMessage(CreateMessageDto createMessageDto)
     {
         var username = User.GetUsername();

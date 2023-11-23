@@ -24,7 +24,7 @@ public class GamesController : BaseApiController
         _imageService = imageService;
     }
 
-    [HttpPost]
+    [HttpPost("list")]
     public async Task<ActionResult<PagedList<GameDto>>> GetGames(
         [FromQuery]PaginationParams paginationParams, [FromBody]GameFilterDto gameFilterDto)
     {
