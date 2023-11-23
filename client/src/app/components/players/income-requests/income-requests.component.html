@@ -1,5 +1,5 @@
-<div class="row" *ngIf="!loading && friends.length !== 0">
-    <div class="col-4" *ngFor="let friend of friends">
-        <app-friend-card (redraw)="loadFriends()" [friend]="friend"></app-friend-card>
+<div class="row">
+    <div class="col-4" *ngFor="let player of players">
+        <app-friend-card (deleteCard)="deleteCard($event)" [player]="player"></app-friend-card>
     </div>
 </div>

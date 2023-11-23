@@ -23,7 +23,7 @@ public class FriendsController : BaseApiController
     }
 
     [HttpPost("add-friend/{username}")]
-    public async Task<ActionResult<FriendshipDto>> AddFriend(string username)
+    public async Task<ActionResult<PlayerDto>> AddFriend(string username)
     {
         var currentUserId = User.GetUserId();
         var currentUser = await _friendsRepository.GetUserWithFriends(currentUserId);        
@@ -43,19 +43,17 @@ public class FriendsController : BaseApiController
         };
         currentUser.Invitees.Add(friendship);
             
-        var friendshipDto = new FriendshipDto
-        {
-            Player = _mapper.Map<PlayerDto>(userToAdd),
-            Status = friendship.Status
-        };
+        var player = _mapper.Map<PlayerDto>(userToAdd);        
+        player.Status = friendship.Status;
+        player.Type = FriendRequestType.Outcome;
 
-        if (await _friendsRepository.SaveAllAsync()) return Ok(friendshipDto);
+        if (await _friendsRepository.SaveAllAsync()) return Ok(player);
 
         return BadRequest("Failed to add friend");
     }
 
     [HttpDelete("delete-friend/{username}")]
-    public async Task<ActionResult<FriendshipDto>> DeleteFriend(string username)
+    public async Task<ActionResult<PlayerDto>> DeleteFriend(string username)
     {
         var currentUserId = User.GetUserId();
         var currentUser = await _friendsRepository.GetUserWithFriends(currentUserId);
@@ -76,19 +74,17 @@ public class FriendsController : BaseApiController
             currentUser.Inviters.Remove(friendship);
         }
 
-        var friendshipDto = new FriendshipDto
-        {
-            Player = _mapper.Map<PlayerDto>(userToDelete),
-            Status = FriendStatus.None
-        };
+        var player = _mapper.Map<PlayerDto>(userToDelete);
+        player.Status = FriendStatus.None;
+        player.Type = FriendRequestType.All;
 
-        if (await _friendsRepository.SaveAllAsync()) return Ok(friendshipDto);
+        if (await _friendsRepository.SaveAllAsync()) return Ok(player);
 
         return BadRequest("Failed to delete friend");
     }
 
     [HttpPost("update-status/{username}/{status}")]
-    public async Task<ActionResult<FriendshipDto>> UpdateFriendStatus(string username, FriendStatus status)
+    public async Task<ActionResult<PlayerDto>> UpdateFriendStatus(string username, FriendStatus status)
     {
         var currentUserId = User.GetUserId();
         var currentUser = await _friendsRepository.GetUserWithFriends(currentUserId);
@@ -97,72 +93,60 @@ public class FriendsController : BaseApiController
         var userToUpdate = await _usersRepository.GetUserByUsernameAsync(username);
         if (userToUpdate == null) return NotFound();
 
-        var friendship = await _friendsRepository.GetFriendship(userToUpdate.Id, currentUserId);
-        if (friendship == null) return NotFound();
+        var currentFriendship = await _friendsRepository.GetFriendship(userToUpdate.Id, currentUserId);
+        if (currentFriendship == null) return NotFound();
 
-        if (friendship.Status == status) return BadRequest("Nothing to change");
+        if (currentFriendship.Status == status) return BadRequest("Nothing to update");
 
         var updatedFriendship = new Friendship
         {
-            Inviter = friendship.Inviter,
-            InviterId = friendship.InviterId,
-            Invitee = friendship.Invitee,
-            InviteeId = friendship.InviteeId,
+            Inviter = currentFriendship.Inviter,
+            InviterId = currentFriendship.InviterId,
+            Invitee = currentFriendship.Invitee,
+            InviteeId = currentFriendship.InviteeId,
             Status = status
         };
-        currentUser.Inviters.Remove(friendship);
+        currentUser.Inviters.Remove(currentFriendship);
         currentUser.Inviters.Add(updatedFriendship);
 
-        var friendshipDto = new FriendshipDto
-        {
-            Player = _mapper.Map<PlayerDto>(userToUpdate),
-            Status = status
-        };
+        var player = _mapper.Map<PlayerDto>(userToUpdate);
+        player.Status = status;        
+        player.Type = FriendRequestType.All;
 
-        if (await _friendsRepository.SaveAllAsync()) return Ok(friendshipDto);
+        if (await _friendsRepository.SaveAllAsync()) return Ok(player);
 
         return BadRequest("Failed to update status");
     }
 
-    [HttpGet("player-with-status/{username}")]
-    public async Task<ActionResult<FriendshipDto>> GetPlayerWithStatus(string username)
-    {
-        if (username == User.GetUsername()) return BadRequest("You cannot request yourself");
-        
-        var currentUserId = User.GetUserId();
-
-        var userToReturn = await _usersRepository.GetUserByUsernameAsync(username);
-        if (userToReturn == null) return NotFound();
-
-        var friendship = await _friendsRepository.GetFriend(currentUserId, userToReturn.Id);
-        if (friendship != null) return friendship;
-
-        return new FriendshipDto
-        {
-            Player = _mapper.Map<PlayerDto>(userToReturn),
-            Status = FriendStatus.None
-        };
-    }
-
-    [HttpGet("list/{status}/{type}")]
-    public async Task<IEnumerable<FriendshipDto>> GetFriends(FriendStatus status, FriendRequestType type)
-    {
-        return await _friendsRepository.GetFriends(User.GetUserId(), status, type);
-    }
-
     [HttpGet("players")]
-    public async Task<ActionResult<PagedList<FriendshipDto>>> GetUsers(
+    public async Task<ActionResult<PagedList<PlayerDto>>> GetPlayersAsync(
         [FromQuery]PaginationParams paginationParams)
     {
-        var users = await _friendsRepository.GetFriendsAsync(paginationParams, User.GetUserId());
+        var players = await _friendsRepository.GetPlayersAsync(paginationParams, User.GetUserId());
 
         Response.AddPaginationHeader(new PaginationHeader(
-            users.CurrentPage,
-            users.ItemsPerPage,
-            users.TotalItems,
-            users.TotalPages
+            players.CurrentPage,
+            players.ItemsPerPage,
+            players.TotalItems,
+            players.TotalPages
         ));
 
-        return Ok(users);
+        return Ok(players);
+    }
+
+    [HttpGet("player/{username}")]
+    public async Task<ActionResult<PlayerDto>> GetPlayerAsync(string username)
+    {
+        var player = await _friendsRepository.GetPlayerAsync(User.GetUserId(), username);
+
+        return Ok(player);
+    }
+
+    [HttpGet("list")]
+    public async Task<ActionResult<PlayerDto>> GetFriendsAsync()
+    {
+        var friends = await _friendsRepository.GetFriendsAsync(User.GetUserId());
+
+        return Ok(friends);
     }
 }

@@ -13,7 +13,7 @@ import { Friend } from 'src/app/models/friend';
   styleUrls: ['./players-list.component.css']
 })
 export class PlayersListComponent implements OnInit {
-  players: Friend[] = [];
+  players: Player[] = [];
   pagination: Pagination | undefined;
   loading = false;
 

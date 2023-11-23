@@ -1,41 +1,41 @@
-<div class="card mt-2 friend-card-body" *ngIf="friend" routerLink="/players/{{friend.player.userName}}">
+<div class="card mt-2 friend-card-body" *ngIf="player" routerLink="/players/{{player.userName}}">
     <div class="row">
         <div class="col-3">
-            <img 
+            <img
                 class="friend-card-img ms-4"
-                src="{{friend.player.avatar.url || './assets/avatar.png'}}"
-                alt="{{friend.player.userName}}"
+                src="{{player.avatar.url || './assets/avatar.png'}}"
+                alt="{{player.userName}}"
             >
         </div>
         <div class="col-8">
             <h5 class="text-right mt-3">
-                {{friend.player.userName}}
+                {{player.userName}}
             </h5>
-            <h6 class="text-muted text-right">Last Online: {{friend.player.lastActive + 'Z' | timeago}}</h6>
+            <h6 class="text-muted text-right">Last Online: {{player.lastActive + 'Z' | timeago}}</h6>
         </div>
 
         <div class="col-1 friend-card-buttons">
             <div>
                 <h5 
-                    *ngIf="friend.status === 3"
+                    *ngIf="player.status === 3"
                     (click)="deleteFriend();$event.stopPropagation()">
                     <i class="bi bi-person-x text-danger"></i>
                 </h5>
 
                 <h5 
-                    *ngIf="friend.status === 0"
+                    *ngIf="player.status === 0"
                     (click)="addFriend();$event.stopPropagation()">
                     <i class="bi bi-person-add text-success"></i>
                 </h5>
 
                 <h5 
-                    *ngIf="friend.status === 2 && !isIncomeRequest"
+                    *ngIf="player.status === 2 && player.type === 2"
                     (click)="cancelRequest();$event.stopPropagation()">
                     <i class="bi bi-person-dash text-warning"></i>
                 </h5>
 
                 <h5
-                    *ngIf="friend.status === 2 && isIncomeRequest"
+                    *ngIf="player.status === 2 && player.type === 1"
                     (click)="acceptRequest();$event.stopPropagation()">
                     <i class="bi bi-person-check text-success"></i>
                 </h5>

@@ -12,8 +12,7 @@ import { PlayersService } from 'src/app/services/players.service';
   styleUrls: ['./player-profile.component.css']
 })
 export class PlayerProfileComponent implements OnInit {
-  friend: Friend | undefined;
-  isIncomeRequest = false;
+  player: Player | undefined;
 
   constructor(
     private playersService: PlayersService,
@@ -29,48 +28,53 @@ export class PlayerProfileComponent implements OnInit {
   loadPlayer() {
     const username = this.route.snapshot.paramMap.get('username');
     if (!username) return;
-    this.playersService.getPlayerWithFriendStatus(username).subscribe({
-      next: friend => {
-        if (!friend) this.router.navigateByUrl('/not-found');
-        this.friend = friend;
-        this.playersService.isIncomeRequest(this.friend.player.userName).subscribe({
-          next: isIncomeRequest => this.isIncomeRequest = isIncomeRequest
-        });
+    this.playersService.getPlayer(username).subscribe({
+      next: player => {
+        if (!player) this.router.navigateByUrl('/not-found');
+        this.player = player;
       }
     });
   }
 
   addFriend() {
-    if (!this.friend) return;
-    this.playersService.addFriend(this.friend.player.userName).subscribe({
-      next: friend => this.friend = friend
+    if (!this.player) return;
+    this.playersService.addFriend(this.player.userName).subscribe({
+      next: player => {
+        if (this.player) this.player = player;
+      }
     });
   }
 
   deleteFriend() {
-    if (!this.friend) return;
-    this.playersService.deleteFriend(this.friend.player.userName).subscribe({
-      next: friend => this.friend = friend
+    if (!this.player) return;
+    this.playersService.deleteFriend(this.player.userName).subscribe({
+      next: player => {
+        if (this.player) this.player = player;
+      }
     });
   }
 
   acceptRequest() {
-    if (!this.friend) return;
-    this.playersService.acceptRequest(this.friend.player.userName).subscribe({
-      next: friend => this.friend = friend
+    if (!this.player) return;
+    this.playersService.acceptRequest(this.player.userName).subscribe({
+      next: player => {
+        if (this.player) this.player = player;
+      }
     });
   }
 
   cancelRequest() {
-    if (!this.friend) return;
-    this.playersService.cancelRequest(this.friend.player.userName).subscribe({
-      next: friend => this.friend = friend
+    if (!this.player) return;
+    this.playersService.cancelRequest(this.player.userName).subscribe({
+      next: player => {
+        if (this.player) this.player = player;
+      }
     });
   }
 
   messagePlayer() {
-    if (!this.friend) return;
-    this.messageService.setLastCompanion(this.friend.player.userName);
+    if (!this.player) return;
+    this.messageService.setLastCompanion(this.player.userName);
     this.router.navigateByUrl('/messenger');
   }
 }

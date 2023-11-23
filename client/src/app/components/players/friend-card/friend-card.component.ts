@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Friend } from 'src/app/models/friend';
+import { Player } from 'src/app/models/player';
 import { MessagesService } from 'src/app/services/messages.service';
 import { PlayersService } from 'src/app/services/players.service';
 
@@ -9,10 +10,9 @@ import { PlayersService } from 'src/app/services/players.service';
   templateUrl: './friend-card.component.html',
   styleUrls: ['./friend-card.component.css']
 })
-export class FriendCardComponent implements OnInit {  
-  @Output() redraw = new EventEmitter<any>();
-  @Input() friend: Friend | undefined;
-  isIncomeRequest = false;
+export class FriendCardComponent implements OnInit {
+  @Output() deleteCard = new EventEmitter<number>();
+  @Input() player: Player | undefined;
 
   constructor(
     private playersService: PlayersService, 
@@ -21,59 +21,39 @@ export class FriendCardComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.checkIncomeRequest();
   }
 
   addFriend() {
-    if (!this.friend) return;
-    this.playersService.addFriend(this.friend.player.userName).subscribe({
-      next: friend => {
-        this.friend = friend
-        this.redraw.emit();
-      }
+    if (!this.player) return;
+    this.playersService.addFriend(this.player.userName).subscribe({
+      next: player => this.deleteCard.emit(player.id)
     });
   }
 
   deleteFriend() {
-    if (!this.friend) return;
-    this.playersService.deleteFriend(this.friend.player.userName).subscribe({
-      next: friend => {
-        this.friend = friend
-        this.redraw.emit();
-      }
+    if (!this.player) return;
+    this.playersService.deleteFriend(this.player.userName).subscribe({
+      next: player => this.deleteCard.emit(player.id)
     });
   }
 
   acceptRequest() {
-    if (!this.friend) return;
-    this.playersService.acceptRequest(this.friend.player.userName).subscribe({
-      next: friend => {
-        this.friend = friend
-        this.redraw.emit();
-      }
+    if (!this.player) return;
+    this.playersService.acceptRequest(this.player.userName).subscribe({
+      next: player => this.deleteCard.emit(player.id)
     });
   }
 
   cancelRequest() {
-    if (!this.friend) return;
-    this.playersService.cancelRequest(this.friend.player.userName).subscribe({
-      next: friend => {
-        this.friend = friend
-        this.redraw.emit();
-      }
-    });
-  }
-
-  checkIncomeRequest() {
-    if (!this.friend) return;
-    this.playersService.isIncomeRequest(this.friend.player.userName).subscribe({
-      next: isIncomeRequest => this.isIncomeRequest = isIncomeRequest
+    if (!this.player) return;
+    this.playersService.cancelRequest(this.player.userName).subscribe({
+      next: player => this.deleteCard.emit(player.id)
     });
   }
 
   messagePlayer() {
-    if (!this.friend) return;
-    this.messagesService.setLastCompanion(this.friend.player.userName);
+    if (!this.player) return;
+    this.messagesService.setLastCompanion(this.player.userName);
     this.router.navigateByUrl('/messenger');
   }
 }

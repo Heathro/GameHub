@@ -1,4 +1,6 @@
-﻿namespace API.DTOs;
+﻿using API.Helpers;
+
+namespace API.DTOs;
 
 public class PlayerDto
 {
@@ -9,6 +11,8 @@ public class PlayerDto
     public string Summary { get; set; }
     public string Country { get; set; }
     public string City { get; set; }
+    public FriendStatus Status { get; set; }
+    public FriendRequestType Type { get; set; }
     public DateTime Created { get; set; }
     public DateTime LastActive { get; set; }
 }

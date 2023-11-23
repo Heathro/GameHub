@@ -7,10 +7,9 @@ namespace API.Interfaces;
 public interface IFriendsRepository
 {
     Task<Friendship> GetFriendship(int inviterId, int inviteeId);
-    Task<FriendshipDto> GetFriend(int currentUserId, int candidateId);
-    Task<IEnumerable<FriendshipDto>> GetFriends(int userId, 
-        FriendStatus friendStatus, FriendRequestType requestType);
     Task<AppUser> GetUserWithFriends(int userId);
+    Task<PagedList<PlayerDto>> GetPlayersAsync(PaginationParams paginationParams, int currentUserId);
+    Task<PlayerDto> GetPlayerAsync(int currentUserId, string requestedUserName);
+    Task<IEnumerable<PlayerDto>> GetFriendsAsync(int userId);
     Task<bool> SaveAllAsync();
-    Task<PagedList<FriendshipDto>> GetFriendsAsync(PaginationParams paginationParams, int currentUserId);
 }

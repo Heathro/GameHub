@@ -3,19 +3,28 @@
 
         <tab heading="Friends">
             <div class="container">
-                <app-friends-list></app-friends-list>
+                <app-friends-list 
+                    (deleteCards)="deleteActiveFriend($event)" 
+                    [players]="activeFriends"
+                ></app-friends-list>
             </div>
         </tab>
 
         <tab heading="Income Requests">
             <div class="container">
-                <app-income-requests></app-income-requests>
+                <app-income-requests 
+                    (deleteCards)="deleteIncomeRequest($event)" 
+                    [players]="incomeRequests"
+                ></app-income-requests>
             </div>
         </tab>
 
         <tab heading="Outcome Requests">
             <div class="container">
-                <app-outcome-requests></app-outcome-requests>
+                <app-outcome-requests 
+                    (deleteCards)="deleteOutcomeRequest($event)" 
+                    [players]="outcomeRequests"
+                ></app-outcome-requests>
             </div>
         </tab>
 

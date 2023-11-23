@@ -28,52 +28,6 @@ public class FriendsRepository : IFriendsRepository
             );
     }
 
-    public async Task<FriendshipDto> GetFriend(int currentUserId, int candidateId)
-    {
-        var friendship = await _context.Friendships
-            .Include(f => f.Invitee)
-            .Include(f => f.Invitee.Avatar)
-            .Include(f => f.Inviter)
-            .Include(f => f.Inviter.Avatar)
-            .FirstOrDefaultAsync(f => 
-                (f.InviterId == currentUserId && f.InviteeId == candidateId) ||
-                (f.InviteeId == currentUserId && f.InviterId == candidateId)
-            );
-
-        if (friendship == null) return null;
-        
-        return new FriendshipDto
-        {
-            Player = _mapper.Map<PlayerDto>
-            (
-               candidateId == friendship.InviteeId ? friendship.Invitee : friendship.Inviter
-            ),
-            Status = friendship.Status
-        };
-    }
-
-    public async Task<IEnumerable<FriendshipDto>> GetFriends(int userId, 
-        FriendStatus status, FriendRequestType type)
-    {
-        var query = _context.Friendships
-            .Include(f => f.Invitee)
-            .Include(f => f.Invitee.Avatar)
-            .Include(f => f.Inviter)
-            .Include(f => f.Inviter.Avatar)
-            .Where(f => f.Status == status)
-            .AsQueryable();
-
-        query = type switch
-        {
-            FriendRequestType.All => query.Where(f => f.InviterId == userId || f.InviteeId == userId),
-            FriendRequestType.Income => query.Where(f => f.InviteeId == userId),
-            FriendRequestType.Outcome => query.Where(f => f.InviterId == userId),
-            _ => query
-        };
-
-        return ProjectToFriendshipDto(await query.ToListAsync(), userId);
-    }
-
     public async Task<AppUser> GetUserWithFriends(int userId)
     {
         return await _context.Users
@@ -82,12 +36,7 @@ public class FriendsRepository : IFriendsRepository
             .FirstOrDefaultAsync(u => u.Id == userId);
     }
 
-    public async Task<bool> SaveAllAsync()
-    {
-        return await _context.SaveChangesAsync() > 0;
-    }
-
-    public async Task<PagedList<FriendshipDto>> GetFriendsAsync(
+    public async Task<PagedList<PlayerDto>> GetPlayersAsync(
         PaginationParams paginationParams, int currentUserId)
     {     
         var query = _context.Users.AsQueryable();
@@ -98,57 +47,99 @@ public class FriendsRepository : IFriendsRepository
             _ => query.OrderBy(u => u.UserName)
         };
 
-        var users = await PagedList<PlayerDto>.CreateAsync
+        var players = await PagedList<PlayerDto>.CreateAsync
         (
             query.ProjectTo<PlayerDto>(_mapper.ConfigurationProvider).AsNoTracking(), 
             paginationParams.CurrentPage, 
             paginationParams.ItemsPerPage
         );
 
-        var usersIds = users.Select(u => u.Id).ToList();
+        var playerIds = players.Select(u => u.Id).ToList();
 
         var friendships = await _context.Friendships
             .Where(f => 
-                (f.InviterId == currentUserId && usersIds.Contains(f.InviteeId)) ||
-                (f.InviteeId == currentUserId && usersIds.Contains(f.InviterId))
+                (f.InviterId == currentUserId && playerIds.Contains(f.InviteeId)) ||
+                (f.InviteeId == currentUserId && playerIds.Contains(f.InviterId))
             )
             .ToListAsync();
 
-        var friends = new List<FriendshipDto>();
-        foreach (var user in users)
+        foreach (var player in players)
         {
-            var friendship = friendships.Find(f => f.InviterId == user.Id || f.InviteeId == user.Id);
-
-            friends.Add(new FriendshipDto
+            var friendship = friendships.Find(f => f.InviterId == player.Id || f.InviteeId == player.Id);
+            player.Status = friendship == null ? FriendStatus.None : friendship.Status;
+            player.Type = player.Status switch
             {
-                Player = _mapper.Map<PlayerDto>(user),
-                Status = friendship == null ? FriendStatus.None : friendship.Status
-            });
+                FriendStatus.Pending => friendship.InviterId == currentUserId ? 
+                    FriendRequestType.Outcome : FriendRequestType.Income,
+                    
+                _ => FriendRequestType.All
+            };
         }
 
-        return new PagedList<FriendshipDto>
-        (
-            friends, 
-            users.TotalItems, 
-            users.CurrentPage, 
-            users.ItemsPerPage
-        );
+        return players;
+    }    
+    
+    public async Task<PlayerDto> GetPlayerAsync(int currentUserId, string requestedUserName)
+    {
+        var player = await _context.Users
+            .Where(u => u.UserName == requestedUserName)
+            .ProjectTo<PlayerDto>(_mapper.ConfigurationProvider)
+            .SingleOrDefaultAsync();
+
+        var friendship = await _context.Friendships
+            .FirstOrDefaultAsync(f => 
+                (f.InviterId == currentUserId && f.Invitee.UserName == requestedUserName) ||
+                (f.InviteeId == currentUserId && f.Inviter.UserName == requestedUserName)
+            );
+
+        player.Status = friendship == null ? FriendStatus.None : friendship.Status;
+
+        player.Type = player.Status switch
+        {
+            FriendStatus.Pending => friendship.InviterId == currentUserId ? 
+                FriendRequestType.Outcome : FriendRequestType.Income,
+                
+            _ => FriendRequestType.All
+        };
+
+        return player;
     }
 
-    private List<FriendshipDto> ProjectToFriendshipDto(IEnumerable<Friendship> friendships, int userId)
+    public async Task<IEnumerable<PlayerDto>> GetFriendsAsync(int userId)
     {
-        var friends = new List<FriendshipDto>();
+        var friendships = await _context.Friendships
+            .Include(f => f.Invitee)
+            .Include(f => f.Inviter.Avatar)
+            .Include(f => f.Inviter)            
+            .Include(f => f.Invitee.Avatar)
+            .Where(f => f.InviterId == userId || f.InviteeId == userId)
+            .ToListAsync();
+
+        var friends = new List<PlayerDto>();
         foreach (var friendship in friendships)
         {
-            friends.Add(new FriendshipDto
+            var friend = _mapper.Map<PlayerDto>
+            (
+                userId == friendship.InviterId ? friendship.Invitee : friendship.Inviter
+            );
+
+            friend.Status = friendship.Status;
+
+            friend.Type = friendship.Status switch
             {
-                Player = _mapper.Map<PlayerDto>
-                (
-                   userId == friendship.InviterId ? friendship.Invitee : friendship.Inviter
-                ),
-                Status = friendship.Status
-            });
+                FriendStatus.Pending => friendship.InviterId == userId ? 
+                    FriendRequestType.Outcome : FriendRequestType.Income,
+
+                _ => FriendRequestType.All
+            };
+
+            friends.Add(friend);
         }
         return friends;
+    }
+
+    public async Task<bool> SaveAllAsync()
+    {
+        return await _context.SaveChangesAsync() > 0;
     }
 }
