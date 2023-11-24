@@ -3,17 +3,17 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 
+import { take } from 'rxjs';
 import { FileUploader } from 'ng2-file-upload';
 import { ToastrService } from 'ngx-toastr';
-import { take } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 import { GamesService } from 'src/app/services/games.service';
 import { AccountService } from 'src/app/services/account.service';
 import { EditComponent } from 'src/app/interfaces/edit-component';
+import { deepEqual } from 'src/app/helpers/compareHelper';
 import { Game } from 'src/app/models/game';
 import { User } from 'src/app/models/user';
-import { deepEqual } from 'src/app/helpers/compareHelper';
 
 @Component({
   selector: 'app-game-edit',

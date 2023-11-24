@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Friend } from 'src/app/models/friend';
 
 import { Player } from 'src/app/models/player';
 import { MessagesService } from 'src/app/services/messages.service';

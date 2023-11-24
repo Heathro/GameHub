@@ -1,15 +1,14 @@
 import { Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { NgForm } from '@angular/forms';
 
 import { take } from 'rxjs';
 
-import { MessageComponent } from '../message/message.component';
 import { AccountService } from 'src/app/services/account.service';
 import { MessagesService } from 'src/app/services/messages.service';
-import { PlayersService } from 'src/app/services/players.service';
+import { MessageComponent } from '../message/message.component';
 import { Message } from 'src/app/models/message';
-import { User } from 'src/app/models/user';
 import { Player } from 'src/app/models/player';
-import { NgForm } from '@angular/forms';
+import { User } from 'src/app/models/user';
 
 @Component({
   selector: 'app-messenger',

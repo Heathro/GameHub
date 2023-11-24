@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { Player } from 'src/app/models/player';
+
 import { MessagesService } from 'src/app/services/messages.service';
 import { PlayersService } from 'src/app/services/players.service';
+import { Player } from 'src/app/models/player';
 
 @Component({
   selector: 'app-friend-card',

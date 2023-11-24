@@ -4,12 +4,8 @@ import { Injectable } from '@angular/core';
 import { EMPTY, map, of } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
-import { getPaginatedResult, getPaginationHeaders } from '../helpers/paginationHelper';
-import { PaginationParams } from '../models/pagination';
 import { Message } from '../models/message';
 import { Player } from '../models/player';
-import { PlayersService } from './players.service';
-import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -21,11 +17,7 @@ export class MessagesService {
   companions: Player[] = [];
   companionsLoaded = false;
 
-  constructor(
-    private http: HttpClient, 
-    private playersService: PlayersService,
-    private router: Router
-  ) { }
+  constructor(private http: HttpClient) { }
 
   getCompanions() {
     if (this.companionsLoaded) return of(this.companions);
@@ -40,6 +32,24 @@ export class MessagesService {
   
   getLastCompanion() {
     return this.lastCompanion;
+  }
+
+  deleteCompanion(deleteMessages: boolean) {
+    if (deleteMessages) {
+      return this.http.delete(this.baseUrl + 'messages/delete-messages/' + this.lastCompanion).pipe(
+        map(() => {
+          this.companions = this.companions.filter(c => c.userName !== this.lastCompanion);
+          this.messagesCache.delete(this.lastCompanion);
+          this.lastCompanion = this.companions.length > 0 ? this.companions[0].userName : '';
+        })
+      );
+    }
+    else {
+      this.companions = this.companions.filter(c => c.userName !== this.lastCompanion);
+      this.messagesCache.delete(this.lastCompanion);
+      this.lastCompanion = this.companions.length > 0 ? this.companions[0].userName : '';
+      return of(void 0);
+    }
   }
 
   startChat(player: Player) {
@@ -60,24 +70,6 @@ export class MessagesService {
           }
         })
       );
-    }
-  }
-
-  deleteCompanion(deleteMessages: boolean) {
-    if (deleteMessages) {
-      return this.http.delete(this.baseUrl + 'messages/delete-messages/' + this.lastCompanion).pipe(
-        map(() => {
-          this.companions = this.companions.filter(c => c.userName !== this.lastCompanion);
-          this.messagesCache.delete(this.lastCompanion);
-          this.lastCompanion = this.companions.length > 0 ? this.companions[0].userName : '';
-        })
-      );
-    }
-    else {
-      this.companions = this.companions.filter(c => c.userName !== this.lastCompanion);
-      this.messagesCache.delete(this.lastCompanion);
-      this.lastCompanion = this.companions.length > 0 ? this.companions[0].userName : '';
-      return of(void 0);
     }
   }
 

@@ -1,11 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Observable } from 'rxjs';
-
 import { PlayersService } from 'src/app/services/players.service';
+import { Pagination } from 'src/app/models/pagination';
 import { Player } from 'src/app/models/player';
-import { Pagination, PaginationParams } from 'src/app/models/pagination';
-import { Friend } from 'src/app/models/friend';
 
 @Component({
   selector: 'app-players-list',

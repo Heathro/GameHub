@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
-import { AdminService } from 'src/app/services/admin.service';
-import { User } from 'src/app/models/user';
 import { ToastrService } from 'ngx-toastr';
+
+import { AdminService } from 'src/app/services/admin.service';
 import { deepEqual } from 'src/app/helpers/compareHelper';
+import { User } from 'src/app/models/user';
 
 @Component({
   selector: 'app-role-card',

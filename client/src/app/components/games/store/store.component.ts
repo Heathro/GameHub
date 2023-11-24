@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
-import { Observable } from 'rxjs';
-
 import { GamesService } from 'src/app/services/games.service';
 import { Game } from 'src/app/models/game';
-import { Pagination, PaginationParams } from 'src/app/models/pagination';
+import { Pagination } from 'src/app/models/pagination';
 
 @Component({
   selector: 'app-store',

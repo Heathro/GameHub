@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FriendStatus } from 'src/app/helpers/friendStatus';
-import { Player } from 'src/app/models/player';
+
 import { PlayersService } from 'src/app/services/players.service';
+import { Player } from 'src/app/models/player';
 
 @Component({
   selector: 'app-friends-panel',

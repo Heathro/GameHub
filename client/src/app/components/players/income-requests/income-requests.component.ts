@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
-import { PlayersService } from 'src/app/services/players.service';
 import { Player } from 'src/app/models/player';
 
 @Component({
