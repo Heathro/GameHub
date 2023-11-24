@@ -41,7 +41,13 @@ export class MessengerComponent implements OnInit {
       next: companions => {
         this.companions = companions;        
         const lastCompanion = this.messagesService.getLastCompanion();
-        this.loadMessages(lastCompanion.length > 0 ? lastCompanion : this.companions[0].userName);
+
+        if (lastCompanion.length > 0) {
+          this.loadMessages(lastCompanion);
+        }
+        else if (companions.length > 0) {
+          this.loadMessages(companions[0].userName);
+        }
       }
     });
   }
@@ -86,7 +92,7 @@ export class MessengerComponent implements OnInit {
   }
 
   deleteCompanion() {
-    this.messagesService.deleteCompanion().subscribe({
+    this.messagesService.deleteCompanion(this.messages.length > 0).subscribe({
       next: () => {
         this.messages = [];
         this.loadCompanions();

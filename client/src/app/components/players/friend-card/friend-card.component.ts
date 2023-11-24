@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { Friend } from 'src/app/models/friend';
 import { Player } from 'src/app/models/player';
 import { MessagesService } from 'src/app/services/messages.service';
 import { PlayersService } from 'src/app/services/players.service';
@@ -53,7 +52,8 @@ export class FriendCardComponent implements OnInit {
 
   messagePlayer() {
     if (!this.player) return;
-    this.messagesService.setLastCompanion(this.player.userName);
-    this.router.navigateByUrl('/messenger');
+    this.messagesService.startChat(this.player).subscribe({
+      next: () => this.router.navigateByUrl('/messenger')
+    });
   }
 }

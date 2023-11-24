@@ -16,7 +16,7 @@ export class PlayerProfileComponent implements OnInit {
 
   constructor(
     private playersService: PlayersService,
-    private messageService: MessagesService,
+    private messagesService: MessagesService,
     private route: ActivatedRoute, 
     private router: Router
   ) { }
@@ -74,7 +74,8 @@ export class PlayerProfileComponent implements OnInit {
 
   messagePlayer() {
     if (!this.player) return;
-    this.messageService.setLastCompanion(this.player.userName);
-    this.router.navigateByUrl('/messenger');
+    this.messagesService.startChat(this.player).subscribe({
+      next: () => this.router.navigateByUrl('/messenger')
+    });
   }
 }

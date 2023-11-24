@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { map, of } from 'rxjs';
+import { EMPTY, map, of } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 import { getPaginatedResult, getPaginationHeaders } from '../helpers/paginationHelper';
@@ -9,6 +9,7 @@ import { PaginationParams } from '../models/pagination';
 import { Message } from '../models/message';
 import { Player } from '../models/player';
 import { PlayersService } from './players.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -18,43 +19,66 @@ export class MessagesService {
   messagesCache = new Map();
   lastCompanion = '';
   companions: Player[] = [];
-  companionsInitialLoad = false;
+  companionsLoaded = false;
 
-  constructor(private http: HttpClient, private playersService: PlayersService) { }
+  constructor(
+    private http: HttpClient, 
+    private playersService: PlayersService,
+    private router: Router
+  ) { }
 
   getCompanions() {
-    if (this.companionsInitialLoad) return of(this.companions);
+    if (this.companionsLoaded) return of(this.companions);
     return this.http.get<Player[]>(this.baseUrl + 'messages/companions').pipe(
       map(companions => {
-        this.companionsInitialLoad = true;
+        this.companionsLoaded = true;
         this.companions = companions;
         return companions;
       })
     );
   }
-
-  setLastCompanion(userName: string) {
-    this.lastCompanion = userName;
-    if (!this.companions.find(c => c.userName === userName)) {
-      this.playersService.getPlayer(userName).subscribe({
-        next: player => this.companions.unshift(player)
-      });
-    }
-  }
-
+  
   getLastCompanion() {
     return this.lastCompanion;
   }
 
-  deleteCompanion() {
-    console.log(this.lastCompanion)
-    return this.http.delete(this.baseUrl + 'messages/delete-messages/' + this.lastCompanion).pipe(
-      map(() => {
-        this.companions = this.companions.filter(c => c.userName !== this.lastCompanion);
-        this.messagesCache.delete(this.lastCompanion);
-        this.lastCompanion = this.companions.length > 0 ? this.companions[0].userName : '';
-      })
-    );
+  startChat(player: Player) {
+    this.lastCompanion = player.userName;
+    if (this.companionsLoaded) {
+      if (!this.companions.find(c => c.userName === player.userName)) {
+        this.companions.unshift(player);
+      }
+      return of(void 0);
+    }
+    else {
+      return this.http.get<Player[]>(this.baseUrl + 'messages/companions').pipe(
+        map(companions => {
+          this.companionsLoaded = true;
+          this.companions = companions;
+          if (!this.companions.find(c => c.userName === player.userName)) {
+            this.companions.unshift(player);
+          }
+        })
+      );
+    }
+  }
+
+  deleteCompanion(deleteMessages: boolean) {
+    if (deleteMessages) {
+      return this.http.delete(this.baseUrl + 'messages/delete-messages/' + this.lastCompanion).pipe(
+        map(() => {
+          this.companions = this.companions.filter(c => c.userName !== this.lastCompanion);
+          this.messagesCache.delete(this.lastCompanion);
+          this.lastCompanion = this.companions.length > 0 ? this.companions[0].userName : '';
+        })
+      );
+    }
+    else {
+      this.companions = this.companions.filter(c => c.userName !== this.lastCompanion);
+      this.messagesCache.delete(this.lastCompanion);
+      this.lastCompanion = this.companions.length > 0 ? this.companions[0].userName : '';
+      return of(void 0);
+    }
   }
 
   getMessages(username: string) {
@@ -88,6 +112,6 @@ export class MessagesService {
     this.messagesCache = new Map();
     this.lastCompanion = '';
     this.companions.length = 0;
-    this.companionsInitialLoad = false;
+    this.companionsLoaded = false;
   }
 }
