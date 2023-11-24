@@ -72,7 +72,7 @@ export class MessagesService {
 
   sendMessage(content: string) {
     const messageDto = { recipientUsername: this.lastCompanion, content };
-    return this.http.post<Message>(this.baseUrl + 'messages', messageDto);
+    return this.http.post<Message>(this.baseUrl + 'messages/new', messageDto);
   }
 
   deleteMessage(id: number) {

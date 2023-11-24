@@ -22,7 +22,7 @@ public class UsersController : BaseApiController
         _mapper = mapper;
     }    
 
-    [HttpGet("list")]
+    [HttpGet("players")]
     public async Task<ActionResult<PagedList<PlayerDto>>> GetPlayersAsync(
         [FromQuery]PaginationParams paginationParams)
     {
@@ -38,7 +38,7 @@ public class UsersController : BaseApiController
         return Ok(players);
     }
 
-    [HttpGet("{username}")]
+    [HttpGet("player/{username}")]
     public async Task<ActionResult<PlayerDto>> GetPlayerAsync(string username)
     {
         var player = await _usersRepository.GetPlayerAsync(User.GetUserId(), username);

@@ -27,16 +27,6 @@ export class PlayersService {
     this.paginationParams = this.initializePaginationParams();
   }
 
-  getPlayer(userName: string) {
-    const player = [...this.playersCache.values()]
-      .reduce((array, element) => array.concat(element.result), [])
-      .find((player: Player) => player.userName === userName);
-
-    if (player) return of(player);
-
-    return this.http.get<Player>(this.baseUrl + 'friends/player/' + userName);
-  }
-
   getPlayers() {
     const queryString = Object.values(this.paginationParams).join('-');
     
@@ -44,12 +34,22 @@ export class PlayersService {
     if (players) return of(players);
 
     let params = getPaginationHeaders(this.paginationParams);
-    return getPaginatedResult<Friend[]>(this.baseUrl + 'friends/players', params, this.http).pipe(
+    return getPaginatedResult<Friend[]>(this.baseUrl + 'users/players', params, this.http).pipe(
       map(players => {
         this.playersCache.set(queryString, players);
         return players;
       })
     );
+  }
+
+  getPlayer(userName: string) {
+    const player = [...this.playersCache.values()]
+      .reduce((array, element) => array.concat(element.result), [])
+      .find((player: Player) => player.userName === userName);
+
+    if (player) return of(player);
+
+    return this.http.get<Player>(this.baseUrl + 'users/player/' + userName);
   }
 
   updatePlayer(player: Player) {

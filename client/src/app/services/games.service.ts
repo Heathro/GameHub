@@ -27,16 +27,6 @@ export class GamesService {
   setCurrentUser(user: User) {
     this.user = user;
   }
-
-  getGame(title: string) {
-    const game = [...this.gamesCache.values()]
-      .reduce((array, element) => array.concat(element.result), [])
-      .find((game: Game) => game.title === title);
-
-    if (game) return of(game);
-
-    return this.http.get<Game>(this.baseUrl + 'games/' + title);
-  }
   
   getGames(filter: Filter) {
     const queryString = Object.values(this.paginationParams).join('-') + this.stringifyFilter(filter);
@@ -46,12 +36,22 @@ export class GamesService {
 
     let params = getPaginationHeaders(this.paginationParams);
 
-    return getFilteredPaginatedResult<Game[]>(this.baseUrl + 'games', params, this.http, filter).pipe(
+    return getFilteredPaginatedResult<Game[]>(this.baseUrl + 'games/list', params, this.http, filter).pipe(
       map(response => {
         this.gamesCache.set(queryString, response);
         return response;
       })
     );
+  }
+
+  getGame(title: string) {
+    const game = [...this.gamesCache.values()]
+      .reduce((array, element) => array.concat(element.result), [])
+      .find((game: Game) => game.title === title);
+
+    if (game) return of(game);
+
+    return this.http.get<Game>(this.baseUrl + 'games/' + title);
   }
 
   isGameLiked(game: Game) {
