@@ -10,7 +10,6 @@ using API.Helpers;
 namespace API.Controllers;
 
 [Authorize]
-
 public class GamesController : BaseApiController
 {
     private readonly IGamesRepository _gamesRepository;
@@ -46,7 +45,7 @@ public class GamesController : BaseApiController
         return await _gamesRepository.GetGameAsync(title);
     }
 
-    [HttpPut("{title}/edit-game")]
+    [HttpPut("update-game/{title}")]
     public async Task<ActionResult> UpdateGame(string title, [FromBody]GameEditDto gameEditDto)
     {
         if (await _gamesRepository.TitleExistsAsync(gameEditDto))
@@ -65,7 +64,7 @@ public class GamesController : BaseApiController
         return BadRequest("No changes were detected");
     }
 
-    [HttpPut("{title}/update-poster")]
+    [HttpPut("update-poster/{title}")]
     public async Task<ActionResult<PosterDto>> UpdatePoster([FromRoute]string title, IFormFile file)
     {
         var game = await _gamesRepository.GetGameByTitleAsync(title);
@@ -92,7 +91,7 @@ public class GamesController : BaseApiController
         return BadRequest("Failed to update poster");
     }
 
-    [HttpPost("{title}/add-screenshot")]
+    [HttpPost("add-screenshot/{title}")]
     public async Task<ActionResult<ScreenshotDto>> AddScreenshot([FromRoute]string title, IFormFile file)
     {
         var game = await _gamesRepository.GetGameByTitleAsync(title);
@@ -124,7 +123,7 @@ public class GamesController : BaseApiController
         return BadRequest("Failed to add screenshot");
     }
 
-    [HttpDelete("{title}/delete-screenshot/{screenshotId}")]
+    [HttpDelete("delete-screenshot/{title}/{screenshotId}")]
     public async Task<ActionResult> DeleteScreenshot(string title, int screenshotId)
     {
         var game = await _gamesRepository.GetGameByTitleAsync(title);
@@ -148,7 +147,7 @@ public class GamesController : BaseApiController
         return BadRequest("Failed to delete screenshot");
     }
 
-    [HttpDelete("{title}/delete-game")]
+    [HttpDelete("delete-game/{title}")]
     public async Task<ActionResult> DeleteGame(string title)
     {
         var game = await _gamesRepository.GetGameByTitleAsync(title);

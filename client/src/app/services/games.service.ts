@@ -81,7 +81,7 @@ export class GamesService {
   }
 
   updateGame(game: Game, title: string) {
-    return this.http.put(this.baseUrl + 'games/' + title + '/edit-game', game).pipe(
+    return this.http.put(this.baseUrl + 'games/update-game' + title, game).pipe(
       map(() => {
         this.gamesCache.forEach(q => {
           q.result.forEach((g: Game) => {
@@ -116,7 +116,7 @@ export class GamesService {
   }
 
   deleteGame(game: Game) {
-    return this.http.delete(this.baseUrl + 'games/' + game.title + '/delete-game').pipe(
+    return this.http.delete(this.baseUrl + 'games/delete-game' + game.title).pipe(
       map(() => {
         this.gamesCache.forEach(q => q.result = q.result.filter((g: Game) => g.title != game.title));
       })
@@ -124,7 +124,7 @@ export class GamesService {
   }
 
   deleteScreenshot(game: Game, screenshotId: number) {
-    return this.http.delete(this.baseUrl + 'games/' + game.title + '/delete-screenshot/' + screenshotId);
+    return this.http.delete(this.baseUrl + 'games/delete-screenshot/' + game.title + '/' + screenshotId);
   }
 
   setPaginationPage(currentPage: number) {

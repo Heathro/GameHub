@@ -155,7 +155,7 @@ export class GameEditComponent implements OnInit, EditComponent {
   initializeUploader() {
     this.uploader = new FileUploader({
       method: 'PUT',
-      url: this.baseUrl + 'games/' + this.game?.title + '/update-poster',
+      url: this.baseUrl + 'games/update-poster' + this.game?.title,
       authToken: 'Bearer ' + this.user?.token,
       isHTML5: true,
       allowedFileType: ['image'],

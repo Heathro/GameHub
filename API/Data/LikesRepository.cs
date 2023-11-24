@@ -18,20 +18,6 @@ public class LikesRepository : ILikesRepository
         return await _context.Likes.FindAsync(sourceUserId, targetGameId);
     }
 
-    public async Task<IEnumerable<int>> GetLikedGamesAsync(int userId)
-    {
-        var likes = _context.Likes.Where(l => l.SourceUserId == userId);
-        var games = likes.Select(l => l.TargetGame);
-        return await games.Select(g => g.Id).ToListAsync();
-    }
-
-    public async Task<IEnumerable<int>> GetLikedUsersAsync(int gameId)
-    {
-        var likes = _context.Likes.Where(l => l.TargetGameId == gameId);
-        var users = likes.Select(l => l.SourceUser);
-        return await users.Select(u => u.Id).ToListAsync();
-    }
-
     public async Task<AppUser> GetUserWithLikesAsync(int userId)
     {
         return await _context.Users

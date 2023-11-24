@@ -34,7 +34,7 @@ export class PlayersService {
     if (players) return of(players);
 
     let params = getPaginationHeaders(this.paginationParams);
-    return getPaginatedResult<Friend[]>(this.baseUrl + 'users/players', params, this.http).pipe(
+    return getPaginatedResult<Friend[]>(this.baseUrl + 'users/list', params, this.http).pipe(
       map(players => {
         this.playersCache.set(queryString, players);
         return players;
@@ -49,7 +49,7 @@ export class PlayersService {
 
     if (player) return of(player);
 
-    return this.http.get<Player>(this.baseUrl + 'users/player/' + userName);
+    return this.http.get<Player>(this.baseUrl + 'users/' + userName);
   }
 
   updatePlayer(player: Player) {

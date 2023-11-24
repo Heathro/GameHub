@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using API.Entities;
 using API.Extensions;
 using API.Interfaces;
 
 namespace API.Controllers;
 
+[Authorize]
 public class LikesController : BaseApiController
 {
     private readonly ILikesRepository _likesRepository;
@@ -43,19 +45,5 @@ public class LikesController : BaseApiController
         if (await _likesRepository.SaveAllAsync()) return Ok(targetGame.Id);
 
         return BadRequest("Failed to like game");
-    }
-
-    [HttpGet("games")]
-    public async Task<ActionResult<IEnumerable<int>>> GetLikedGames()
-    {
-        var games = await _likesRepository.GetLikedGamesAsync(User.GetUserId());
-        return Ok(games);
-    }
-
-    [HttpGet("users/{gameId}")]
-    public async Task<ActionResult<IEnumerable<int>>> GetLikedUsers(int gameId)
-    {
-        var users = await _likesRepository.GetLikedUsersAsync(gameId);
-        return Ok(users);
     }
 }

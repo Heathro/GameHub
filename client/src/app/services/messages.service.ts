@@ -47,7 +47,8 @@ export class MessagesService {
   }
 
   deleteCompanion() {
-    return this.http.delete(this.baseUrl + 'messages/' + this.lastCompanion).pipe(
+    console.log(this.lastCompanion)
+    return this.http.delete(this.baseUrl + 'messages/delete-messages/' + this.lastCompanion).pipe(
       map(() => {
         this.companions = this.companions.filter(c => c.userName !== this.lastCompanion);
         this.messagesCache.delete(this.lastCompanion);
@@ -76,11 +77,11 @@ export class MessagesService {
   }
 
   deleteMessage(id: number) {
-    return this.http.delete(this.baseUrl + 'messages/' + id);
+    return this.http.delete(this.baseUrl + 'messages/delete-message/' + id);
   }
 
   deleteMessages() {
-    return this.http.delete(this.baseUrl + 'messages/' + this.lastCompanion);
+    return this.http.delete(this.baseUrl + 'messages/delete-messages/' + this.lastCompanion);
   }
 
   clearPrivateData() {

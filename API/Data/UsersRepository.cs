@@ -31,26 +31,19 @@ public class UsersRepository : IUsersRepository
             .SingleOrDefaultAsync(user => user.Id == id);
     }
 
-    public async Task<AppUser> GetUserByUsernameAsync(string username)
+    public async Task<AppUser> GetUserByUsernameAsync(string userName)
     {
         return await _context.Users
             .Include(a => a.Avatar)
-            .SingleOrDefaultAsync(user => user.UserName == username);
+            .SingleOrDefaultAsync(user => user.UserName == userName);
     }
 
-    public async Task<IEnumerable<AppUser>> GetUsersAsync()
+    public async Task DeleteUserAsync(string userName)
     {
-        return await _context.Users
-            .Include(a => a.Avatar)
-            .ToListAsync();
-    }
-
-    public async Task DeleteUserAsync(string username)
-    {
-        await _messagesRepository.DeleteUserMessagesAsync(username);
+        await _messagesRepository.DeleteUserMessagesAsync(userName);
         await _messagesRepository.SaveAllAsync();
 
-        var user = await GetUserByUsernameAsync(username);
+        var user = await GetUserByUsernameAsync(userName);
         await _userManager.DeleteAsync(user);
     }
     

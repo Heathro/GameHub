@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 using API.Controllers;
 using API.Interfaces;
@@ -8,6 +9,7 @@ using API.Entities;
 
 namespace API;
 
+[Authorize]
 public class MessagesController : BaseApiController
 {
     private readonly IUsersRepository _usersRepository;
@@ -65,7 +67,7 @@ public class MessagesController : BaseApiController
         return Ok(await _messagesRepository.GetCompanionsAsync(User.GetUsername()));
     }
 
-    [HttpDelete("{id:int}")]
+    [HttpDelete("delete-message/{id:int}")]
     public async Task<ActionResult> DeleteMessage(int id)
     {
         var username = User.GetUsername();
@@ -89,7 +91,7 @@ public class MessagesController : BaseApiController
         return BadRequest("Failed to delete message");
     }
 
-    [HttpDelete("{recipientUsername}")]
+    [HttpDelete("delete-messages/{recipientUsername}")]
     public async Task<ActionResult> DeleteMessages(string recipientUsername)
     {
         var currentUsername = User.GetUsername();

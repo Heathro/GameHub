@@ -24,7 +24,10 @@ public class AccountController : BaseApiController
     [HttpPost("register")]
     public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
     {
-        if (await UserExistsAsync(registerDto.UserName)) return BadRequest("Username is already taken");
+        if (await _userManager.Users.AnyAsync(u => u.NormalizedUserName == registerDto.UserName.ToUpper()))
+        {
+            return BadRequest("Username is already taken");
+        }
         
         var user = _mapper.Map<AppUser>(registerDto);
 
@@ -69,10 +72,5 @@ public class AccountController : BaseApiController
             Token = await _tokenService.CreateTokenAsync(user),
             AvatarUrl = user.Avatar.Url
         };
-    }
-
-    private async Task<bool> UserExistsAsync(string username)
-    {
-        return await _userManager.Users.AnyAsync(u => u.NormalizedUserName == username.ToUpper());
     }
 }

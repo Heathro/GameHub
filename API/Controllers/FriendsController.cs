@@ -1,13 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 using API.Interfaces;
 using API.Extensions;
 using API.Entities;
-using API.DTOs;
 using API.Helpers;
+using API.DTOs;
 
 namespace API.Controllers;
 
+[Authorize]
 public class FriendsController : BaseApiController
 {
     private readonly IFriendsRepository _friendsRepository;

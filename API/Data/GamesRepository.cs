@@ -108,16 +108,6 @@ public class GamesRepository : IGamesRepository
             .SingleOrDefaultAsync(game => game.Title == title);
     }
 
-    public async Task<IEnumerable<Game>> GetAllGamesAsync()
-    {
-        return await _context.Games
-            .Include(p => p.Platforms)
-            .Include(g => g.Genres)
-            .Include(s => s.Poster)
-            .Include(s => s.Screenshots)
-            .ToListAsync();
-    }
-
     public async Task<bool> TitleExistsAsync(GameEditDto gameEditDto)
     {
         return await _context.Games

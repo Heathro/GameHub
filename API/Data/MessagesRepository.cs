@@ -28,11 +28,6 @@ public class MessagesRepository : IMessagesRepository
         _context.Messages.Remove(message);
     }
 
-    public void DeleteMessages(IEnumerable<Message> messages)
-    {
-        _context.Messages.RemoveRange(messages);
-    }
-
     public async Task<Message> GetMessageAsync(int id)
     {
         return await _context.Messages.FindAsync(id);
