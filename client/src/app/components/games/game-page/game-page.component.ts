@@ -18,6 +18,7 @@ import { Game } from 'src/app/models/game';
 export class GamePageComponent implements OnInit {
   game: Game | undefined;
   screenshots: GalleryItem[] = [];
+  isLiked = false;
 
   constructor(private gamesService: GamesService, private route: ActivatedRoute, private router: Router) { }
 
@@ -33,6 +34,7 @@ export class GamePageComponent implements OnInit {
         if (!game) this.router.navigateByUrl('/not-found');
         this.game = game;
         this.getScreenshots();
+        this.checkLikes();
       } 
     });
   }
@@ -42,5 +44,17 @@ export class GamePageComponent implements OnInit {
     for (const screenshot of this.game.screenshots) {
       this.screenshots.push(new ImageItem({ src: screenshot.url, thumb: screenshot.url }));
     }
+  }  
+  
+  likeGame() {
+    if (this.game) {
+      this.gamesService.likeGame(this.game.id).subscribe({
+        next: () => this.loadGame()
+      });
+    }
+  }
+
+  checkLikes() {
+    if (this.game) this.isLiked = this.gamesService.isGameLiked(this.game);
   }
 }

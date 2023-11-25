@@ -13,3 +13,7 @@
     background-color: #303030;
     border-top: none;
 }
+
+.click-cursor {
+    cursor: pointer;
+}
