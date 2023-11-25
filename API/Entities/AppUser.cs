@@ -11,10 +11,11 @@ public class AppUser : IdentityUser<int>
     public string City { get; set; }
     public DateTime Created { get; set; } = DateTime.UtcNow;
     public DateTime LastActive { get; set; } = DateTime.UtcNow;
+    public List<Publication> Publications { get; set; } = new();
     public List<Like> LikedGames { get; set; } = new();
     public List<Friendship> Inviters { get; set; } = new();
     public List<Friendship> Invitees { get; set; } = new();
     public List<Message> MessagesSent { get; set; } = new();
     public List<Message> MessagesReceived { get; set; } = new();
-    public ICollection<AppUserRole> UserRoles { get; set; }
+    public List<AppUserRole> UserRoles { get; set; } = new();
 }

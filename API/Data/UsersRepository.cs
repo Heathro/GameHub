@@ -34,7 +34,8 @@ public class UsersRepository : IUsersRepository
     public async Task<AppUser> GetUserByUsernameAsync(string userName)
     {
         return await _context.Users
-            .Include(a => a.Avatar)
+            .Include(u => u.Avatar)
+            .Include(u => u.Publications)
             .SingleOrDefaultAsync(user => user.UserName == userName);
     }
 

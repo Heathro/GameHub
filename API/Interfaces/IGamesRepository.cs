@@ -10,7 +10,7 @@ public interface IGamesRepository
     Task<PagedList<GameDto>> GetGamesAsync(PaginationParams paginationParams, GameFilterDto gameFilterDto);
     Task<Game> GetGameByIdAsync(int id);
     Task<Game> GetGameByTitleAsync(string title);
-    Task<bool> TitleExistsAsync(GameEditDto gameEditDto);
+    Task<bool> TitleExistsAsync(string title, int id = 0);
     void DeleteGame(Game game);
     Task<bool> SaveAllAsync();
 }

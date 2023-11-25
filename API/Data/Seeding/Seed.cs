@@ -58,7 +58,14 @@ public class Seed
 
         var games = JsonSerializer.Deserialize<List<Game>>(gameData, options);
 
-        foreach (var game in games) context.Games.Add(game);
+        foreach (var game in games) 
+        {
+            game.Publication = new Publication
+            {
+                PublisherId = 1
+            };
+            context.Games.Add(game);
+        }
 
         await context.SaveChangesAsync();
     }

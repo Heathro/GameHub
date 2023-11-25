@@ -10,4 +10,5 @@ public class GameDto
     public GenresDto Genres { get; set; }
     public PosterDto Poster { get; set; }
     public List<ScreenshotDto> Screenshots { get; set; }
+    public string Publisher { get; set; }
 }

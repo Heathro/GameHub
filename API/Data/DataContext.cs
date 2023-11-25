@@ -17,14 +17,13 @@ public class DataContext : IdentityDbContext
     IdentityUserToken<int>
 >
 {
-    public DataContext(DbContextOptions options) : base(options)
-    {
-    }
+    public DataContext(DbContextOptions options) : base(options) { }
 
     public DbSet<Friendship> Friendships { get; set; }
-    public DbSet<Game> Games { get; set; }
-    public DbSet<Like> Likes { get; set; }
     public DbSet<Message> Messages { get; set; }
+    public DbSet<Game> Games { get; set; }
+    public DbSet<Publication> Publications { get; set; }
+    public DbSet<Like> Likes { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -41,19 +40,6 @@ public class DataContext : IdentityDbContext
             .WithOne(r => r.Role)
             .HasForeignKey(r => r.RoleId)
             .IsRequired();
-
-        modelBuilder.Entity<Like>()
-            .HasKey(l => new {l.SourceUserId, l.TargetGameId});
-        modelBuilder.Entity<Like>()
-            .HasOne(l => l.SourceUser)
-            .WithMany(l => l.LikedGames)
-            .HasForeignKey(l => l.SourceUserId)
-            .OnDelete(DeleteBehavior.Cascade);
-        modelBuilder.Entity<Like>()
-            .HasOne(l => l.TargetGame)
-            .WithMany(l => l.LikedUsers)
-            .HasForeignKey(l => l.TargetGameId)
-            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Friendship>()
             .HasKey(f => new {f.InviterId, f.InviteeId, f.Status});
@@ -76,5 +62,31 @@ public class DataContext : IdentityDbContext
             .HasOne(m => m.Sender)
             .WithMany(m => m.MessagesSent)
             .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Publication>()
+            .HasKey(p => new {p.PublisherId, p.TitleId});
+        modelBuilder.Entity<Publication>()
+            .HasOne(p => p.Publisher)
+            .WithMany(p => p.Publications)
+            .HasForeignKey(p => p.PublisherId)
+            .OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<Publication>()
+            .HasOne(p => p.Title)
+            .WithOne(p => p.Publication)
+            .HasForeignKey<Publication>(p => p.TitleId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Like>()
+            .HasKey(l => new {l.SourceUserId, l.TargetGameId});
+        modelBuilder.Entity<Like>()
+            .HasOne(l => l.SourceUser)
+            .WithMany(l => l.LikedGames)
+            .HasForeignKey(l => l.SourceUserId)
+            .OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<Like>()
+            .HasOne(l => l.TargetGame)
+            .WithMany(l => l.LikedUsers)
+            .HasForeignKey(l => l.TargetGameId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

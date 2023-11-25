@@ -15,4 +15,5 @@ public class PlayerDto
     public FriendRequestType Type { get; set; }
     public DateTime Created { get; set; }
     public DateTime LastActive { get; set; }
+    public List<GameDto> Publications { get; set; }
 }

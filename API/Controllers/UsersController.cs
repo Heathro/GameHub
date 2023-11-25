@@ -90,6 +90,8 @@ public class UsersController : BaseApiController
     [HttpDelete("delete-user")]
     public async Task<ActionResult> DeleteUser()
     {
+        // TODO delete avatar first
+        
         await _usersRepository.DeleteUserAsync(User.GetUsername());
 
         if (await _usersRepository.SaveAllAsync()) return BadRequest("Failed to delete user");

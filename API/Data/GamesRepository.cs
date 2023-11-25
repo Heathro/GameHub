@@ -31,9 +31,10 @@ public class GamesRepository : IGamesRepository
         PaginationParams paginationParams, GameFilterDto gameFilter)
     {
         var query = _context.Games
-            .Include(p => p.Platforms)
+            .Include(g => g.Platforms)
             .Include(g => g.Genres)
-            .Include(l => l.LikedUsers)
+            .Include(g => g.LikedUsers)
+            .Include(g => g.Publication)
             .AsQueryable();
 
         if (gameFilter.Platforms.Windows || 
@@ -101,20 +102,16 @@ public class GamesRepository : IGamesRepository
     public async Task<Game> GetGameByTitleAsync(string title)
     {
         return await _context.Games
-            .Include(p => p.Platforms)
+            .Include(g => g.Platforms)
             .Include(g => g.Genres)
-            .Include(s => s.Poster)
-            .Include(s => s.Screenshots)
+            .Include(g => g.Poster)
+            .Include(g => g.Screenshots)
             .SingleOrDefaultAsync(game => game.Title == title);
     }
 
-    public async Task<bool> TitleExistsAsync(GameEditDto gameEditDto)
+    public async Task<bool> TitleExistsAsync(string title, int id = 0)
     {
-        return await _context.Games
-            .AnyAsync(
-                game => game.Id != gameEditDto.Id && 
-                game.Title.ToLower() == gameEditDto.Title.ToLower()
-            );
+        return await _context.Games.AnyAsync(g => g.Id != id && g.Title.ToLower() == title.ToLower());
     }
 
     public void DeleteGame(Game game)

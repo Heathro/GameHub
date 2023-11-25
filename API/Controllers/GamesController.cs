@@ -48,7 +48,7 @@ public class GamesController : BaseApiController
     [HttpPut("update-game/{title}")]
     public async Task<ActionResult> UpdateGame(string title, [FromBody]GameEditDto gameEditDto)
     {
-        if (await _gamesRepository.TitleExistsAsync(gameEditDto))
+        if (await _gamesRepository.TitleExistsAsync(gameEditDto.Title, gameEditDto.Id))
         {
             return BadRequest("Title is already taken");
         }
