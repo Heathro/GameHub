@@ -14,14 +14,16 @@ public class UsersRepository : IUsersRepository
     private readonly DataContext _context;
     private readonly UserManager<AppUser> _userManager;
     private readonly IMessagesRepository _messagesRepository;
+    private readonly IImageService _imageService;
     private readonly IMapper _mapper;
 
     public UsersRepository(DataContext context, UserManager<AppUser> userManager,
-        IMessagesRepository messagesRepository, IMapper mapper)
+        IMessagesRepository messagesRepository, IImageService imageService, IMapper mapper)
     {
         _context = context;
         _userManager = userManager;
         _messagesRepository = messagesRepository;
+        _imageService = imageService;
         _mapper = mapper;
     }
 
@@ -41,10 +43,14 @@ public class UsersRepository : IUsersRepository
 
     public async Task DeleteUserAsync(string userName)
     {
+        var user = await GetUserByUsernameAsync(userName);
+
+        var avatarPublicId = user.Avatar.PublicId;
+        if (avatarPublicId != null) await _imageService.DeleteImageAsync(avatarPublicId);
+
         await _messagesRepository.DeleteUserMessagesAsync(userName);
         await _messagesRepository.SaveAllAsync();
 
-        var user = await GetUserByUsernameAsync(userName);
         await _userManager.DeleteAsync(user);
     }
     
