@@ -80,10 +80,12 @@
             </tab>
 
             <tab heading="Games">
-                <h4>games</h4>
+                <div *ngFor="let game of player.publications">
+                    <app-game-card-mini [game]="game"></app-game-card-mini>
+                </div>
             </tab>
 
-            <tab heading="Review">
+            <tab heading="Reviews">
                 <h4>reviews</h4>
             </tab>
             

@@ -42,6 +42,7 @@ import { FriendsPanelComponent } from './components/players/friends-panel/friend
 import { IncomeRequestsComponent } from './components/players/income-requests/income-requests.component';
 import { OutcomeRequestsComponent } from './components/players/outcome-requests/outcome-requests.component';
 import { FriendCardComponent } from './components/players/friend-card/friend-card.component';
+import { GameCardMiniComponent } from './components/games/game-card-mini/game-card-mini.component';
 
 @NgModule({
   declarations: [
@@ -77,7 +78,8 @@ import { FriendCardComponent } from './components/players/friend-card/friend-car
     FriendsPanelComponent,
     IncomeRequestsComponent,
     OutcomeRequestsComponent,
-    FriendCardComponent
+    FriendCardComponent,
+    GameCardMiniComponent
   ],
   imports: [
     BrowserModule,

@@ -1,6 +1,7 @@
 import { FriendRequestType } from "../helpers/friendRequestType";
 import { FriendStatus } from "../helpers/friendStatus";
 import { Avatar } from "./avatar";
+import { Game } from "./game";
 
 export interface Player {
   id: number;
@@ -14,4 +15,5 @@ export interface Player {
   type: FriendRequestType;
   created: string;
   lastActive: string;
+  publications: Game[];
 }

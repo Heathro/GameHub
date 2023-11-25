@@ -7,7 +7,6 @@ import { environment } from 'src/environments/environment';
 import { getPaginatedResult, getPaginationHeaders } from '../helpers/paginationHelper';
 import { PaginationParams } from '../models/pagination';
 import { Player } from '../models/player';
-import { Friend } from '../models/friend';
 import { FriendStatus } from '../helpers/friendStatus';
 import { FriendRequestType } from '../helpers/friendRequestType';
 
@@ -34,7 +33,7 @@ export class PlayersService {
     if (players) return of(players);
 
     let params = getPaginationHeaders(this.paginationParams);
-    return getPaginatedResult<Friend[]>(this.baseUrl + 'users/list', params, this.http).pipe(
+    return getPaginatedResult<Player[]>(this.baseUrl + 'users/list', params, this.http).pipe(
       map(players => {
         this.playersCache.set(queryString, players);
         return players;

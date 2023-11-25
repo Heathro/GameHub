@@ -1,26 +1,33 @@
-<div class="card mb-2 me-2 game-card-button" *ngIf="game" routerLink="/games/{{game.title}}">
+<div class="card mb-2 me-2 game-card-mini-button" *ngIf="game" routerLink="/games/{{game.title}}">
     <div class="row">
 
-        <div class="col-4">
+        <div class="col-2">
             <img 
-                class="game-card-img"
+                class="game-card-mini-img"
                 src="{{game.poster.url || './assets/poster.png'}}"
                 alt="{{game.title}}"
             >
         </div>
 
-        <div class="col-8">
-            <h4 class="text-right ms-2 my-4">
-                {{game.title}}
-            </h4>
+        <div class="col-10">
 
-            <h5>
-                <i class="bi bi-windows m-2" *ngIf="game.platforms.windows"></i>
-                <i class="bi bi-apple m-2" *ngIf="game.platforms.macos"></i>
-                <i class="bi bi-ubuntu m-2" *ngIf="game.platforms.linux"></i>
-            </h5>           
+            <div class="mt-3 d-flex justify-content-between">
 
-            <div class="mt-4">
+                <h4 class="ms-2">
+                    {{game.title}}
+                </h4>
+
+                <div class="d-inline mt-1 me-3">
+                    <h5>
+                        <i class="bi bi-windows m-2" *ngIf="game.platforms.windows"></i>
+                        <i class="bi bi-apple m-2" *ngIf="game.platforms.macos"></i>
+                        <i class="bi bi-ubuntu m-2" *ngIf="game.platforms.linux"></i>
+                    </h5> 
+                </div>
+
+            </div>       
+            
+            <div class="d-inline">
                 <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.action">Action</h6>
                 <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.adventure">Adventure</h6>
                 <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.card">Card</h6>
@@ -38,27 +45,7 @@
                 <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.stealth">Stealth</h6>
                 <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.strategy">Strategy</h6>
                 <h6 class="text-muted ms-2 d-inline" *ngIf="game.genres.survival">Survival</h6>
-            </div>
-
-            <div class="mt-3 d-flex justify-content-between">
-
-                <h6 class="d-inline ms-2" routerLink="/players/{{game.publisher}}">
-                    by {{game.publisher}}
-                </h6>
-
-                <div class="d-inline me-4" (click)="likeGame();$event.stopPropagation()">
-
-                    <h6 class="d-inline mx-2">
-                        <i class="bi bi-hand-thumbs-up-fill" *ngIf="isLiked"></i>
-                        <i class="bi bi-hand-thumbs-up" *ngIf="!isLiked"></i>
-                    </h6>
-
-                    <h6 class="d-inline">
-                        {{game.likes.length}}
-                    </h6>
-
-                </div>                
-            </div>
+            </div> 
             
         </div>
 

@@ -1,0 +1,9 @@
+.game-card-mini-button {
+    background-color: #222222;
+    cursor: pointer;
+}
+
+.game-card-mini-img {
+    width: 150px;
+    margin: 4px;
+}

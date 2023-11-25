@@ -12,4 +12,5 @@ export interface Game {
   genres: Genres;
   poster: Poster;
   screenshots: Screenshot[];
+  publisher: string;
 }
