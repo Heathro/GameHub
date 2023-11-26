@@ -46,12 +46,12 @@
             >
             <div class="card-body">
                 <h3 class="mb-4">{{game.title}}</h3>
-                <h5 class="mb-4">
+                <h5 class="my-4">
                     <i class="bi bi-windows me-3" *ngIf="game.platforms.windows"></i>
                     <i class="bi bi-apple me-3" *ngIf="game.platforms.macos"></i>
                     <i class="bi bi-ubuntu me-3" *ngIf="game.platforms.linux"></i>
                 </h5>
-                <div class="mt-3 d-flex justify-content-between">
+                <div class="mt-4 d-flex justify-content-between">
                     <h5 class="d-inline click-cursor" routerLink="/players/{{game.publisher}}">
                         by {{game.publisher}}
                     </h5>
@@ -67,7 +67,7 @@
                 </div> 
             </div>
             <div class="card-footer">
-                <div class="btn-group d-flex mb-2">
+                <div class="btn-group d-flex my-2">
                     <button class="btn btn-outline-success">Add to library</button>
                     <button 
                         class="btn btn-outline-info"

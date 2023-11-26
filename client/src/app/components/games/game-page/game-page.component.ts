@@ -49,7 +49,7 @@ export class GamePageComponent implements OnInit {
   likeGame() {
     if (this.game) {
       this.gamesService.likeGame(this.game.id).subscribe({
-        next: () => this.loadGame()
+        next: () => this.isLiked = !this.isLiked
       });
     }
   }

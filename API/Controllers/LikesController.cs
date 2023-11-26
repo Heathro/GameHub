@@ -19,7 +19,7 @@ public class LikesController : BaseApiController
     }
 
     [HttpPost("{gameId}")]
-    public async Task<ActionResult<int>> LikeGame(int gameId)
+    public async Task<ActionResult> LikeGame(int gameId)
     {
         var sourceUserId = User.GetUserId();
         var sourceUser = await _likesRepository.GetUserWithLikesAsync(sourceUserId);
@@ -42,7 +42,7 @@ public class LikesController : BaseApiController
             sourceUser.LikedGames.Add(like);
         }
         
-        if (await _likesRepository.SaveAllAsync()) return Ok(targetGame.Id);
+        if (await _likesRepository.SaveAllAsync()) return Ok();
 
         return BadRequest("Failed to like game");
     }

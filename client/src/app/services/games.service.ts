@@ -60,8 +60,8 @@ export class GamesService {
   }
 
   likeGame(gameId: number) {
-    return this.http.post<number>(this.baseUrl + 'likes/' + gameId, {}).pipe(
-      map(gameId => {
+    return this.http.post(this.baseUrl + 'likes/' + gameId, {}).pipe(
+      map(() => {
         if (!this.user) return;
         const userId = this.user.id;
 
