@@ -1,9 +1,11 @@
 .role-card-img {
+    cursor: pointer;
     width: 40px;
     margin: 5px;
 }
 
 .role-card-name {
+    cursor: pointer;
     margin-top: 13px;
 }
 
@@ -13,4 +15,8 @@
 
 .role-button-row {
     margin-top: 6px;
+}
+
+.role-card-body {
+    background-color: #222222;
 }

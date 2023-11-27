@@ -64,6 +64,7 @@ export class RoleCardComponent implements OnInit {
 
   initializeFrom() {    
     if (!this.user) return;
+    if (!this.user.roles) return;
     
     this.roleForm = this.formBuilder.group({
       admin: this.user.roles.includes('Admin'),

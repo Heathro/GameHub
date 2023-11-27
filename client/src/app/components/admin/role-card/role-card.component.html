@@ -1,7 +1,7 @@
-<div class="card mb-1" *ngIf="user">
+<div class="card mb-1 role-card-body" *ngIf="user">
     <div class="row">
 
-        <div class="col-1">
+        <div class="col-1" routerLink="/players/{{user.userName}}">
             <img 
                 class="role-card-img"
                 src="{{user.avatarUrl || './assets/avatar.png'}}"
@@ -10,7 +10,7 @@
         </div>
 
         <div class="col-3">
-            <h5 class="role-card-name">
+            <h5 class="role-card-name" routerLink="/players/{{user.userName}}">
                 {{user.userName}}
             </h5>
         </div>

@@ -12,6 +12,9 @@ public class AutoMapperProfiles : Profile
             .ForMember(d => d.Publications, o => o.MapFrom(s => s.Publications.Select(p => p.Title)));
         CreateMap<PlayerEditDto, AppUser>();
         CreateMap<RegisterDto, AppUser>();
+        CreateMap<AppUser, UserRoleDto>()
+            .ForMember(d => d.AvatarUrl, o => o.MapFrom(s => s.Avatar.Url))
+            .ForMember(d => d.Roles, o => o.MapFrom(s => s.UserRoles.Select(r => r.Role.Name).ToList()));
         
         CreateMap<Avatar, AvatarDto>();
 
@@ -19,7 +22,7 @@ public class AutoMapperProfiles : Profile
             .ForMember(d => d.Likes, o => o.MapFrom(s => s.LikedUsers.Select(l => l.SourceUserId)))
             .ForMember(d => d.Publisher, o => o.MapFrom(s => s.Publication.Publisher.UserName));
         CreateMap<GameEditDto, Game>();
-        CreateMap<GamePublishDto, Game>();
+        CreateMap<GamePublishDto, Game>();        
 
         CreateMap<Platforms, PlatformsDto>();
         CreateMap<PlatformsDto, Platforms>();

@@ -8,6 +8,7 @@ import { GamesService } from './games.service';
 import { User } from '../models/user';
 import { MessagesService } from './messages.service';
 import { PlayersService } from './players.service';
+import { AdminService } from './admin.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +22,8 @@ export class AccountService {
     private http: HttpClient, 
     private gamesService: GamesService,
     private messagesService: MessagesService,
-    private playerService: PlayersService
+    private playerService: PlayersService,
+    private adminService: AdminService
   ) { }
 
   login(model: any) {
@@ -66,5 +68,6 @@ export class AccountService {
     this.gamesService.clearPrivateData();
     this.messagesService.clearPrivateData();
     this.playerService.clearPrivateData();
+    this.adminService.clearPrivateData();
   }
 }

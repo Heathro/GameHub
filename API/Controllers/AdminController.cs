@@ -2,10 +2,14 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using API.Controllers;
 using API.Entities;
 using API.Extensions;
 using API.Interfaces;
+using API.Helpers;
+using API.DTOs;
 
 namespace API;
 
@@ -13,28 +17,38 @@ public class AdminController : BaseApiController
 {
     private readonly UserManager<AppUser> _userManager;
     private readonly IUsersRepository _usersRepository;
+    private readonly IMapper _mapper;
 
-    public AdminController(UserManager<AppUser> userManager, IUsersRepository usersRepository)
+    public AdminController(UserManager<AppUser> userManager, IUsersRepository usersRepository,
+        IMapper mapper)
     {
         _userManager = userManager;
         _usersRepository = usersRepository;
+        _mapper = mapper;
     }
 
     [Authorize(Policy = "AdminRole")]
     [HttpGet("users-with-roles")]
-    public async Task<ActionResult> GetUsersWithRoles()
+    public async Task<ActionResult<PagedList<UserRoleDto>>> GetUsersWithRoles(
+        [FromQuery]PaginationParams paginationParams)
     {
-        var users = await _userManager.Users
+        var query = _userManager.Users
             .Where(u => u.UserName != User.GetUsername() && u.UserName != "Admin")
-            .OrderBy(u => u.UserName)
-            .Select(u => new
-            {
-                u.Id,
-                u.UserName,
-                AvatarUrl = u.Avatar.Url,
-                Roles = u.UserRoles.Select(r => r.Role.Name).ToList()
-            })
-            .ToListAsync();
+            .OrderBy(u => u.UserName);
+
+        var users = await PagedList<UserRoleDto>.CreateAsync
+        (
+            query.ProjectTo<UserRoleDto>(_mapper.ConfigurationProvider).AsNoTracking(), 
+            paginationParams.CurrentPage, 
+            paginationParams.ItemsPerPage
+        );
+
+        Response.AddPaginationHeader(new PaginationHeader(
+            users.CurrentPage,
+            users.ItemsPerPage,
+            users.TotalItems,
+            users.TotalPages
+        ));
         
         return Ok(users);
     }

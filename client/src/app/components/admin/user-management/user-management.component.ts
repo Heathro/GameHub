@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { AdminService } from 'src/app/services/admin.service';
+import { Pagination } from 'src/app/models/pagination';
 import { User } from 'src/app/models/user';
 
 @Component({
@@ -10,20 +11,24 @@ import { User } from 'src/app/models/user';
 })
 export class UserManagementComponent implements OnInit {
   users: User[] = [];
+  pagination: Pagination | undefined;
   loading = false;
 
   constructor(private adminService: AdminService) { }
 
   ngOnInit(): void {
-    this.getUsersWithRoles();
+    this.loadUsersWithRoles();
   }
 
-  getUsersWithRoles() {
+  loadUsersWithRoles() {
     this.loading = true;
     this.adminService.getUsersWithRoles().subscribe({
-      next: users => {
-        this.users = users;
-        this.loading = false;
+      next: response => {
+        if (response.result && response.pagination) {
+          this.users = response.result;
+          this.pagination = response.pagination;
+          this.loading = false;
+        }
       }
     });
   }
@@ -33,4 +38,11 @@ export class UserManagementComponent implements OnInit {
       next: () => this.users = this.users.filter(u => u.userName != userName)
     })
   }
+
+  pageChanged(event: any) {
+    if (this.adminService.getPaginationParams().currentPage !== event.page) {
+      this.adminService.setPaginationPage(event.page);
+      this.loadUsersWithRoles();
+    }
+  }  
 }

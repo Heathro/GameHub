@@ -1,5 +1,20 @@
-<div class="row" *ngIf="!loading && users">
+<div class="row mt-3" *ngIf="!loading && users">
     <div class="col-12" *ngFor="let user of users">
         <app-role-card (deleteUser)="deleteUser($event)" [user]="user"></app-role-card>
     </div>
+</div>
+
+<div class="d-flex justify-content-center mt-4" *ngIf="!loading && users.length !== 0 && pagination">
+    <pagination
+        [boundaryLinks]="true"
+        [totalItems]="pagination.totalItems"
+        [itemsPerPage]="pagination.itemsPerPage"
+        [maxSize]="10"
+        [(ngModel)]="pagination.currentPage"
+        (pageChanged)="pageChanged($event)"
+        previousText="&lsaquo;"
+        nextText="&rsaquo;"
+        firstText="&laquo;"
+        lastText="&raquo;"> 
+    </pagination>
 </div>
