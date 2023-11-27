@@ -9,15 +9,13 @@ namespace API.Controllers;
 
 public class PublicationsController : BaseApiController
 {
-    private readonly IPublicationsRepository _publicationsRepository;
     private readonly IUsersRepository _usersRepository;
     private readonly IGamesRepository _gamesRepository;
     private readonly IMapper _mapper;
 
-    public PublicationsController(IPublicationsRepository publicationsRepository, 
-        IUsersRepository usersRepository, IGamesRepository gamesRepository, IMapper mapper)
+    public PublicationsController(IUsersRepository usersRepository, 
+    IGamesRepository gamesRepository, IMapper mapper)
     {
-        _publicationsRepository = publicationsRepository;
         _usersRepository = usersRepository;
         _gamesRepository = gamesRepository;
         _mapper = mapper;

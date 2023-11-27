@@ -22,6 +22,7 @@ public class DataContext : IdentityDbContext
     public DbSet<Friendship> Friendships { get; set; }
     public DbSet<Message> Messages { get; set; }
     public DbSet<Game> Games { get; set; }
+    public DbSet<Bookmark> Bookmarks { get; set; }
     public DbSet<Publication> Publications { get; set; }
     public DbSet<Like> Likes { get; set; }
 
@@ -74,6 +75,19 @@ public class DataContext : IdentityDbContext
             .HasOne(p => p.Title)
             .WithOne(p => p.Publication)
             .HasForeignKey<Publication>(p => p.TitleId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Bookmark>()
+            .HasKey(l => new {l.SourceUserId, l.TargetGameId});
+        modelBuilder.Entity<Bookmark>()
+            .HasOne(l => l.SourceUser)
+            .WithMany(l => l.Bookmarks)
+            .HasForeignKey(l => l.SourceUserId)
+            .OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<Bookmark>()
+            .HasOne(l => l.TargetGame)
+            .WithMany(l => l.Bookmarks)
+            .HasForeignKey(l => l.TargetGameId)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Like>()

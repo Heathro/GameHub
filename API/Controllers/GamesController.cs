@@ -27,7 +27,8 @@ public class GamesController : BaseApiController
     public async Task<ActionResult<PagedList<GameDto>>> GetGames(
         [FromQuery]PaginationParams paginationParams, [FromBody]GameFilterDto gameFilterDto)
     {
-        var games = await _gamesRepository.GetGamesAsync(paginationParams, gameFilterDto);
+        var games = await _gamesRepository
+            .GetGamesAsync(paginationParams, gameFilterDto, User.GetUserId());
 
         Response.AddPaginationHeader(new PaginationHeader(
             games.CurrentPage,

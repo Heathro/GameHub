@@ -8,7 +8,8 @@ public class Game
     public Platforms Platforms { get; set; }
     public Genres Genres { get; set; }
     public Poster Poster { get; set; }
-    public Publication Publication { get; set; }
+    public Publication Publication { get; set; }    
+    public List<Bookmark> Bookmarks { get; set; } = new();
     public List<Screenshot> Screenshots { get; set; } = new();
     public List<Like> LikedUsers { get; set; } = new();
 }

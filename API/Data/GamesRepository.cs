@@ -28,7 +28,7 @@ public class GamesRepository : IGamesRepository
     }
 
     public async Task<PagedList<GameDto>> GetGamesAsync(
-        PaginationParams paginationParams, GameFilterDto gameFilter)
+        PaginationParams paginationParams, GameFilterDto gameFilter, int currentUserId)
     {
         var query = _context.Games
             .Include(g => g.Platforms)
@@ -36,6 +36,16 @@ public class GamesRepository : IGamesRepository
             .Include(g => g.LikedUsers)
             .Include(g => g.Publication)
             .AsQueryable();
+
+        query = paginationParams.Relationship switch
+        {
+            "published" => query.Where(g => g.Publication.Publisher.Id == currentUserId),
+            "bookmarked" => query
+                .Where(g => g.Bookmarks.Select(b => b.SourceUserId).Contains(currentUserId)),
+            "liked" => query
+                .Where(g => g.LikedUsers.Select(b => b.SourceUserId).Contains(currentUserId)),
+            _ => query
+        };
 
         if (gameFilter.Platforms.Windows || 
             gameFilter.Platforms.Macos || 

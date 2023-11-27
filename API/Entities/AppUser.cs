@@ -11,6 +11,7 @@ public class AppUser : IdentityUser<int>
     public string City { get; set; }
     public DateTime Created { get; set; } = DateTime.UtcNow;
     public DateTime LastActive { get; set; } = DateTime.UtcNow;
+    public List<Bookmark> Bookmarks { get; set; } = new();
     public List<Publication> Publications { get; set; } = new();
     public List<Like> LikedGames { get; set; } = new();
     public List<Friendship> Inviters { get; set; } = new();
