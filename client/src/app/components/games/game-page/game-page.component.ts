@@ -19,6 +19,7 @@ export class GamePageComponent implements OnInit {
   game: Game | undefined;
   screenshots: GalleryItem[] = [];
   isLiked = false;
+  isGameOwned = false;
 
   constructor(private gamesService: GamesService, private route: ActivatedRoute, private router: Router) { }
 
@@ -35,6 +36,7 @@ export class GamePageComponent implements OnInit {
         this.game = game;
         this.getScreenshots();
         this.checkLikes();
+        this.checkGameOwner();
       } 
     });
   }
@@ -56,5 +58,9 @@ export class GamePageComponent implements OnInit {
 
   checkLikes() {
     if (this.game) this.isLiked = this.gamesService.isGameLiked(this.game);
+  }
+
+  checkGameOwner() {
+    if (this.game) this.isGameOwned = this.gamesService.isGameOwned(this.game);
   }
 }

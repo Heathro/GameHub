@@ -22,6 +22,7 @@ import { MessengerComponent } from './components/messages/messenger/messenger.co
 import { AdminPanelComponent } from './components/admin/admin-panel/admin-panel.component';
 import { FriendsPanelComponent } from './components/players/friends-panel/friends-panel.component';
 import { PublicationComponent } from './components/games/publication/publication.component';
+import { gameOwnerGuard } from './guards/game-owner.guard';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -33,13 +34,19 @@ const routes: Routes = [
       { path: 'library', component: LibraryComponent },
       { path: 'publish', component: PublicationComponent },
       { path: 'games/:title', component: GamePageComponent },
-      { path: 'games/:title/edit', component: GameEditComponent, canDeactivate: [unsavedChangesGuard] },
+      { path: 'games/:title/edit', component: GameEditComponent, 
+        canActivate: [gameOwnerGuard], canDeactivate: [unsavedChangesGuard] 
+      },
       { path: 'friends', component: FriendsPanelComponent },
       { path: 'players', component: PlayersListComponent },
       { path: 'players/:username', component: PlayerProfileComponent },
-      { path: 'edit-profile', component: PlayerEditComponent, canDeactivate: [unsavedChangesGuard] },
+      { path: 'edit-profile', component: PlayerEditComponent, 
+        canDeactivate: [unsavedChangesGuard] 
+      },
       { path: 'messenger', component: MessengerComponent },
-      { path: 'admin', component: AdminPanelComponent, canActivate: [adminGuard] }
+      { path: 'admin', component: AdminPanelComponent, 
+        canActivate: [adminGuard] 
+      }
     ]
   },
   { path: '',

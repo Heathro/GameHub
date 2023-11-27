@@ -60,9 +60,9 @@ export class GamesService {
     );
   }
 
-  isGameLiked(game: Game) {
-    if (!this.user) return false;
-    return game.likes.includes(this.user.id);
+  isGameOwned(game: Game) {
+    if (!this.user) return false; 
+    return game.publisher === this.user.userName;
   }
 
   likeGame(gameId: number) {
@@ -84,6 +84,11 @@ export class GamesService {
         });
       })
     );
+  }
+
+  isGameLiked(game: Game) {
+    if (!this.user) return false;
+    return game.likes.includes(this.user.id);
   }
 
   updateGame(game: Game, title: string) {
@@ -122,9 +127,10 @@ export class GamesService {
   }
 
   deleteGame(game: Game) {
-    return this.http.delete(this.baseUrl + 'games/delete-game' + game.title).pipe(
+    return this.http.delete(this.baseUrl + 'games/delete-game/' + game.title).pipe(
       map(() => {
         this.gamesCache.forEach(q => q.result = q.result.filter((g: Game) => g.title != game.title));
+        this.gamesCache = new Map(); //TODO
       })
     );
   }
