@@ -121,12 +121,24 @@
                 </form>
             </tab>
 
-            <tab heading="Reviews">
-                <h4>reviews will go here</h4>
+            <tab heading="Games">
+                
+                <div class="row ms-1 mb-2" routerLink="/publish">
+                    <button
+                        class="btn btn-success col-3"
+                        >Publish new game&nbsp;&nbsp;&nbsp;
+                        <i class="bi bi-rocket-takeoff"></i>
+                    </button>
+                </div>                
+                
+                <div *ngFor="let game of player.publications">
+                    <app-game-card-mini [game]="game"></app-game-card-mini>
+                </div>
+
             </tab>
 
-            <tab heading="Messages">
-                <h4>messages will go here</h4>
+            <tab heading="Reviews">
+                <h4>reviews will go here</h4>
             </tab>
             
         </tabset>
