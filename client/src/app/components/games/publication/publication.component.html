@@ -1,0 +1,127 @@
+<div class="container col-8">
+
+    <h2 class="text-center text-info">Publish own game</h2>
+
+    <form [formGroup]="publishForm" (ngSubmit)="publishForm.valid && publish()" autocomplete="off">
+
+        <h4 class="mt-4 text-warning">Title</h4>
+        <app-text-input
+            [formControl]="$any(publishForm.get('title'))"
+            [label]="'Title'"
+            [placeholder]="'Title'"
+        ></app-text-input>
+
+        <h4 class="mt-4 text-warning">Description</h4>
+        <app-textarea-input 
+            [formControl]="$any(publishForm.get('description'))"
+            [placeholder]="'Description'"
+        ></app-textarea-input>
+
+        <h4 class="mt-4 text-warning">Platforms</h4>
+        <div class="row" formGroupName="platforms">
+            <app-checkbox-input class="col-2"
+                [formControl]="$any(publishForm.get('platforms.windows'))"
+                [label]="'Windows'"
+            ></app-checkbox-input>
+            <app-checkbox-input class="col-2"
+                [formControl]="$any(publishForm.get('platforms.macos'))"
+                [label]="'MacOS'"
+            ></app-checkbox-input>
+            <app-checkbox-input class="col-2"
+                [formControl]="$any(publishForm.get('platforms.linux'))"
+                [label]="'Linux'"
+            ></app-checkbox-input>
+        </div>
+
+        <h4 class="mt-4 text-warning">Genres</h4>
+        <div class="row mb-4" formGroupName="genres">
+            <app-checkbox-input class="col-2"
+                [formControl]="$any(publishForm.get('genres.action'))"
+                [label]="'Action'"
+            ></app-checkbox-input>
+            <app-checkbox-input class="col-2"
+                [formControl]="$any(publishForm.get('genres.adventure'))"
+                [label]="'Adventure'"
+            ></app-checkbox-input>
+            <app-checkbox-input class="col-2"
+                [formControl]="$any(publishForm.get('genres.card'))"
+                [label]="'Card'"
+            ></app-checkbox-input>
+            <app-checkbox-input class="col-2"
+                [formControl]="$any(publishForm.get('genres.educational'))"
+                [label]="'Educational'"
+            ></app-checkbox-input>
+            <app-checkbox-input class="col-2"
+                [formControl]="$any(publishForm.get('genres.fighting'))"
+                [label]="'Fighting'"
+            ></app-checkbox-input>
+            <app-checkbox-input class="col-2"
+                [formControl]="$any(publishForm.get('genres.horror'))"
+                [label]="'Horror'"
+            ></app-checkbox-input>
+            <app-checkbox-input class="col-2"
+                [formControl]="$any(publishForm.get('genres.platformer'))"
+                [label]="'Platformer'"
+            ></app-checkbox-input>
+            <app-checkbox-input class="col-2"
+                [formControl]="$any(publishForm.get('genres.puzzle'))"
+                [label]="'Puzzle'"
+            ></app-checkbox-input>
+            <app-checkbox-input class="col-2"
+                [formControl]="$any(publishForm.get('genres.racing'))"
+                [label]="'Racing'"
+            ></app-checkbox-input>
+            <app-checkbox-input class="col-2"
+                [formControl]="$any(publishForm.get('genres.rhythm'))"
+                [label]="'Rhythm'"
+            ></app-checkbox-input>
+            <app-checkbox-input class="col-2"
+                [formControl]="$any(publishForm.get('genres.roleplay'))"
+                [label]="'Roleplay'"
+            ></app-checkbox-input>
+            <app-checkbox-input class="col-2"
+                [formControl]="$any(publishForm.get('genres.shooter'))"
+                [label]="'Shooter'"
+            ></app-checkbox-input>
+            <app-checkbox-input class="col-2"
+                [formControl]="$any(publishForm.get('genres.simulation'))"
+                [label]="'Simulation'"
+            ></app-checkbox-input>
+            <app-checkbox-input class="col-2"
+                [formControl]="$any(publishForm.get('genres.sport'))"
+                [label]="'Sport'"
+            ></app-checkbox-input>
+            <app-checkbox-input class="col-2"
+                [formControl]="$any(publishForm.get('genres.stealth'))"
+                [label]="'Stealth'"
+            ></app-checkbox-input>
+            <app-checkbox-input class="col-2"
+                [formControl]="$any(publishForm.get('genres.strategy'))"
+                [label]="'Strategy'"
+            ></app-checkbox-input>
+            <app-checkbox-input class="col-2"
+                [formControl]="$any(publishForm.get('genres.survival'))"
+                [label]="'Survival'"
+            ></app-checkbox-input>
+        </div>
+
+        <div class="row ms-4 mb-4" *ngIf="validationErrors">
+            <ul class="text-danger">
+                <li *ngFor="let error of validationErrors">
+                    {{error}}
+                </li>
+            </ul>
+        </div>
+
+        <div class="row">
+            <button
+                class="btn btn-outline-success mt-4 col-4 mx-auto"
+                type="submit"
+                [disabled]="!publishForm.valid || publishing"
+                >Publish&nbsp;&nbsp;&nbsp;
+                <i class="bi bi-rocket-takeoff"></i>
+            </button>
+        </div>
+
+    </form>
+</div>

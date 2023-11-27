@@ -54,6 +54,12 @@ export class GamesService {
     return this.http.get<Game>(this.baseUrl + 'games/' + title);
   }
 
+  publishGame(publication: any) {
+    return this.http.post(this.baseUrl + 'publications/new', publication).pipe(
+      map(() => this.gamesCache = new Map()) // TODO
+    );
+  }
+
   isGameLiked(game: Game) {
     if (!this.user) return false;
     return game.likes.includes(this.user.id);

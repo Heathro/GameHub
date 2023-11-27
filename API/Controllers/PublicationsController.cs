@@ -24,7 +24,7 @@ public class PublicationsController : BaseApiController
     }
 
     [HttpPost("new")]
-    public async Task<ActionResult<GameDto>> PublishGame(GamePublishDto gamePublishDto)
+    public async Task<ActionResult> PublishGame(GamePublishDto gamePublishDto)
     {
         if (await _gamesRepository.TitleExistsAsync(gamePublishDto.Title))
         {
@@ -34,18 +34,13 @@ public class PublicationsController : BaseApiController
         var publisher = await _usersRepository.GetUserByUsernameAsync(User.GetUsername());
         
         var game = _mapper.Map<Game>(gamePublishDto);
-        game.Platforms = new Platforms();
-        game.Genres = new Genres();
         game.Poster = new Poster{ Url = "" };
 
         var publication = new Publication{ Title = game };
 
         publisher.Publications.Add(publication);
 
-        if (await _gamesRepository.SaveAllAsync())
-        {
-            return Ok(await _gamesRepository.GetGameAsync(gamePublishDto.Title));
-        }
+        if (await _gamesRepository.SaveAllAsync()) return Ok();
 
         return BadRequest("Failed to publish game");
     }

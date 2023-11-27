@@ -43,6 +43,7 @@ import { IncomeRequestsComponent } from './components/players/income-requests/in
 import { OutcomeRequestsComponent } from './components/players/outcome-requests/outcome-requests.component';
 import { FriendCardComponent } from './components/players/friend-card/friend-card.component';
 import { GameCardMiniComponent } from './components/games/game-card-mini/game-card-mini.component';
+import { PublicationComponent } from './components/games/publication/publication.component';
 
 @NgModule({
   declarations: [
@@ -79,7 +80,8 @@ import { GameCardMiniComponent } from './components/games/game-card-mini/game-ca
     IncomeRequestsComponent,
     OutcomeRequestsComponent,
     FriendCardComponent,
-    GameCardMiniComponent
+    GameCardMiniComponent,
+    PublicationComponent
   ],
   imports: [
     BrowserModule,

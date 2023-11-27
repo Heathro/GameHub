@@ -21,6 +21,7 @@ import { GameEditComponent } from './components/games/game-edit/game-edit.compon
 import { MessengerComponent } from './components/messages/messenger/messenger.component';
 import { AdminPanelComponent } from './components/admin/admin-panel/admin-panel.component';
 import { FriendsPanelComponent } from './components/players/friends-panel/friends-panel.component';
+import { PublicationComponent } from './components/games/publication/publication.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -30,6 +31,7 @@ const routes: Routes = [
     children: [
       { path: 'store', component: StoreComponent },
       { path: 'library', component: LibraryComponent },
+      { path: 'publish', component: PublicationComponent },
       { path: 'games/:title', component: GamePageComponent },
       { path: 'games/:title/edit', component: GameEditComponent, canDeactivate: [unsavedChangesGuard] },
       { path: 'friends', component: FriendsPanelComponent },
