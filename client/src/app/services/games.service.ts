@@ -9,7 +9,6 @@ import { PaginationParams } from '../models/pagination';
 import { Game } from '../models/game';
 import { Filter } from '../models/filter';
 import { User } from '../models/user';
-import { GameCategory } from '../helpers/gameCategory';
 
 @Injectable({
   providedIn: 'root'
@@ -132,7 +131,7 @@ export class GamesService {
   }
 
   updateGame(game: Game, title: string) {
-    return this.http.put(this.baseUrl + 'games/update-game' + title, game).pipe(
+    return this.http.put(this.baseUrl + 'games/update-game/' + title, game).pipe(
       map(() => {
         this.storeGamesCache.forEach(q => {
           q.result.forEach((g: Game) => {

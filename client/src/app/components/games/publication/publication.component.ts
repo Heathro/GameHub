@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { GamesService } from 'src/app/services/games.service';
@@ -73,7 +73,7 @@ export class PublicationComponent implements OnInit {
         strategy: false,
         survival: false
       })
-    });
+    }, { validators: [this.atLeastOneSelected('genres'), this.atLeastOneSelected('platforms')] });
   }
 
   alphaNumericSpaceColon(): ValidatorFn {
@@ -87,5 +87,18 @@ export class PublicationComponent implements OnInit {
       const input: string = control.value;
       return input[0] === ' ' || input[input.length - 1] === ' ' ? {whiteSpace: true} : null;
     }
+  }
+
+  atLeastOneSelected(groupName: string): ValidatorFn {
+    return (control: AbstractControl) => {
+      const fg = control as FormGroup;
+  
+      if (fg && fg.controls && fg.controls[groupName]) {
+        const groupControl = fg.controls[groupName] as FormGroup;
+        const controls = Object.values(groupControl.controls);
+        return controls.every(c => c.value === false) ? {atLeastOneSelected: true} : null;
+      }  
+      return null;
+    };
   }
 }

@@ -25,7 +25,16 @@
                         [formControl]="$any(editForm.get('description'))"
                     ></app-textarea-input>
 
-                    <h4 class="mt-4 text-warning">Platforms</h4>
+                    <div class="mt-4 mb-2">
+                        <h4 class="text-warning d-inline">Platforms</h4>
+                        <h6 
+                            class="text-primary d-inline ms-2" 
+                            style="position: relative; top: -1px;"
+                        >
+                            (at least one)
+                        </h6>
+                    </div>
+
                     <div class="row" formGroupName="platforms">
                         <app-checkbox-input class="col-2"
                             [formControl]="$any(editForm.get('platforms.windows'))"
@@ -41,7 +50,11 @@
                         ></app-checkbox-input>
                     </div>
 
-                    <h4 class="mt-4 text-warning">Genres</h4>
+                    <div class="mt-4 mb-2">
+                        <h4 class="text-warning d-inline">Genres</h4>
+                        <h6 class="text-primary d-inline ms-2" style="position: relative; top: -1px;">(at least one)</h6>
+                    </div>
+
                     <div class="row mb-4" formGroupName="genres">
                         <app-checkbox-input class="col-2"
                             [formControl]="$any(editForm.get('genres.action'))"

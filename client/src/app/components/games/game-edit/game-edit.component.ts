@@ -134,7 +134,7 @@ export class GameEditComponent implements OnInit, EditComponent {
         strategy: this.game?.genres.strategy,
         survival: this.game?.genres.survival
       })
-    });
+    }, { validators: [this.atLeastOneSelected('genres'), this.atLeastOneSelected('platforms')] });
     
     this.initialForm = this.editForm.value;
   }
@@ -150,6 +150,19 @@ export class GameEditComponent implements OnInit, EditComponent {
       const input: string = control.value;
       return input[0] === ' ' || input[input.length - 1] === ' ' ? {whiteSpace: true} : null;
     }
+  }
+
+  atLeastOneSelected(groupName: string): ValidatorFn {
+    return (control: AbstractControl) => {
+      const fg = control as FormGroup;
+  
+      if (fg && fg.controls && fg.controls[groupName]) {
+        const groupControl = fg.controls[groupName] as FormGroup;
+        const controls = Object.values(groupControl.controls);
+        return controls.every(c => c.value === false) ? {atLeastOneSelected: true} : null;
+      }  
+      return null;
+    };
   }
 
   initializeUploader() {

@@ -56,7 +56,7 @@ public class GamesController : BaseApiController
         
         var game = await _gamesRepository.GetGameByTitleAsync(title);
         if (game == null) return NotFound();
-        if (game.Publication.Publisher.Id != User.GetUserId())
+        if (game.Publication.PublisherId != User.GetUserId())
         {
             return BadRequest("You are not publisher");
         }

@@ -84,6 +84,7 @@ public class UsersRepository : IUsersRepository
         PaginationParams paginationParams, int currentUserId)
     {     
         var query = _context.Users.AsQueryable();
+        
         query = query.Where(u => u.Id != currentUserId && u.UserName != "Admin");
         query = paginationParams.OrderBy switch
         {

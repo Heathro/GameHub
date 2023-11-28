@@ -30,12 +30,7 @@ public class GamesRepository : IGamesRepository
     public async Task<PagedList<GameDto>> GetGamesAsync(
         PaginationParams paginationParams, GameFilterDto gameFilter, int currentUserId)
     {
-        var query = _context.Games
-            .Include(g => g.Platforms)
-            .Include(g => g.Genres)
-            .Include(g => g.LikedUsers)
-            .Include(g => g.Publication)
-            .AsQueryable();
+        var query = _context.Games.AsQueryable();
 
         query = paginationParams.Category switch
         {
@@ -116,6 +111,7 @@ public class GamesRepository : IGamesRepository
             .Include(g => g.Genres)
             .Include(g => g.Poster)
             .Include(g => g.Screenshots)
+            .Include(g => g.Publication)
             .SingleOrDefaultAsync(game => game.Title == title);
     }
 
