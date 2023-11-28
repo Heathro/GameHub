@@ -9,46 +9,71 @@ import { PaginationParams } from '../models/pagination';
 import { Game } from '../models/game';
 import { Filter } from '../models/filter';
 import { User } from '../models/user';
+import { GameCategory } from '../helpers/gameCategory';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GamesService {
   baseUrl = environment.apiUrl;
-  gamesCache = new Map();
-  paginationParams: PaginationParams;
-  filter: Filter | undefined;
+  storeGamesCache = new Map();
+  storePaginationParams: PaginationParams;
+  storeFilter: Filter | undefined;
+  libraryGamesCache = new Map();
+  libraryPaginationParams: PaginationParams;  
+  libraryFilter: Filter | undefined;
   user: User | undefined;
 
   constructor(private http: HttpClient) {
-    this.paginationParams = this.initializePaginationParams();
+    this.storePaginationParams = new PaginationParams(4, 'az', 'all');
+    this.libraryPaginationParams = new PaginationParams(4, 'az', 'bookmarked');
   }
 
   setCurrentUser(user: User) {
     this.user = user;
   }
   
-  getGames(filter: Filter) {
-    const queryString = Object.values(this.paginationParams).join('-') + this.stringifyFilter(filter);
+  getAllGames(filter: Filter) {
+    const queryString = Object.values(this.storePaginationParams).join('-') + this.stringifyFilter(filter);
 
-    const response = this.gamesCache.get(queryString);
+    const response = this.storeGamesCache.get(queryString);
     if (response) return of(response);
 
-    let params = getPaginationHeaders(this.paginationParams);
+    let params = getPaginationHeaders(this.storePaginationParams);
 
     return getFilteredPaginatedResult<Game[]>(this.baseUrl + 'games/list', params, this.http, filter).pipe(
       map(response => {
-        this.gamesCache.set(queryString, response);
+        this.storeGamesCache.set(queryString, response);
+        return response;
+      })
+    );
+  }
+
+  getBookmarkedGames(filter: Filter) {
+    const queryString = Object.values(this.libraryPaginationParams).join('-') + this.stringifyFilter(filter);
+
+    const response = this.libraryGamesCache.get(queryString);
+    if (response) return of(response);
+
+    let params = getPaginationHeaders(this.libraryPaginationParams);
+
+    return getFilteredPaginatedResult<Game[]>(this.baseUrl + 'games/list', params, this.http, filter).pipe(
+      map(response => {
+        this.libraryGamesCache.set(queryString, response);
         return response;
       })
     );
   }
 
   getGame(title: string) {
-    const game = [...this.gamesCache.values()]
+    let game = [...this.storeGamesCache.values()]
       .reduce((array, element) => array.concat(element.result), [])
       .find((game: Game) => game.title === title);
+    if (game) return of(game);
 
+    game = [...this.libraryGamesCache.values()]
+      .reduce((array, element) => array.concat(element.result), [])
+      .find((game: Game) => game.title === title);
     if (game) return of(game);
 
     return this.http.get<Game>(this.baseUrl + 'games/' + title);
@@ -56,7 +81,10 @@ export class GamesService {
 
   publishGame(publication: any) {
     return this.http.post(this.baseUrl + 'publications/new', publication).pipe(
-      map(() => this.gamesCache = new Map()) // TODO
+      map(() => {
+        this.storeGamesCache = new Map();
+        this.libraryGamesCache = new Map(); //TODO
+      })
     );
   }
 
@@ -71,7 +99,19 @@ export class GamesService {
         if (!this.user) return;
         const userId = this.user.id;
 
-        this.gamesCache.forEach(q => {
+        this.storeGamesCache.forEach(q => {
+          q.result.forEach((g: Game) => {
+            if (g.id === gameId) {
+              if (this.isGameLiked(g)) {
+                g.likes = g.likes.filter(l => l !== userId);
+              } else {
+                g.likes.push(userId);
+              }
+            }
+          });
+        });
+
+        this.libraryGamesCache.forEach(q => {
           q.result.forEach((g: Game) => {
             if (g.id === gameId) {
               if (this.isGameLiked(g)) {
@@ -94,7 +134,36 @@ export class GamesService {
   updateGame(game: Game, title: string) {
     return this.http.put(this.baseUrl + 'games/update-game' + title, game).pipe(
       map(() => {
-        this.gamesCache.forEach(q => {
+        this.storeGamesCache.forEach(q => {
+          q.result.forEach((g: Game) => {
+            if (g.id === game.id) {              
+              g.title = game.title;
+              g.description = game.description;
+              g.platforms.windows = game.platforms.windows;
+              g.platforms.macos = game.platforms.macos;
+              g.platforms.linux = game.platforms.linux;
+              g.genres.action = game.genres.action;
+              g.genres.adventure = game.genres.adventure;
+              g.genres.card = game.genres.card;
+              g.genres.educational = game.genres.educational;
+              g.genres.fighting = game.genres.fighting;
+              g.genres.horror = game.genres.horror;
+              g.genres.platformer = game.genres.platformer;
+              g.genres.puzzle = game.genres.puzzle;
+              g.genres.racing = game.genres.racing;
+              g.genres.rhythm = game.genres.rhythm;
+              g.genres.roleplay = game.genres.roleplay;
+              g.genres.shooter = game.genres.shooter;
+              g.genres.simulation = game.genres.simulation;
+              g.genres.sport = game.genres.sport;
+              g.genres.stealth = game.genres.stealth;
+              g.genres.strategy = game.genres.strategy;
+              g.genres.survival = game.genres.survival;
+            }
+          });
+        });
+
+        this.libraryGamesCache.forEach(q => {
           q.result.forEach((g: Game) => {
             if (g.id === game.id) {              
               g.title = game.title;
@@ -129,54 +198,91 @@ export class GamesService {
   deleteGame(game: Game) {
     return this.http.delete(this.baseUrl + 'games/delete-game/' + game.title).pipe(
       map(() => {
-        this.gamesCache.forEach(q => q.result = q.result.filter((g: Game) => g.title != game.title));
-        this.gamesCache = new Map(); //TODO
+        this.storeGamesCache = new Map();
+        this.libraryGamesCache = new Map(); //TODO
       })
     );
   }
 
   deleteScreenshot(game: Game, screenshotId: number) {
-    return this.http.delete(this.baseUrl + 'games/delete-screenshot/' + game.title + '/' + screenshotId);
+    return this.http.delete(this.baseUrl + 'games/delete-screenshot/' + game.title + '/' + screenshotId).pipe(
+      map(() => {
+        this.storeGamesCache.forEach(q => {
+          q.result.forEach((g: Game) => {
+            if (g.id === game.id) {
+              g.screenshots = g.screenshots.filter(s => s.id === screenshotId);
+            }
+          });
+        });
+
+        this.libraryGamesCache.forEach(q => {
+          q.result.forEach((g: Game) => {
+            if (g.id === game.id) {
+              g.screenshots = g.screenshots.filter(s => s.id === screenshotId);
+            }
+          });
+        });
+      })
+    );
   }
 
-  setPaginationPage(currentPage: number) {
-    this.paginationParams.currentPage = currentPage;
+  setStorePaginationPage(currentPage: number) {
+    this.storePaginationParams.currentPage = currentPage;
   }
 
-  setPaginationOrder(orderBy: string) {
-    this.paginationParams.orderBy = orderBy;
+  setStorePaginationOrder(orderBy: string) {
+    this.storePaginationParams.orderBy = orderBy;
   }
 
-  getPaginationParams() {
-    return this.paginationParams;
+  getStorePaginationParams() {
+    return this.storePaginationParams;
   }
 
-  setFilter(filter: Filter) {
-    this.filter = filter;
+  setStoreFilter(filter: Filter) {
+    this.storeFilter = filter;
   }
 
-  getFilter() {
-    return this.filter;
+  getStoreFilter() {
+    return this.storeFilter;
+  }
+
+  setLibraryPaginationPage(currentPage: number) {
+    this.libraryPaginationParams.currentPage = currentPage;
+  }
+
+  setLibraryPaginationOrder(orderBy: string) {
+    this.libraryPaginationParams.orderBy = orderBy;
+  }
+
+  getLibraryPaginationParams() {
+    return this.libraryPaginationParams;
+  }
+
+  setLibraryFilter(filter: Filter) {
+    this.libraryFilter = filter;
+  }
+
+  getLibraryFilter() {
+    return this.libraryFilter;
   }
 
   clearPrivateData() {
-    this.gamesCache = new Map();
-    this.paginationParams = this.initializePaginationParams();
-    this.filter = undefined;
+    this.storeGamesCache = new Map();
+    this.libraryGamesCache = new Map();
+    this.storePaginationParams = new PaginationParams(4, 'az', 'all');
+    this.libraryPaginationParams = new PaginationParams(4, 'az', 'bookmarked');
+    this.storeFilter = undefined;
+    this.libraryFilter = undefined;
     this.user = undefined;
   }
 
-  private initializePaginationParams() {
-    return new PaginationParams(4, 'az');
-  }
-
-  private stringifyFilter(filters: Filter): string {
+  private stringifyFilter(filter: Filter): string {
     let result = "";
 
-    const platformsKeys = Object.keys(filters.platforms);
-    const platformsValues = Object.values(filters.platforms);
-    const genresKeys = Object.keys(filters.genres);
-    const genresValues = Object.values(filters.genres);
+    const platformsKeys = Object.keys(filter.platforms);
+    const platformsValues = Object.values(filter.platforms);
+    const genresKeys = Object.keys(filter.genres);
+    const genresValues = Object.values(filter.genres);
 
     for (let i = 0; i < platformsKeys.length; i++) {
       result += '-' + platformsKeys[i] + '-' + platformsValues[i];

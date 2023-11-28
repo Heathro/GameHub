@@ -65,6 +65,6 @@ export class AdminService {
   }
 
   private initializePaginationParams() {
-    return new PaginationParams(7, 'az');
+    return new PaginationParams(7, 'az', 'all');
   }
 }

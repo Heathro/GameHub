@@ -37,7 +37,7 @@ public class GamesRepository : IGamesRepository
             .Include(g => g.Publication)
             .AsQueryable();
 
-        query = paginationParams.Relationship switch
+        query = paginationParams.Category switch
         {
             "published" => query.Where(g => g.Publication.Publisher.Id == currentUserId),
             "bookmarked" => query

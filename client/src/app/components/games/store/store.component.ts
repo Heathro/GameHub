@@ -25,7 +25,7 @@ export class StoreComponent implements OnInit {
 
   loadGames() {
     this.loading = true;
-    this.gamesService.getGames(this.filterForm.value).subscribe({
+    this.gamesService.getAllGames(this.filterForm.value).subscribe({
       next: response => {
         if (response.result && response.pagination) {
           this.games = response.result;
@@ -37,22 +37,22 @@ export class StoreComponent implements OnInit {
   }
   
   sortGames(order: string) {
-    this.gamesService.setPaginationPage(1);
-    this.gamesService.setPaginationOrder(order);
+    this.gamesService.setStorePaginationPage(1);
+    this.gamesService.setStorePaginationOrder(order);
     this.loadGames();
     if (this.pagination) this.pagination.currentPage = 1;
   }
 
   pageChanged(event: any) {
-    if (this.gamesService.getPaginationParams().currentPage !== event.page) {
-      this.gamesService.setPaginationPage(event.page);
+    if (this.gamesService.getStorePaginationParams().currentPage !== event.page) {
+      this.gamesService.setStorePaginationPage(event.page);
       this.loadGames();
     }
   }
 
   applyFilters() {
-    this.gamesService.setPaginationPage(1);
-    this.gamesService.setFilter(this.filterForm.value);
+    this.gamesService.setStorePaginationPage(1);
+    this.gamesService.setStoreFilter(this.filterForm.value);
     this.loadGames();
     if (this.pagination) this.pagination.currentPage = 1;
   }
@@ -63,14 +63,14 @@ export class StoreComponent implements OnInit {
   }
 
   getSortingType() {
-    switch (this.gamesService.getPaginationParams().orderBy) {
+    switch (this.gamesService.getStorePaginationParams().orderBy) {
       case 'za': return 'Z&ensp;<i class="bi bi-arrow-right"></i>&ensp;A';
       default:   return 'A&ensp;<i class="bi bi-arrow-right"></i>&ensp;Z';
     }
   }
   
   initializeFrom(initial: boolean) {
-    const filter = this.gamesService.getFilter();
+    const filter = this.gamesService.getStoreFilter();
 
     this.filterForm = this.formBuilder.group({
       platforms: this.formBuilder.group({
