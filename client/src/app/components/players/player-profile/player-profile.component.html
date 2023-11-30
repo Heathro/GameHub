@@ -21,7 +21,8 @@
                 </div>
             </div>
             <div class="card-footer">
-                <div class="btn-group d-flex">
+
+                <div class="btn-group d-flex my-2" *ngIf="user && user.userName !== player.userName">
 
                     <button *ngIf="player.status === 3"
                         class="btn btn-outline-danger me-1"

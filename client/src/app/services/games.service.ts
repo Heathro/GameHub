@@ -130,6 +130,44 @@ export class GamesService {
     return game.likes.includes(this.user.id);
   }
 
+  bookmarkGame(gameId: number) {
+    return this.http.post(this.baseUrl + 'bookmarks/' + gameId, {}).pipe(
+      map(() => {
+        if (!this.user) return;
+        const userId = this.user.id;
+
+        this.storeGamesCache.forEach(q => {
+          q.result.forEach((g: Game) => {
+            if (g.id === gameId) {
+              if (this.isGameBookmarked(g)) {
+                g.bookmarks = g.bookmarks.filter(b => b !== userId);
+              } else {
+                g.bookmarks.push(userId);
+              }
+            }
+          });
+        });
+
+        this.libraryGamesCache.forEach(q => {
+          q.result.forEach((g: Game) => {
+            if (g.id === gameId) {
+              if (this.isGameBookmarked(g)) {
+                g.bookmarks = g.bookmarks.filter(b => b !== userId);
+              } else {
+                g.bookmarks.push(userId);
+              }
+            }
+          });
+        });
+      })
+    );
+  }
+
+  isGameBookmarked(game: Game) {
+    if (!this.user) return false;
+    return game.bookmarks.includes(this.user.id);
+  }
+
   updateGame(game: Game, title: string) {
     return this.http.put(this.baseUrl + 'games/update-game/' + title, game).pipe(
       map(() => {

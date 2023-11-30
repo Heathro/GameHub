@@ -19,6 +19,7 @@ public class AutoMapperProfiles : Profile
         CreateMap<Avatar, AvatarDto>();
 
         CreateMap<Game, GameDto>()
+            .ForMember(d => d.Bookmarks, o => o.MapFrom(s => s.Bookmarks.Select(b => b.SourceUserId)))
             .ForMember(d => d.Likes, o => o.MapFrom(s => s.LikedUsers.Select(l => l.SourceUserId)))
             .ForMember(d => d.Publisher, o => o.MapFrom(s => s.Publication.Publisher.UserName));
         CreateMap<GameEditDto, Game>();

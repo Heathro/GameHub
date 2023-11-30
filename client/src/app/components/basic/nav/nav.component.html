@@ -29,6 +29,7 @@
             <li class="nav-item">
                 <a class="nav-link" routerLink="/errors" routerLinkActive="active">Errors</a>
             </li>
+            
         </ul>
 
         <div class="dropdown" *ngIf="(accountService.currentUser$ | async) as user" dropdown>
@@ -36,8 +37,9 @@
             <a class="dropdown-toggle text-success text-decoration-none username-text" dropdownToggle>
                 {{user.userName}}
             </a>
-            <div class="dropdown-menu" *dropdownMenu>
+            <div class="dropdown-menu" *dropdownMenu>                
                 <a class="dropdown-item" routerLink="/edit-profile">Edit Profile</a>
+                <a class="dropdown-item" routerLink="/publish">Publish Game</a>
                 <a class="dropdown-item" (click)="logout()">Logout</a>
             </div>
         </div>

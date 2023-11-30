@@ -63,18 +63,35 @@
                         <h5 class="d-inline">
                             {{game.likes.length}}
                         </h5>
-                    </div>                
+                    </div>
                 </div> 
             </div>
             <div class="card-footer">
                 <div class="btn-group d-flex my-2">
-                    <button class="btn btn-outline-success">Add to library</button>
+
+                    <button 
+                        *ngIf="!isGameBookmarked"
+                        (click)="bookmarkGame()"
+                        class="btn btn-outline-success me-1"
+                    >
+                        Add&nbsp;&nbsp;&nbsp;<i class="bi bi-bookmark-check"></i>
+                    </button>
+
+                    <button 
+                        *ngIf="isGameBookmarked"
+                        (click)="bookmarkGame()"
+                        class="btn btn-outline-warning me-1"
+                    >
+                        Remove&nbsp;&nbsp;&nbsp;<i class="bi bi-bookmark-dash"></i>
+                    </button>
+                    
                     <button *ngIf="isGameOwned"
                         class="btn btn-outline-info"
                         routerLink="/games/{{game.title}}/edit"
                     >
                         Edit Game&nbsp;&nbsp;&nbsp;<i class="bi bi-pencil"></i>
                     </button>
+
                 </div>
             </div>
 

@@ -20,6 +20,7 @@ export class GamePageComponent implements OnInit {
   screenshots: GalleryItem[] = [];
   isLiked = false;
   isGameOwned = false;
+  isGameBookmarked = false;
 
   constructor(private gamesService: GamesService, private route: ActivatedRoute, private router: Router) { }
 
@@ -37,6 +38,7 @@ export class GamePageComponent implements OnInit {
         this.getScreenshots();
         this.checkLikes();
         this.checkGameOwner();
+        this.checkBookmarks();
       } 
     });
   }
@@ -56,11 +58,23 @@ export class GamePageComponent implements OnInit {
     }
   }
 
+  bookmarkGame() {
+    if (this.game) {
+      this.gamesService.bookmarkGame(this.game.id).subscribe({
+        next: () => this.isGameBookmarked = !this.isGameBookmarked
+      });
+    }
+  }
+
   checkLikes() {
     if (this.game) this.isLiked = this.gamesService.isGameLiked(this.game);
   }
 
   checkGameOwner() {
     if (this.game) this.isGameOwned = this.gamesService.isGameOwned(this.game);
+  }
+
+  checkBookmarks() {
+    if (this.game) this.isGameBookmarked = this.gamesService.isGameBookmarked(this.game);
   }
 }
