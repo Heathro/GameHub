@@ -19,8 +19,8 @@ export class GamePageComponent implements OnInit {
   game: Game | undefined;
   screenshots: GalleryItem[] = [];
   isLiked = false;
-  isGameOwned = false;
-  isGameBookmarked = false;
+  isPublished = false;
+  isBookmarked = false;
 
   constructor(private gamesService: GamesService, private route: ActivatedRoute, private router: Router) { }
 
@@ -61,7 +61,7 @@ export class GamePageComponent implements OnInit {
   bookmarkGame() {
     if (this.game) {
       this.gamesService.bookmarkGame(this.game.id).subscribe({
-        next: () => this.isGameBookmarked = !this.isGameBookmarked
+        next: () => this.isBookmarked = !this.isBookmarked
       });
     }
   }
@@ -71,10 +71,10 @@ export class GamePageComponent implements OnInit {
   }
 
   checkGameOwner() {
-    if (this.game) this.isGameOwned = this.gamesService.isGamePublished(this.game);
+    if (this.game) this.isPublished = this.gamesService.isGamePublished(this.game);
   }
 
   checkBookmarks() {
-    if (this.game) this.isGameBookmarked = this.gamesService.isGameBookmarked(this.game);
+    if (this.game) this.isBookmarked = this.gamesService.isGameBookmarked(this.game);
   }
 }

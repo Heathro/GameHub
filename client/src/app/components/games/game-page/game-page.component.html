@@ -70,22 +70,22 @@
                 <div class="btn-group d-flex my-2">
 
                     <button 
-                        *ngIf="!isGameBookmarked"
+                        *ngIf="!isBookmarked"
                         (click)="bookmarkGame()"
                         class="btn btn-outline-success me-1"
                     >
-                        Add&nbsp;&nbsp;&nbsp;<i class="bi bi-bookmark-check"></i>
+                        Add Bookmark&nbsp;&nbsp;&nbsp;<i class="bi bi-bookmark-check"></i>
                     </button>
 
                     <button 
-                        *ngIf="isGameBookmarked"
+                        *ngIf="isBookmarked"
                         (click)="bookmarkGame()"
                         class="btn btn-outline-warning me-1"
                     >
-                        Remove&nbsp;&nbsp;&nbsp;<i class="bi bi-bookmark-dash"></i>
+                        Remove Bookmark&nbsp;&nbsp;&nbsp;<i class="bi bi-bookmark-dash"></i>
                     </button>
                     
-                    <button *ngIf="isGameOwned"
+                    <button *ngIf="isPublished"
                         class="btn btn-outline-info"
                         routerLink="/games/{{game.title}}/edit"
                     >

@@ -21,6 +21,16 @@
                 </div>
             </div>
             <div class="card-footer">
+                <div class="btn-group d-flex my-2" *ngIf="user && user.userName === player.userName">
+
+                    <button
+                        routerLink="/edit-profile"
+                        class="btn btn-outline-info me-1"
+                    >
+                        Edit profile&nbsp;&nbsp;&nbsp;<i class="bi bi-pencil"></i>
+                    </button>
+
+                </div>
 
                 <div class="btn-group d-flex my-2" *ngIf="user && user.userName !== player.userName">
 
