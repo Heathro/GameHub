@@ -9,6 +9,7 @@ import { PaginationParams } from '../models/pagination';
 import { Player } from '../models/player';
 import { FriendStatus } from '../helpers/friendStatus';
 import { FriendRequestType } from '../helpers/friendRequestType';
+import { OrderType } from '../helpers/orderType';
 
 @Injectable({
   providedIn: 'root'
@@ -144,8 +145,8 @@ export class PlayersService {
     this.paginationParams.currentPage = currentPage;
   }
 
-  setPaginationOrder(orderBy: string) {
-    this.paginationParams.orderBy = orderBy;
+  setPaginationOrder(orderType: OrderType) {
+    this.paginationParams.orderType = orderType;
   }
 
   getPaginationParams() {
@@ -162,6 +163,6 @@ export class PlayersService {
   }
 
   private initializePaginationParams() {
-    return new PaginationParams(3, 'az');
+    return new PaginationParams(3, OrderType.AZ);
   }
 }

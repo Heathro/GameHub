@@ -9,6 +9,7 @@ import { PaginationParams } from '../models/pagination';
 import { Game } from '../models/game';
 import { Filter } from '../models/filter';
 import { User } from '../models/user';
+import { OrderType } from '../helpers/orderType';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +22,7 @@ export class GamesService {
   user: User | undefined;
 
   constructor(private http: HttpClient) {
-    this.paginationParams = new PaginationParams(4, 'az');
+    this.paginationParams = new PaginationParams(4, OrderType.AZ);
   }
   
   getGames(filter: Filter) {
@@ -176,8 +177,8 @@ export class GamesService {
     this.paginationParams.currentPage = currentPage;
   }
 
-  setPaginationOrder(orderBy: string) {
-    this.paginationParams.orderBy = orderBy;
+  setPaginationOrder(orderType: OrderType) {
+    this.paginationParams.orderType = orderType;
   }
 
   getPaginationParams() {
@@ -198,7 +199,7 @@ export class GamesService {
 
   clearPrivateData() {
     this.gamesCache = new Map();
-    this.paginationParams = new PaginationParams(4, 'az');
+    this.paginationParams = new PaginationParams(4, OrderType.AZ);
     this.filter = undefined;
     this.user = undefined;
   }

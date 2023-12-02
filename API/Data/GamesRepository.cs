@@ -90,9 +90,9 @@ public class GamesRepository : IGamesRepository
             );
         }
 
-        query = paginationParams.OrderBy switch
+        query = paginationParams.OrderType switch
         {
-            "za" => query.OrderByDescending(g => g.Title),
+            OrderType.ZA => query.OrderByDescending(g => g.Title),
             _ => query.OrderBy(g => g.Title)
         };
 

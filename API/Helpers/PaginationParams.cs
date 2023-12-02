@@ -10,5 +10,5 @@ public class PaginationParams
         set => _itemsPerPage = (value > MaxItemsPerPage) ? MaxItemsPerPage : value;
     }
     public int CurrentPage { get; set; } = 1;    
-    public string OrderBy { get; set; } = "az";
+    public OrderType OrderType { get; set; } = OrderType.AZ;
 }

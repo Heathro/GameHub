@@ -7,6 +7,7 @@ import { environment } from 'src/environments/environment';
 import { getPaginatedResult, getPaginationHeaders } from '../helpers/paginationHelper';
 import { PaginationParams } from '../models/pagination';
 import { User } from '../models/user';
+import { OrderType } from '../helpers/orderType';
 
 @Injectable({
   providedIn: 'root'
@@ -51,8 +52,8 @@ export class AdminService {
     this.paginationParams.currentPage = currentPage;
   }
 
-  setPaginationOrder(orderBy: string) {
-    this.paginationParams.orderBy = orderBy;
+  setPaginationOrder(orderType: OrderType) {
+    this.paginationParams.orderType = orderType;
   }
 
   getPaginationParams() {
@@ -65,6 +66,6 @@ export class AdminService {
   }
 
   private initializePaginationParams() {
-    return new PaginationParams(7, 'az');
+    return new PaginationParams(7, OrderType.AZ);
   }
 }

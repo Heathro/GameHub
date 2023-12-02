@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { PlayersService } from 'src/app/services/players.service';
 import { Pagination } from 'src/app/models/pagination';
 import { Player } from 'src/app/models/player';
+import { OrderType } from 'src/app/helpers/orderType';
 
 @Component({
   selector: 'app-players-list',
@@ -33,9 +34,17 @@ export class PlayersListComponent implements OnInit {
     });
   }
 
-  sortPlayers(order: string) {
+  sortAZ() {
+    this.sortPlayers(OrderType.AZ);
+  }
+
+  sortZA() {
+    this.sortPlayers(OrderType.ZA);
+  }
+
+  sortPlayers(orderType: OrderType) {
     this.playersService.setPaginationPage(1);
-    this.playersService.setPaginationOrder(order);
+    this.playersService.setPaginationOrder(orderType);
     this.loadPlayers();
     if (this.pagination) this.pagination.currentPage = 1;
   }
@@ -48,9 +57,9 @@ export class PlayersListComponent implements OnInit {
   }  
 
   getSortingType() {
-    switch (this.playersService.getPaginationParams().orderBy) {
-      case 'za': return 'Z&ensp;<i class="bi bi-arrow-right"></i>&ensp;A';
-      default:   return 'A&ensp;<i class="bi bi-arrow-right"></i>&ensp;Z';
+    switch (this.playersService.getPaginationParams().orderType) {
+      case OrderType.ZA: return 'Z&ensp;<i class="bi bi-arrow-right"></i>&ensp;A';
+      default:           return 'A&ensp;<i class="bi bi-arrow-right"></i>&ensp;Z';
     }
   }
 }

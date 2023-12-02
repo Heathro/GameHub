@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { GamesService } from 'src/app/services/games.service';
 import { Game } from 'src/app/models/game';
 import { Pagination } from 'src/app/models/pagination';
+import { OrderType } from 'src/app/helpers/orderType';
 
 @Component({
   selector: 'app-store',
@@ -35,10 +36,18 @@ export class GamesListComponent implements OnInit {
       }
     });
   }
+
+  sortAZ() {
+    this.sortGames(OrderType.AZ);
+  }
+
+  sortZA() {
+    this.sortGames(OrderType.ZA);
+  }
   
-  sortGames(order: string) {
+  sortGames(orderType: OrderType) {
     this.gamesService.setPaginationPage(1);
-    this.gamesService.setPaginationOrder(order);
+    this.gamesService.setPaginationOrder(orderType);
     this.loadGames();
     if (this.pagination) this.pagination.currentPage = 1;
   }
@@ -63,9 +72,9 @@ export class GamesListComponent implements OnInit {
   }
 
   getSortingType() {
-    switch (this.gamesService.getPaginationParams().orderBy) {
-      case 'za': return 'Z&ensp;<i class="bi bi-arrow-right"></i>&ensp;A';
-      default:   return 'A&ensp;<i class="bi bi-arrow-right"></i>&ensp;Z';
+    switch (this.gamesService.getPaginationParams().orderType) {
+      case OrderType.ZA: return 'Z&ensp;<i class="bi bi-arrow-right"></i>&ensp;A';
+      default:           return 'A&ensp;<i class="bi bi-arrow-right"></i>&ensp;Z';
     }
   }
   

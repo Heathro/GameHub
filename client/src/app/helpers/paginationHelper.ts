@@ -10,7 +10,7 @@ export function getPaginationHeaders(paginationParams: PaginationParams) {
 
   params = params.append('currentPage', paginationParams.currentPage);
   params = params.append('itemsPerPage', paginationParams.itemsPerPage);
-  params = params.append('orderBy', paginationParams.orderBy);
+  params = params.append('orderType', paginationParams.orderType);
 
   return params;
 }
