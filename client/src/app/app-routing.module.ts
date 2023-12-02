@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { HomeComponent } from './components/basic/home/home.component';
-import { StoreComponent } from './components/games/store/store.component';
+import { GamesListComponent } from './components/games/games-list/games-list.component';
 import { LoginComponent } from './components/authorization/login/login.component';
 import { RegisterComponent } from './components/authorization/register/register.component';
 import { authGuard } from './guards/auth.guard';
@@ -29,7 +29,7 @@ const routes: Routes = [
     runGuardsAndResolvers: 'always',
     canActivate: [authGuard],
     children: [
-      { path: 'store', component: StoreComponent },
+      { path: 'games', component: GamesListComponent },
       { path: 'publish', component: PublicationComponent },
       { path: 'games/:title', component: GamePageComponent },
       { path: 'games/:title/edit', component: GameEditComponent, 

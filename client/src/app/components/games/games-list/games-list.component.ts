@@ -7,10 +7,10 @@ import { Pagination } from 'src/app/models/pagination';
 
 @Component({
   selector: 'app-store',
-  templateUrl: './store.component.html',
-  styleUrls: ['./store.component.css']
+  templateUrl: './games-list.component.html',
+  styleUrls: ['./games-list.component.css']
 })
-export class StoreComponent implements OnInit {
+export class GamesListComponent implements OnInit {
   games: Game[] = [];
   pagination: Pagination | undefined;
   filterForm: FormGroup = new FormGroup({});
