@@ -71,7 +71,7 @@ export class GamePageComponent implements OnInit {
   }
 
   checkGameOwner() {
-    if (this.game) this.isGameOwned = this.gamesService.isGameOwned(this.game);
+    if (this.game) this.isGameOwned = this.gamesService.isGamePublished(this.game);
   }
 
   checkBookmarks() {

@@ -15,7 +15,6 @@ import { HomeComponent } from './components/basic/home/home.component';
 import { RegisterComponent } from './components/authorization/register/register.component';
 import { LoginComponent } from './components/authorization/login/login.component';
 import { StoreComponent } from './components/games/store/store.component';
-import { LibraryComponent } from './components/games/library/library.component';
 import { TestErrorComponent } from './components/errors/test-error/test-error.component';
 import { NotFoundComponent } from './components/errors/not-found/not-found.component';
 import { ServerErrorComponent } from './components/errors/server-error/server-error.component';
@@ -53,7 +52,6 @@ import { PublicationComponent } from './components/games/publication/publication
     RegisterComponent,
     LoginComponent,
     StoreComponent,
-    LibraryComponent,
     TestErrorComponent,
     NotFoundComponent,
     ServerErrorComponent,

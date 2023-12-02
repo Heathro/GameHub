@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { HomeComponent } from './components/basic/home/home.component';
 import { StoreComponent } from './components/games/store/store.component';
-import { LibraryComponent } from './components/games/library/library.component';
 import { LoginComponent } from './components/authorization/login/login.component';
 import { RegisterComponent } from './components/authorization/register/register.component';
 import { authGuard } from './guards/auth.guard';
@@ -31,7 +30,6 @@ const routes: Routes = [
     canActivate: [authGuard],
     children: [
       { path: 'store', component: StoreComponent },
-      { path: 'library', component: LibraryComponent },
       { path: 'publish', component: PublicationComponent },
       { path: 'games/:title', component: GamePageComponent },
       { path: 'games/:title/edit', component: GameEditComponent, 

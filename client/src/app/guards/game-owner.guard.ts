@@ -22,7 +22,7 @@ export const gameOwnerGuard: CanActivateFn = (route, state) => {
 
       return gamesService.getGame(title).pipe(
         map(game => {
-          if (gamesService.isGameOwned(game)) {
+          if (gamesService.isGamePublished(game)) {
             return true;
           } else {
             router.navigateByUrl('/games/' + game.title);
