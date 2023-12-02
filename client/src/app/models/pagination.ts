@@ -14,11 +14,9 @@ export class PaginationParams {
   currentPage = 1;
   itemsPerPage = 4;
   orderBy = 'az';
-  category = 'all';
 
-  constructor(itemsPerPage: number, orderBy: string, category: string) {
+  constructor(itemsPerPage: number, orderBy: string) {
     this.itemsPerPage = itemsPerPage;
     this.orderBy = orderBy;
-    this.category = category;
   }
 }

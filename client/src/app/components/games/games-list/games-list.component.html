@@ -38,6 +38,21 @@
                 </div>
             </div>
 
+            <div class="mb-4" formGroupName="categories">
+                <app-checkbox-input class="d-block ms-4"
+                    [formControl]="$any(filterForm.get('categories.published'))"
+                    [label]="'My publications'"
+                ></app-checkbox-input>
+                <app-checkbox-input class="d-block ms-4"
+                    [formControl]="$any(filterForm.get('categories.bookmarked'))"
+                    [label]="'My bookmarks'"
+                ></app-checkbox-input>
+                <app-checkbox-input class="d-block ms-4"
+                    [formControl]="$any(filterForm.get('categories.liked'))"
+                    [label]="'My likes'"
+                ></app-checkbox-input>
+            </div>
+
             <div class="mb-4" formGroupName="platforms">
                 <app-checkbox-input class="d-block ms-4"
                     [formControl]="$any(filterForm.get('platforms.windows'))"

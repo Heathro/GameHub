@@ -21,7 +21,7 @@ export class GamesService {
   user: User | undefined;
 
   constructor(private http: HttpClient) {
-    this.paginationParams = new PaginationParams(4, 'az', 'all');
+    this.paginationParams = new PaginationParams(4, 'az');
   }
   
   getGames(filter: Filter) {
@@ -198,7 +198,7 @@ export class GamesService {
 
   clearPrivateData() {
     this.gamesCache = new Map();
-    this.paginationParams = new PaginationParams(4, 'az', 'all');
+    this.paginationParams = new PaginationParams(4, 'az');
     this.filter = undefined;
     this.user = undefined;
   }
@@ -206,11 +206,16 @@ export class GamesService {
   private stringifyFilter(filter: Filter): string {
     let result = "";
 
+    const categoriesKeys = Object.keys(filter.categories);
+    const categoriesValues = Object.values(filter.categories);
     const platformsKeys = Object.keys(filter.platforms);
     const platformsValues = Object.values(filter.platforms);
     const genresKeys = Object.keys(filter.genres);
     const genresValues = Object.values(filter.genres);
 
+    for (let i = 0; i < categoriesKeys.length; i++) {
+      result += '-' + categoriesKeys[i] + '-' + categoriesValues[i];
+    }
     for (let i = 0; i < platformsKeys.length; i++) {
       result += '-' + platformsKeys[i] + '-' + platformsValues[i];
     }

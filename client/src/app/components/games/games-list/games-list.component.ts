@@ -73,10 +73,15 @@ export class GamesListComponent implements OnInit {
     const filter = this.gamesService.getFilter();
 
     this.filterForm = this.formBuilder.group({
+      categories: this.formBuilder.group({
+        published: [filter && initial ? filter.categories.published : false, { nonNullable: true }],
+        bookmarked: [filter && initial ? filter.categories.bookmarked : false, { nonNullable: true }],
+        liked: [filter && initial ? filter.categories.liked : false, { nonNullable: true }]
+      }),
       platforms: this.formBuilder.group({
         windows: [filter && initial ? filter.platforms.windows : false, { nonNullable: true }],
-        macos: [filter && initial ? filter?.platforms.macos : false, { nonNullable: true }],
-        linux:  [filter && initial ? filter?.platforms.linux : false, { nonNullable: true }]
+        macos: [filter && initial ? filter.platforms.macos : false, { nonNullable: true }],
+        linux: [filter && initial ? filter.platforms.linux : false, { nonNullable: true }]
       }),
       genres: this.formBuilder.group({
         action: [filter && initial ? filter.genres.action : false, { nonNullable: true }],

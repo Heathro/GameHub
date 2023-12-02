@@ -11,5 +11,4 @@ public class PaginationParams
     }
     public int CurrentPage { get; set; } = 1;    
     public string OrderBy { get; set; } = "az";
-    public string Category { get; set; } = "all";
 }

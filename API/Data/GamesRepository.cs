@@ -32,15 +32,21 @@ public class GamesRepository : IGamesRepository
     {
         var query = _context.Games.AsQueryable();
 
-        query = paginationParams.Category switch
+        if (gameFilter.Categories.Published || 
+            gameFilter.Categories.Bookmarked || 
+            gameFilter.Categories.Liked)
         {
-            "published" => query.Where(g => g.Publication.Publisher.Id == currentUserId),
-            "bookmarked" => query
-                .Where(g => g.Bookmarks.Select(b => b.SourceUserId).Contains(currentUserId)),
-            "liked" => query
-                .Where(g => g.LikedUsers.Select(b => b.SourceUserId).Contains(currentUserId)),
-            _ => query
-        };
+            query = query.Where(g => 
+                (gameFilter.Categories.Published && 
+                    g.Publication.Publisher.Id == currentUserId) ||
+
+                (gameFilter.Categories.Bookmarked && 
+                    g.Bookmarks.Select(b => b.SourceUserId).Contains(currentUserId)) ||
+
+                (gameFilter.Categories.Liked && 
+                    g.LikedUsers.Select(b => b.SourceUserId).Contains(currentUserId))
+            );
+        }
 
         if (gameFilter.Platforms.Windows || 
             gameFilter.Platforms.Macos || 
