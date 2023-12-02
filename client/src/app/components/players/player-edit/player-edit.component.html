@@ -58,14 +58,24 @@
                     <p>{{player.created + 'Z' | date: 'd MMMM yyyy'}}</p>
                 </div>
             </div>
-            <div class="card-footer my-2">
-                <button 
-                    class="btn btn-outline-danger col-12"
-                    (click)="deleteUser()"
-                >
-                    Delete profile&nbsp;&nbsp;&nbsp;
-                    <i class="bi bi-trash3"></i>
-                </button>
+            <div class="card-footer">
+                <div class="btn-group d-flex my-2">
+
+                    <button
+                        class="btn btn-outline-info me-1"
+                        routerLink="/players/{{player.userName}}"
+                    >
+                        View&nbsp;&nbsp;&nbsp;<i class="bi bi-eye"></i>
+                    </button>
+
+                    <button
+                        class="btn btn-outline-danger"
+                        (click)="deleteUser()"
+                    >
+                        Delete&nbsp;&nbsp;&nbsp;<i class="bi bi-trash3"></i>
+                    </button>
+
+                </div>
             </div>
         </div>        
     </div>
