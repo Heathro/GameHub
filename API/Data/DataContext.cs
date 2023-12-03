@@ -25,6 +25,7 @@ public class DataContext : IdentityDbContext
     public DbSet<Bookmark> Bookmarks { get; set; }
     public DbSet<Publication> Publications { get; set; }
     public DbSet<Like> Likes { get; set; }
+    public DbSet<Review> Reviews { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -32,75 +33,84 @@ public class DataContext : IdentityDbContext
 
         modelBuilder.Entity<AppUser>()
             .HasMany(u => u.UserRoles)
-            .WithOne(u => u.User)
-            .HasForeignKey(u => u.UserId)
+            .WithOne(ur => ur.User)
+            .HasForeignKey(ur => ur.UserId)
             .IsRequired();
 
         modelBuilder.Entity<AppRole>()
             .HasMany(r => r.UserRoles)
-            .WithOne(r => r.Role)
-            .HasForeignKey(r => r.RoleId)
+            .WithOne(ur => ur.Role)
+            .HasForeignKey(ur => ur.RoleId)
             .IsRequired();
 
         modelBuilder.Entity<Friendship>()
             .HasKey(f => new {f.InviterId, f.InviteeId, f.Status});
         modelBuilder.Entity<Friendship>()
             .HasOne(f => f.Inviter)
-            .WithMany(f => f.Invitees)
+            .WithMany(u => u.Invitees)
             .HasForeignKey(f => f.InviterId)
             .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<Friendship>()
             .HasOne(f => f.Invitee)
-            .WithMany(f => f.Inviters)
+            .WithMany(u => u.Inviters)
             .HasForeignKey(f => f.InviteeId)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Message>()
             .HasOne(m => m.Recipient)
-            .WithMany(m => m.MessagesReceived)
+            .WithMany(u => u.MessagesReceived)
             .OnDelete(DeleteBehavior.Restrict);
         modelBuilder.Entity<Message>()
             .HasOne(m => m.Sender)
-            .WithMany(m => m.MessagesSent)
+            .WithMany(u => u.MessagesSent)
             .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Publication>()
             .HasKey(p => new {p.PublisherId, p.TitleId});
         modelBuilder.Entity<Publication>()
             .HasOne(p => p.Publisher)
-            .WithMany(p => p.Publications)
+            .WithMany(u => u.Publications)
             .HasForeignKey(p => p.PublisherId)
             .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<Publication>()
             .HasOne(p => p.Title)
-            .WithOne(p => p.Publication)
+            .WithOne(g => g.Publication)
             .HasForeignKey<Publication>(p => p.TitleId)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Bookmark>()
-            .HasKey(l => new {l.SourceUserId, l.TargetGameId});
+            .HasKey(b => new {b.SourceUserId, b.TargetGameId});
         modelBuilder.Entity<Bookmark>()
-            .HasOne(l => l.SourceUser)
-            .WithMany(l => l.Bookmarks)
-            .HasForeignKey(l => l.SourceUserId)
+            .HasOne(b => b.SourceUser)
+            .WithMany(u => u.Bookmarks)
+            .HasForeignKey(b => b.SourceUserId)
             .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<Bookmark>()
-            .HasOne(l => l.TargetGame)
-            .WithMany(l => l.Bookmarks)
-            .HasForeignKey(l => l.TargetGameId)
+            .HasOne(b => b.TargetGame)
+            .WithMany(g => g.Bookmarks)
+            .HasForeignKey(b => b.TargetGameId)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Like>()
             .HasKey(l => new {l.SourceUserId, l.TargetGameId});
         modelBuilder.Entity<Like>()
             .HasOne(l => l.SourceUser)
-            .WithMany(l => l.LikedGames)
+            .WithMany(u => u.LikedGames)
             .HasForeignKey(l => l.SourceUserId)
             .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<Like>()
             .HasOne(l => l.TargetGame)
-            .WithMany(l => l.LikedUsers)
+            .WithMany(g => g.LikedUsers)
             .HasForeignKey(l => l.TargetGameId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Review>()
+            .HasOne(r => r.Reviewer)
+            .WithMany(u => u.Reviews)
+            .OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<Review>()
+            .HasOne(r => r.Game)
+            .WithMany(g => g.Reviews)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

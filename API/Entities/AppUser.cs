@@ -18,5 +18,6 @@ public class AppUser : IdentityUser<int>
     public List<Friendship> Invitees { get; set; } = new();
     public List<Message> MessagesSent { get; set; } = new();
     public List<Message> MessagesReceived { get; set; } = new();
+    public List<Review> Reviews { get; set; } = new();
     public List<AppUserRole> UserRoles { get; set; } = new();
 }

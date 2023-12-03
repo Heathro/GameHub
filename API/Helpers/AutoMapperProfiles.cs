@@ -37,5 +37,9 @@ public class AutoMapperProfiles : Profile
         CreateMap<Message, MessageDto>()
             .ForMember(d => d.SenderAvatar, o => o.MapFrom(s => s.Sender.Avatar))
             .ForMember(d => d.RecipientAvatar, o => o.MapFrom(s => s.Recipient.Avatar));
+
+        CreateMap<Review, ReviewDto>()
+            .ForMember(d => d.ReviewerAvatar, o => o.MapFrom(s => s.Reviewer.Avatar))
+            .ForMember(d => d.GamePoster, o => o.MapFrom(s => s.Game.Poster));
     }
 }

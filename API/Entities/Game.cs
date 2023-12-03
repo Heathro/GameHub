@@ -12,4 +12,5 @@ public class Game
     public List<Bookmark> Bookmarks { get; set; } = new();
     public List<Screenshot> Screenshots { get; set; } = new();
     public List<Like> LikedUsers { get; set; } = new();
+    public List<Review> Reviews { get; set; } = new();
 }
