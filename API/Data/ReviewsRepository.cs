@@ -1,22 +1,37 @@
-﻿using API.Entities;
+﻿using API.Data;
+using API.Entities;
 using API.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace API;
 
 public class ReviewsRepository : IReviewsRepository
 {
-    public void AddReview(Review message)
+    private readonly DataContext _context;
+
+    public ReviewsRepository(DataContext context)
     {
-        throw new NotImplementedException();
+        _context = context;
     }
 
-    public void DeleteReview(Review message)
+    public void AddReview(Review review)
     {
-        throw new NotImplementedException();
+        _context.Reviews.Add(review);
     }
 
-    public Task<bool> SaveAllAsync()
+    public void DeleteReview(Review review)
     {
-        throw new NotImplementedException();
+        _context.Reviews.Remove(review);
+    }
+
+    public async Task<Review> GetReviewAsync(int reviewerId, int gameId)
+    {
+        return await _context.Reviews
+            .SingleOrDefaultAsync(r => r.ReviewerId == reviewerId && r.GameId == gameId);
+    }
+
+    public async Task<bool> SaveAllAsync()
+    {
+        return await _context.SaveChangesAsync() > 0;
     }
 }
