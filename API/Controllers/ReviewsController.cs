@@ -4,6 +4,7 @@ using API.DTOs;
 using API.Entities;
 using API.Extensions;
 using API.Interfaces;
+using API.Helpers;
 
 namespace API.Controllers;
 
@@ -57,5 +58,21 @@ public class ReviewsController : BaseApiController
         if (await _reviewsRepository.SaveAllAsync()) return Ok(_mapper.Map<ReviewDto>(review));
 
         return BadRequest("Failed to create review");
+    }
+
+    [HttpGet("{gameId}")]
+    public async Task<ActionResult<PagedList<GameDto>>> GetReviewsForGame(
+        [FromQuery]PaginationParams paginationParams, int gameId)
+    {
+        var reviews = await _reviewsRepository.GetReviewsForGame(paginationParams, gameId);
+
+        Response.AddPaginationHeader(new PaginationHeader(
+            reviews.CurrentPage,
+            reviews.ItemsPerPage,
+            reviews.TotalItems,
+            reviews.TotalPages
+        ));
+
+        return Ok(reviews);
     }
 }

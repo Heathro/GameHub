@@ -3,5 +3,7 @@
 public enum OrderType
 {
     AZ,
-    ZA
+    ZA,
+    Newest,
+    Oldest
 }
