@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { PlayersService } from 'src/app/services/players.service';
-import { Pagination } from 'src/app/models/pagination';
+import { Pagination } from 'src/app/helpers/pagination';
 import { Player } from 'src/app/models/player';
 import { OrderType } from 'src/app/helpers/orderType';
 
@@ -35,11 +35,11 @@ export class PlayersListComponent implements OnInit {
   }
 
   sortAZ() {
-    this.sortPlayers(OrderType.AZ);
+    this.sortPlayers(OrderType.az);
   }
 
   sortZA() {
-    this.sortPlayers(OrderType.ZA);
+    this.sortPlayers(OrderType.za);
   }
 
   sortPlayers(orderType: OrderType) {
@@ -58,7 +58,7 @@ export class PlayersListComponent implements OnInit {
 
   getSortingType() {
     switch (this.playersService.getPaginationParams().orderType) {
-      case OrderType.ZA: return 'Z&ensp;<i class="bi bi-arrow-right"></i>&ensp;A';
+      case OrderType.za: return 'Z&ensp;<i class="bi bi-arrow-right"></i>&ensp;A';
       default:           return 'A&ensp;<i class="bi bi-arrow-right"></i>&ensp;Z';
     }
   }

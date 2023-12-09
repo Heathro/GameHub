@@ -1,4 +1,4 @@
-import { OrderType } from "../helpers/orderType";
+import { OrderType } from "./orderType";
 
 export interface Pagination {
   currentPage: number;
@@ -15,7 +15,7 @@ export class PaginatedResult<T> {
 export class PaginationParams {
   currentPage = 1;
   itemsPerPage = 4;
-  orderType = OrderType.AZ;
+  orderType = OrderType.az;
 
   constructor(itemsPerPage: number, orderType: OrderType) {
     this.itemsPerPage = itemsPerPage;

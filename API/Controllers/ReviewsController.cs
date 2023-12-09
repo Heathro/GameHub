@@ -59,6 +59,23 @@ public class ReviewsController : BaseApiController
 
         return BadRequest("Failed to create review");
     }
+    
+
+    [HttpGet("list")]
+    public async Task<ActionResult<PagedList<GameDto>>> GetAllReviews(
+        [FromQuery]PaginationParams paginationParams)
+    {
+        var reviews = await _reviewsRepository.GetAllReviews(paginationParams);
+
+        Response.AddPaginationHeader(new PaginationHeader(
+            reviews.CurrentPage,
+            reviews.ItemsPerPage,
+            reviews.TotalItems,
+            reviews.TotalPages
+        ));
+
+        return Ok(reviews);
+    }
 
     [HttpGet("{gameId}")]
     public async Task<ActionResult<PagedList<GameDto>>> GetReviewsForGame(

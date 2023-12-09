@@ -36,11 +36,28 @@ public class ReviewsRepository : IReviewsRepository
             .SingleOrDefaultAsync(r => r.ReviewerId == reviewerId && r.GameId == gameId);
     }
 
-    public async Task<PagedList<ReviewDto>> GetReviewsForGame(
-        PaginationParams paginationParams, int gameId)
+    public async Task<PagedList<ReviewDto>> GetAllReviews(PaginationParams paginationParams)
+    {
+        var query = _context.Reviews.AsQueryable();
+        
+        query = paginationParams.OrderType switch
+        {
+            OrderType.Oldest => query.OrderBy(r => r.ReviewPosted),
+            _ => query.OrderByDescending(r => r.ReviewPosted)
+        };
+
+        return await PagedList<ReviewDto>.CreateAsync
+        (
+            query.AsNoTracking().ProjectTo<ReviewDto>(_mapper.ConfigurationProvider),
+            paginationParams.CurrentPage,
+            paginationParams.ItemsPerPage
+        );
+    }
+
+    public async Task<PagedList<ReviewDto>> GetReviewsForGame(PaginationParams paginationParams, int gameId)
     {
         var query = _context.Reviews.Where(r => r.GameId == gameId);
-
+        
         query = paginationParams.OrderType switch
         {
             OrderType.Oldest => query.OrderBy(r => r.ReviewPosted),

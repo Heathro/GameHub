@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { AdminService } from 'src/app/services/admin.service';
-import { Pagination } from 'src/app/models/pagination';
+import { Pagination } from 'src/app/helpers/pagination';
 import { User } from 'src/app/models/user';
 
 @Component({

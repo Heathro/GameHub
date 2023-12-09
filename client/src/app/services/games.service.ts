@@ -5,7 +5,7 @@ import { map, of } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 import { getFilteredPaginatedResult, getPaginationHeaders } from '../helpers/paginationHelper';
-import { PaginationParams } from '../models/pagination';
+import { PaginationParams } from '../helpers/pagination';
 import { Game } from '../models/game';
 import { Filter } from '../models/filter';
 import { User } from '../models/user';
@@ -22,7 +22,7 @@ export class GamesService {
   user: User | undefined;
 
   constructor(private http: HttpClient) {
-    this.paginationParams = new PaginationParams(4, OrderType.AZ);
+    this.paginationParams = new PaginationParams(4, OrderType.az);
   }
   
   getGames(filter: Filter) {
@@ -199,7 +199,7 @@ export class GamesService {
 
   clearPrivateData() {
     this.gamesCache = new Map();
-    this.paginationParams = new PaginationParams(4, OrderType.AZ);
+    this.paginationParams = new PaginationParams(4, OrderType.az);
     this.filter = undefined;
     this.user = undefined;
   }

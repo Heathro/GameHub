@@ -5,7 +5,7 @@ import { map, of } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 import { getPaginatedResult, getPaginationHeaders } from '../helpers/paginationHelper';
-import { PaginationParams } from '../models/pagination';
+import { PaginationParams } from '../helpers/pagination';
 import { User } from '../models/user';
 import { OrderType } from '../helpers/orderType';
 
@@ -66,6 +66,6 @@ export class AdminService {
   }
 
   private initializePaginationParams() {
-    return new PaginationParams(7, OrderType.AZ);
+    return new PaginationParams(7, OrderType.az);
   }
 }

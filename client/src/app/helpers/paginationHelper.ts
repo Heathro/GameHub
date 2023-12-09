@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from "@angular/common/http";
 
 import { map } from "rxjs";
 
-import { PaginatedResult, PaginationParams } from "../models/pagination";
+import { PaginatedResult, PaginationParams } from "./pagination";
 import { Filter } from "../models/filter";
 
 export function getPaginationHeaders(paginationParams: PaginationParams) {

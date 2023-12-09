@@ -1,4 +1,6 @@
 export enum OrderType {
-	AZ,
-	ZA
+	az,
+	za,
+    newest,
+    oldest
 }
