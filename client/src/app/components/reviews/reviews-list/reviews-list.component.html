@@ -1,0 +1,66 @@
+<div class="row">
+
+    <div class="card mb-2 col-2">
+        
+        <div class="my-4">
+            <div class="dropdown row" dropdown>
+                <button 
+                    type="button"
+                    class="btn btn-info col-8 mx-auto"
+                    dropdownToggle
+                    [innerHTML]="getSortingType()"
+                ></button>
+                <div class="dropdown-menu dropdown-menu-right col-8" *dropdownMenu>
+                    <a 
+                        class="dropdown-item text-center"
+                        (click)="sortNewest()"
+                    >
+                        <i class="bi bi-hourglass"></i>
+                        &nbsp;
+                        <i class="bi bi-arrow-right"></i>
+                        &nbsp;
+                        <i class="bi bi-hourglass-split"></i>
+                    </a>
+                    <a
+                        class="dropdown-item text-center" 
+                        (click)="sortOldest()"
+                    >
+                        <i class="bi bi-hourglass-split"></i>
+                        &nbsp;
+                        <i class="bi bi-arrow-right"></i>
+                        &nbsp;
+                        <i class="bi bi-hourglass"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    
+    <div class="col-10">
+        <div *ngIf="!loading && reviews.length !== 0">
+            <div *ngFor="let review of reviews">
+                <app-review [review]="review"></app-review>
+            </div>
+        </div>
+        <div [hidden]="loading" *ngIf="reviews.length === 0">
+            <h5 class="text-center mt-4">No reviews found</h5>
+        </div>
+    </div>
+
+</div>
+
+<div class="d-flex justify-content-center mt-4" *ngIf="!loading && reviews.length !== 0 && pagination">
+    <pagination
+        [boundaryLinks]="true"
+        [totalItems]="pagination.totalItems"
+        [itemsPerPage]="pagination.itemsPerPage"
+        [maxSize]="10"
+        [(ngModel)]="pagination.currentPage"
+        (pageChanged)="pageChanged($event)"
+        previousText="&lsaquo;"
+        nextText="&rsaquo;"
+        firstText="&laquo;"
+        lastText="&raquo;"> 
+    </pagination>
+</div>

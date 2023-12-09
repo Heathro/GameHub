@@ -67,6 +67,6 @@ export class ReviewsService {
   }
 
   private initializePaginationParams() {
-    return new PaginationParams(3, OrderType.newest);
+    return new PaginationParams(5, OrderType.newest);
   }
 }

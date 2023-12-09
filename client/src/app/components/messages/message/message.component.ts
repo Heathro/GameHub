@@ -90,7 +90,7 @@ export class MessageComponent implements OnInit {
       return 'H:mm';
     }
     else if (differenceInDays < 7) {
-      return 'EEEE H:mm'
+      return 'EEEE H:mm';
     }
     else {
       return 'E, d MMM H:mm';

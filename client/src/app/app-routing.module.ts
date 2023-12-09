@@ -22,6 +22,7 @@ import { AdminPanelComponent } from './components/admin/admin-panel/admin-panel.
 import { FriendsPanelComponent } from './components/players/friends-panel/friends-panel.component';
 import { PublicationComponent } from './components/games/publication/publication.component';
 import { gameOwnerGuard } from './guards/game-owner.guard';
+import { ReviewsListComponent } from './components/reviews/reviews-list/reviews-list.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -35,6 +36,7 @@ const routes: Routes = [
       { path: 'games/:title/edit', component: GameEditComponent, 
         canActivate: [gameOwnerGuard], canDeactivate: [unsavedChangesGuard] 
       },
+      { path: 'reviews', component: ReviewsListComponent },
       { path: 'friends', component: FriendsPanelComponent },
       { path: 'players', component: PlayersListComponent },
       { path: 'players/:username', component: PlayerProfileComponent },
