@@ -1,0 +1,50 @@
+<div class="container col-8" *ngIf="game">
+
+    <h2 class="text-center text-info mb-4">Review Game</h2>
+
+    <div class="row mb-4">
+        <div class="col-6">
+            <img 
+                src="{{game.poster.url || './assets/poster.png'}}"
+                alt="{{game.title}}"
+                class="card-img-top img-thumbnail"
+            >
+        </div>
+        <div class="col-6">
+            <h3 class="mb-4 text-end">{{game.title}}</h3>
+            <h5 class="my-4 text-end">
+                <i class="bi bi-windows me-3" *ngIf="game.platforms.windows"></i>
+                <i class="bi bi-apple me-3" *ngIf="game.platforms.macos"></i>
+                <i class="bi bi-ubuntu me-3" *ngIf="game.platforms.linux"></i>
+            </h5>
+        </div>
+    </div>
+
+    <form [formGroup]="reviewForm" (ngSubmit)="reviewForm.valid && postReview()" autocomplete="off">
+
+        <app-textarea-input 
+            [formControl]="$any(reviewForm.get('content'))"
+            [placeholder]="'Your review here...'"
+            [rows]="'7'"
+        ></app-textarea-input>
+
+        <div class="row ms-4 mb-4" *ngIf="validationErrors">
+            <ul class="text-danger">
+                <li *ngFor="let error of validationErrors">
+                    {{error}}
+                </li>
+            </ul>
+        </div>
+
+        <div class="row">
+            <button
+                class="btn btn-outline-success mt-4 col-4 mx-auto"
+                type="submit"
+                [disabled]="!reviewForm.valid || posting"
+                >Post&nbsp;&nbsp;&nbsp;
+                <i class="bi bi-rocket-takeoff"></i>
+            </button>
+        </div>
+
+    </form>
+</div>

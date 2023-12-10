@@ -40,8 +40,8 @@ export class ReviewsService {
     return getPaginatedResult<Review[]>(this.baseUrl + 'reviews/' + gameId, params, this.http);
   }
 
-  postReview(gameId: number, content: string) {
-    const reviewDto = { gameTitle: gameId, content };
+  postReview(title: string, content: string) {
+    const reviewDto = { gameTitle: title, content };
     return this.http.post<Review>(this.baseUrl + 'reviews/new', reviewDto);
   }
 

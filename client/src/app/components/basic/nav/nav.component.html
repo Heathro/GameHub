@@ -38,9 +38,15 @@
                 {{user.userName}}
             </a>
             <div class="dropdown-menu" *dropdownMenu>
-                <a class="dropdown-item" routerLink="/edit-profile">Edit Profile</a>
-                <a class="dropdown-item" routerLink="/publish">Publish Game</a>
-                <a class="dropdown-item" (click)="logout()">Logout</a>
+                <a class="dropdown-item" routerLink="/edit-profile">
+                    Edit Profile&nbsp;&nbsp;&nbsp;<i class="bi bi-pencil"></i>
+                </a>
+                <a class="dropdown-item" routerLink="/publish">
+                    Publish Game&nbsp;&nbsp;&nbsp;<i class="bi bi-rocket-takeoff"></i>
+                </a>
+                <a class="dropdown-item" (click)="logout()">
+                    Logout&nbsp;&nbsp;&nbsp;<i class="bi bi-door-open"></i>
+                </a>
             </div>
         </div>
 

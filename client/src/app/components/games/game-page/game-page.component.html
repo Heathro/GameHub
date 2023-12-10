@@ -91,6 +91,13 @@
                     >
                         Edit Game&nbsp;&nbsp;&nbsp;<i class="bi bi-pencil"></i>
                     </button>
+                    
+                    <button *ngIf="!isPublished"
+                        class="btn btn-outline-info"
+                        routerLink="/reviews/{{game.title}}"
+                    >
+                        Review Game&nbsp;&nbsp;&nbsp;<i class="bi bi-feather"></i>
+                    </button>
 
                 </div>
             </div>

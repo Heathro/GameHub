@@ -45,6 +45,7 @@ import { GameCardMiniComponent } from './components/games/game-card-mini/game-ca
 import { PublicationComponent } from './components/games/publication/publication.component';
 import { ReviewsListComponent } from './components/reviews/reviews-list/reviews-list.component';
 import { ReviewComponent } from './components/reviews/review/review.component';
+import { PostReviewComponent } from './components/reviews/post-review/post-review.component';
 
 @NgModule({
   declarations: [
@@ -83,7 +84,8 @@ import { ReviewComponent } from './components/reviews/review/review.component';
     GameCardMiniComponent,
     PublicationComponent,
     ReviewsListComponent,
-    ReviewComponent
+    ReviewComponent,
+    PostReviewComponent
   ],
   imports: [
     BrowserModule,

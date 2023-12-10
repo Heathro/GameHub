@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { GamesService } from 'src/app/services/games.service';
@@ -48,7 +48,9 @@ export class PublicationComponent implements OnInit {
         this.alphaNumericSpaceColon(),
         Validators.maxLength(32)
       ]],
-      description: '',
+      description: ['', [
+        Validators.maxLength(800)
+      ]],
       platforms: this.formBuilder.group({
         windows: false,
         macos: false,
