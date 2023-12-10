@@ -33,6 +33,8 @@ public class ReviewsRepository : IReviewsRepository
     public async Task<Review> GetReviewAsync(int reviewerId, int gameId)
     {
         return await _context.Reviews
+            .Include(r => r.Reviewer).ThenInclude(u => u.Avatar)
+            .Include(r => r.Game).ThenInclude(g => g.Poster)
             .SingleOrDefaultAsync(r => r.ReviewerId == reviewerId && r.GameId == gameId);
     }
 

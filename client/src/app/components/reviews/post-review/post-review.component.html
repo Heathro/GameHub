@@ -1,21 +1,22 @@
-<div class="container col-8" *ngIf="game">
+<div class="container col-8" *ngIf="reviewPost">
 
-    <h2 class="text-center text-info mb-4">Review Game</h2>
+    <h2 class="text-center text-info mb-4" *ngIf="!reviewPost.posted">Review Game</h2>
+    <h2 class="text-center text-info mb-4" *ngIf="reviewPost.posted">Edit Review</h2>
 
     <div class="row mb-4">
         <div class="col-5">
             <img 
-                src="{{game.poster.url || './assets/poster.png'}}"
-                alt="{{game.title}}"
+                src="{{reviewPost.game.poster.url || './assets/poster.png'}}"
+                alt="{{reviewPost.game.title}}"
                 class="card-img-top img-thumbnail"
             >
         </div>
         <div class="col-7">
-            <h3 class="m-3 m text-end">{{game.title}}</h3>
+            <h3 class="m-3 m text-end">{{reviewPost.game.title}}</h3>
             <h5 class="my-3 text-end">
-                <i class="bi bi-windows me-3" *ngIf="game.platforms.windows"></i>
-                <i class="bi bi-apple me-3" *ngIf="game.platforms.macos"></i>
-                <i class="bi bi-ubuntu me-3" *ngIf="game.platforms.linux"></i>
+                <i class="bi bi-windows me-3" *ngIf="reviewPost.game.platforms.windows"></i>
+                <i class="bi bi-apple me-3" *ngIf="reviewPost.game.platforms.macos"></i>
+                <i class="bi bi-ubuntu me-3" *ngIf="reviewPost.game.platforms.linux"></i>
             </h5>
         </div>
     </div>
@@ -38,11 +39,21 @@
 
         <div class="row">
             <button
+                *ngIf="!reviewPost.posted"
                 class="btn btn-outline-success mt-4 col-4 mx-auto"
                 type="submit"
-                [disabled]="!reviewForm.valid || posting"
+                [disabled]="!isDirty() || !reviewForm.valid || posting"
                 >Post&nbsp;&nbsp;&nbsp;
                 <i class="bi bi-feather"></i>
+            </button>
+
+            <button
+                *ngIf="reviewPost.posted"
+                class="btn btn-outline-info mt-4 col-4 mx-auto"
+                type="submit"
+                [disabled]="!isDirty() || !reviewForm.valid || posting"
+                >Edit&nbsp;&nbsp;&nbsp;
+                <i class="bi bi-pencil"></i>
             </button>
         </div>
 

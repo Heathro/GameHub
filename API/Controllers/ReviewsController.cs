@@ -26,17 +26,15 @@ public class ReviewsController : BaseApiController
 
     [HttpPost("new")]
     public async Task<ActionResult<ReviewDto>> CreateReview(CreateReviewDto createReviewDto)
-    {
-        var username = User.GetUsername();
-        var userId = User.GetUserId();
-
-        var reviewer = await _usersRepository.GetUserByUsernameAsync(username);
+    {        
         var game = await _gamesRepository.GetGameByTitleAsync(createReviewDto.GameTitle);
-
         if (game == null) return NotFound();
 
-        var review = await _reviewsRepository.GetReviewAsync(userId, game.Id);
+        var username = User.GetUsername();
+        var userId = User.GetUserId();
+        var reviewer = await _usersRepository.GetUserByUsernameAsync(username);
 
+        var review = await _reviewsRepository.GetReviewAsync(userId, game.Id);
         if (review != null)
         {
             return BadRequest("You already reviewed this game");
@@ -62,7 +60,7 @@ public class ReviewsController : BaseApiController
     
 
     [HttpGet("list")]
-    public async Task<ActionResult<PagedList<GameDto>>> GetAllReviews(
+    public async Task<ActionResult<PagedList<ReviewDto>>> GetAllReviews(
         [FromQuery]PaginationParams paginationParams)
     {
         var reviews = await _reviewsRepository.GetAllReviews(paginationParams);
@@ -77,10 +75,13 @@ public class ReviewsController : BaseApiController
         return Ok(reviews);
     }
 
-    [HttpGet("{gameId}")]
-    public async Task<ActionResult<PagedList<GameDto>>> GetReviewsForGame(
+    [HttpGet("for-game/{gameId}")]
+    public async Task<ActionResult<PagedList<ReviewDto>>> GetReviewsForGame(
         [FromQuery]PaginationParams paginationParams, int gameId)
-    {
+    {        
+        var game = await _gamesRepository.GetGameByIdAsync(gameId);
+        if (game == null) return NotFound();
+
         var reviews = await _reviewsRepository.GetReviewsForGame(paginationParams, gameId);
 
         Response.AddPaginationHeader(new PaginationHeader(
@@ -91,5 +92,21 @@ public class ReviewsController : BaseApiController
         ));
 
         return Ok(reviews);
+    }
+
+    [HttpGet("for-player/{title}")]
+    public async Task<ActionResult<ReviewPostDto>> GetReview(string title)
+    {
+        var game = await _gamesRepository.GetGameAsync(title);
+        if (game == null) return NotFound();
+
+        var review = await _reviewsRepository.GetReviewAsync(User.GetUserId(), game.Id);
+
+        return Ok(new ReviewPostDto
+        {
+            Posted = review != null,
+            Game = game,
+            Content = review == null ? "" : review.Content
+        });
     }
 }

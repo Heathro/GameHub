@@ -5,9 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 
 import { EditComponent } from 'src/app/interfaces/edit-component';
-import { GamesService } from 'src/app/services/games.service';
 import { ReviewsService } from 'src/app/services/reviews.service';
-import { Game } from 'src/app/models/game';
+import { ReviewPost } from 'src/app/models/reviewPost';
 
 @Component({
   selector: 'app-post-review',
@@ -20,13 +19,13 @@ export class PostReviewComponent implements OnInit, EditComponent {
   }
   reviewForm: FormGroup = new FormGroup({});
   validationErrors: string[] | undefined;
-  game: Game | undefined;
+  reviewPost: ReviewPost | undefined;
+  initialContent = "";
   posting = false;
   posted = false;
 
   constructor(
-    private reviewsService: ReviewsService, 
-    private gamesService: GamesService,
+    private reviewsService: ReviewsService,
     private route: ActivatedRoute,
     private router: Router, 
     private toastr: ToastrService, 
@@ -37,46 +36,48 @@ export class PostReviewComponent implements OnInit, EditComponent {
     if (this.posted) return false;
 
     const content: string = this.reviewForm.value.content;
+    if (this.initialContent === content) return false;
     return content.length > 0 && !/^[ \t\n]*$/.test(content);
   }
 
   ngOnInit(): void {
-    this.loadGame();
+    this.loadReview();
   }
 
-  loadGame() {
+  loadReview() {
     const title = this.route.snapshot.paramMap.get('title');
     if (!title) return;
-    this.gamesService.getGame(title).subscribe({
-      next: game => {
-        if (!game) this.router.navigateByUrl('/not-found');
-        this.game = game;
+    this.reviewsService.getReview(title).subscribe({
+      next: reviewPost => {
+        this.reviewPost = reviewPost;
+        this.initialContent = this.reviewPost.content;
         this.initializeFrom();
       }
     });
   }
 
   postReview() {
-    if (!this.game) return;
+    if (!this.reviewPost) return;
     this.posting = true;
-    this.reviewsService.postReview(this.game.title, this.reviewForm.value.content).subscribe({
+    this.reviewsService.postReview(this.reviewPost.game.title, this.reviewForm.value.content).subscribe({
       next: () => {
-        this.router.navigateByUrl('/games/' + this.game?.title);
+        this.router.navigateByUrl('/games/' + this.reviewPost?.game.title);
         this.toastr.success('Review successful');
         this.posting = false;
         this.posted = true;
       },
       error: error => {
         this.validationErrors = error;
-        this.posting = false;        
+        this.posting = false;
         this.posted = true;
       }
     });
   }
 
   initializeFrom() {
+    if (!this.reviewPost) return;
     this.reviewForm = this.formBuilder.group({
-      content: ['', [
+      content: [this.reviewPost.content, [
         Validators.required,        
         Validators.maxLength(800),
         this.onlyWhiteSpace()

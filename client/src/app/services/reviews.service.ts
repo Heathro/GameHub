@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
+import { map, of } from 'rxjs';
+
 import { environment } from 'src/environments/environment';
 import { PaginationParams } from '../helpers/pagination';
-import { OrderType } from '../helpers/orderType';
 import { getPaginatedResult, getPaginationHeaders } from '../helpers/paginationHelper';
+import { OrderType } from '../helpers/orderType';
 import { Review } from '../models/review';
-import { map, of } from 'rxjs';
+import { ReviewPost } from '../models/reviewPost';
 
 @Injectable({
   providedIn: 'root'
@@ -37,7 +39,11 @@ export class ReviewsService {
 
   getReviewsForGame(gameId: number) {
     let params = getPaginationHeaders(this.paginationParams);
-    return getPaginatedResult<Review[]>(this.baseUrl + 'reviews/' + gameId, params, this.http);
+    return getPaginatedResult<Review[]>(this.baseUrl + 'reviews/for-game/' + gameId, params, this.http);
+  }
+
+  getReview(title: string) {
+    return this.http.get<ReviewPost>(this.baseUrl + 'reviews/for-player/' + title);
   }
 
   postReview(title: string, content: string) {
