@@ -37,21 +37,22 @@ public class ReviewsController : BaseApiController
         var review = await _reviewsRepository.GetReviewAsync(userId, game.Id);
         if (review != null)
         {
-            return BadRequest("You already reviewed this game");
+            review.Content = createReviewDto.Content;
         }
-
-        review = new Review
+        else
         {
-            ReviewerId = userId,
-            ReviewerUsername = username,
-            Reviewer = reviewer,
-            GameId = game.Id,
-            GameTitle = game.Title,
-            Game = game,
-            Content = createReviewDto.Content
-        };
-
-        _reviewsRepository.AddReview(review);
+            review = new Review
+            {
+                ReviewerId = userId,
+                ReviewerUsername = username,
+                Reviewer = reviewer,
+                GameId = game.Id,
+                GameTitle = game.Title,
+                Game = game,
+                Content = createReviewDto.Content
+            };
+            _reviewsRepository.AddReview(review);
+        }
 
         if (await _reviewsRepository.SaveAllAsync()) return Ok(_mapper.Map<ReviewDto>(review));
 
