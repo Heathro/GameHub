@@ -1,6 +1,15 @@
-<textarea
-    class="form-control"
-    [formControl]="control"
-    rows={{rows}}
-    placeholder={{placeholder}}
-></textarea>
+<div class="mb-3">
+    <textarea
+        class="form-control"
+        [formControl]="control"
+        rows={{rows}}
+        placeholder={{placeholder}}
+    ></textarea>
+
+    <div 
+        class="invalid-feedback" 
+        *ngIf="!control.errors?.['onlyWhiteSpace']"
+    >
+        Review cannot be empty
+    </div>
+</div>

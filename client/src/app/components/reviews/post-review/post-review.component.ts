@@ -1,5 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { ToastrService } from 'ngx-toastr';
@@ -37,7 +37,7 @@ export class PostReviewComponent implements OnInit, EditComponent {
     if (this.posted) return false;
 
     const content: string = this.reviewForm.value.content;
-    return content.length > 0;
+    return content.length > 0 && !/^[ \t\n]*$/.test(content);
   }
 
   ngOnInit(): void {
@@ -78,8 +78,15 @@ export class PostReviewComponent implements OnInit, EditComponent {
     this.reviewForm = this.formBuilder.group({
       content: ['', [
         Validators.required,        
-        Validators.maxLength(800)
+        Validators.maxLength(800),
+        this.onlyWhiteSpace()
       ]]
     });
+  }
+
+  onlyWhiteSpace(): ValidatorFn {
+    return (control: AbstractControl) => {
+      return /^[ \t\n]*$/.test(control.value as string) ? {onlyWhiteSpace: true} : null;
+    }
   }
 }
