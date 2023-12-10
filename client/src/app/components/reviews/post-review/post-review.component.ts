@@ -6,7 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 
 import { EditComponent } from 'src/app/interfaces/edit-component';
 import { ReviewsService } from 'src/app/services/reviews.service';
-import { ReviewPost } from 'src/app/models/reviewPost';
+import { ReviewMenu } from 'src/app/models/reviewMenu';
 
 @Component({
   selector: 'app-post-review',
@@ -19,7 +19,7 @@ export class PostReviewComponent implements OnInit, EditComponent {
   }
   reviewForm: FormGroup = new FormGroup({});
   validationErrors: string[] | undefined;
-  reviewPost: ReviewPost | undefined;
+  reviewMenu: ReviewMenu | undefined;
   initialContent = "";
   posting = false;
   posted = false;
@@ -48,20 +48,20 @@ export class PostReviewComponent implements OnInit, EditComponent {
     const title = this.route.snapshot.paramMap.get('title');
     if (!title) return;
     this.reviewsService.getReview(title).subscribe({
-      next: reviewPost => {
-        this.reviewPost = reviewPost;
-        this.initialContent = this.reviewPost.content;
+      next: reviewMenu => {
+        this.reviewMenu = reviewMenu;
+        this.initialContent = this.reviewMenu.content;
         this.initializeFrom();
       }
     });
   }
 
   postReview() {
-    if (!this.reviewPost) return;
+    if (!this.reviewMenu) return;
     this.posting = true;
-    this.reviewsService.postReview(this.reviewPost.game.title, this.reviewForm.value.content).subscribe({
+    this.reviewsService.postReview(this.reviewMenu.game.title, this.reviewForm.value.content).subscribe({
       next: () => {
-        this.router.navigateByUrl('/games/' + this.reviewPost?.game.title);
+        this.router.navigateByUrl('/games/' + this.reviewMenu?.game.title);
         this.toastr.success('Review successful');
         this.posting = false;
         this.posted = true;
@@ -75,9 +75,9 @@ export class PostReviewComponent implements OnInit, EditComponent {
   }
 
   initializeFrom() {
-    if (!this.reviewPost) return;
+    if (!this.reviewMenu) return;
     this.reviewForm = this.formBuilder.group({
-      content: [this.reviewPost.content, [
+      content: [this.reviewMenu.content, [
         Validators.required,        
         Validators.maxLength(800),
         this.onlyWhiteSpace()

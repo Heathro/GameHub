@@ -1,6 +1,6 @@
 import { Game } from "./game";
 
-export interface ReviewPost {
+export interface ReviewMenu {
   posted: boolean;
   game: Game;
   content: string;

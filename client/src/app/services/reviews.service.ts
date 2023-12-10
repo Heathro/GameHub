@@ -8,7 +8,7 @@ import { PaginationParams } from '../helpers/pagination';
 import { getPaginatedResult, getPaginationHeaders } from '../helpers/paginationHelper';
 import { OrderType } from '../helpers/orderType';
 import { Review } from '../models/review';
-import { ReviewPost } from '../models/reviewPost';
+import { ReviewMenu } from '../models/reviewMenu';
 
 @Injectable({
   providedIn: 'root'
@@ -43,7 +43,7 @@ export class ReviewsService {
   }
 
   getReview(title: string) {
-    return this.http.get<ReviewPost>(this.baseUrl + 'reviews/for-player/' + title);
+    return this.http.get<ReviewMenu>(this.baseUrl + 'reviews/for-player/' + title);
   }
 
   postReview(title: string, content: string) {

@@ -1,6 +1,6 @@
 ﻿namespace API.DTOs;
 
-public class ReviewPostDto
+public class ReviewMenuDto
 {
     public bool Posted { get; set; }
     public GameDto Game { get; set; }

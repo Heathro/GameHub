@@ -95,14 +95,14 @@ public class ReviewsController : BaseApiController
     }
 
     [HttpGet("for-player/{title}")]
-    public async Task<ActionResult<ReviewPostDto>> GetReview(string title)
+    public async Task<ActionResult<ReviewMenuDto>> GetReview(string title)
     {
         var game = await _gamesRepository.GetGameAsync(title);
         if (game == null) return NotFound();
 
         var review = await _reviewsRepository.GetReviewAsync(User.GetUserId(), game.Id);
 
-        return Ok(new ReviewPostDto
+        return Ok(new ReviewMenuDto
         {
             Posted = review != null,
             Game = game,
