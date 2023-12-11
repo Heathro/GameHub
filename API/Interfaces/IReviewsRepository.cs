@@ -6,8 +6,8 @@ namespace API.Interfaces;
 
 public interface IReviewsRepository
 {
-    void AddReview(Review message);
-    void DeleteReview(Review message);
+    void AddReview(Review review);
+    Task DeleteReviewAsync(int reviewerId, int gameId);
     Task<Review> GetReviewAsync(int reviewerId, int gameId);
     Task<PagedList<ReviewDto>> GetAllReviews(PaginationParams paginationParams);
     Task<PagedList<ReviewDto>> GetReviewsForGame(PaginationParams paginationParams, int gameId);

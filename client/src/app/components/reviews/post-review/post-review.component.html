@@ -37,23 +37,32 @@
             </ul>
         </div>
 
-        <div class="row">
+        <div class="btn-group d-flex col-6 mt-4 mx-auto">
             <button
                 *ngIf="!reviewMenu.posted"
-                class="btn btn-outline-success mt-4 col-4 mx-auto"
+                class="btn btn-outline-success"
                 type="submit"
                 [disabled]="!isDirty() || !reviewForm.valid || posting"
-                >Post&nbsp;&nbsp;&nbsp;
-                <i class="bi bi-feather"></i>
+            >
+                Post&nbsp;&nbsp;&nbsp;<i class="bi bi-feather"></i>
             </button>
 
             <button
                 *ngIf="reviewMenu.posted"
-                class="btn btn-outline-info mt-4 col-4 mx-auto"
+                class="btn btn-outline-info"
                 type="submit"
                 [disabled]="!isDirty() || !reviewForm.valid || posting"
-                >Edit&nbsp;&nbsp;&nbsp;
-                <i class="bi bi-pencil"></i>
+            >
+                Edit&nbsp;&nbsp;&nbsp;<i class="bi bi-pencil"></i>
+            </button>
+
+            <button
+                *ngIf="reviewMenu.posted"
+                class="btn btn-outline-danger ms-1"
+                type="button"
+                (click)="deleteReview()"
+            >
+                Delete&nbsp;&nbsp;&nbsp;<i class="bi bi-pencil"></i>
             </button>
         </div>
 

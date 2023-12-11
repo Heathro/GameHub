@@ -76,7 +76,7 @@ public class ReviewsController : BaseApiController
         return Ok(reviews);
     }
 
-    [HttpGet("for-game/{gameId}")]
+    [HttpGet("game/{gameId}")]
     public async Task<ActionResult<PagedList<ReviewDto>>> GetReviewsForGame(
         [FromQuery]PaginationParams paginationParams, int gameId)
     {        
@@ -95,8 +95,8 @@ public class ReviewsController : BaseApiController
         return Ok(reviews);
     }
 
-    [HttpGet("for-player/{title}")]
-    public async Task<ActionResult<ReviewMenuDto>> GetReview(string title)
+    [HttpGet("menu/{title}")]
+    public async Task<ActionResult<ReviewMenuDto>> GetReviewMenu(string title)
     {
         var game = await _gamesRepository.GetGameAsync(title);
         if (game == null) return NotFound();
@@ -109,5 +109,15 @@ public class ReviewsController : BaseApiController
             Game = game,
             Content = review == null ? "" : review.Content
         });
+    }
+
+    [HttpDelete("delete/{gameId}")]
+    public async Task<ActionResult> DeleteUser(int gameId)
+    {
+        await _reviewsRepository.DeleteReviewAsync(User.GetUserId(), gameId);
+
+        if (await _reviewsRepository.SaveAllAsync()) return BadRequest("Failed to delete review");
+        
+        return Ok();
     }
 }

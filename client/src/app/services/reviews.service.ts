@@ -39,16 +39,20 @@ export class ReviewsService {
 
   getReviewsForGame(gameId: number) {
     let params = getPaginationHeaders(this.paginationParams);
-    return getPaginatedResult<Review[]>(this.baseUrl + 'reviews/for-game/' + gameId, params, this.http);
+    return getPaginatedResult<Review[]>(this.baseUrl + 'reviews/game/' + gameId, params, this.http);
   }
 
-  getReview(title: string) {
-    return this.http.get<ReviewMenu>(this.baseUrl + 'reviews/for-player/' + title);
+  getReviewMenu(title: string) {
+    return this.http.get<ReviewMenu>(this.baseUrl + 'reviews/menu/' + title);
   }
 
   postReview(title: string, content: string) {
     const reviewDto = { gameTitle: title, content };
     return this.http.post<Review>(this.baseUrl + 'reviews/new', reviewDto);
+  }
+
+  deleteReview(gameId: number) {
+    return this.http.delete(this.baseUrl + 'reviews/delete/' + gameId);
   }
 
   resetPagination() {

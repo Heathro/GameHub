@@ -25,9 +25,16 @@ public class ReviewsRepository : IReviewsRepository
         _context.Reviews.Add(review);
     }
 
-    public void DeleteReview(Review review)
+    public async Task DeleteReviewAsync(int reviewerId, int gameId)
     {
-        _context.Reviews.Remove(review);
+        var review = await _context.Reviews
+            .SingleOrDefaultAsync(r => r.ReviewerId == reviewerId && r.GameId == gameId);
+
+        if (review != null)
+        {
+            _context.Reviews.Remove(review);
+            await _context.SaveChangesAsync();
+        }
     }
 
     public async Task<Review> GetReviewAsync(int reviewerId, int gameId)

@@ -22,7 +22,7 @@ export class PostReviewComponent implements OnInit, EditComponent {
   reviewMenu: ReviewMenu | undefined;
   initialContent = "";
   posting = false;
-  posted = false;
+  finished = false;
 
   constructor(
     private reviewsService: ReviewsService,
@@ -33,7 +33,7 @@ export class PostReviewComponent implements OnInit, EditComponent {
   ) { }
 
   isDirty(): boolean {
-    if (this.posted) return false;
+    if (this.finished) return false;
 
     const content: string = this.reviewForm.value.content;
     if (this.initialContent === content) return false;
@@ -47,7 +47,7 @@ export class PostReviewComponent implements OnInit, EditComponent {
   loadReview() {
     const title = this.route.snapshot.paramMap.get('title');
     if (!title) return;
-    this.reviewsService.getReview(title).subscribe({
+    this.reviewsService.getReviewMenu(title).subscribe({
       next: reviewMenu => {
         this.reviewMenu = reviewMenu;
         this.initialContent = this.reviewMenu.content;
@@ -61,15 +61,31 @@ export class PostReviewComponent implements OnInit, EditComponent {
     this.posting = true;
     this.reviewsService.postReview(this.reviewMenu.game.title, this.reviewForm.value.content).subscribe({
       next: () => {
+        if (!this.reviewMenu) return;
+        this.finished = true;
+        this.posting = false;
         this.router.navigateByUrl('/games/' + this.reviewMenu?.game.title);
         this.toastr.success('Review successful');
-        this.posting = false;
-        this.posted = true;
       },
       error: error => {
-        this.validationErrors = error;
+        this.finished = true;
         this.posting = false;
-        this.posted = true;
+        this.validationErrors = error;
+      }
+    });
+  }
+
+  deleteReview() {
+    if (!this.reviewMenu) return;
+    this.reviewsService.deleteReview(this.reviewMenu.game.id).subscribe({
+      next: () => {
+        if (!this.reviewMenu) return;
+        this.finished = true;
+        this.reviewMenu.posted = false;
+        this.reviewMenu.content = "";
+        this.router.navigateByUrl('/games/' + this.reviewMenu.game.title);
+        this.toastr.success('Delete successful');
+        this.posting = false;
       }
     });
   }
