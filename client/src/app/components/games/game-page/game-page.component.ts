@@ -7,30 +7,41 @@ import { GalleryItem, GalleryModule, ImageItem } from 'ng-gallery';
 
 import { GamesService } from 'src/app/services/games.service';
 import { Game } from 'src/app/models/game';
+import { Review } from 'src/app/models/review';
+import { ReviewsService } from 'src/app/services/reviews.service';
+import { GameReviewComponent } from '../../reviews/game-review/game-review.component';
 
 @Component({
   selector: 'app-game-page',
   standalone: true,
   templateUrl: './game-page.component.html',
   styleUrls: ['./game-page.component.css'],
-  imports: [ CommonModule, TabsModule, GalleryModule, RouterModule ]
+  imports: [ CommonModule, TabsModule, GalleryModule, RouterModule, GameReviewComponent ]
 })
 export class GamePageComponent implements OnInit {
   game: Game | undefined;
   screenshots: GalleryItem[] = [];
+  reviews: Review[] = [];
   isLiked = false;
   isPublished = false;
   isBookmarked = false;
 
-  constructor(private gamesService: GamesService, private route: ActivatedRoute, private router: Router) { }
+  constructor(
+    private gamesService: GamesService,
+    private reviewsService: ReviewsService,
+    private route: ActivatedRoute, 
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
-    this.loadGame();
-  }
-
-  loadGame() {
     const title = this.route.snapshot.paramMap.get('title');
     if (!title) return;
+
+    this.loadGame(title);
+    this.loadReviews(title);
+  }
+
+  loadGame(title: string) {
     this.gamesService.getGame(title).subscribe({
       next: game => {
         if (!game) this.router.navigateByUrl('/not-found');
@@ -40,6 +51,12 @@ export class GamePageComponent implements OnInit {
         this.checkGameOwner();
         this.checkBookmarks();
       } 
+    });
+  }
+
+  loadReviews(title: string) {
+    this.reviewsService.getReviewsForGame(title).subscribe({
+      next: reviews => this.reviews = reviews
     });
   }
 

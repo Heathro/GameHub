@@ -76,40 +76,24 @@ public class ReviewsController : BaseApiController
         return Ok(reviews);
     }
 
-    [HttpGet("game/{gameId}")]
-    public async Task<ActionResult<PagedList<ReviewDto>>> GetReviewsForGame(
-        [FromQuery]PaginationParams paginationParams, int gameId)
+    [HttpGet("game/{title}")]
+    public async Task<ActionResult<IEnumerable<ReviewDto>>> GetReviewsForGame(string title)
     {        
-        var game = await _gamesRepository.GetGameByIdAsync(gameId);
+        var game = await _gamesRepository.GetGameByTitleAsync(title);
         if (game == null) return NotFound();
 
-        var reviews = await _reviewsRepository.GetReviewsForGame(paginationParams, gameId);
-
-        Response.AddPaginationHeader(new PaginationHeader(
-            reviews.CurrentPage,
-            reviews.ItemsPerPage,
-            reviews.TotalItems,
-            reviews.TotalPages
-        ));
+        var reviews = await _reviewsRepository.GetReviewsForGame(game.Id);
 
         return Ok(reviews);
     }
 
-    [HttpGet("player/{userId}")]
-    public async Task<ActionResult<PagedList<ReviewDto>>> GetReviewsForUser(
-        [FromQuery]PaginationParams paginationParams, int userId)
+    [HttpGet("player/{userName}")]
+    public async Task<ActionResult<IEnumerable<ReviewDto>>> GetReviewsForUser(string userName)
     {
-        var user = await _usersRepository.GetUserByIdAsync(userId);
+        var user = await _usersRepository.GetUserByUsernameAsync(userName);
         if (user == null) return NotFound();
 
-        var reviews = await _reviewsRepository.GetReviewsForUser(paginationParams, userId);
-
-        Response.AddPaginationHeader(new PaginationHeader(
-            reviews.CurrentPage,
-            reviews.ItemsPerPage,
-            reviews.TotalItems,
-            reviews.TotalPages
-        ));
+        var reviews = await _reviewsRepository.GetReviewsForUser(user.Id);
 
         return Ok(reviews);
     }
@@ -124,16 +108,17 @@ public class ReviewsController : BaseApiController
 
         return Ok(new ReviewMenuDto
         {
+            Id = review == null ? 0 : review.Id,
             Posted = review != null,
             Game = game,
             Content = review == null ? "" : review.Content
         });
     }
 
-    [HttpDelete("delete/{gameId}")]
-    public async Task<ActionResult> DeleteUser(int gameId)
+    [HttpDelete("delete/{id}")]
+    public async Task<ActionResult> DeleteUser(int id)
     {
-        await _reviewsRepository.DeleteReviewAsync(User.GetUserId(), gameId);
+        await _reviewsRepository.DeleteReviewAsync(id);
 
         if (await _reviewsRepository.SaveAllAsync()) return BadRequest("Failed to delete review");
         

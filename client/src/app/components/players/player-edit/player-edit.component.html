@@ -140,7 +140,9 @@
             </tab>
 
             <tab heading="Reviews">
-                <h4>reviews will go here</h4>
+                <div *ngFor="let review of reviews">
+                    <app-profile-review (deleteReview)="deleteReview($event)" [review]="review"></app-profile-review>
+                </div>
             </tab>
             
         </tabset>

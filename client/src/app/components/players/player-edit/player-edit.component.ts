@@ -13,6 +13,8 @@ import { EditComponent } from 'src/app/interfaces/edit-component';
 import { deepEqual } from 'src/app/helpers/compareHelper';
 import { Player } from 'src/app/models/player';
 import { User } from 'src/app/models/user';
+import { Review } from 'src/app/models/review';
+import { ReviewsService } from 'src/app/services/reviews.service';
 
 @Component({
   selector: 'app-player-edit',
@@ -31,10 +33,12 @@ export class PlayerEditComponent implements OnInit, EditComponent {
   uploader: FileUploader | undefined;
   baseUrl = environment.apiUrl;
   updating = false;
+  reviews: Review[] = [];
 
   constructor(
     private accountService: AccountService, 
     private playersService: PlayersService,
+    private reviewsService: ReviewsService,
     private toastr: ToastrService,
     private formBuilder: FormBuilder,
     private router: Router
@@ -46,6 +50,7 @@ export class PlayerEditComponent implements OnInit, EditComponent {
 
   ngOnInit(): void {
     this.loadPlayer();
+    this.loadReviews();
   }
 
   isDirty(): boolean {
@@ -62,6 +67,19 @@ export class PlayerEditComponent implements OnInit, EditComponent {
         this.initializeFrom();
       }
     });
+  }  
+  
+  loadReviews() {
+    if (!this.user) return;
+    this.reviewsService.getReviewsForPlayer(this.user.userName).subscribe({
+      next: reviews => this.reviews = reviews
+    });
+  }
+
+  deleteReview(id: number) {
+    this.reviewsService.deleteReview(id).subscribe({
+      next: () => this.reviews = this.reviews.filter(r => r.id !== id)
+    })
   }
 
   updatePlayer() {

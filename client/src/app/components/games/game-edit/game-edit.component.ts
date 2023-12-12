@@ -14,6 +14,8 @@ import { EditComponent } from 'src/app/interfaces/edit-component';
 import { deepEqual } from 'src/app/helpers/compareHelper';
 import { Game } from 'src/app/models/game';
 import { User } from 'src/app/models/user';
+import { Review } from 'src/app/models/review';
+import { ReviewsService } from 'src/app/services/reviews.service';
 
 @Component({
   selector: 'app-game-edit',
@@ -33,10 +35,12 @@ export class GameEditComponent implements OnInit, EditComponent {
   uploader: FileUploader | undefined;
   baseUrl = environment.apiUrl;
   updating = false;
+  reviews: Review[] = [];
 
   constructor(
     private accountService: AccountService,
     private gamesService: GamesService, 
+    private reviewsService: ReviewsService,
     private toastr: ToastrService, 
     private route: ActivatedRoute,
     private router: Router,
@@ -49,16 +53,18 @@ export class GameEditComponent implements OnInit, EditComponent {
   }
 
   ngOnInit(): void {
-    this.loadGame();
+    const title = this.route.snapshot.paramMap.get('title');
+    if (!title) return;
+
+    this.loadGame(title);
+    this.loadReviews(title);
   }
 
   isDirty(): boolean {
     return !deepEqual(this.editForm.value, this.initialForm);
   }
 
-  loadGame() {
-    const title = this.route.snapshot.paramMap.get('title');
-    if (!title) return;
+  loadGame(title: string) {
     this.gamesService.getGame(title).subscribe({
       next: game => {
         if (!game) this.router.navigateByUrl('/not-found');
@@ -68,6 +74,18 @@ export class GameEditComponent implements OnInit, EditComponent {
         this.initializeFrom();
       }
     });
+  }
+
+  loadReviews(title: string) {
+    this.reviewsService.getReviewsForGame(title).subscribe({
+      next: reviews => this.reviews = reviews
+    });
+  }
+
+  deleteReview(id: number) {
+    this.reviewsService.deleteReview(id).subscribe({
+      next: () => this.reviews = this.reviews.filter(r => r.id !== id)
+    })
   }
 
   updateGame() {

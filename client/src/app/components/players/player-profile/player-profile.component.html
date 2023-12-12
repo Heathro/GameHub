@@ -97,7 +97,9 @@
             </tab>
 
             <tab heading="Reviews">
-                <h4>reviews</h4>
+                <div *ngFor="let review of reviews">
+                    <app-player-review [review]="review"></app-player-review>
+                </div>
             </tab>
             
         </tabset>

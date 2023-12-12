@@ -33,6 +33,12 @@
                 <gallery *ngIf="screenshotTab.active" [items]="screenshots"></gallery>
             </tab>
 
+            <tab heading="Reviews">
+                <div *ngFor="let review of reviews">
+                    <app-game-review [review]="review"></app-game-review>
+                </div>
+            </tab>
+            
         </tabset>
     </div>
     

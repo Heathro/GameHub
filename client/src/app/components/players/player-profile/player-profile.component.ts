@@ -8,6 +8,8 @@ import { MessagesService } from 'src/app/services/messages.service';
 import { PlayersService } from 'src/app/services/players.service';
 import { Player } from 'src/app/models/player';
 import { User } from 'src/app/models/user';
+import { Review } from 'src/app/models/review';
+import { ReviewsService } from 'src/app/services/reviews.service';
 
 @Component({
   selector: 'app-player-profile',
@@ -16,14 +18,16 @@ import { User } from 'src/app/models/user';
 })
 export class PlayerProfileComponent implements OnInit {
   player: Player | undefined;
+  reviews: Review[] = [];
   user: User | null = null;
 
   constructor(
+    private accountService: AccountService,
     private playersService: PlayersService,
     private messagesService: MessagesService,
+    private reviewsService: ReviewsService,
     private route: ActivatedRoute, 
-    private router: Router,
-    private accountService: AccountService
+    private router: Router
   ) { 
     this.accountService.currentUser$.pipe(take(1)).subscribe({
       next: user => this.user = user
@@ -31,17 +35,25 @@ export class PlayerProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadPlayer();
-  }
-
-  loadPlayer() {
     const username = this.route.snapshot.paramMap.get('username');
     if (!username) return;
+
+    this.loadPlayer(username);
+    this.loadReviews(username);
+  }
+
+  loadPlayer(username: string) {
     this.playersService.getPlayer(username).subscribe({
       next: player => {
         if (!player) this.router.navigateByUrl('/not-found');
         this.player = player;
       }
+    });
+  }
+
+  loadReviews(username: string) {
+    this.reviewsService.getReviewsForPlayer(username).subscribe({
+      next: reviews => this.reviews = reviews
     });
   }
 

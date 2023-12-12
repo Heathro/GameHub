@@ -1,0 +1,32 @@
+<div class="card m-2 player-review-body" *ngIf="review">
+    <div class="row">
+
+        <div class="col-2">
+            <img 
+                routerLink="/games/{{review.gameTitle}}"
+                class="review-game-img cursor-pointer-on"
+                src="{{review.gamePoster.url || './assets/poster.png'}}"
+                alt="{{review.gameTitle}}"
+            >
+        </div>        
+
+        <div class="col-10">
+            <div class="mt-2">
+                <h4 class="ms-2 cursor-pointer-on" routerLink="/games/{{review.gameTitle}}">
+                    {{review.gameTitle}}
+                </h4>
+                <p class="mx-3 text-body-secondary">
+                    {{review.content}}
+                </p>
+            </div>            
+        </div>
+
+    </div>
+
+    <div class="m-1">
+        <h6 class="ms-2 text-body-secondary">
+            {{review.reviewPosted + 'Z' | timeago}}
+        </h6>
+    </div>
+
+</div>

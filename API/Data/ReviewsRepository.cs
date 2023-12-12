@@ -25,10 +25,10 @@ public class ReviewsRepository : IReviewsRepository
         _context.Reviews.Add(review);
     }
 
-    public async Task DeleteReviewAsync(int reviewerId, int gameId)
+    public async Task DeleteReviewAsync(int id)
     {
         var review = await _context.Reviews
-            .SingleOrDefaultAsync(r => r.ReviewerId == reviewerId && r.GameId == gameId);
+            .SingleOrDefaultAsync(r => r.Id == id);
 
         if (review != null)
         {
@@ -63,40 +63,20 @@ public class ReviewsRepository : IReviewsRepository
         );
     }
 
-    public async Task<PagedList<ReviewDto>> GetReviewsForGame(PaginationParams paginationParams, int gameId)
+    public async Task<IEnumerable<ReviewDto>> GetReviewsForGame(int gameId)
     {
-        var query = _context.Reviews.Where(r => r.GameId == gameId);
-        
-        query = paginationParams.OrderType switch
-        {
-            OrderType.Oldest => query.OrderBy(r => r.ReviewPosted),
-            _ => query.OrderByDescending(r => r.ReviewPosted)
-        };
-
-        return await PagedList<ReviewDto>.CreateAsync
-        (
-            query.AsNoTracking().ProjectTo<ReviewDto>(_mapper.ConfigurationProvider),
-            paginationParams.CurrentPage,
-            paginationParams.ItemsPerPage
-        );
+        return await _context.Reviews
+            .Where(r => r.GameId == gameId)
+            .ProjectTo<ReviewDto>(_mapper.ConfigurationProvider)
+            .ToListAsync();
     }
 
-    public async Task<PagedList<ReviewDto>> GetReviewsForUser(PaginationParams paginationParams, int userId)
+    public async Task<IEnumerable<ReviewDto>> GetReviewsForUser(int userId)
     {
-        var query = _context.Reviews.Where(r => r.ReviewerId == userId);
-        
-        query = paginationParams.OrderType switch
-        {
-            OrderType.Oldest => query.OrderBy(r => r.ReviewPosted),
-            _ => query.OrderByDescending(r => r.ReviewPosted)
-        };
-
-        return await PagedList<ReviewDto>.CreateAsync
-        (
-            query.AsNoTracking().ProjectTo<ReviewDto>(_mapper.ConfigurationProvider),
-            paginationParams.CurrentPage,
-            paginationParams.ItemsPerPage
-        );
+        return await _context.Reviews
+            .Where(r => r.ReviewerId == userId)
+            .ProjectTo<ReviewDto>(_mapper.ConfigurationProvider)
+            .ToListAsync();
     }
 
     public async Task<bool> SaveAllAsync()

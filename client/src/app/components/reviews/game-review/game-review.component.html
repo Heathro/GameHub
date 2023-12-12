@@ -1,0 +1,15 @@
+<div class="card m-2 game-review-body" *ngIf="review">
+    <p class="m-3 text-body-secondary" style="overflow: auto;">
+        {{review.content}}
+    </p>
+
+    <div class="m-2">
+        <h6 class="d-inline ms-2 cursor-pointer-on" routerLink="/players/{{review.reviewerUsername}}">
+            by {{review.reviewerUsername}}
+        </h6>
+        <h6 class="d-inline ms-4 text-body-secondary">
+            {{review.reviewPosted + 'Z' | timeago}}
+        </h6>
+    </div>
+
+</div>

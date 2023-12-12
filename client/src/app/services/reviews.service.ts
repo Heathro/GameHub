@@ -37,9 +37,12 @@ export class ReviewsService {
     );
   }
 
-  getReviewsForGame(gameId: number) {
-    let params = getPaginationHeaders(this.paginationParams);
-    return getPaginatedResult<Review[]>(this.baseUrl + 'reviews/game/' + gameId, params, this.http);
+  getReviewsForGame(title: string) {
+    return this.http.get<Review[]>(this.baseUrl + 'reviews/game/' + title);
+  }
+
+  getReviewsForPlayer(username: string) {
+    return this.http.get<Review[]>(this.baseUrl + 'reviews/player/' + username);
   }
 
   getReviewMenu(title: string) {
@@ -51,8 +54,8 @@ export class ReviewsService {
     return this.http.post<Review>(this.baseUrl + 'reviews/new', reviewDto);
   }
 
-  deleteReview(gameId: number) {
-    return this.http.delete(this.baseUrl + 'reviews/delete/' + gameId);
+  deleteReview(id: number) {
+    return this.http.delete(this.baseUrl + 'reviews/delete/' + id);
   }
 
   resetPagination() {

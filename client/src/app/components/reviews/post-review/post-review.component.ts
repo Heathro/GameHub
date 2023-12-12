@@ -77,7 +77,7 @@ export class PostReviewComponent implements OnInit, EditComponent {
 
   deleteReview() {
     if (!this.reviewMenu) return;
-    this.reviewsService.deleteReview(this.reviewMenu.game.id).subscribe({
+    this.reviewsService.deleteReview(this.reviewMenu.id).subscribe({
       next: () => {
         if (!this.reviewMenu) return;
         this.finished = true;

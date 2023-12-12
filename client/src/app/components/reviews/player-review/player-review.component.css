@@ -1,0 +1,12 @@
+.review-game-img {
+    width: 150px;
+    margin: 8px;
+}
+
+.cursor-pointer-on {
+    cursor: pointer;
+}
+
+.player-review-body {
+    background-color: #222222;
+}

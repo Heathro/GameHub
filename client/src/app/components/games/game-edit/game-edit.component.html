@@ -151,6 +151,12 @@
                 <app-screenshot-editor [game]="game"></app-screenshot-editor>
             </tab>
 
+            <tab heading="Reviews">
+                <div *ngFor="let review of reviews">
+                    <app-game-edit-review (deleteReview)="deleteReview($event)" [review]="review"></app-game-edit-review>
+                </div>
+            </tab>
+
         </tabset>
     </div>
     

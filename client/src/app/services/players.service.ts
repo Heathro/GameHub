@@ -163,6 +163,6 @@ export class PlayersService {
   }
 
   private initializePaginationParams() {
-    return new PaginationParams(3, OrderType.az);
+    return new PaginationParams(6, OrderType.az);
   }
 }
