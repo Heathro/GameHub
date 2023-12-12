@@ -95,6 +95,25 @@ public class ReviewsController : BaseApiController
         return Ok(reviews);
     }
 
+    [HttpGet("player/{userId}")]
+    public async Task<ActionResult<PagedList<ReviewDto>>> GetReviewsForUser(
+        [FromQuery]PaginationParams paginationParams, int userId)
+    {
+        var user = await _usersRepository.GetUserByIdAsync(userId);
+        if (user == null) return NotFound();
+
+        var reviews = await _reviewsRepository.GetReviewsForUser(paginationParams, userId);
+
+        Response.AddPaginationHeader(new PaginationHeader(
+            reviews.CurrentPage,
+            reviews.ItemsPerPage,
+            reviews.TotalItems,
+            reviews.TotalPages
+        ));
+
+        return Ok(reviews);
+    }
+
     [HttpGet("menu/{title}")]
     public async Task<ActionResult<ReviewMenuDto>> GetReviewMenu(string title)
     {

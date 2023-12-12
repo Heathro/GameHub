@@ -81,6 +81,24 @@ public class ReviewsRepository : IReviewsRepository
         );
     }
 
+    public async Task<PagedList<ReviewDto>> GetReviewsForUser(PaginationParams paginationParams, int userId)
+    {
+        var query = _context.Reviews.Where(r => r.ReviewerId == userId);
+        
+        query = paginationParams.OrderType switch
+        {
+            OrderType.Oldest => query.OrderBy(r => r.ReviewPosted),
+            _ => query.OrderByDescending(r => r.ReviewPosted)
+        };
+
+        return await PagedList<ReviewDto>.CreateAsync
+        (
+            query.AsNoTracking().ProjectTo<ReviewDto>(_mapper.ConfigurationProvider),
+            paginationParams.CurrentPage,
+            paginationParams.ItemsPerPage
+        );
+    }
+
     public async Task<bool> SaveAllAsync()
     {
         return await _context.SaveChangesAsync() > 0;
