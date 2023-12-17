@@ -34,6 +34,7 @@ export class PlayerEditComponent implements OnInit, EditComponent {
   baseUrl = environment.apiUrl;
   updating = false;
   reviews: Review[] = [];
+  loadingReviews = false;
 
   constructor(
     private accountService: AccountService, 
@@ -71,8 +72,12 @@ export class PlayerEditComponent implements OnInit, EditComponent {
   
   loadReviews() {
     if (!this.user) return;
+    this.loadingReviews = true;
     this.reviewsService.getReviewsForPlayer(this.user.userName).subscribe({
-      next: reviews => this.reviews = reviews
+      next: reviews => {
+        this.reviews = reviews;
+        this.loadingReviews = false;
+      }
     });
   }
 

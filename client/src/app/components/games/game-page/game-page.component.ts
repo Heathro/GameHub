@@ -25,6 +25,7 @@ export class GamePageComponent implements OnInit {
   isLiked = false;
   isPublished = false;
   isBookmarked = false;
+  loadingReviews = false;
 
   constructor(
     private gamesService: GamesService,
@@ -55,8 +56,12 @@ export class GamePageComponent implements OnInit {
   }
 
   loadReviews(title: string) {
+    this.loadingReviews = true;
     this.reviewsService.getReviewsForGame(title).subscribe({
-      next: reviews => this.reviews = reviews
+      next: reviews => {
+        this.reviews = reviews;
+        this.loadingReviews = false;
+      }
     });
   }
 

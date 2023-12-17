@@ -131,17 +131,28 @@
                 </form>
             </tab>
 
-            <tab heading="Games">              
-                
-                <div *ngFor="let game of player.publications">
-                    <app-game-card-mini [game]="game"></app-game-card-mini>
+            <tab heading="Games">
+                <div *ngIf="player.publications.length !== 0">
+                    <div *ngFor="let game of player.publications">
+                        <app-game-card-mini [game]="game"></app-game-card-mini>
+                    </div>
                 </div>
-
+                <div *ngIf="player.publications.length === 0">
+                    <h5 class="text-center my-4">No games published</h5>
+                </div>
             </tab>
 
             <tab heading="Reviews">
-                <div *ngFor="let review of reviews">
-                    <app-profile-review (deleteReview)="deleteReview($event)" [review]="review"></app-profile-review>
+                <div *ngIf="!loadingReviews && reviews.length !== 0">
+                    <div *ngFor="let review of reviews">
+                        <app-profile-review 
+                            (deleteReview)="deleteReview($event)" 
+                            [review]="review"
+                        ></app-profile-review>
+                    </div>
+                </div>
+                <div [hidden]="loadingReviews" *ngIf="reviews.length === 0">
+                    <h5 class="text-center my-4">No reviews posted</h5>
                 </div>
             </tab>
             

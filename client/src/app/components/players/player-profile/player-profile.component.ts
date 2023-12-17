@@ -20,6 +20,7 @@ export class PlayerProfileComponent implements OnInit {
   player: Player | undefined;
   reviews: Review[] = [];
   user: User | null = null;
+  loadingReviews = false;
 
   constructor(
     private accountService: AccountService,
@@ -52,8 +53,12 @@ export class PlayerProfileComponent implements OnInit {
   }
 
   loadReviews(username: string) {
+    this.loadingReviews = true;
     this.reviewsService.getReviewsForPlayer(username).subscribe({
-      next: reviews => this.reviews = reviews
+      next: reviews => {
+        this.reviews = reviews;
+        this.loadingReviews = false;
+      }
     });
   }
 

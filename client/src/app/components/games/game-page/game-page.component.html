@@ -34,8 +34,13 @@
             </tab>
 
             <tab heading="Reviews">
-                <div *ngFor="let review of reviews">
-                    <app-game-review [review]="review"></app-game-review>
+                <div *ngIf="!loadingReviews && reviews.length !== 0">
+                    <div *ngFor="let review of reviews">
+                        <app-game-review [review]="review"></app-game-review>
+                    </div>
+                </div>
+                <div [hidden]="loadingReviews" *ngIf="reviews.length === 0">
+                    <h5 class="text-center my-4">No reviews posted</h5>
                 </div>
             </tab>
             
