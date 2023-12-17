@@ -1,5 +1,10 @@
-<div class="row">
-    <div class="col-4" *ngFor="let player of players">
-        <app-friend-card (deleteCard)="deleteCard($event)" [player]="player"></app-friend-card>
+<div *ngIf="!loading && players.length !== 0">
+    <div class="row">
+        <div class="col-4" *ngFor="let player of players">
+            <app-friend-card (deleteCard)="deleteCard($event)" [player]="player"></app-friend-card>
+        </div>
     </div>
+</div>
+<div [hidden]="loading" *ngIf="players.length === 0">
+    <h5 class="text-center my-4">No active friends</h5>
 </div>

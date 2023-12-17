@@ -10,6 +10,7 @@ import { Player } from 'src/app/models/player';
 export class IncomeRequestsComponent implements OnInit {  
   @Output() deleteCards = new EventEmitter<number>();
   @Input() players: Player[] = [];
+  @Input() loading: boolean = false;
 
   constructor() { }
 

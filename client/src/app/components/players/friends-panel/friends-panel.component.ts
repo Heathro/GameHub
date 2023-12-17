@@ -12,6 +12,7 @@ export class FriendsPanelComponent implements OnInit {
   activeFriends: Player[] = [];
   incomeRequests: Player[] = [];
   outcomeRequests: Player[] = [];
+  loading = false;
 
   constructor(private playersService: PlayersService) { }
 
@@ -20,11 +21,13 @@ export class FriendsPanelComponent implements OnInit {
   }
 
   loadFriends() {
+    this.loading = true;
     this.playersService.getFriends().subscribe({
       next: friends => {
         this.activeFriends = friends.activeFriends;
         this.incomeRequests = friends.incomeRequests;
         this.outcomeRequests = friends.outcomeRequests;
+        this.loading = false;
       }
     });
   }

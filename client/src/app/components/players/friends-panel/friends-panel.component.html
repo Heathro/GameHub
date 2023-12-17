@@ -1,11 +1,12 @@
 <div class="tab-panel">
     <tabset class="custom-tabset">
 
-        <tab heading="Friends">
+        <tab heading="Active Friends">
             <div class="container">
                 <app-friends-list 
                     (deleteCards)="deleteActiveFriend($event)" 
                     [players]="activeFriends"
+                    [loading]="loading"
                 ></app-friends-list>
             </div>
         </tab>
@@ -15,6 +16,7 @@
                 <app-income-requests 
                     (deleteCards)="deleteIncomeRequest($event)" 
                     [players]="incomeRequests"
+                    [loading]="loading"
                 ></app-income-requests>
             </div>
         </tab>
@@ -24,6 +26,7 @@
                 <app-outcome-requests 
                     (deleteCards)="deleteOutcomeRequest($event)" 
                     [players]="outcomeRequests"
+                    [loading]="loading"
                 ></app-outcome-requests>
             </div>
         </tab>
