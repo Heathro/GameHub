@@ -17,14 +17,16 @@ public class AdminController : BaseApiController
 {
     private readonly UserManager<AppUser> _userManager;
     private readonly IUsersRepository _usersRepository;
+    private readonly IReviewsRepository _reviewsRepository;
     private readonly IMapper _mapper;
 
-    public AdminController(UserManager<AppUser> userManager, IUsersRepository usersRepository,
-        IMapper mapper)
+    public AdminController(UserManager<AppUser> userManager, IMapper mapper,
+        IUsersRepository usersRepository, IReviewsRepository reviewsRepository)
     {
         _userManager = userManager;
-        _usersRepository = usersRepository;
         _mapper = mapper;
+        _usersRepository = usersRepository;
+        _reviewsRepository = reviewsRepository;
     }
 
     [Authorize(Policy = "AdminRole")]
@@ -90,5 +92,33 @@ public class AdminController : BaseApiController
     public ActionResult GetGamesForModeration()
     {
         return Ok("ADMIN AND MODERATOR");
+    }
+
+    [Authorize(Policy = "AdminModeratorRole")]
+    [HttpGet("reviews-for-moderation")]
+    public async Task<ActionResult<PagedList<ReviewModerationDto>>> GetReviewsForModeration(
+        [FromQuery]PaginationParams paginationParams)
+    {
+        var users = await _reviewsRepository.GetReviewsForModeration(paginationParams);
+
+        Response.AddPaginationHeader(new PaginationHeader(
+            users.CurrentPage,
+            users.ItemsPerPage,
+            users.TotalItems,
+            users.TotalPages
+        ));
+        
+        return Ok(users);
+    }
+
+    [Authorize(Policy = "AdminModeratorRole")]
+    [HttpPut("approve-review/{id}")]
+    public async Task<ActionResult> ApproveReview(int id)
+    {
+        await _reviewsRepository.ApproveReview(id);
+
+        if (await _reviewsRepository.SaveAllAsync()) return BadRequest("Failed to approve review");
+
+        return Ok();
     }
 }

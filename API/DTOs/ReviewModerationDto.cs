@@ -1,14 +1,14 @@
-﻿namespace API.Entities;
+﻿namespace API.DTOs;
 
-public class Review
+public class ReviewModerationDto
 {
     public int Id { get; set; }
     public int ReviewerId { get; set; }
     public string ReviewerUsername { get; set; }
-    public AppUser Reviewer { get; set; }
+    public AvatarDto ReviewerAvatar { get; set; }
     public int GameId { get; set; }
     public string GameTitle { get; set; }
-    public Game Game { get; set; }
+    public PosterDto GamePoster { get; set; }
     public string Content { get; set; }
     public DateTime ReviewPosted { get; set; } = DateTime.UtcNow;
     public bool IsApproved { get; set; }

@@ -49,7 +49,8 @@ public class ReviewsController : BaseApiController
                 GameId = game.Id,
                 GameTitle = game.Title,
                 Game = game,
-                Content = createReviewDto.Content
+                Content = createReviewDto.Content,
+                IsApproved = false
             };
             _reviewsRepository.AddReview(review);
         }
@@ -78,7 +79,7 @@ public class ReviewsController : BaseApiController
 
     [HttpGet("game/{title}")]
     public async Task<ActionResult<IEnumerable<ReviewDto>>> GetReviewsForGame(string title)
-    {        
+    {
         var game = await _gamesRepository.GetGameByTitleAsync(title);
         if (game == null) return NotFound();
 

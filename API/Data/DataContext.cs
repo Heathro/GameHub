@@ -112,5 +112,7 @@ public class DataContext : IdentityDbContext
             .HasOne(r => r.Game)
             .WithMany(g => g.Reviews)
             .OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<Review>()
+            .HasQueryFilter(r => r.IsApproved);
     }
 }

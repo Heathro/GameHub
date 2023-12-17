@@ -41,5 +41,9 @@ public class AutoMapperProfiles : Profile
         CreateMap<Review, ReviewDto>()
             .ForMember(d => d.ReviewerAvatar, o => o.MapFrom(s => s.Reviewer.Avatar))
             .ForMember(d => d.GamePoster, o => o.MapFrom(s => s.Game.Poster));
+
+        CreateMap<Review, ReviewModerationDto>()
+            .ForMember(d => d.ReviewerAvatar, o => o.MapFrom(s => s.Reviewer.Avatar))
+            .ForMember(d => d.GamePoster, o => o.MapFrom(s => s.Game.Poster));
     }
 }
