@@ -62,6 +62,7 @@
                     <i class="bi bi-apple me-3" *ngIf="game.platforms.macos"></i>
                     <i class="bi bi-ubuntu me-3" *ngIf="game.platforms.linux"></i>
                 </h5>
+                <h6 class="mb-4">{{game.release | date:'dd MMMM yyyy'}}</h6>
                 <div class="mt-4 d-flex justify-content-between">
                     <h5 class="d-inline click-cursor" routerLink="/players/{{game.publisher}}">
                         by {{game.publisher}}

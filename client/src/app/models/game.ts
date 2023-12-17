@@ -14,4 +14,5 @@ export interface Game {
   poster: Poster;
   screenshots: Screenshot[];
   publisher: string;
+  release: string;
 }

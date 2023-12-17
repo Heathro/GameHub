@@ -13,4 +13,5 @@ public class Game
     public List<Screenshot> Screenshots { get; set; } = new();
     public List<Like> LikedUsers { get; set; } = new();
     public List<Review> Reviews { get; set; } = new();
+    public DateTime Release { get; set; } = DateTime.UtcNow;
 }

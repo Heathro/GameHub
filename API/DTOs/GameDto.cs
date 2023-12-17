@@ -12,4 +12,5 @@ public class GameDto
     public PosterDto Poster { get; set; }
     public List<ScreenshotDto> Screenshots { get; set; }
     public string Publisher { get; set; }
+    public DateTime Release { get; set; }
 }
