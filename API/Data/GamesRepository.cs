@@ -92,6 +92,8 @@ public class GamesRepository : IGamesRepository
 
         query = paginationParams.OrderType switch
         {
+            OrderType.Newest => query.OrderByDescending(g => g.Release),            
+            OrderType.Oldest => query.OrderBy(g => g.Release),
             OrderType.ZA => query.OrderByDescending(g => g.Title),
             _ => query.OrderBy(g => g.Title)
         };

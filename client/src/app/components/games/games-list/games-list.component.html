@@ -26,13 +26,33 @@
                             class="dropdown-item text-center"
                             (click)="sortAZ()"
                         >
-                            A&ensp;<i class="bi bi-arrow-right"></i>&ensp;Z
+                            A&nbsp;&nbsp;&nbsp;&nbsp;<i class="bi bi-arrow-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;Z
                         </a>
                         <a
                             class="dropdown-item text-center" 
                             (click)="sortZA()"
                         >
-                            Z&ensp;<i class="bi bi-arrow-right"></i>&ensp;A
+                            Z&nbsp;&nbsp;&nbsp;&nbsp;<i class="bi bi-arrow-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;A
+                        </a>
+                        <a
+                            class="dropdown-item text-center" 
+                            (click)="sortNewest()"
+                        >
+                            <i class="bi bi-hourglass"></i>
+                            &nbsp;
+                            <i class="bi bi-arrow-right"></i>
+                            &nbsp;
+                            <i class="bi bi-hourglass-split"></i>
+                        </a>
+                        <a
+                            class="dropdown-item text-center" 
+                            (click)="sortOldest()"
+                        >
+                            <i class="bi bi-hourglass-split"></i>
+                            &nbsp;
+                            <i class="bi bi-arrow-right"></i>
+                            &nbsp;
+                            <i class="bi bi-hourglass"></i>
                         </a>
                     </div>
                 </div>

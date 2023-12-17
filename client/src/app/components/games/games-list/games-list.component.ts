@@ -44,6 +44,14 @@ export class GamesListComponent implements OnInit {
   sortZA() {
     this.sortGames(OrderType.za);
   }
+
+  sortNewest() {
+    this.sortGames(OrderType.newest);
+  }
+
+  sortOldest() {
+    this.sortGames(OrderType.oldest);
+  }
   
   sortGames(orderType: OrderType) {
     this.gamesService.setPaginationPage(1);
@@ -73,8 +81,14 @@ export class GamesListComponent implements OnInit {
 
   getSortingType() {
     switch (this.gamesService.getPaginationParams().orderType) {
-      case OrderType.za: return 'Z&ensp;<i class="bi bi-arrow-right"></i>&ensp;A';
-      default:           return 'A&ensp;<i class="bi bi-arrow-right"></i>&ensp;Z';
+      case OrderType.newest: return '<i class="bi bi-hourglass"></i>&ensp;' + 
+                                    '<i class="bi bi-arrow-right"></i>&ensp;' + 
+                                    '<i class="bi bi-hourglass-split"></i>';
+      case OrderType.oldest: return '<i class="bi bi-hourglass-split"></i>&ensp;' + 
+                                    '<i class="bi bi-arrow-right"></i>&ensp;' +
+                                    '<i class="bi bi-hourglass"></i>';
+      case OrderType.za:     return 'Z&ensp;<i class="bi bi-arrow-right"></i>&ensp;A';
+      default:               return 'A&ensp;<i class="bi bi-arrow-right"></i>&ensp;Z';
     }
   }
   
