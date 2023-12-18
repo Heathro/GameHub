@@ -7,8 +7,7 @@ import { environment } from 'src/environments/environment';
 import { PaginationParams } from '../helpers/pagination';
 import { getPaginatedResult, getPaginationHeaders } from '../helpers/paginationHelper';
 import { OrderType } from '../helpers/orderType';
-import { Review } from '../models/review';
-import { ReviewMenu } from '../models/reviewMenu';
+import { Review, ReviewMenu } from '../models/review';
 
 @Injectable({
   providedIn: 'root'

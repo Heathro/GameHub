@@ -1,0 +1,35 @@
+<div class="card mb-1 moderation-review-body" *ngIf="review">
+    <div class="row mt-2">
+
+        <div class="col-3">
+            <h5 class="ms-2">"{{review.gameTitle}}"</h5>
+            <h6 class="ms-2">by {{review.reviewerUsername}}</h6>
+            <h6 class="ms-2">{{review.reviewPosted | date:'dd MMM yyyy'}}</h6>
+        </div>
+
+        <div class="col-6">
+            <p>{{review.content}}</p>
+        </div>
+
+        <div class="col-3">
+            <div class="btn-group d-flex me-2">
+
+                <button 
+                    class="btn btn-outline-success me-1"
+                    (click)="approveCurrentReview()"
+                >
+                    Approve&nbsp;&nbsp;&nbsp;<i class="bi bi-check2"></i>
+                </button>
+
+                <button 
+                    class="btn btn-outline-danger" 
+                    (click)="rejectCurrentReview()"
+                >
+                    Reject&nbsp;&nbsp;&nbsp;<i class="bi bi-dash-circle"></i>
+                </button>
+
+            </div>
+        </div>        
+
+    </div>
+</div>

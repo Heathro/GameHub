@@ -8,6 +8,7 @@ import { getPaginatedResult, getPaginationHeaders } from '../helpers/paginationH
 import { PaginationParams } from '../helpers/pagination';
 import { User } from '../models/user';
 import { OrderType } from '../helpers/orderType';
+import { ReviewForModeration } from '../models/review';
 
 @Injectable({
   providedIn: 'root'
@@ -15,19 +16,21 @@ import { OrderType } from '../helpers/orderType';
 export class AdminService {
   baseUrl = environment.apiUrl;
   usersCache = new Map();
-  paginationParams: PaginationParams;
+  usersPaginationParams: PaginationParams;
+  reviewsPaginationParams: PaginationParams;
 
   constructor(private http: HttpClient) {
-    this.paginationParams = this.initializePaginationParams();
+    this.usersPaginationParams = this.initializeUsersPaginationParams();
+    this.reviewsPaginationParams = this.initializeReviewsPaginationParams();
   }
 
   getUsersWithRoles() {
-    const queryString = Object.values(this.paginationParams).join('-');
+    const queryString = Object.values(this.usersPaginationParams).join('-');
     
     const users = this.usersCache.get(queryString);
     if (users) return of(users);
 
-    let params = getPaginationHeaders(this.paginationParams);
+    let params = getPaginationHeaders(this.usersPaginationParams);
     return getPaginatedResult<User[]>(this.baseUrl + 'admin/users-with-roles', params, this.http).pipe(
       map(users => {
         this.usersCache.set(queryString, users);
@@ -48,24 +51,52 @@ export class AdminService {
 
   }
 
-  setPaginationPage(currentPage: number) {
-    this.paginationParams.currentPage = currentPage;
+  getReviewsForModeration() {
+    let params = getPaginationHeaders(this.reviewsPaginationParams);
+    return getPaginatedResult<ReviewForModeration[]>(
+      this.baseUrl + 'admin/reviews-for-moderation', params, this.http
+    );
   }
 
-  setPaginationOrder(orderType: OrderType) {
-    this.paginationParams.orderType = orderType;
+  approveReview(reviewId: number) {
+    return this.http.put(this.baseUrl + 'admin/approve-review/' + reviewId, {});
   }
 
-  getPaginationParams() {
-    return this.paginationParams;
+  setUsersPaginationPage(currentPage: number) {
+    this.usersPaginationParams.currentPage = currentPage;
+  }
+
+  setUsersPaginationOrder(orderType: OrderType) {
+    this.usersPaginationParams.orderType = orderType;
+  }
+
+  getUsersPaginationParams() {
+    return this.usersPaginationParams;
+  }  
+
+  setReviewsPaginationPage(currentPage: number) {
+    this.reviewsPaginationParams.currentPage = currentPage;
+  }
+
+  setReviewsPaginationOrder(orderType: OrderType) {
+    this.reviewsPaginationParams.orderType = orderType;
+  }
+
+  getReviewsPaginationParams() {
+    return this.reviewsPaginationParams;
   }
 
   clearPrivateData() {
     this.usersCache = new Map();
-    this.paginationParams = this.initializePaginationParams();
+    this.usersPaginationParams = this.initializeUsersPaginationParams();
+    this.reviewsPaginationParams = this.initializeReviewsPaginationParams();
   }
 
-  private initializePaginationParams() {
+  private initializeUsersPaginationParams() {
     return new PaginationParams(7, OrderType.az);
+  }
+
+  private initializeReviewsPaginationParams() {
+    return new PaginationParams(4, OrderType.az);
   }
 }

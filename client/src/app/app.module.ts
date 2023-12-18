@@ -49,6 +49,8 @@ import { PostReviewComponent } from './components/reviews/post-review/post-revie
 import { PlayerReviewComponent } from './components/reviews/player-review/player-review.component';
 import { ProfileReviewsComponent } from './components/reviews/profile-review/profile-review.component';
 import { GameEditReviewsComponent } from './components/reviews/game-edit-review/game-edit-review.component';
+import { ReviewManagementComponent } from './components/admin/review-management/review-management.component';
+import { ReviewForModerationComponent } from './components/admin/review-for-moderation/review-for-moderation.component';
 
 @NgModule({
   declarations: [
@@ -91,7 +93,9 @@ import { GameEditReviewsComponent } from './components/reviews/game-edit-review/
     PostReviewComponent,
     PlayerReviewComponent,
     ProfileReviewsComponent,
-    GameEditReviewsComponent
+    GameEditReviewsComponent,
+    ReviewManagementComponent,
+    ReviewForModerationComponent
   ],
   imports: [
     BrowserModule,

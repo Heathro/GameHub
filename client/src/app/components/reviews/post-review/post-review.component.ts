@@ -6,7 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 
 import { EditComponent } from 'src/app/interfaces/edit-component';
 import { ReviewsService } from 'src/app/services/reviews.service';
-import { ReviewMenu } from 'src/app/models/reviewMenu';
+import { ReviewMenu } from 'src/app/models/review';
 
 @Component({
   selector: 'app-post-review',

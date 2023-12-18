@@ -36,12 +36,12 @@ export class UserManagementComponent implements OnInit {
   deleteUser(userName: string) {
     this.adminService.deleteUser(userName).subscribe({
       next: () => this.users = this.users.filter(u => u.userName != userName)
-    })
+    });
   }
 
   pageChanged(event: any) {
-    if (this.adminService.getPaginationParams().currentPage !== event.page) {
-      this.adminService.setPaginationPage(event.page);
+    if (this.adminService.getUsersPaginationParams().currentPage !== event.page) {
+      this.adminService.setUsersPaginationPage(event.page);
       this.loadUsersWithRoles();
     }
   }  

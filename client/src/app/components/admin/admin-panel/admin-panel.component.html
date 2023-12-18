@@ -13,5 +13,11 @@
             </div>
         </tab>
 
+        <tab heading="Reviews" *HasRole="['Admin', 'Moderator']">
+            <div class="container">
+                <app-review-management></app-review-management>
+            </div>
+        </tab>
+
     </tabset>
 </div>

@@ -15,7 +15,7 @@
             </h5>
         </div>
 
-        <div class="col-4 role-card-checkboxes">            
+        <div class="col-5 role-card-checkboxes">            
             <app-checkbox-input class="d-inline ms-4"
                 [formControl]="$any(roleForm.get('player'))"
                 [label]="'Player'"
@@ -30,19 +30,26 @@
             ></app-checkbox-input>
         </div>
 
-        <div class="col-2 role-button-row">
-            <button 
-                class="btn btn-outline-info" 
-                [disabled]="!isDirty()" 
-                (click)="editRoles()"
-            >
-                Edit Roles
-            </button>
-        </div>
+        <div class="col-3">
+            <div class="btn-group d-flex me-2 role-button-row">
 
-        <div class="col-2 role-button-row">
-            <button class="btn btn-outline-danger" (click)="deleteCurrentUser()">Delete User</button>
-        </div>
+                <button 
+                    class="btn btn-outline-info me-1" 
+                    [disabled]="!isDirty()" 
+                    (click)="editRoles()"
+                >
+                    Edit Roles&nbsp;&nbsp;&nbsp;<i class="bi bi-pencil"></i>
+                </button>
+
+                <button 
+                    class="btn btn-outline-danger" 
+                    (click)="deleteCurrentUser()"
+                >
+                    Delete User&nbsp;&nbsp;&nbsp;<i class="bi bi-trash3"></i>
+                </button>
+
+            </div>
+        </div>    
 
     </div>
 </div>
