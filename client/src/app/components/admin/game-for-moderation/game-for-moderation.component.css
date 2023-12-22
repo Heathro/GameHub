@@ -6,12 +6,16 @@
     cursor: pointer;
 }
 
+.game-moderation-card-title {
+    margin-top: 9px;
+}
+
 .game-moderation-card-img {
-    width: 100px;
+    width: 70px;
     margin: 4px;
     cursor: pointer;
 }
 
 .game-moderation-card-button {
-    margin-top: 14px;
+    margin-top: 6px;
 }

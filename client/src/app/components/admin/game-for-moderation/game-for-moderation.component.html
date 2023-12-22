@@ -9,29 +9,33 @@
             >
         </div>
 
-        <div class="col-9">
+        <div class="col-8 game-moderation-card-title">
             <h4 
-                class="ms-2 game-moderation-card-cursor"
+                class="ms-2 game-moderation-card-cursor d-inline"
                 routerLink="/games/{{game.title}}"
             >
-                {{game.title}}
+                "{{game.title}}"
             </h4>
-            <h6 
-                class="text-right ms-2 game-moderation-card-cursor" 
+            <h4 
+                class="text-right ms-2 game-moderation-card-cursor d-inline" 
                 routerLink="/players/{{game.publisher}}"
             >
                 by {{game.publisher}}
-            </h6>
+            </h4>
         </div>
+        
+        <div class="col-3">
+            <div class="btn-group d-flex me-2 game-moderation-card-button">
 
-        <div class="col-2 game-moderation-card-button">
-            <button 
-                class="btn btn-outline-danger" 
-                (click)="deleteCurrentGame()"
-            >
-                Delete Game&nbsp;&nbsp;&nbsp;<i class="bi bi-trash3"></i>
-            </button>
-        </div>    
+                <button 
+                    class="btn btn-outline-danger" 
+                    (click)="deleteCurrentGame()"
+                >
+                    Delete&nbsp;&nbsp;&nbsp;<i class="bi bi-trash3"></i>
+                </button>
+
+            </div>
+        </div>   
 
     </div>
 </div>
