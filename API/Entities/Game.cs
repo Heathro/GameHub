@@ -14,4 +14,5 @@ public class Game
     public List<Like> LikedUsers { get; set; } = new();
     public List<Review> Reviews { get; set; } = new();
     public DateTime Release { get; set; } = DateTime.UtcNow;
+    public string Video { get; set; }
 }

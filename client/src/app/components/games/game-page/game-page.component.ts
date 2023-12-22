@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 import { TabsModule } from 'ngx-bootstrap/tabs';
@@ -10,6 +11,7 @@ import { Game } from 'src/app/models/game';
 import { Review } from 'src/app/models/review';
 import { ReviewsService } from 'src/app/services/reviews.service';
 import { GameReviewComponent } from '../../reviews/game-review/game-review.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-game-page',
@@ -31,7 +33,8 @@ export class GamePageComponent implements OnInit {
     private gamesService: GamesService,
     private reviewsService: ReviewsService,
     private route: ActivatedRoute, 
-    private router: Router
+    private router: Router,
+    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit(): void {
@@ -40,6 +43,15 @@ export class GamePageComponent implements OnInit {
 
     this.loadGame(title);
     this.loadReviews(title);
+  }
+
+  getVideo(): string {
+    if (!this.game) return '';
+    return environment.youtubeUrl + this.game.video;
+  }
+  
+  sanitizeVideoUrl(videoUrl: string): SafeResourceUrl {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(videoUrl);
   }
 
   loadGame(title: string) {

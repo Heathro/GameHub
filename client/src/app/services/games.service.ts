@@ -47,7 +47,7 @@ export class GamesService {
       .find((game: Game) => game.title === title);
 
     if (game) return of(game);
-
+    
     return this.http.get<Game>(this.baseUrl + 'games/' + title);
   }
 
@@ -144,6 +144,7 @@ export class GamesService {
               g.genres.stealth = game.genres.stealth;
               g.genres.strategy = game.genres.strategy;
               g.genres.survival = game.genres.survival;
+              g.video = game.video;
             }
           });
         });

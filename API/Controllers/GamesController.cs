@@ -60,7 +60,7 @@ public class GamesController : BaseApiController
         {
             return BadRequest("You are not publisher");
         }
-
+        
         _mapper.Map(gameEditDto, game);
 
         if (await _gamesRepository.SaveAllAsync()) return NoContent();

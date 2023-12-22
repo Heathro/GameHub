@@ -30,7 +30,27 @@
             </tab>
 
             <tab heading="Screenshots" #screenshotTab="tab" class="gallery">
-                <gallery *ngIf="screenshotTab.active" [items]="screenshots"></gallery>
+                <gallery 
+                    *ngIf="screenshots.length > 0 && screenshotTab.active" 
+                    [items]="screenshots"
+                ></gallery>
+                <div *ngIf="screenshots.length === 0">
+                    <h5 class="text-center my-4">No screenshots posted</h5>
+                </div>
+            </tab>
+
+            <tab heading="Video" #videoTab="tab">
+                <iframe
+                    *ngIf="game.video.length > 0 && videoTab.active"
+                    width="836"
+                    height="470"
+                    [src]="sanitizeVideoUrl(getVideo())"
+                    frameborder="0"
+                    allowfullscreen
+                ></iframe>
+                <div *ngIf="game.video.length === 0">
+                    <h5 class="text-center my-4">No video posted</h5>
+                </div>
             </tab>
 
             <tab heading="Reviews">
@@ -39,7 +59,7 @@
                         <app-game-review [review]="review"></app-game-review>
                     </div>
                 </div>
-                <div [hidden]="loadingReviews" *ngIf="reviews.length === 0">
+                <div *ngIf="reviews.length === 0">
                     <h5 class="text-center my-4">No reviews posted</h5>
                 </div>
             </tab>

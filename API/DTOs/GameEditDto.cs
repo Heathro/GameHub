@@ -11,4 +11,5 @@ public class GameEditDto
     public string Description { get; set; }
     public PlatformsDto Platforms { get; set; }
     public GenresDto Genres { get; set; }
+    public string Video { get; set; }
 }

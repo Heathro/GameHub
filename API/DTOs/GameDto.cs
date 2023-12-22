@@ -13,4 +13,5 @@ public class GameDto
     public List<ScreenshotDto> Screenshots { get; set; }
     public string Publisher { get; set; }
     public DateTime Release { get; set; }
+    public string Video { get; set; }
 }

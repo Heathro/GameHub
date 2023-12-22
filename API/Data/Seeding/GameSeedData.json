@@ -36,7 +36,8 @@
             {
               "Url": "https://img.itch.zone/aW1hZ2UvODEwMTE2LzQ1NDE1MjYucG5n/original/zA28rq.png"
             }
-        ]
+        ],
+        "Video": "6hO3h26ZhBk"
     },
     {
         "Title": "Dungeon",
@@ -75,7 +76,8 @@
             {
               "Url": "https://img.itch.zone/aW1hZ2UvMTg3NjUxMS8xMTAyMzM5Ni5wbmc=/original/Wy0mql.png"
             }
-        ]
+        ],
+        "Video": "CK7C5ZkouTI"
     },
     {
         "Title": "Counter Zero",
@@ -110,11 +112,7 @@
         {
             "Url": ""
         },
-        "Screenshots": [
-            {
-              "Url": ""
-            }
-        ]
+        "Video": ""
     },
     {
         "Title": "Find rabbit",
@@ -149,11 +147,7 @@
         {
             "Url": ""
         },
-        "Screenshots": [
-            {
-              "Url": ""
-            }
-        ]
+        "Video": ""
     },
     {
         "Title": "Sing a song",
@@ -188,11 +182,7 @@
         {
             "Url": ""
         },
-        "Screenshots": [
-            {
-              "Url": ""
-            }
-        ]
+        "Video": ""
     },
     {
         "Title": "Casino 777",
@@ -227,11 +217,7 @@
         {
             "Url": ""
         },
-        "Screenshots": [
-            {
-              "Url": ""
-            }
-        ]
+        "Video": ""
     },
     {
         "Title": "Hot Pursuit: Revenge",
@@ -266,11 +252,7 @@
         {
             "Url": ""
         },
-        "Screenshots": [
-            {
-              "Url": ""
-            }
-        ]
+        "Video": ""
     },
     {
         "Title": "Day X",
@@ -305,10 +287,6 @@
         {
             "Url": ""
         },
-        "Screenshots": [
-            {
-              "Url": ""
-            }
-        ]
+        "Video": ""
     }
 ]

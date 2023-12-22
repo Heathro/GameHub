@@ -156,7 +156,8 @@ export class GameEditComponent implements OnInit, EditComponent {
         stealth: this.game?.genres.stealth,
         strategy: this.game?.genres.strategy,
         survival: this.game?.genres.survival
-      })
+      }),
+      video: [this.game?.video, this.youtubeId()],
     }, { validators: [this.atLeastOneSelected('genres'), this.atLeastOneSelected('platforms')] });
     
     this.initialForm = this.editForm.value;
@@ -186,6 +187,13 @@ export class GameEditComponent implements OnInit, EditComponent {
       }  
       return null;
     };
+  }
+
+  youtubeId(): ValidatorFn {
+    return (control: AbstractControl) => {
+      return control.value.length === 11 && control.value.match('^[A-Za-z0-9-_]+$')
+        ? null : {youtubeId: true};
+    }
   }
 
   initializeUploader() {

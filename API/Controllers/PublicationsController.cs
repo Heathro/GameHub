@@ -33,6 +33,7 @@ public class PublicationsController : BaseApiController
         
         var game = _mapper.Map<Game>(gamePublishDto);
         game.Poster = new Poster{ Url = "" };
+        game.Video = "";
 
         var publication = new Publication{ Title = game };
 

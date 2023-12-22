@@ -32,7 +32,7 @@ export class ScreenshotEditorComponent implements OnInit {
 
   initializeUploader() {
     this.uploader = new FileUploader({
-      url: this.baseUrl + 'games/' + this.game?.title + '/add-screenshot',
+      url: this.baseUrl + 'games/add-screenshot/' + this.game?.title,
       authToken: 'Bearer ' + this.user?.token,
       isHTML5: true,
       allowedFileType: ['image'],

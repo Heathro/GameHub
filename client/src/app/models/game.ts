@@ -15,4 +15,5 @@ export interface Game {
   screenshots: Screenshot[];
   publisher: string;
   release: string;
+  video: string;
 }
