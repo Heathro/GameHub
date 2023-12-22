@@ -114,7 +114,7 @@ export class GameEditComponent implements OnInit, EditComponent {
   deleteGame() {
     if (!this.game) return;
     this.gamesService.deleteGame(this.game).subscribe({
-      next: () => this.router.navigateByUrl('/store')
+      next: () => this.router.navigateByUrl('/games')
     });
   }
 
