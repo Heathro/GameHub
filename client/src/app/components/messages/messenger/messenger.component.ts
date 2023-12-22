@@ -22,7 +22,8 @@ export class MessengerComponent implements OnInit {
   messages: Message[] = [];
   user: User | null = null;
   content = '';
-  loading = false;
+  loadingCompanions = false;
+  loadingMessages = false;
   sending = false;
 
   constructor(private accountService: AccountService, private messagesService: MessagesService) {
@@ -32,10 +33,11 @@ export class MessengerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadCompanions();    
+    this.loadCompanions();
   }
 
   loadCompanions() {
+    this.loadingCompanions = true;
     this.messagesService.getCompanions().subscribe({
       next: companions => {
         this.companions = companions;        
@@ -47,16 +49,18 @@ export class MessengerComponent implements OnInit {
         else if (companions.length > 0) {
           this.loadMessages(companions[0].userName);
         }
+
+        this.loadingCompanions = false;
       }
     });
   }
 
   loadMessages(username: string) {
-    this.loading = true;
+    this.loadingMessages = true;
     this.messagesService.getMessages(username).subscribe({
       next: messages => {
         this.messages = messages;
-        this.loading = false;
+        this.loadingMessages = false;
       }
     });
   }
