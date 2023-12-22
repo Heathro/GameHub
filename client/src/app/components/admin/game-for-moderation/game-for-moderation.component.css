@@ -1,0 +1,17 @@
+.game-moderation-card {
+    background-color: #222222;
+}
+
+.game-moderation-card-cursor {
+    cursor: pointer;
+}
+
+.game-moderation-card-img {
+    width: 100px;
+    margin: 4px;
+    cursor: pointer;
+}
+
+.game-moderation-card-button {
+    margin-top: 14px;
+}

@@ -162,7 +162,7 @@ namespace API.Data.Migrations
                     b.HasIndex("AppUserId")
                         .IsUnique();
 
-                    b.ToTable("Avatars");
+                    b.ToTable("Avatars", (string)null);
                 });
 
             modelBuilder.Entity("API.Entities.Bookmark", b =>
@@ -177,7 +177,7 @@ namespace API.Data.Migrations
 
                     b.HasIndex("TargetGameId");
 
-                    b.ToTable("Bookmarks");
+                    b.ToTable("Bookmarks", (string)null);
                 });
 
             modelBuilder.Entity("API.Entities.Friendship", b =>
@@ -195,7 +195,7 @@ namespace API.Data.Migrations
 
                     b.HasIndex("InviteeId");
 
-                    b.ToTable("Friendships");
+                    b.ToTable("Friendships", (string)null);
                 });
 
             modelBuilder.Entity("API.Entities.Game", b =>
@@ -218,7 +218,7 @@ namespace API.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Games");
+                    b.ToTable("Games", (string)null);
                 });
 
             modelBuilder.Entity("API.Entities.Genres", b =>
@@ -286,7 +286,7 @@ namespace API.Data.Migrations
                     b.HasIndex("GameId")
                         .IsUnique();
 
-                    b.ToTable("Genres");
+                    b.ToTable("Genres", (string)null);
                 });
 
             modelBuilder.Entity("API.Entities.Like", b =>
@@ -301,7 +301,7 @@ namespace API.Data.Migrations
 
                     b.HasIndex("TargetGameId");
 
-                    b.ToTable("Likes");
+                    b.ToTable("Likes", (string)null);
                 });
 
             modelBuilder.Entity("API.Entities.Message", b =>
@@ -343,7 +343,7 @@ namespace API.Data.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("Messages");
+                    b.ToTable("Messages", (string)null);
                 });
 
             modelBuilder.Entity("API.Entities.Platforms", b =>
@@ -369,7 +369,7 @@ namespace API.Data.Migrations
                     b.HasIndex("GameId")
                         .IsUnique();
 
-                    b.ToTable("Platforms");
+                    b.ToTable("Platforms", (string)null);
                 });
 
             modelBuilder.Entity("API.Entities.Poster", b =>
@@ -392,7 +392,7 @@ namespace API.Data.Migrations
                     b.HasIndex("GameId")
                         .IsUnique();
 
-                    b.ToTable("Posters");
+                    b.ToTable("Posters", (string)null);
                 });
 
             modelBuilder.Entity("API.Entities.Publication", b =>
@@ -408,7 +408,7 @@ namespace API.Data.Migrations
                     b.HasIndex("TitleId")
                         .IsUnique();
 
-                    b.ToTable("Publications");
+                    b.ToTable("Publications", (string)null);
                 });
 
             modelBuilder.Entity("API.Entities.Review", b =>
@@ -444,7 +444,7 @@ namespace API.Data.Migrations
 
                     b.HasIndex("ReviewerId");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Reviews", (string)null);
                 });
 
             modelBuilder.Entity("API.Entities.Screenshot", b =>
@@ -466,7 +466,7 @@ namespace API.Data.Migrations
 
                     b.HasIndex("GameId");
 
-                    b.ToTable("Screenshots");
+                    b.ToTable("Screenshots", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>

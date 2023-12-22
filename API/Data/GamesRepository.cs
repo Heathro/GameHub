@@ -105,6 +105,15 @@ public class GamesRepository : IGamesRepository
             paginationParams.ItemsPerPage
         );
     }
+    public async Task<PagedList<GameDto>> GetGamesForModerationAsync(PaginationParams paginationParams)
+    {
+        return await PagedList<GameDto>.CreateAsync
+        (
+            _context.Games.OrderBy(g => g.Title).ProjectTo<GameDto>(_mapper.ConfigurationProvider),
+            paginationParams.CurrentPage,
+            paginationParams.ItemsPerPage
+        );
+    }
 
     public async Task<Game> GetGameByIdAsync(int id)
     {

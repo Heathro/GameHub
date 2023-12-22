@@ -51,6 +51,7 @@ import { ProfileReviewsComponent } from './components/reviews/profile-review/pro
 import { GameEditReviewsComponent } from './components/reviews/game-edit-review/game-edit-review.component';
 import { ReviewManagementComponent } from './components/admin/review-management/review-management.component';
 import { ReviewForModerationComponent } from './components/admin/review-for-moderation/review-for-moderation.component';
+import { GameForModerationComponent } from './components/admin/game-for-moderation/game-for-moderation.component';
 
 @NgModule({
   declarations: [
@@ -95,7 +96,8 @@ import { ReviewForModerationComponent } from './components/admin/review-for-mode
     ProfileReviewsComponent,
     GameEditReviewsComponent,
     ReviewManagementComponent,
-    ReviewForModerationComponent
+    ReviewForModerationComponent,
+    GameForModerationComponent
   ],
   imports: [
     BrowserModule,

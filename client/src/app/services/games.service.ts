@@ -152,8 +152,8 @@ export class GamesService {
     );
   }
 
-  deleteGame(game: Game) {
-    return this.http.delete(this.baseUrl + 'games/delete-game/' + game.title).pipe(
+  deleteGame(title: string) {
+    return this.http.delete(this.baseUrl + 'games/delete-game/' + title).pipe(
       map(() => {
         this.gamesCache = new Map(); //TODO
       })

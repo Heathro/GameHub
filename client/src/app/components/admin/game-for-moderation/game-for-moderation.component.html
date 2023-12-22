@@ -1,0 +1,37 @@
+<div class="card mb-1 game-moderation-card" *ngIf="game">
+    <div class="row">
+
+        <div class="col-1" routerLink="/games/{{game.title}}">
+            <img 
+                class="game-moderation-card-img"
+                src="{{game.poster.url || './assets/poster.png'}}"
+                alt="{{game.title}}"
+            >
+        </div>
+
+        <div class="col-9">
+            <h4 
+                class="ms-2 game-moderation-card-cursor"
+                routerLink="/games/{{game.title}}"
+            >
+                {{game.title}}
+            </h4>
+            <h6 
+                class="text-right ms-2 game-moderation-card-cursor" 
+                routerLink="/players/{{game.publisher}}"
+            >
+                by {{game.publisher}}
+            </h6>
+        </div>
+
+        <div class="col-2 game-moderation-card-button">
+            <button 
+                class="btn btn-outline-danger" 
+                (click)="deleteCurrentGame()"
+            >
+                Delete Game&nbsp;&nbsp;&nbsp;<i class="bi bi-trash3"></i>
+            </button>
+        </div>    
+
+    </div>
+</div>

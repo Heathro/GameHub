@@ -1,42 +1,32 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { map, of } from 'rxjs';
-
 import { environment } from 'src/environments/environment';
 import { getPaginatedResult, getPaginationHeaders } from '../helpers/paginationHelper';
 import { PaginationParams } from '../helpers/pagination';
 import { User } from '../models/user';
 import { OrderType } from '../helpers/orderType';
 import { ReviewForModeration } from '../models/review';
+import { Game } from '../models/game';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminService {
   baseUrl = environment.apiUrl;
-  usersCache = new Map();
-  usersPaginationParams: PaginationParams;
+  usersPaginationParams: PaginationParams;  
+  gamesPaginationParams: PaginationParams;
   reviewsPaginationParams: PaginationParams;
 
   constructor(private http: HttpClient) {
     this.usersPaginationParams = this.initializeUsersPaginationParams();
+    this.gamesPaginationParams = this.initializeGamesPaginationParams();
     this.reviewsPaginationParams = this.initializeReviewsPaginationParams();
   }
 
   getUsersWithRoles() {
-    const queryString = Object.values(this.usersPaginationParams).join('-');
-    
-    const users = this.usersCache.get(queryString);
-    if (users) return of(users);
-
     let params = getPaginationHeaders(this.usersPaginationParams);
-    return getPaginatedResult<User[]>(this.baseUrl + 'admin/users-with-roles', params, this.http).pipe(
-      map(users => {
-        this.usersCache.set(queryString, users);
-        return users;
-      })
-    );
+    return getPaginatedResult<User[]>(this.baseUrl + 'admin/users-with-roles', params, this.http);
   }
 
   editRoles(userName: string, roles: string) {
@@ -48,7 +38,8 @@ export class AdminService {
   }
 
   getGamesForModeration() {
-
+    let params = getPaginationHeaders(this.usersPaginationParams);
+    return getPaginatedResult<Game[]>(this.baseUrl + 'admin/games-for-moderation', params, this.http);
   }
 
   getReviewsForModeration() {
@@ -74,6 +65,18 @@ export class AdminService {
     return this.usersPaginationParams;
   }  
 
+  setGamesPaginationPage(currentPage: number) {
+    this.gamesPaginationParams.currentPage = currentPage;
+  }
+
+  setGamesPaginationOrder(orderType: OrderType) {
+    this.gamesPaginationParams.orderType = orderType;
+  }
+
+  getGamesPaginationParams() {
+    return this.gamesPaginationParams;
+  } 
+
   setReviewsPaginationPage(currentPage: number) {
     this.reviewsPaginationParams.currentPage = currentPage;
   }
@@ -87,8 +90,8 @@ export class AdminService {
   }
 
   clearPrivateData() {
-    this.usersCache = new Map();
     this.usersPaginationParams = this.initializeUsersPaginationParams();
+    this.gamesPaginationParams = this.initializeGamesPaginationParams();
     this.reviewsPaginationParams = this.initializeReviewsPaginationParams();
   }
 
@@ -97,6 +100,10 @@ export class AdminService {
   }
 
   private initializeReviewsPaginationParams() {
+    return new PaginationParams(5, OrderType.az);
+  }
+
+  private initializeGamesPaginationParams() {
     return new PaginationParams(4, OrderType.az);
   }
 }

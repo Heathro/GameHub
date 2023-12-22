@@ -16,17 +16,20 @@ namespace API;
 public class AdminController : BaseApiController
 {
     private readonly UserManager<AppUser> _userManager;
+    private readonly IMapper _mapper;
     private readonly IUsersRepository _usersRepository;
     private readonly IReviewsRepository _reviewsRepository;
-    private readonly IMapper _mapper;
+    private readonly IGamesRepository _gamesRepository;
 
     public AdminController(UserManager<AppUser> userManager, IMapper mapper,
-        IUsersRepository usersRepository, IReviewsRepository reviewsRepository)
+        IUsersRepository usersRepository, IReviewsRepository reviewsRepository,
+        IGamesRepository gamesRepository)
     {
         _userManager = userManager;
         _mapper = mapper;
         _usersRepository = usersRepository;
         _reviewsRepository = reviewsRepository;
+        _gamesRepository = gamesRepository;
     }
 
     [Authorize(Policy = "AdminRole")]
@@ -89,9 +92,19 @@ public class AdminController : BaseApiController
 
     [Authorize(Policy = "AdminModeratorRole")]
     [HttpGet("games-for-moderation")]
-    public ActionResult GetGamesForModeration()
+    public async Task<ActionResult<PagedList<GameDto>>> GetGamesForModeration(
+        [FromQuery]PaginationParams paginationParams)
     {
-        return Ok("ADMIN AND MODERATOR");
+        var games = await _gamesRepository.GetGamesForModerationAsync(paginationParams);
+
+        Response.AddPaginationHeader(new PaginationHeader(
+            games.CurrentPage,
+            games.ItemsPerPage,
+            games.TotalItems,
+            games.TotalPages
+        ));
+
+        return Ok(games);
     }
 
     [Authorize(Policy = "AdminModeratorRole")]
