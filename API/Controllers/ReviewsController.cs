@@ -38,6 +38,7 @@ public class ReviewsController : BaseApiController
         if (review != null)
         {
             review.Content = createReviewDto.Content;
+            review.IsApproved = false;
         }
         else
         {
