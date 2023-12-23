@@ -5,5 +5,7 @@ public enum OrderType
     AZ,
     ZA,
     Newest,
-    Oldest
+    Oldest,
+    MostLiked,
+    LessLiked
 }
