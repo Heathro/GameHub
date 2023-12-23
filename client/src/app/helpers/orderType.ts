@@ -6,5 +6,7 @@ export enum OrderType {
     mostLiked,
     lessLiked,
     mostReviewed,
-    lessReviewed
+    lessReviewed,
+    mostPublicated,
+    lessPublicated
 }

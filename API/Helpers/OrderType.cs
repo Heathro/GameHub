@@ -9,5 +9,7 @@ public enum OrderType
     MostLiked,
     LessLiked,
     MostReviewed,
-    LessReviewed
+    LessReviewed,
+    MostPublicated,
+    LessPublicated
 }

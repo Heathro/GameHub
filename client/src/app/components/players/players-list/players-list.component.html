@@ -12,13 +12,53 @@
                     class="dropdown-item text-center"
                     (click)="sortAZ()"
                 >
-                    A&ensp;<i class="bi bi-arrow-right"></i>&ensp;Z
+                    A&nbsp;&nbsp;&nbsp;&nbsp;<i class="bi bi-arrow-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;Z
                 </a>
                 <a
                     class="dropdown-item text-center" 
                     (click)="sortZA()"
                 >
-                    Z&ensp;<i class="bi bi-arrow-right"></i>&ensp;A
+                    Z&nbsp;&nbsp;&nbsp;&nbsp;<i class="bi bi-arrow-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;A
+                </a>
+                <a 
+                    class="dropdown-item text-center"
+                    (click)="sortMostReviewed()"
+                >
+                    <i class="bi bi-pen-fill"></i>
+                    &nbsp;
+                    <i class="bi bi-arrow-right"></i>
+                    &nbsp;
+                    <i class="bi bi-pen"></i>
+                    </a>
+                <a
+                    class="dropdown-item text-center" 
+                    (click)="sortLessReviewed()"
+                >
+                    <i class="bi bi-pen"></i>
+                    &nbsp;
+                    <i class="bi bi-arrow-right"></i>
+                    &nbsp;
+                    <i class="bi bi-pen-fill"></i>
+                </a>
+                <a 
+                    class="dropdown-item text-center"
+                    (click)="sortMostPublicated()"
+                >
+                    <i class="bi bi-rocket-takeoff-fill"></i>
+                    &nbsp;
+                    <i class="bi bi-arrow-right"></i>
+                    &nbsp;
+                    <i class="bi bi-rocket-takeoff"></i>
+                </a>
+                <a
+                    class="dropdown-item text-center" 
+                    (click)="sortLessPublicated()"
+                >
+                    <i class="bi bi-rocket-takeoff"></i>
+                    &nbsp;
+                    <i class="bi bi-arrow-right"></i>
+                    &nbsp;
+                    <i class="bi bi-rocket-takeoff-fill"></i>
                 </a>
             </div>
         </div>
