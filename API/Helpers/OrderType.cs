@@ -7,5 +7,7 @@ public enum OrderType
     Newest,
     Oldest,
     MostLiked,
-    LessLiked
+    LessLiked,
+    MostReviewed,
+    LessReviewed
 }

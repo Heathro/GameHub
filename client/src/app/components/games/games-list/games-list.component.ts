@@ -60,6 +60,14 @@ export class GamesListComponent implements OnInit {
   sortLessLiked() {
     this.sortGames(OrderType.lessLiked);
   }
+
+  sortMostReviewed() {
+    this.sortGames(OrderType.mostReviewed);
+  }
+
+  sortLessReviewed() {
+    this.sortGames(OrderType.lessReviewed);
+  }
   
   sortGames(orderType: OrderType) {
     this.gamesService.setPaginationPage(1);
@@ -68,10 +76,28 @@ export class GamesListComponent implements OnInit {
     if (this.pagination) this.pagination.currentPage = 1;
   }
 
-  pageChanged(event: any) {
-    if (this.gamesService.getPaginationParams().currentPage !== event.page) {
-      this.gamesService.setPaginationPage(event.page);
-      this.loadGames();
+  getSortingType() {
+    switch (this.gamesService.getPaginationParams().orderType) {  
+      case OrderType.mostReviewed: return '<i class="bi bi-pen-fill"></i>&ensp;' + 
+                                          '<i class="bi bi-arrow-right"></i>&ensp;' + 
+                                          '<i class="bi bi-pen"></i>';
+      case OrderType.lessReviewed: return '<i class="bi bi-pen"></i>&ensp;' + 
+                                          '<i class="bi bi-arrow-right"></i>&ensp;' +
+                                          '<i class="bi bi-pen-fill"></i>';
+      case OrderType.mostLiked:    return '<i class="bi bi-hand-thumbs-up-fill"></i>&ensp;' + 
+                                          '<i class="bi bi-arrow-right"></i>&ensp;' + 
+                                          '<i class="bi bi-hand-thumbs-up"></i>';
+      case OrderType.lessLiked:    return '<i class="bi bi-hand-thumbs-up"></i>&ensp;' + 
+                                          '<i class="bi bi-arrow-right"></i>&ensp;' +
+                                          '<i class="bi bi-hand-thumbs-up-fill"></i>';
+      case OrderType.newest:       return '<i class="bi bi-hourglass"></i>&ensp;' + 
+                                          '<i class="bi bi-arrow-right"></i>&ensp;' + 
+                                          '<i class="bi bi-hourglass-split"></i>';
+      case OrderType.oldest:       return '<i class="bi bi-hourglass-split"></i>&ensp;' + 
+                                          '<i class="bi bi-arrow-right"></i>&ensp;' +
+                                          '<i class="bi bi-hourglass"></i>';
+      case OrderType.za:           return 'Z&ensp;<i class="bi bi-arrow-right"></i>&ensp;A';
+      default:                     return 'A&ensp;<i class="bi bi-arrow-right"></i>&ensp;Z';
     }
   }
 
@@ -87,22 +113,10 @@ export class GamesListComponent implements OnInit {
     this.applyFilters();
   }
 
-  getSortingType() {
-    switch (this.gamesService.getPaginationParams().orderType) {      
-      case OrderType.mostLiked: return '<i class="bi bi-hand-thumbs-up-fill"></i>&ensp;' + 
-                                       '<i class="bi bi-arrow-right"></i>&ensp;' + 
-                                       '<i class="bi bi-hand-thumbs-up"></i>';
-      case OrderType.lessLiked: return '<i class="bi bi-hand-thumbs-up"></i>&ensp;' + 
-                                       '<i class="bi bi-arrow-right"></i>&ensp;' +
-                                       '<i class="bi bi-hand-thumbs-up-fill"></i>';
-      case OrderType.newest:    return '<i class="bi bi-hourglass"></i>&ensp;' + 
-                                       '<i class="bi bi-arrow-right"></i>&ensp;' + 
-                                       '<i class="bi bi-hourglass-split"></i>';
-      case OrderType.oldest:    return '<i class="bi bi-hourglass-split"></i>&ensp;' + 
-                                       '<i class="bi bi-arrow-right"></i>&ensp;' +
-                                       '<i class="bi bi-hourglass"></i>';
-      case OrderType.za:        return 'Z&ensp;<i class="bi bi-arrow-right"></i>&ensp;A';
-      default:                  return 'A&ensp;<i class="bi bi-arrow-right"></i>&ensp;Z';
+  pageChanged(event: any) {
+    if (this.gamesService.getPaginationParams().currentPage !== event.page) {
+      this.gamesService.setPaginationPage(event.page);
+      this.loadGames();
     }
   }
   
