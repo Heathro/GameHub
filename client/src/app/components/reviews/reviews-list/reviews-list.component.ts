@@ -34,14 +34,22 @@ export class ReviewsListComponent implements OnInit {
   }
 
   sortNewest() {
-    this.sortPlayers(OrderType.newest);
+    this.sortReviews(OrderType.newest);
   }
 
   sortOldest() {
-    this.sortPlayers(OrderType.oldest);
+    this.sortReviews(OrderType.oldest);
   }
 
-  sortPlayers(orderType: OrderType) {
+  sortMostLiked() {
+    this.sortReviews(OrderType.mostLiked);
+  }
+
+  sortLessLiked() {
+    this.sortReviews(OrderType.lessLiked);
+  }
+
+  sortReviews(orderType: OrderType) {
     this.reviewsService.setPaginationPage(1);
     this.reviewsService.setPaginationOrder(orderType);
     this.loadReviews();
@@ -57,12 +65,18 @@ export class ReviewsListComponent implements OnInit {
 
   getSortingType() {
     switch (this.reviewsService.getPaginationParams().orderType) {
-      case OrderType.oldest: return '<i class="bi bi-hourglass-split"></i>&ensp;' + 
-                                    '<i class="bi bi-arrow-right"></i>&ensp;' +
-                                    '<i class="bi bi-hourglass"></i>';
-      default:               return '<i class="bi bi-hourglass"></i>&ensp;' + 
-                                    '<i class="bi bi-arrow-right"></i>&ensp;' + 
-                                    '<i class="bi bi-hourglass-split"></i>';
+      case OrderType.mostLiked: return '<i class="bi bi-hand-thumbs-up-fill"></i>&ensp;' + 
+                                       '<i class="bi bi-arrow-right"></i>&ensp;' + 
+                                       '<i class="bi bi-hand-thumbs-up"></i>';
+      case OrderType.lessLiked: return '<i class="bi bi-hand-thumbs-up"></i>&ensp;' + 
+                                       '<i class="bi bi-arrow-right"></i>&ensp;' +
+                                       '<i class="bi bi-hand-thumbs-up-fill"></i>';
+      case OrderType.oldest:    return '<i class="bi bi-hourglass-split"></i>&ensp;' + 
+                                       '<i class="bi bi-arrow-right"></i>&ensp;' +
+                                       '<i class="bi bi-hourglass"></i>';
+      default:                  return '<i class="bi bi-hourglass"></i>&ensp;' + 
+                                       '<i class="bi bi-arrow-right"></i>&ensp;' + 
+                                       '<i class="bi bi-hourglass-split"></i>';
     }
   }
 }

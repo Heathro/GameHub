@@ -66,6 +66,8 @@ public class ReviewsRepository : IReviewsRepository
         
         query = paginationParams.OrderType switch
         {
+            OrderType.MostLiked => query.OrderByDescending(r => r.Game.LikedUsers.Count),
+            OrderType.LessLiked => query.OrderBy(r => r.Game.LikedUsers.Count),
             OrderType.Oldest => query.OrderBy(r => r.ReviewPosted),
             _ => query.OrderByDescending(r => r.ReviewPosted)
         };
