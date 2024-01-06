@@ -22,23 +22,28 @@ export class GamesService {
   user: User | undefined;
 
   constructor(private http: HttpClient) {
-    this.paginationParams = new PaginationParams(4, OrderType.az);
+    this.paginationParams = new PaginationParams(3, OrderType.az);
   }
   
-  getGames(filter: Filter) {
-    const queryString = Object.values(this.paginationParams).join('-') + this.stringifyFilter(filter);
-
+  getGames() {
+    const queryString = Object.values(this.paginationParams).join('-') + this.stringifyFilter(this.filter!);
+    
     const response = this.gamesCache.get(queryString);
-    if (response) return of(response);
+    if (response) {
+      const copy = JSON.parse(JSON.stringify(response));
+      return of(copy);
+    }
 
     let params = getPaginationHeaders(this.paginationParams);
-
-    return getFilteredPaginatedResult<Game[]>(this.baseUrl + 'games/list', params, this.http, filter).pipe(
-      map(response => {
-        this.gamesCache.set(queryString, response);
-        return response;
-      })
-    );
+    return getFilteredPaginatedResult<Game[]>
+      (this.baseUrl + 'games/list', params, this.http, this.filter!).pipe(
+        map(response => {
+          const copy1 = JSON.parse(JSON.stringify(response));
+          const copy2 = JSON.parse(JSON.stringify(response));
+          this.gamesCache.set(queryString, copy1);
+          return copy2;
+        })
+      );
   }
 
   getGame(title: string) {
@@ -200,7 +205,7 @@ export class GamesService {
 
   clearPrivateData() {
     this.gamesCache = new Map();
-    this.paginationParams = new PaginationParams(4, OrderType.az);
+    this.paginationParams = new PaginationParams(3, OrderType.az);
     this.filter = undefined;
     this.user = undefined;
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { GamesService } from 'src/app/services/games.service';
@@ -14,6 +14,7 @@ import { OrderType } from 'src/app/helpers/orderType';
 export class GamesListComponent implements OnInit {
   games: Game[] = [];
   pagination: Pagination | undefined;
+  currentPage = 1;
   filterForm: FormGroup = new FormGroup({});
   loading = false;
 
@@ -21,17 +22,21 @@ export class GamesListComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeFrom(true);
+    this.gamesService.setFilter(this.filterForm.value);
+    this.gamesService.setPaginationPage(1);
+    this.gamesService.setPaginationOrder(OrderType.az);
     this.loadGames();
   }
 
   loadGames() {
     this.loading = true;
-    this.gamesService.getGames(this.filterForm.value).subscribe({
+    this.gamesService.getGames().subscribe({
       next: response => {
         if (response.result && response.pagination) {
           this.games = response.result;
           this.pagination = response.pagination;
           this.loading = false;
+          this.currentPage = response.pagination.currentPage;
         }
       }
     });
@@ -73,7 +78,6 @@ export class GamesListComponent implements OnInit {
     this.gamesService.setPaginationPage(1);
     this.gamesService.setPaginationOrder(orderType);
     this.loadGames();
-    if (this.pagination) this.pagination.currentPage = 1;
   }
 
   getSortingType() {
@@ -105,7 +109,6 @@ export class GamesListComponent implements OnInit {
     this.gamesService.setPaginationPage(1);
     this.gamesService.setFilter(this.filterForm.value);
     this.loadGames();
-    if (this.pagination) this.pagination.currentPage = 1;
   }
 
   resetFilters() {

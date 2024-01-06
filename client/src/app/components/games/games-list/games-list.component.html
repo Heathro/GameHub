@@ -212,6 +212,7 @@
             <div class="row mb-4">
                 <button
                     class="btn btn-outline-warning col-8 mx-auto"
+                    type="button"
                     (click)="resetFilters()"
                     >Reset&nbsp;&nbsp;&nbsp;
                     <i class="bi bi-repeat"></i>
@@ -228,7 +229,7 @@
         [totalItems]="pagination.totalItems"
         [itemsPerPage]="pagination.itemsPerPage"
         [maxSize]="10"
-        [(ngModel)]="pagination.currentPage"
+        [(ngModel)]="currentPage"
         (pageChanged)="pageChanged($event)"
         previousText="&lsaquo;"
         nextText="&rsaquo;"

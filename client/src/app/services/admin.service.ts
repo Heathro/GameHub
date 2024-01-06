@@ -38,7 +38,7 @@ export class AdminService {
   }
 
   getGamesForModeration() {
-    let params = getPaginationHeaders(this.usersPaginationParams);
+    let params = getPaginationHeaders(this.gamesPaginationParams);
     return getPaginatedResult<Game[]>(this.baseUrl + 'admin/games-for-moderation', params, this.http);
   }
 
