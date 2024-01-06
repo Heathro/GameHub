@@ -213,21 +213,18 @@ export class GamesService {
   private stringifyFilter(filter: Filter): string {
     let result = "";
 
-    const categoriesKeys = Object.keys(filter.categories);
     const categoriesValues = Object.values(filter.categories);
-    const platformsKeys = Object.keys(filter.platforms);
     const platformsValues = Object.values(filter.platforms);
-    const genresKeys = Object.keys(filter.genres);
     const genresValues = Object.values(filter.genres);
 
-    for (let i = 0; i < categoriesKeys.length; i++) {
-      result += '-' + categoriesKeys[i] + '-' + categoriesValues[i];
+    for (let i = 0; i < categoriesValues.length; i++) {
+      result += '-' + (categoriesValues[i] ? 1 : 0);
     }
-    for (let i = 0; i < platformsKeys.length; i++) {
-      result += '-' + platformsKeys[i] + '-' + platformsValues[i];
+    for (let i = 0; i < platformsValues.length; i++) {
+      result += '-' + (platformsValues[i] ? 1 : 0);
     }
-    for (let i = 0; i < genresKeys.length; i++) {
-      result += '-' + genresKeys[i] + '-' + genresValues[i];
+    for (let i = 0; i < genresValues.length; i++) {
+      result += '-' + (genresValues[i] ? 1 : 0);
     }
 
     return result;

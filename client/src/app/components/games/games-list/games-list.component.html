@@ -11,7 +11,7 @@
     </div>
 
     <div class="card mb-2 col-2">
-        <form [formGroup]="filterForm" (ngSubmit)="filterForm.valid && applyFilters()" autocomplete="off">
+        <form [formGroup]="filterForm">
 
             <div class="my-4">
                 <div class="dropdown row" dropdown>
@@ -202,7 +202,8 @@
             <div class="row mb-2">
                 <button
                     class="btn btn-outline-info col-8 mx-auto"
-                    type="submit"
+                    type="button"
+                    (click)="applyFilters()"
                     [disabled]="!filterForm.dirty || !filterForm.valid"
                     >Apply&nbsp;&nbsp;&nbsp;
                     <i class="bi bi-sliders2"></i>

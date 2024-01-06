@@ -16,6 +16,7 @@ export class GamesListComponent implements OnInit {
   pagination: Pagination | undefined;
   currentPage = 1;
   filterForm: FormGroup = new FormGroup({});
+  initialFilter: any;
   loading = false;
 
   constructor(private gamesService: GamesService, private formBuilder: FormBuilder) { }
@@ -23,8 +24,6 @@ export class GamesListComponent implements OnInit {
   ngOnInit(): void {
     this.initializeFrom(true);
     this.gamesService.setFilter(this.filterForm.value);
-    this.gamesService.setPaginationPage(1);
-    this.gamesService.setPaginationOrder(OrderType.az);
     this.loadGames();
   }
 
