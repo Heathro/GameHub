@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { map, of } from 'rxjs';
+import { delay, map, of } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 import { getFilteredPaginatedResult, getPaginationHeaders } from '../helpers/paginationHelper';
@@ -22,26 +22,21 @@ export class GamesService {
   user: User | undefined;
 
   constructor(private http: HttpClient) {
-    this.paginationParams = new PaginationParams(3, OrderType.az);
+    this.paginationParams = new PaginationParams(4, OrderType.az);
   }
   
   getGames() {
     const queryString = Object.values(this.paginationParams).join('-') + this.stringifyFilter(this.filter!);
     
     const response = this.gamesCache.get(queryString);
-    if (response) {
-      const copy = JSON.parse(JSON.stringify(response));
-      return of(copy);
-    }
+    if (response) return of(response).pipe(delay(10));
 
     let params = getPaginationHeaders(this.paginationParams);
     return getFilteredPaginatedResult<Game[]>
       (this.baseUrl + 'games/list', params, this.http, this.filter!).pipe(
         map(response => {
-          const copy1 = JSON.parse(JSON.stringify(response));
-          const copy2 = JSON.parse(JSON.stringify(response));
-          this.gamesCache.set(queryString, copy1);
-          return copy2;
+          this.gamesCache.set(queryString, response);
+          return response;
         })
       );
   }
@@ -205,7 +200,7 @@ export class GamesService {
 
   clearPrivateData() {
     this.gamesCache = new Map();
-    this.paginationParams = new PaginationParams(3, OrderType.az);
+    this.paginationParams = new PaginationParams(4, OrderType.az);
     this.filter = undefined;
     this.user = undefined;
   }

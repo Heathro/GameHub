@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { map, of } from 'rxjs';
+import { delay, map, of } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 import { getPaginatedResult, getPaginationHeaders } from '../helpers/paginationHelper';
@@ -31,7 +31,7 @@ export class PlayersService {
     const queryString = Object.values(this.paginationParams).join('-');
     
     const players = this.playersCache.get(queryString);
-    if (players) return of(players);
+    if (players) return of(players).pipe(delay(10));
 
     let params = getPaginationHeaders(this.paginationParams);
     return getPaginatedResult<Player[]>(this.baseUrl + 'users/list', params, this.http).pipe(

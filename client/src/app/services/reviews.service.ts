@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { map, of } from 'rxjs';
+import { delay, map, of } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 import { PaginationParams } from '../helpers/pagination';
@@ -25,7 +25,7 @@ export class ReviewsService {
     const queryString = Object.values(this.paginationParams).join('-');
     
     const reviews = this.reviewsCache.get(queryString);
-    if (reviews) return of(reviews);
+    if (reviews) return of(reviews).pipe(delay(10));
 
     let params = getPaginationHeaders(this.paginationParams);
     return getPaginatedResult<Review[]>(this.baseUrl + 'reviews/list', params, this.http).pipe(

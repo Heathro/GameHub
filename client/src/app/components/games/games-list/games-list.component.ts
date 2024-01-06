@@ -14,9 +14,7 @@ import { OrderType } from 'src/app/helpers/orderType';
 export class GamesListComponent implements OnInit {
   games: Game[] = [];
   pagination: Pagination | undefined;
-  currentPage = 1;
   filterForm: FormGroup = new FormGroup({});
-  initialFilter: any;
   loading = false;
 
   constructor(private gamesService: GamesService, private formBuilder: FormBuilder) { }
@@ -35,7 +33,6 @@ export class GamesListComponent implements OnInit {
           this.games = response.result;
           this.pagination = response.pagination;
           this.loading = false;
-          this.currentPage = response.pagination.currentPage;
         }
       }
     });
