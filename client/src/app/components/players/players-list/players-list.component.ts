@@ -62,7 +62,6 @@ export class PlayersListComponent implements OnInit {
     this.playersService.setPaginationPage(1);
     this.playersService.setPaginationOrder(orderType);
     this.loadPlayers();
-    if (this.pagination) this.pagination.currentPage = 1;
   }
 
   pageChanged(event: any) {

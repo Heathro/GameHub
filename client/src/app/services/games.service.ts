@@ -22,7 +22,7 @@ export class GamesService {
   user: User | undefined;
 
   constructor(private http: HttpClient) {
-    this.paginationParams = new PaginationParams(4, OrderType.az);
+    this.paginationParams = this.initializePaginationParams();
   }
   
   getGames() {
@@ -200,7 +200,7 @@ export class GamesService {
 
   clearPrivateData() {
     this.gamesCache = new Map();
-    this.paginationParams = new PaginationParams(4, OrderType.az);
+    this.paginationParams = this.initializePaginationParams();
     this.filter = undefined;
     this.user = undefined;
   }
@@ -223,5 +223,9 @@ export class GamesService {
     }
 
     return result;
+  }
+
+  private initializePaginationParams() {
+    return new PaginationParams(4, OrderType.newest);
   }
 }

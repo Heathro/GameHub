@@ -22,18 +22,6 @@
                         [innerHTML]="getSortingType()"
                     ></button>
                     <div class="dropdown-menu dropdown-menu-right col-8" *dropdownMenu>
-                        <a 
-                            class="dropdown-item text-center"
-                            (click)="sortAZ()"
-                        >
-                            A&nbsp;&nbsp;&nbsp;&nbsp;<i class="bi bi-arrow-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;Z
-                        </a>
-                        <a
-                            class="dropdown-item text-center" 
-                            (click)="sortZA()"
-                        >
-                            Z&nbsp;&nbsp;&nbsp;&nbsp;<i class="bi bi-arrow-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;A
-                        </a>
                         <a
                             class="dropdown-item text-center" 
                             (click)="sortNewest()"
@@ -53,6 +41,18 @@
                             <i class="bi bi-arrow-right"></i>
                             &nbsp;
                             <i class="bi bi-hourglass"></i>
+                        </a>
+                        <a 
+                            class="dropdown-item text-center"
+                            (click)="sortAZ()"
+                        >
+                            A&nbsp;&nbsp;&nbsp;&nbsp;<i class="bi bi-arrow-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;Z
+                        </a>
+                        <a
+                            class="dropdown-item text-center" 
+                            (click)="sortZA()"
+                        >
+                            Z&nbsp;&nbsp;&nbsp;&nbsp;<i class="bi bi-arrow-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;A
                         </a>
                         <a
                             class="dropdown-item text-center" 

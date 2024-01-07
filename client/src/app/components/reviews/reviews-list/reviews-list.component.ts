@@ -53,7 +53,6 @@ export class ReviewsListComponent implements OnInit {
     this.reviewsService.setPaginationPage(1);
     this.reviewsService.setPaginationOrder(orderType);
     this.loadReviews();
-    if (this.pagination) this.pagination.currentPage = 1;
   }
 
   pageChanged(event: any) {
