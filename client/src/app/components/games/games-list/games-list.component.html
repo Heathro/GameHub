@@ -204,7 +204,7 @@
                     class="btn btn-outline-info col-8 mx-auto"
                     type="button"
                     (click)="applyFilters()"
-                    [disabled]="!filterForm.dirty || !filterForm.valid"
+                    [disabled]="!isFilterChanged()"
                     >Apply&nbsp;&nbsp;&nbsp;
                     <i class="bi bi-sliders2"></i>
                 </button>
@@ -215,6 +215,7 @@
                     class="btn btn-outline-warning col-8 mx-auto"
                     type="button"
                     (click)="resetFilters()"
+                    [disabled]="isFilterInitial()"
                     >Reset&nbsp;&nbsp;&nbsp;
                     <i class="bi bi-repeat"></i>
                 </button>

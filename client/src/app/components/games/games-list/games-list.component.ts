@@ -5,6 +5,7 @@ import { GamesService } from 'src/app/services/games.service';
 import { Game } from 'src/app/models/game';
 import { Pagination } from 'src/app/helpers/pagination';
 import { OrderType } from 'src/app/helpers/orderType';
+import { deepEqual } from 'src/app/helpers/compareHelper';
 
 @Component({
   selector: 'app-store',
@@ -15,6 +16,8 @@ export class GamesListComponent implements OnInit {
   games: Game[] = [];
   pagination: Pagination | undefined;
   filterForm: FormGroup = new FormGroup({});
+  currentFilter: any;
+  initialFilter: any;
   loading = false;
 
   constructor(private gamesService: GamesService, private formBuilder: FormBuilder) { }
@@ -101,9 +104,18 @@ export class GamesListComponent implements OnInit {
     }
   }
 
+  isFilterChanged() {
+    return !deepEqual(this.currentFilter, this.filterForm.value);
+  }
+
+  isFilterInitial() {
+    return deepEqual(this.initialFilter, this.filterForm.value);
+  }
+
   applyFilters() {
     this.gamesService.setPaginationPage(1);
     this.gamesService.setFilter(this.filterForm.value);
+    this.currentFilter = this.filterForm.value;
     this.loadGames();
   }
 
@@ -153,5 +165,38 @@ export class GamesListComponent implements OnInit {
         survival: [filter && initial ? filter.genres.survival : false, { nonNullable: true }]
       })
     });
+
+    this.currentFilter = this.filterForm.value;
+    this.initialFilter = {
+      categories: {
+        published: false,
+        bookmarked: false,
+        liked: false
+      },
+      platforms: {
+        windows: false,
+        macos: false,
+        linux: false
+      },
+      genres: {
+        action: false,
+        adventure: false,
+        card: false,
+        educational: false,
+        fighting: false,
+        horror: false,
+        platformer: false,
+        puzzle: false,
+        racing: false,
+        rhythm: false,
+        roleplay: false,
+        shooter: false,
+        simulation: false,
+        sport: false,
+        stealth: false,
+        strategy: false,
+        survival: false
+      }
+    };
   }
 }
