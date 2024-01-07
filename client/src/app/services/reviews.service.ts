@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { delay, map, of } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
-import { PaginationParams } from '../helpers/pagination';
+import { PaginatedResult, PaginationParams } from '../helpers/pagination';
 import { getPaginatedResult, getPaginationHeaders } from '../helpers/paginationHelper';
 import { OrderType } from '../helpers/orderType';
 import { Review, ReviewMenu } from '../models/review';
@@ -23,7 +23,7 @@ export class ReviewsService {
   
   getAllReviews() {
     const queryString = Object.values(this.paginationParams).join('-');
-    
+
     const reviews = this.reviewsCache.get(queryString);
     if (reviews) return of(reviews).pipe(delay(10));
 
@@ -37,10 +37,20 @@ export class ReviewsService {
   }
 
   getReviewsForGame(title: string) {
+    const firstElement: PaginatedResult<Review[]> = this.reviewsCache.values().next().value;
+    if (firstElement && firstElement.result) {
+      return of(firstElement.result.filter(r => r.gameTitle !== title));
+    }
+
     return this.http.get<Review[]>(this.baseUrl + 'reviews/game/' + title);
   }
 
   getReviewsForPlayer(username: string) {
+    const firstElement: PaginatedResult<Review[]> = this.reviewsCache.values().next().value;
+    if (firstElement && firstElement.result) {
+      return of(firstElement.result.filter(r => r.reviewerUsername !== username));
+    }
+
     return this.http.get<Review[]>(this.baseUrl + 'reviews/player/' + username);
   }
 

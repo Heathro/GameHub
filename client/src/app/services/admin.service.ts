@@ -99,11 +99,11 @@ export class AdminService {
     return new PaginationParams(7, OrderType.az);
   }
 
-  private initializeReviewsPaginationParams() {
-    return new PaginationParams(5, OrderType.az);
+  private initializeGamesPaginationParams() {
+    return new PaginationParams(7, OrderType.az);
   }
 
-  private initializeGamesPaginationParams() {
-    return new PaginationParams(4, OrderType.az);
+  private initializeReviewsPaginationParams() {
+    return new PaginationParams(5, OrderType.az);
   }
 }
