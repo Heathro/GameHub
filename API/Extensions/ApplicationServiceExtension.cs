@@ -3,6 +3,7 @@ using API.Data;
 using API.Interfaces;
 using API.Services;
 using API.Helpers;
+using API.SignalR;
 
 namespace API.Extensions;
 
@@ -15,8 +16,12 @@ public static class ApplicationServiceExtension
         {
             options.UseSqlite(config.GetConnectionString("DefaultConnection"));
         });
+
         services.AddCors();
+
         services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IImageService, ImageService>();
+
         services.AddScoped<IUsersRepository, UsersRepository>();
         services.AddScoped<IGamesRepository, GamesRepository>();
         services.AddScoped<ILikesRepository, LikesRepository>();
@@ -24,10 +29,14 @@ public static class ApplicationServiceExtension
         services.AddScoped<IFriendsRepository, FriendsRepository>();
         services.AddScoped<IBookmarksRepository, BookmarksRepository>();
         services.AddScoped<IReviewsRepository, ReviewsRepository>();
-        services.AddScoped<IImageService, ImageService>();
-        services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-        services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
+
+        services.AddSignalR();
+        services.AddSingleton<PresenceTracker>();
         services.AddScoped<LogUserActivity>();
+
+        services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        
+        services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
 
         return services;
     }

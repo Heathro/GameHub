@@ -11,7 +11,26 @@
             <h5 class="text-right mt-3">
                 {{player.userName}}
             </h5>
-            <h6 class="text-muted text-right">Last Online: {{player.lastActive + 'Z' | timeago}}</h6>
+            <ng-container  *ngIf="presenceService.onlineUsers$ | async as onlineUsers">
+
+                <h6 
+                    *ngIf="onlineUsers.includes(player.userName); else offline"
+                    class="text-info text-right"
+                >
+                    Online
+                </h6>
+
+                <ng-template #offline>
+
+                    <h6 
+                        class="text-muted text-right"
+                    >
+                        Last Online: {{ player.lastActive + 'Z' | timeago }}
+                    </h6>
+                    
+                </ng-template>
+
+            </ng-container>
         </div>
 
         <div class="col-1 friend-card-buttons">

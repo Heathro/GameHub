@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 import { Player } from 'src/app/models/player';
+import { PresenceService } from 'src/app/services/presence.service';
 
 @Component({
   selector: 'app-contact-card',
@@ -11,7 +12,7 @@ export class ContactCardComponent implements OnInit {
   @Output() loadMessages = new EventEmitter<string>();
   @Input() player: Player | undefined;
 
-  constructor() { }
+  constructor(public presenceService: PresenceService) { }
 
   ngOnInit(): void {
   }

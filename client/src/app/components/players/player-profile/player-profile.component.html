@@ -17,8 +17,21 @@
                 </div>
                 <div>
                     <strong>Last active:</strong>
-                    <p>{{player.lastActive + 'Z' | timeago}}</p>
+                    <ng-container  *ngIf="presenceService.onlineUsers$ | async as onlineUsers">
+                    <p 
+                        *ngIf="onlineUsers.includes(player.userName); else offline"
+                        class="text-info"
+                    >
+                        Online
+                    </p>    
+                    <ng-template #offline>
+                        <p>{{player.lastActive + 'Z' | timeago}}</p>
+                    </ng-template>    
+                </ng-container>
                 </div>
+                
+                
+
             </div>
             <div class="card-footer">
                 <div class="btn-group d-flex my-2" *ngIf="user && user.userName === player.userName">

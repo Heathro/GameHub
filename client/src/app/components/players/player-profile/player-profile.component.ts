@@ -4,12 +4,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { take } from 'rxjs';
 
 import { AccountService } from 'src/app/services/account.service';
+import { PresenceService } from 'src/app/services/presence.service';
+import { ReviewsService } from 'src/app/services/reviews.service';
 import { MessagesService } from 'src/app/services/messages.service';
 import { PlayersService } from 'src/app/services/players.service';
 import { Player } from 'src/app/models/player';
 import { User } from 'src/app/models/user';
 import { Review } from 'src/app/models/review';
-import { ReviewsService } from 'src/app/services/reviews.service';
 
 @Component({
   selector: 'app-player-profile',
@@ -24,6 +25,7 @@ export class PlayerProfileComponent implements OnInit {
 
   constructor(
     private accountService: AccountService,
+    public presenceService: PresenceService,
     private playersService: PlayersService,
     private messagesService: MessagesService,
     private reviewsService: ReviewsService,

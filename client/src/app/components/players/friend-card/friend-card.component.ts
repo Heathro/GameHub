@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { PresenceService } from 'src/app/services/presence.service';
 import { MessagesService } from 'src/app/services/messages.service';
 import { PlayersService } from 'src/app/services/players.service';
 import { Player } from 'src/app/models/player';
@@ -15,6 +16,7 @@ export class FriendCardComponent implements OnInit {
   @Input() player: Player | undefined;
 
   constructor(
+    public presenceService: PresenceService,
     private playersService: PlayersService, 
     private messagesService: MessagesService,
     private router: Router

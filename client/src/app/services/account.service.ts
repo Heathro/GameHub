@@ -9,6 +9,7 @@ import { User } from '../models/user';
 import { MessagesService } from './messages.service';
 import { PlayersService } from './players.service';
 import { AdminService } from './admin.service';
+import { PresenceService } from './presence.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,8 @@ export class AccountService {
   currentUser$ = this.currentUserSource.asObservable();
 
   constructor(
-    private http: HttpClient, 
+    private http: HttpClient,
+    private presenceService: PresenceService,
     private gamesService: GamesService,
     private messagesService: MessagesService,
     private playerService: PlayersService,
@@ -48,6 +50,7 @@ export class AccountService {
     this.clearPrivateData();
     localStorage.removeItem('user');
     this.currentUserSource.next(null);
+    this.presenceService.stopHubConnection();
   }
 
   setCurrentUser(user: User) {
@@ -58,10 +61,7 @@ export class AccountService {
     localStorage.setItem('user', JSON.stringify(user));
     this.currentUserSource.next(user);
     this.gamesService.setCurrentUser(user);
-  }
-
-  private getDecodetToken(token: string) {
-    return JSON.parse(atob(token.split('.')[1]));
+    this.presenceService.createHubConnection(user);
   }
 
   clearPrivateData() {
@@ -69,5 +69,9 @@ export class AccountService {
     this.messagesService.clearPrivateData();
     this.playerService.clearPrivateData();
     this.adminService.clearPrivateData();
+  }
+
+  private getDecodetToken(token: string) {
+    return JSON.parse(atob(token.split('.')[1]));
   }
 }
