@@ -2,7 +2,10 @@
 
     <div class="col-4" *ngIf="companions.length > 0">
         <div *ngFor="let companion of companions">
-            <app-contact-card (loadMessages)="loadMessages($event)" [player]="companion"></app-contact-card>
+            <app-contact-card 
+                (loadMessages)="changeCompanion($event)"
+                [player]="companion"
+            ></app-contact-card>
         </div>
     </div>
 
@@ -27,6 +30,7 @@
 
     <div class="col-8">
         <div>
+            <!-- 
             <div class="row">
                 <h4 
                     class="d-inline text-info ms-4 mt-2 col-7"
@@ -49,9 +53,34 @@
                     Delete Chat&nbsp;&nbsp;&nbsp;<i class="bi bi-trash3"></i>
                 </button>
             </div>
+            -->
+
+            <div class="row">
+                <h4 
+                    class="d-inline text-info ms-4 mt-2 col-7"
+                >   
+                    &nbsp;&nbsp;<i class="bi bi-chat-dots"></i>
+                    &nbsp;&nbsp;{{getCurrentConversant()}}
+                </h4>
+                <button 
+                    class="btn btn-outline-danger mb-2 col-2 me-1"
+                    [disabled]="(messagesService.messageThread$ | async)?.length === 0"
+                    (click)="deleteMessages()"
+                >
+                    Clear Chat&nbsp;&nbsp;&nbsp;<i class="bi bi-trash3"></i>
+                </button>
+                <button 
+                    class="btn btn-outline-danger mb-2 col-2"
+                    [disabled]="getCurrentConversant().length === 0"
+                    (click)="deleteCompanion()"
+                >   
+                    Delete Chat&nbsp;&nbsp;&nbsp;<i class="bi bi-trash3"></i>
+                </button>
+            </div>
 
             <div class="card">
 
+                <!-- 
                 <div class="card-body" *ngIf="!loadingMessages && messages && messages.length !== 0">
                     <div *ngFor="let message of messages; let i = index">
                         <app-message
@@ -59,6 +88,22 @@
                             [previousMessage]="i === 0 ? undefined : messages[i-1]"
                             [currentMessage]="messages[i]"
                             [nextMessage]="i === messages.length ? undefined : messages[i+1]"
+                            [currentUser]="user?.userName"
+                        ></app-message>
+                    </div>
+                </div>
+                -->
+                
+                <div 
+                    class="card-body"
+                    *ngIf="messagesService.messageThread$ | async as messageThread"
+                >
+                    <div *ngFor="let message of messageThread; let i = index">
+                        <app-message
+                            (deleteMessage)="deleteMessage($event)"
+                            [previousMessage]="i === 0 ? undefined : messageThread[i-1]"
+                            [currentMessage]="messageThread[i]"
+                            [nextMessage]="i === messageThread.length ? undefined : messageThread[i+1]"
                             [currentUser]="user?.userName"
                         ></app-message>
                     </div>

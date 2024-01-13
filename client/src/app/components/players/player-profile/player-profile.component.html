@@ -13,7 +13,7 @@
                 </div>
                 <div>
                     <strong>Member since:</strong>
-                    <p>{{player.created + 'Z' | date: 'd MMMM yyyy'}}</p>
+                    <p>{{player.created | date: 'd MMMM yyyy'}}</p>
                 </div>
                 <div>
                     <strong>Last active:</strong>
@@ -25,7 +25,7 @@
                         Online
                     </p>    
                     <ng-template #offline>
-                        <p>{{player.lastActive + 'Z' | timeago}}</p>
+                        <p>{{player.lastActive | timeago}}</p>
                     </ng-template>    
                 </ng-container>
                 </div>

@@ -1,4 +1,5 @@
-﻿using API.DTOs;
+﻿using System.Xml.Serialization;
+using API.DTOs;
 using API.Entities;
 
 namespace API.Interfaces;
@@ -13,4 +14,8 @@ public interface IMessagesRepository
     Task DeleteUserMessagesAsync(string username);
     Task<IEnumerable<PlayerDto>> GetCompanionsAsync(string username);
     Task<bool> SaveAllAsync();
+    void AddGroup(Group group);
+    void RemoveConnection(Connection connection);
+    Task<Connection> GetConnection(string connectionId);
+    Task<Group> GetGroup(string name);
 }

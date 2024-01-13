@@ -9,7 +9,7 @@
                 by {{review.reviewerUsername}}
             </h6>
             <h6 class="d-inline ms-4 text-body-secondary">
-                {{review.reviewPosted + 'Z' | timeago}}
+                {{review.reviewPosted | timeago}}
             </h6>
         </div>
         <h6 class="d-inline text-end me-2 cursor-pointer-on" (click)="deleteCurrentReview()">

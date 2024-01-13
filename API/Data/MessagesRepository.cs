@@ -104,4 +104,26 @@ public class MessagesRepository : IMessagesRepository
     {
         return await _context.SaveChangesAsync() > 0;
     }
+
+    public void AddGroup(Group group)
+    {
+        _context.Groups.Add(group);
+    }
+
+    public void RemoveConnection(Connection connection)
+    {
+        _context.Connections.Remove(connection);
+    }
+
+    public async Task<Connection> GetConnection(string connectionId)
+    {
+        return await _context.Connections.FindAsync(connectionId);
+    }
+
+    public async Task<Group> GetGroup(string name)
+    {
+        return await _context.Groups
+            .Include(g => g.Connections)
+            .FirstOrDefaultAsync(g => g.Name == name);
+    }
 }

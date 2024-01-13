@@ -30,7 +30,7 @@
 
     <div class="d-flex" *ngIf="timeRequired && currentMessage.senderUsername !== currentUser">
         <h6 class="text-muted text-right ms-4 message-timestamp">
-            {{currentMessage.messageSent + 'Z' | date:getDateFormat()}}
+            {{currentMessage.messageSent | date:getDateFormat()}}
         </h6>
     </div>    
 
@@ -40,7 +40,7 @@
             <i class="bi bi-check me-4 message-read" *ngIf="currentMessage.messageRead"></i>
         </h6>
         <h6 class="text-muted text-right me-1 message-timestamp">
-            {{currentMessage.messageSent + 'Z' | date:getDateFormat()}}
+            {{currentMessage.messageSent | date:getDateFormat()}}
         </h6>
     </div>
 

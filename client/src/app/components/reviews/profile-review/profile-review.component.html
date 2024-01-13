@@ -25,7 +25,7 @@
 
     <div class="m-1 d-flex justify-content-between">
         <h6 class="d-inline ms-2 text-body-secondary">
-            {{review.reviewPosted + 'Z' | timeago}}
+            {{review.reviewPosted | timeago}}
         </h6>
         <h6 class="d-inline text-end me-2 cursor-pointer-on" (click)="deleteCurrentReview()">
             <i class="bi bi-trash3 text-danger"></i>

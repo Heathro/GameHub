@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 using API.Controllers;
 using API.Interfaces;
-using API.DTOs;
 using API.Extensions;
 using API.Entities;
+using API.DTOs;
 
 namespace API;
 
@@ -31,7 +31,7 @@ public class MessagesController : BaseApiController
 
         if (username == createMessageDto.RecipientUsername)
         {
-            return BadRequest("You cannot send messages to yourselft");
+            return BadRequest("You cannot send messages to yourself");
         }
 
         var sender = await _usersRepository.GetUserByUsernameAsync(username);

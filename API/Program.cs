@@ -28,15 +28,22 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.MapHub<PresenceHub>("hubs/presence");
+app.MapHub<MessageHub>("hubs/message");
 
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
 try
 {
     var context = services.GetRequiredService<DataContext>();
-    await context.Database.MigrateAsync();
+
     var userManager = services.GetRequiredService<UserManager<AppUser>>();
     var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
+
+    await context.Database.MigrateAsync();
+
+    await context.Database.ExecuteSqlRawAsync("DELETE FROM [Groups]");
+    await context.Database.ExecuteSqlRawAsync("DELETE FROM [Connections]");
+
     await Seed.SeedUsers(userManager, roleManager);
     await Seed.SeedGames(context);
 }

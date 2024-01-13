@@ -45,5 +45,10 @@ public class AutoMapperProfiles : Profile
         CreateMap<Review, ReviewModerationDto>()
             .ForMember(d => d.ReviewerAvatar, o => o.MapFrom(s => s.Reviewer.Avatar))
             .ForMember(d => d.GamePoster, o => o.MapFrom(s => s.Game.Poster));
+
+        CreateMap<DateTime, DateTime>()
+            .ConvertUsing(d => DateTime.SpecifyKind(d, DateTimeKind.Utc));
+        CreateMap<DateTime?, DateTime?>()
+            .ConvertUsing(d => d.HasValue ? DateTime.SpecifyKind(d.Value, DateTimeKind.Utc) : null);
     }
 }
