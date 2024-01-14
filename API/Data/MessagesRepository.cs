@@ -65,8 +65,6 @@ public class MessagesRepository : IMessagesRepository
             {
                 message.MessageRead = DateTime.UtcNow;
             }
-
-            await _context.SaveChangesAsync();
         }
 
         return _mapper.Map<IEnumerable<MessageDto>>(messages);
@@ -98,11 +96,6 @@ public class MessagesRepository : IMessagesRepository
             .Where(u => companions.Contains(u.Id))
             .ProjectTo<PlayerDto>(_mapper.ConfigurationProvider)
             .ToListAsync();
-    }
-
-    public async Task<bool> SaveAllAsync()
-    {
-        return await _context.SaveChangesAsync() > 0;
     }
 
     public void AddGroup(Group group)

@@ -13,18 +13,11 @@ namespace API.Data;
 public class UsersRepository : IUsersRepository
 {
     private readonly DataContext _context;
-    private readonly UserManager<AppUser> _userManager;
-    private readonly IMessagesRepository _messagesRepository;
-    private readonly IImageService _imageService;
     private readonly IMapper _mapper;
 
-    public UsersRepository(DataContext context, UserManager<AppUser> userManager,
-        IMessagesRepository messagesRepository, IImageService imageService, IMapper mapper)
+    public UsersRepository(DataContext context, IMapper mapper)
     {
         _context = context;
-        _userManager = userManager;
-        _messagesRepository = messagesRepository;
-        _imageService = imageService;
         _mapper = mapper;
     }
 
@@ -42,18 +35,24 @@ public class UsersRepository : IUsersRepository
             .SingleOrDefaultAsync(user => user.UserName == userName);
     }
 
-    public async Task DeleteUserAsync(string userName)
-    {
-        var user = await GetUserByUsernameAsync(userName);
+    // public async Task DeleteUserAsync(string userName)
+    // {
+    //     var user = await GetUserByUsernameAsync(userName);
 
-        var avatarPublicId = user.Avatar.PublicId;
-        if (avatarPublicId != null) await _imageService.DeleteImageAsync(avatarPublicId);
+    //     var avatarPublicId = user.Avatar.PublicId;
+    //     if (avatarPublicId != null) await _imageService.DeleteImageAsync(avatarPublicId);
 
-        await _messagesRepository.DeleteUserMessagesAsync(userName);
-        await _messagesRepository.SaveAllAsync();
+    //     var messages = await _context.Messages
+    //         .Where(m => m.SenderUsername == userName || m.RecipientUsername == userName)
+    //         .ToListAsync();
 
-        await _userManager.DeleteAsync(user);
-    }
+    //     _context.Messages.RemoveRange(messages);
+
+    //     await _messagesRepository.DeleteUserMessagesAsync(userName);
+    //     await _messagesRepository.SaveAllAsync();
+
+    //     await _userManager.DeleteAsync(user);
+    // }
     
     public async Task<PlayerDto> GetPlayerAsync(int currentUserId, string requestedUserName)
     {
@@ -133,10 +132,5 @@ public class UsersRepository : IUsersRepository
     {
         var user = await GetUserByUsernameAsync(username);
         user.LastActive = DateTime.UtcNow;
-    }
-
-    public async Task<bool> SaveAllAsync()
-    {
-        return await _context.SaveChangesAsync() > 0;
     }
 }

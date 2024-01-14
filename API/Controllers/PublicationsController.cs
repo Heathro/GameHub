@@ -9,27 +9,24 @@ namespace API.Controllers;
 
 public class PublicationsController : BaseApiController
 {
-    private readonly IUsersRepository _usersRepository;
-    private readonly IGamesRepository _gamesRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public PublicationsController(IUsersRepository usersRepository, 
-    IGamesRepository gamesRepository, IMapper mapper)
+    public PublicationsController(IUnitOfWork unitOfWork, IMapper mapper)
     {
-        _usersRepository = usersRepository;
-        _gamesRepository = gamesRepository;
+        _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
 
     [HttpPost("new")]
     public async Task<ActionResult> PublishGame(GamePublishDto gamePublishDto)
     {
-        if (await _gamesRepository.TitleExistsAsync(gamePublishDto.Title))
+        if (await _unitOfWork.GamesRepository.TitleExistsAsync(gamePublishDto.Title))
         {
             return BadRequest("Title is already taken");
         }
 
-        var publisher = await _usersRepository.GetUserByUsernameAsync(User.GetUsername());
+        var publisher = await _unitOfWork.UsersRepository.GetUserByUsernameAsync(User.GetUsername());
         
         var game = _mapper.Map<Game>(gamePublishDto);
         game.Poster = new Poster{ Url = "" };
@@ -39,7 +36,7 @@ public class PublicationsController : BaseApiController
 
         publisher.Publications.Add(publication);
 
-        if (await _gamesRepository.SaveAllAsync()) return Ok();
+        if (await _unitOfWork.Complete()) return Ok();
 
         return BadRequest("Failed to publish game");
     }

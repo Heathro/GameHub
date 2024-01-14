@@ -24,9 +24,4 @@ public class LikesRepository : ILikesRepository
             .Include(u => u.LikedGames)
             .FirstOrDefaultAsync(u => u.Id == userId);
     }
-
-    public async Task<bool> SaveAllAsync()
-    {
-        return await _context.SaveChangesAsync() > 0;
-    }
 }

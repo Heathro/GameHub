@@ -12,13 +12,13 @@ namespace API.Controllers;
 [Authorize]
 public class GamesController : BaseApiController
 {
-    private readonly IGamesRepository _gamesRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly IImageService _imageService;
 
-    public GamesController(IGamesRepository gamesRepository, IMapper mapper, IImageService imageService)
+    public GamesController(IUnitOfWork unitOfWork, IMapper mapper, IImageService imageService)
     {
-        _gamesRepository = gamesRepository;
+        _unitOfWork = unitOfWork;
         _mapper = mapper;
         _imageService = imageService;
     }
@@ -27,7 +27,7 @@ public class GamesController : BaseApiController
     public async Task<ActionResult<PagedList<GameDto>>> GetGames(
         [FromQuery]PaginationParams paginationParams, [FromBody]GameFilterDto gameFilterDto)
     {
-        var games = await _gamesRepository
+        var games = await _unitOfWork.GamesRepository
             .GetGamesAsync(paginationParams, gameFilterDto, User.GetUserId());
 
         Response.AddPaginationHeader(new PaginationHeader(
@@ -43,18 +43,18 @@ public class GamesController : BaseApiController
     [HttpGet("{title}")]
     public async Task<ActionResult<GameDto>> GetGame(string title)
     {
-        return await _gamesRepository.GetGameAsync(title);
+        return await _unitOfWork.GamesRepository.GetGameAsync(title);
     }
 
     [HttpPut("update-game/{title}")]
     public async Task<ActionResult> UpdateGame(string title, [FromBody]GameEditDto gameEditDto)
     {
-        if (await _gamesRepository.TitleExistsAsync(gameEditDto.Title, gameEditDto.Id))
+        if (await _unitOfWork.GamesRepository.TitleExistsAsync(gameEditDto.Title, gameEditDto.Id))
         {
             return BadRequest("Title is already taken");
         }
         
-        var game = await _gamesRepository.GetGameByTitleAsync(title);
+        var game = await _unitOfWork.GamesRepository.GetGameByTitleAsync(title);
         if (game == null) return NotFound();
         if (game.Publication.PublisherId != User.GetUserId())
         {
@@ -63,7 +63,7 @@ public class GamesController : BaseApiController
         
         _mapper.Map(gameEditDto, game);
 
-        if (await _gamesRepository.SaveAllAsync()) return NoContent();
+        if (await _unitOfWork.Complete()) return NoContent();
 
         return BadRequest("No changes were detected");
     }
@@ -71,7 +71,7 @@ public class GamesController : BaseApiController
     [HttpPut("update-poster/{title}")]
     public async Task<ActionResult<PosterDto>> UpdatePoster([FromRoute]string title, IFormFile file)
     {
-        var game = await _gamesRepository.GetGameByTitleAsync(title);
+        var game = await _unitOfWork.GamesRepository.GetGameByTitleAsync(title);
 
         if (game == null) return NotFound();
 
@@ -90,7 +90,7 @@ public class GamesController : BaseApiController
             if (deletingResult.Error != null) return BadRequest(deletingResult.Error.Message);
         }
 
-        if (await _gamesRepository.SaveAllAsync()) return _mapper.Map<PosterDto>(game.Poster);
+        if (await _unitOfWork.Complete()) return _mapper.Map<PosterDto>(game.Poster);
 
         return BadRequest("Failed to update poster");
     }
@@ -98,7 +98,7 @@ public class GamesController : BaseApiController
     [HttpPost("add-screenshot/{title}")]
     public async Task<ActionResult<ScreenshotDto>> AddScreenshot([FromRoute]string title, IFormFile file)
     {
-        var game = await _gamesRepository.GetGameByTitleAsync(title);
+        var game = await _unitOfWork.GamesRepository.GetGameByTitleAsync(title);
 
         if (game == null) return NotFound();
 
@@ -114,7 +114,7 @@ public class GamesController : BaseApiController
 
         game.Screenshots.Add(screenshot);
 
-        if (await _gamesRepository.SaveAllAsync())
+        if (await _unitOfWork.Complete())
         {
             return CreatedAtAction
             (
@@ -130,7 +130,7 @@ public class GamesController : BaseApiController
     [HttpDelete("delete-screenshot/{title}/{screenshotId}")]
     public async Task<ActionResult> DeleteScreenshot(string title, int screenshotId)
     {
-        var game = await _gamesRepository.GetGameByTitleAsync(title);
+        var game = await _unitOfWork.GamesRepository.GetGameByTitleAsync(title);
 
         if (game == null) return NotFound();
 
@@ -146,7 +146,7 @@ public class GamesController : BaseApiController
 
         game.Screenshots.Remove(screenshot);
 
-        if (await _gamesRepository.SaveAllAsync()) return Ok();
+        if (await _unitOfWork.Complete()) return Ok();
 
         return BadRequest("Failed to delete screenshot");
     }
@@ -154,11 +154,11 @@ public class GamesController : BaseApiController
     [HttpDelete("delete-game/{title}")]
     public async Task<ActionResult> DeleteGame(string title)
     {
-        var game = await _gamesRepository.GetGameByTitleAsync(title);
+        var game = await _unitOfWork.GamesRepository.GetGameByTitleAsync(title);
 
-        _gamesRepository.DeleteGame(game);
+        _unitOfWork.GamesRepository.DeleteGame(game);
 
-        if (await _gamesRepository.SaveAllAsync()) return Ok();
+        if (await _unitOfWork.Complete()) return Ok();
 
         return BadRequest("Failed to delete game");
     }

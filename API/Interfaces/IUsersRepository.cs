@@ -8,9 +8,7 @@ public interface IUsersRepository
 {    
     Task<AppUser> GetUserByIdAsync(int id);
     Task<AppUser> GetUserByUsernameAsync(string userName);
-    Task DeleteUserAsync(string userName);
     Task<PlayerDto> GetPlayerAsync(int currentUserId, string requestedUserName);
     Task<PagedList<PlayerDto>> GetPlayersAsync(PaginationParams paginationParams, int currentUserId);
     Task RegisterLastActivity(string username);
-    Task<bool> SaveAllAsync();
 }

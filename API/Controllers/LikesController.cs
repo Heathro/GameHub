@@ -9,25 +9,23 @@ namespace API.Controllers;
 [Authorize]
 public class LikesController : BaseApiController
 {
-    private readonly ILikesRepository _likesRepository;
-    private readonly IGamesRepository _gamesRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public LikesController(ILikesRepository likesRepository, IGamesRepository gamesRepository)
+    public LikesController(IUnitOfWork unitOfWork)
     {
-        _likesRepository = likesRepository;
-        _gamesRepository = gamesRepository;
+        _unitOfWork = unitOfWork;
     }
 
     [HttpPost("{gameId}")]
     public async Task<ActionResult> LikeGame(int gameId)
     {
         var sourceUserId = User.GetUserId();
-        var sourceUser = await _likesRepository.GetUserWithLikesAsync(sourceUserId);
+        var sourceUser = await _unitOfWork.LikesRepository.GetUserWithLikesAsync(sourceUserId);
 
-        var targetGame = await _gamesRepository.GetGameByIdAsync(gameId);        
+        var targetGame = await _unitOfWork.GamesRepository.GetGameByIdAsync(gameId);        
         if (targetGame == null) return NotFound();
 
-        var like = await _likesRepository.GetLikeAsync(sourceUserId, targetGame.Id);
+        var like = await _unitOfWork.LikesRepository.GetLikeAsync(sourceUserId, targetGame.Id);
         if (like != null)
         {
             sourceUser.LikedGames.Remove(like);
@@ -42,7 +40,7 @@ public class LikesController : BaseApiController
             sourceUser.LikedGames.Add(like);
         }
         
-        if (await _likesRepository.SaveAllAsync()) return Ok();
+        if (await _unitOfWork.Complete()) return Ok();
 
         return BadRequest("Failed to like game");
     }

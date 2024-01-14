@@ -146,9 +146,4 @@ public class GamesRepository : IGamesRepository
     {
         _context.Games.Remove(game);
     }
-
-    public async Task<bool> SaveAllAsync()
-    {
-        return await _context.SaveChangesAsync() > 0;
-    }
 }

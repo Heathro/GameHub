@@ -7,12 +7,11 @@ namespace API.Interfaces;
 public interface IReviewsRepository
 {
     void AddReview(Review review);
-    Task DeleteReviewAsync(int id);
-    Task ApproveReview(int id);
+    void DeleteReview(int id);
+    void ApproveReview(int id);
     Task<Review> GetReviewAsync(int reviewerId, int gameId);
     Task<PagedList<ReviewDto>> GetAllReviews(PaginationParams paginationParams);
     Task<PagedList<ReviewModerationDto>> GetReviewsForModeration(PaginationParams paginationParams);
     Task<IEnumerable<ReviewDto>> GetReviewsForGame(int gameId);
     Task<IEnumerable<ReviewDto>> GetReviewsForUser(int userId);
-    Task<bool> SaveAllAsync();
 }

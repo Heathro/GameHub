@@ -75,9 +75,4 @@ public class FriendsRepository : IFriendsRepository
             .Select(f => f.InviterId == userId ? f.InviteeId : f.InviterId)
             .ToListAsync();
     }
-
-    public async Task<bool> SaveAllAsync()
-    {
-        return await _context.SaveChangesAsync() > 0;
-    }
 }

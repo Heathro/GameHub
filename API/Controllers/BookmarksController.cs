@@ -7,25 +7,23 @@ namespace API.Controllers;
 
 public class BookmarksController : BaseApiController
 {
-    private readonly IBookmarksRepository _bookmarksRepository;
-    private readonly IGamesRepository _gamesRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public BookmarksController(IBookmarksRepository bookmarksRepository, IGamesRepository gamesRepository)
+    public BookmarksController(IUnitOfWork unitOfWork)
     {
-        _bookmarksRepository = bookmarksRepository;
-        _gamesRepository = gamesRepository;
+        _unitOfWork = unitOfWork;
     }
 
     [HttpPost("{gameId}")]
     public async Task<ActionResult> BookmarkGame(int gameId)
     {
         var sourceUserId = User.GetUserId();
-        var sourceUser = await _bookmarksRepository.GetUserWithBookmarksAsync(sourceUserId);
+        var sourceUser = await _unitOfWork.BookmarksRepository.GetUserWithBookmarksAsync(sourceUserId);
 
-        var targetGame = await _gamesRepository.GetGameByIdAsync(gameId);        
+        var targetGame = await _unitOfWork.GamesRepository.GetGameByIdAsync(gameId);        
         if (targetGame == null) return NotFound();
 
-        var bookmark = await _bookmarksRepository.GetBookmarkAsync(sourceUserId, targetGame.Id);
+        var bookmark = await _unitOfWork.BookmarksRepository.GetBookmarkAsync(sourceUserId, targetGame.Id);
         if (bookmark != null)
         {
             sourceUser.Bookmarks.Remove(bookmark);
@@ -40,7 +38,7 @@ public class BookmarksController : BaseApiController
             sourceUser.Bookmarks.Add(bookmark);
         }
         
-        if (await _bookmarksRepository.SaveAllAsync()) return Ok();
+        if (await _unitOfWork.Complete()) return Ok();
 
         return BadRequest("Failed to like game");
     }

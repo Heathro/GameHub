@@ -22,13 +22,15 @@ public static class ApplicationServiceExtension
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IImageService, ImageService>();
 
-        services.AddScoped<IUsersRepository, UsersRepository>();
-        services.AddScoped<IGamesRepository, GamesRepository>();
-        services.AddScoped<ILikesRepository, LikesRepository>();
-        services.AddScoped<IMessagesRepository, MessagesRepository>();
-        services.AddScoped<IFriendsRepository, FriendsRepository>();
-        services.AddScoped<IBookmarksRepository, BookmarksRepository>();
-        services.AddScoped<IReviewsRepository, ReviewsRepository>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        // services.AddScoped<IUsersRepository, UsersRepository>();
+        // services.AddScoped<IGamesRepository, GamesRepository>();
+        // services.AddScoped<ILikesRepository, LikesRepository>();
+        // services.AddScoped<IMessagesRepository, MessagesRepository>();
+        // services.AddScoped<IFriendsRepository, FriendsRepository>();
+        // services.AddScoped<IBookmarksRepository, BookmarksRepository>();
+        // services.AddScoped<IReviewsRepository, ReviewsRepository>();
 
         services.AddSignalR();
         services.AddSingleton<PresenceTracker>();

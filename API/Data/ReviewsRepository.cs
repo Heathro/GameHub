@@ -25,30 +25,22 @@ public class ReviewsRepository : IReviewsRepository
         _context.Reviews.Add(review);
     }
 
-    public async Task DeleteReviewAsync(int id)
+    public void DeleteReview(int id)
     {
         var review = _context.Reviews
             .IgnoreQueryFilters()
             .FirstOrDefault(r => r.Id == id);
 
-        if (review != null)
-        {
-            _context.Reviews.Remove(review);
-            await _context.SaveChangesAsync();
-        }
+        if (review != null) _context.Reviews.Remove(review);
     }
 
-    public async Task ApproveReview(int id)
+    public void ApproveReview(int id)
     {
         var review = _context.Reviews
             .IgnoreQueryFilters()
             .FirstOrDefault(r => r.Id == id);
         
-        if (review != null)
-        {
-            review.IsApproved = true;
-            await _context.SaveChangesAsync();
-        }
+        if (review != null) review.IsApproved = true;
     }
 
     public async Task<Review> GetReviewAsync(int reviewerId, int gameId)
@@ -116,10 +108,5 @@ public class ReviewsRepository : IReviewsRepository
             .Where(r => r.ReviewerId == userId)
             .ProjectTo<ReviewDto>(_mapper.ConfigurationProvider)
             .ToListAsync();
-    }
-
-    public async Task<bool> SaveAllAsync()
-    {
-        return await _context.SaveChangesAsync() > 0;
     }
 }

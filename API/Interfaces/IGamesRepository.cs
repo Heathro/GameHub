@@ -14,5 +14,4 @@ public interface IGamesRepository
     Task<Game> GetGameByTitleAsync(string title);
     Task<bool> TitleExistsAsync(string title, int id = 0);
     void DeleteGame(Game game);
-    Task<bool> SaveAllAsync();
 }

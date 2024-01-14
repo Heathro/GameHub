@@ -9,5 +9,4 @@ public interface IFriendsRepository
     Task<AppUser> GetUserWithFriendsAsync(int userId);
     Task<IEnumerable<PlayerDto>> GetFriendsAsync(int userId);
     Task<List<int>> GetActiveFriendsAsync(int userId);
-    Task<bool> SaveAllAsync();
 }

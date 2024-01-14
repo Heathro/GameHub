@@ -12,15 +12,12 @@ namespace API.Controllers;
 [Authorize]
 public class FriendsController : BaseApiController
 {
-    private readonly IFriendsRepository _friendsRepository;
-    private readonly IUsersRepository _usersRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public FriendsController(IFriendsRepository friendsRepository,
-        IUsersRepository usersRepository, IMapper mapper)
+    public FriendsController(IUnitOfWork unitOfWork, IMapper mapper)
     {
-        _friendsRepository = friendsRepository;
-        _usersRepository = usersRepository;
+        _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
 
@@ -28,13 +25,13 @@ public class FriendsController : BaseApiController
     public async Task<ActionResult<PlayerDto>> AddFriend(string username)
     {
         var currentUserId = User.GetUserId();
-        var currentUser = await _friendsRepository.GetUserWithFriendsAsync(currentUserId);        
+        var currentUser = await _unitOfWork.FriendsRepository.GetUserWithFriendsAsync(currentUserId);        
         if (currentUser.UserName == username) return BadRequest("You cannot add yourself");
 
-        var userToAdd = await _usersRepository.GetUserByUsernameAsync(username);
+        var userToAdd = await _unitOfWork.UsersRepository.GetUserByUsernameAsync(username);
         if (userToAdd == null) return NotFound();
 
-        var friendship = await _friendsRepository.GetFriendshipAsync(currentUserId, userToAdd.Id);
+        var friendship = await _unitOfWork.FriendsRepository.GetFriendshipAsync(currentUserId, userToAdd.Id);
         if (friendship != null) return BadRequest("You already send request");
         
         friendship = new Friendship
@@ -49,7 +46,7 @@ public class FriendsController : BaseApiController
         player.Status = friendship.Status;
         player.Type = FriendRequestType.Outcome;
 
-        if (await _friendsRepository.SaveAllAsync()) return Ok(player);
+        if (await _unitOfWork.Complete()) return Ok(player);
 
         return BadRequest("Failed to add friend");
     }
@@ -58,13 +55,14 @@ public class FriendsController : BaseApiController
     public async Task<ActionResult<PlayerDto>> DeleteFriend(string username)
     {
         var currentUserId = User.GetUserId();
-        var currentUser = await _friendsRepository.GetUserWithFriendsAsync(currentUserId);
+        var currentUser = await _unitOfWork.FriendsRepository.GetUserWithFriendsAsync(currentUserId);
         if (currentUser.UserName == username) return BadRequest("You cannot delete yourself");
 
-        var userToDelete = await _usersRepository.GetUserByUsernameAsync(username);
+        var userToDelete = await _unitOfWork.UsersRepository.GetUserByUsernameAsync(username);
         if (userToDelete == null) return NotFound();
 
-        var friendship = await _friendsRepository.GetFriendshipAsync(currentUserId, userToDelete.Id);
+        var friendship = await _unitOfWork.FriendsRepository
+            .GetFriendshipAsync(currentUserId, userToDelete.Id);
         if (friendship == null) return NotFound();
 
         if (friendship.InviterId == currentUserId)
@@ -80,7 +78,7 @@ public class FriendsController : BaseApiController
         player.Status = FriendStatus.None;
         player.Type = FriendRequestType.All;
 
-        if (await _friendsRepository.SaveAllAsync()) return Ok(player);
+        if (await _unitOfWork.Complete()) return Ok(player);
 
         return BadRequest("Failed to delete friend");
     }
@@ -89,13 +87,14 @@ public class FriendsController : BaseApiController
     public async Task<ActionResult<PlayerDto>> UpdateFriendStatus(string username, FriendStatus status)
     {
         var currentUserId = User.GetUserId();
-        var currentUser = await _friendsRepository.GetUserWithFriendsAsync(currentUserId);
+        var currentUser = await _unitOfWork.FriendsRepository.GetUserWithFriendsAsync(currentUserId);
         if (currentUser.UserName == username) return BadRequest("You cannot update yourself");
 
-        var userToUpdate = await _usersRepository.GetUserByUsernameAsync(username);
+        var userToUpdate = await _unitOfWork.UsersRepository.GetUserByUsernameAsync(username);
         if (userToUpdate == null) return NotFound();
 
-        var currentFriendship = await _friendsRepository.GetFriendshipAsync(userToUpdate.Id, currentUserId);
+        var currentFriendship = await _unitOfWork.FriendsRepository
+            .GetFriendshipAsync(userToUpdate.Id, currentUserId);
         if (currentFriendship == null) return NotFound();
 
         if (currentFriendship.Status == status) return BadRequest("Nothing to update");
@@ -115,7 +114,7 @@ public class FriendsController : BaseApiController
         player.Status = status;        
         player.Type = FriendRequestType.All;
 
-        if (await _friendsRepository.SaveAllAsync()) return Ok(player);
+        if (await _unitOfWork.Complete()) return Ok(player);
 
         return BadRequest("Failed to update status");
     }
@@ -123,7 +122,7 @@ public class FriendsController : BaseApiController
     [HttpGet("list")]
     public async Task<ActionResult<PlayerDto>> GetFriendsAsync()
     {
-        var friends = await _friendsRepository.GetFriendsAsync(User.GetUserId());
+        var friends = await _unitOfWork.FriendsRepository.GetFriendsAsync(User.GetUserId());
 
         return Ok(friends);
     }

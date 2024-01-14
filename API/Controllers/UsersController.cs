@@ -5,20 +5,25 @@ using API.DTOs;
 using API.Interfaces;
 using API.Extensions;
 using API.Helpers;
+using Microsoft.AspNetCore.Identity;
+using API.Entities;
 
 namespace API.Controllers;
 
 [Authorize]
 public class UsersController : BaseApiController
 {
-    private readonly IUsersRepository _usersRepository;
+    private readonly UserManager<AppUser> _userManager;
     private readonly IImageService _imageService;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public UsersController(IUsersRepository usersRepository, IImageService imageService, IMapper mapper)
+    public UsersController(UserManager<AppUser> userManager, IImageService imageService, 
+        IUnitOfWork unitOfWork, IMapper mapper)
     {
-        _usersRepository = usersRepository;
+        _userManager = userManager;
         _imageService = imageService;
+        _unitOfWork = unitOfWork;
         _mapper = mapper;
     }    
 
@@ -26,7 +31,7 @@ public class UsersController : BaseApiController
     public async Task<ActionResult<PagedList<PlayerDto>>> GetPlayersAsync(
         [FromQuery]PaginationParams paginationParams)
     {
-        var players = await _usersRepository.GetPlayersAsync(paginationParams, User.GetUserId());
+        var players = await _unitOfWork.UsersRepository.GetPlayersAsync(paginationParams, User.GetUserId());
 
         Response.AddPaginationHeader(new PaginationHeader(
             players.CurrentPage,
@@ -41,7 +46,7 @@ public class UsersController : BaseApiController
     [HttpGet("{username}")]
     public async Task<ActionResult<PlayerDto>> GetPlayerAsync(string username)
     {
-        var player = await _usersRepository.GetPlayerAsync(User.GetUserId(), username);
+        var player = await _unitOfWork.UsersRepository.GetPlayerAsync(User.GetUserId(), username);
 
         return Ok(player);
     }
@@ -49,13 +54,13 @@ public class UsersController : BaseApiController
     [HttpPut("edit-profile")]
     public async Task<ActionResult> UpdateUser(PlayerEditDto playerEditDto)
     {
-        var user = await _usersRepository.GetUserByUsernameAsync(User.GetUsername());
+        var user = await _unitOfWork.UsersRepository.GetUserByUsernameAsync(User.GetUsername());
 
         if (user == null) return NotFound();
 
         _mapper.Map(playerEditDto, user);
 
-        if (await _usersRepository.SaveAllAsync()) return NoContent();
+        if (await _unitOfWork.Complete()) return NoContent();
 
         return BadRequest("No changes were detected");
     }
@@ -63,7 +68,7 @@ public class UsersController : BaseApiController
     [HttpPut("update-avatar")]
     public async Task<ActionResult<AvatarDto>> UpdateAvatar(IFormFile file)
     {
-        var user = await _usersRepository.GetUserByUsernameAsync(User.GetUsername());
+        var user = await _unitOfWork.UsersRepository.GetUserByUsernameAsync(User.GetUsername());
 
         if (user == null) return NotFound();
 
@@ -82,7 +87,7 @@ public class UsersController : BaseApiController
             if (deletingResult.Error != null) return BadRequest(deletingResult.Error.Message);
         }
 
-        if (await _usersRepository.SaveAllAsync()) return _mapper.Map<AvatarDto>(user.Avatar);
+        if (await _unitOfWork.Complete()) return _mapper.Map<AvatarDto>(user.Avatar);
 
         return BadRequest("Failed to update photo");
     }
@@ -90,10 +95,18 @@ public class UsersController : BaseApiController
     [HttpDelete("delete-user")]
     public async Task<ActionResult> DeleteUser()
     {
-        await _usersRepository.DeleteUserAsync(User.GetUsername());
+        var username = User.GetUsername();
 
-        if (await _usersRepository.SaveAllAsync()) return BadRequest("Failed to delete user");
-        
+        var user = await _unitOfWork.UsersRepository.GetUserByUsernameAsync(username);
+
+        var avatarPublicId = user.Avatar.PublicId;
+        if (avatarPublicId != null) await _imageService.DeleteImageAsync(avatarPublicId);
+
+        await _unitOfWork.MessagesRepository.DeleteUserMessagesAsync(username);
+        await _unitOfWork.Complete();
+
+        await _userManager.DeleteAsync(user);
+
         return Ok();
     }
 }

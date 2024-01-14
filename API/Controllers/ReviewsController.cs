@@ -10,31 +10,26 @@ namespace API.Controllers;
 
 public class ReviewsController : BaseApiController
 {
-    private readonly IReviewsRepository _reviewsRepository;
-    private readonly IUsersRepository _usersRepository;
-    private readonly IGamesRepository _gamesRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public ReviewsController(IReviewsRepository reviewsRepository, IUsersRepository usersRepository,
-        IGamesRepository gamesRepository, IMapper mapper)
+    public ReviewsController(IUnitOfWork unitOfWork, IMapper mapper)
     {
-        _reviewsRepository = reviewsRepository;
-        _usersRepository = usersRepository;
-        _gamesRepository = gamesRepository;
+        _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
 
     [HttpPost("new")]
     public async Task<ActionResult<ReviewDto>> CreateReview(CreateReviewDto createReviewDto)
     {        
-        var game = await _gamesRepository.GetGameByTitleAsync(createReviewDto.GameTitle);
+        var game = await _unitOfWork.GamesRepository.GetGameByTitleAsync(createReviewDto.GameTitle);
         if (game == null) return NotFound();
 
         var username = User.GetUsername();
         var userId = User.GetUserId();
-        var reviewer = await _usersRepository.GetUserByUsernameAsync(username);
+        var reviewer = await _unitOfWork.UsersRepository.GetUserByUsernameAsync(username);
 
-        var review = await _reviewsRepository.GetReviewAsync(userId, game.Id);
+        var review = await _unitOfWork.ReviewsRepository.GetReviewAsync(userId, game.Id);
         if (review != null)
         {
             review.Content = createReviewDto.Content;
@@ -53,10 +48,10 @@ public class ReviewsController : BaseApiController
                 Content = createReviewDto.Content,
                 IsApproved = false
             };
-            _reviewsRepository.AddReview(review);
+            _unitOfWork.ReviewsRepository.AddReview(review);
         }
 
-        if (await _reviewsRepository.SaveAllAsync()) return Ok(_mapper.Map<ReviewDto>(review));
+        if (await _unitOfWork.Complete()) return Ok(_mapper.Map<ReviewDto>(review));
 
         return BadRequest("Failed to create review");
     }
@@ -66,7 +61,7 @@ public class ReviewsController : BaseApiController
     public async Task<ActionResult<PagedList<ReviewDto>>> GetAllReviews(
         [FromQuery]PaginationParams paginationParams)
     {
-        var reviews = await _reviewsRepository.GetAllReviews(paginationParams);
+        var reviews = await _unitOfWork.ReviewsRepository.GetAllReviews(paginationParams);
 
         Response.AddPaginationHeader(new PaginationHeader(
             reviews.CurrentPage,
@@ -81,10 +76,10 @@ public class ReviewsController : BaseApiController
     [HttpGet("game/{title}")]
     public async Task<ActionResult<IEnumerable<ReviewDto>>> GetReviewsForGame(string title)
     {
-        var game = await _gamesRepository.GetGameByTitleAsync(title);
+        var game = await _unitOfWork.GamesRepository.GetGameByTitleAsync(title);
         if (game == null) return NotFound();
 
-        var reviews = await _reviewsRepository.GetReviewsForGame(game.Id);
+        var reviews = await _unitOfWork.ReviewsRepository.GetReviewsForGame(game.Id);
 
         return Ok(reviews);
     }
@@ -92,10 +87,10 @@ public class ReviewsController : BaseApiController
     [HttpGet("player/{userName}")]
     public async Task<ActionResult<IEnumerable<ReviewDto>>> GetReviewsForUser(string userName)
     {
-        var user = await _usersRepository.GetUserByUsernameAsync(userName);
+        var user = await _unitOfWork.UsersRepository.GetUserByUsernameAsync(userName);
         if (user == null) return NotFound();
 
-        var reviews = await _reviewsRepository.GetReviewsForUser(user.Id);
+        var reviews = await _unitOfWork.ReviewsRepository.GetReviewsForUser(user.Id);
 
         return Ok(reviews);
     }
@@ -103,10 +98,10 @@ public class ReviewsController : BaseApiController
     [HttpGet("menu/{title}")]
     public async Task<ActionResult<ReviewMenuDto>> GetReviewMenu(string title)
     {
-        var game = await _gamesRepository.GetGameAsync(title);
+        var game = await _unitOfWork.GamesRepository.GetGameAsync(title);
         if (game == null) return NotFound();
 
-        var review = await _reviewsRepository.GetReviewAsync(User.GetUserId(), game.Id);
+        var review = await _unitOfWork.ReviewsRepository.GetReviewAsync(User.GetUserId(), game.Id);
 
         return Ok(new ReviewMenuDto
         {
@@ -120,10 +115,10 @@ public class ReviewsController : BaseApiController
     [HttpDelete("delete/{id}")]
     public async Task<ActionResult> DeleteUser(int id)
     {
-        await _reviewsRepository.DeleteReviewAsync(id);
+        _unitOfWork.ReviewsRepository.DeleteReview(id);
 
-        if (await _reviewsRepository.SaveAllAsync()) return BadRequest("Failed to delete review");
+        if (await _unitOfWork.Complete()) return Ok();
         
-        return Ok();
+        return BadRequest("Failed to delete review");
     }
 }

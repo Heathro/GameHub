@@ -6,5 +6,4 @@ public interface IBookmarksRepository
 {
     Task<Bookmark> GetBookmarkAsync(int sourceUserId, int targetGameId);
     Task<AppUser> GetUserWithBookmarksAsync(int userId);
-    Task<bool> SaveAllAsync();
 }

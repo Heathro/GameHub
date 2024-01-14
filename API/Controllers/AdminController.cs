@@ -15,20 +15,17 @@ namespace API.Controllers;
 public class AdminController : BaseApiController
 {
     private readonly UserManager<AppUser> _userManager;
+    private readonly IImageService _imageService;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
-    private readonly IUsersRepository _usersRepository;
-    private readonly IReviewsRepository _reviewsRepository;
-    private readonly IGamesRepository _gamesRepository;
 
-    public AdminController(UserManager<AppUser> userManager, IMapper mapper,
-        IUsersRepository usersRepository, IReviewsRepository reviewsRepository,
-        IGamesRepository gamesRepository)
+    public AdminController(UserManager<AppUser> userManager, IImageService imageService,
+        IUnitOfWork unitOfWork, IMapper mapper)
     {
         _userManager = userManager;
+        _imageService = imageService;
+        _unitOfWork = unitOfWork;
         _mapper = mapper;
-        _usersRepository = usersRepository;
-        _reviewsRepository = reviewsRepository;
-        _gamesRepository = gamesRepository;
     }
 
     [Authorize(Policy = "AdminRole")]
@@ -82,11 +79,17 @@ public class AdminController : BaseApiController
     [HttpDelete("delete-user/{username}")]
     public async Task<ActionResult> DeleteUser(string username)
     {
-        await _usersRepository.DeleteUserAsync(username);
+        var user = await _unitOfWork.UsersRepository.GetUserByUsernameAsync(username);
 
-        if (await _usersRepository.SaveAllAsync()) return BadRequest("Failed to delete user");
+        var avatarPublicId = user.Avatar.PublicId;
+        if (avatarPublicId != null) await _imageService.DeleteImageAsync(avatarPublicId);
 
-        return Ok();
+        await _unitOfWork.MessagesRepository.DeleteUserMessagesAsync(username);
+        await _unitOfWork.Complete();
+
+        await _userManager.DeleteAsync(user);
+
+        return Ok();       
     }
 
     [Authorize(Policy = "AdminModeratorRole")]
@@ -94,7 +97,7 @@ public class AdminController : BaseApiController
     public async Task<ActionResult<PagedList<GameDto>>> GetGamesForModeration(
         [FromQuery]PaginationParams paginationParams)
     {
-        var games = await _gamesRepository.GetGamesForModerationAsync(paginationParams);
+        var games = await _unitOfWork.GamesRepository.GetGamesForModerationAsync(paginationParams);
 
         Response.AddPaginationHeader(new PaginationHeader(
             games.CurrentPage,
@@ -111,7 +114,7 @@ public class AdminController : BaseApiController
     public async Task<ActionResult<PagedList<ReviewModerationDto>>> GetReviewsForModeration(
         [FromQuery]PaginationParams paginationParams)
     {
-        var users = await _reviewsRepository.GetReviewsForModeration(paginationParams);
+        var users = await _unitOfWork.ReviewsRepository.GetReviewsForModeration(paginationParams);
 
         Response.AddPaginationHeader(new PaginationHeader(
             users.CurrentPage,
@@ -127,10 +130,10 @@ public class AdminController : BaseApiController
     [HttpPut("approve-review/{id}")]
     public async Task<ActionResult> ApproveReview(int id)
     {
-        await _reviewsRepository.ApproveReview(id);
+        _unitOfWork.ReviewsRepository.ApproveReview(id);
 
-        if (await _reviewsRepository.SaveAllAsync()) return BadRequest("Failed to approve review");
+        if (await _unitOfWork.Complete()) return Ok();
 
-        return Ok();
+        return BadRequest("Failed to approve review");
     }
 }

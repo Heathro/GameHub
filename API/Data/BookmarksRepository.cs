@@ -24,9 +24,4 @@ public class BookmarksRepository : IBookmarksRepository
             .Include(u => u.Bookmarks)
             .FirstOrDefaultAsync(u => u.Id == userId);
     }
-
-    public async Task<bool> SaveAllAsync()
-    {
-        return await _context.SaveChangesAsync() > 0;
-    }
 }
