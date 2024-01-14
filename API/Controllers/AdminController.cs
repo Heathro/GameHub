@@ -4,14 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using API.Controllers;
 using API.Entities;
 using API.Extensions;
 using API.Interfaces;
 using API.Helpers;
 using API.DTOs;
 
-namespace API;
+namespace API.Controllers;
 
 public class AdminController : BaseApiController
 {

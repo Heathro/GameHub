@@ -1,4 +1,6 @@
-﻿namespace API.Helpers;
+﻿using API.Enums;
+
+namespace API.Helpers;
 
 public class PaginationParams
 {

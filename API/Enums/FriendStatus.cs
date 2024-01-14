@@ -1,4 +1,4 @@
-﻿namespace API.Helpers;
+﻿namespace API.Enums;
 
 public enum FriendStatus
 {

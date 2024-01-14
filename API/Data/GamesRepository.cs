@@ -5,6 +5,7 @@ using API.Entities;
 using API.Interfaces;
 using API.Helpers;
 using API.DTOs;
+using API.Enums;
 
 namespace API.Data;
 

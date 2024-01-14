@@ -1,6 +1,4 @@
-﻿using API.Helpers;
-
-namespace API.DTOs;
+﻿namespace API.DTOs;
 
 public class GameFilterDto
 {

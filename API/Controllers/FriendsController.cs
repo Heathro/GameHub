@@ -4,7 +4,7 @@ using AutoMapper;
 using API.Interfaces;
 using API.Extensions;
 using API.Entities;
-using API.Helpers;
+using API.Enums;
 using API.DTOs;
 
 namespace API.Controllers;

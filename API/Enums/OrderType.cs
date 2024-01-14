@@ -1,4 +1,4 @@
-﻿namespace API;
+﻿namespace API.Enums;
 
 public enum OrderType
 {

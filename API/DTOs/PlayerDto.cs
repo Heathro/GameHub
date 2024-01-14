@@ -1,4 +1,4 @@
-﻿using API.Helpers;
+﻿using API.Enums;
 
 namespace API.DTOs;
 

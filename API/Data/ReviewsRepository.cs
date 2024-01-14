@@ -1,13 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using API.Data;
 using API.DTOs;
 using API.Entities;
 using API.Helpers;
 using API.Interfaces;
+using API.Enums;
 
-namespace API;
+namespace API.Data;
 
 public class ReviewsRepository : IReviewsRepository
 {
