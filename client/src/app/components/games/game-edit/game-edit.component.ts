@@ -11,7 +11,7 @@ import { environment } from 'src/environments/environment';
 import { GamesService } from 'src/app/services/games.service';
 import { AccountService } from 'src/app/services/account.service';
 import { EditComponent } from 'src/app/interfaces/edit-component';
-import { deepEqual } from 'src/app/helpers/compareHelper';
+import { deepEqual } from 'src/app/helpers/basicFunctions';
 import { Game } from 'src/app/models/game';
 import { User } from 'src/app/models/user';
 import { Review } from 'src/app/models/review';

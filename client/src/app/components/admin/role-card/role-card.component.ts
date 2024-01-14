@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 
 import { AdminService } from 'src/app/services/admin.service';
-import { deepEqual } from 'src/app/helpers/compareHelper';
+import { deepEqual } from 'src/app/helpers/basicFunctions';
 import { User } from 'src/app/models/user';
 
 @Component({

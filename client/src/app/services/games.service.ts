@@ -4,12 +4,12 @@ import { Injectable } from '@angular/core';
 import { delay, map, of } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
-import { getFilteredPaginatedResult, getPaginationHeaders } from '../helpers/paginationHelper';
+import { getFilteredPaginatedResult, getPaginationHeaders } from '../helpers/pagination';
 import { PaginationParams } from '../helpers/pagination';
 import { Game } from '../models/game';
 import { Filter } from '../models/filter';
 import { User } from '../models/user';
-import { OrderType } from '../helpers/orderType';
+import { OrderType } from '../enums/orderType';
 
 @Injectable({
   providedIn: 'root'

@@ -1,33 +1,51 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using API.Extensions;
+using API.Interfaces;
 
 namespace API.SignalR;
 
 public class PresenceHub : Hub
 {
-    private readonly PresenceTracker _tracker;
+    private readonly IUsersRepository _usersRepository;
+    private readonly IFriendsRepository _friendsRepository;
 
-    public PresenceHub(PresenceTracker tracker)
+    public PresenceHub(IUsersRepository usersRepository, IFriendsRepository friendsRepository)
     {
-        _tracker = tracker;
+        _usersRepository = usersRepository;
+        _friendsRepository = friendsRepository;
     }
 
     public override async Task OnConnectedAsync()
     {
-        await _tracker.UserConnected(Context.User.GetUsername(), Context.ConnectionId);
-        await Clients.Others.SendAsync("UserIsOnline", Context.User.GetUsername());
+        var isOnline = await PresenceTracker.UserConnected(Context.User.GetUsername(), Context.ConnectionId);
+        if (isOnline)
+        {
+            await Clients.Others.SendAsync("UserIsOnline", new
+            {
+                username = Context.User.GetUsername(),
+                friends = await _friendsRepository.GetActiveFriendsAsync(Context.User.GetUserId())
+            });
+        }
 
-        var currentUsers = await _tracker.GetOnlineUsers();
-        await Clients.All.SendAsync("GetOnlineUsers", currentUsers);
+        var currentUsers = await PresenceTracker.GetOnlineUsers();
+        await Clients.Caller.SendAsync("GetOnlineUsers", currentUsers);
+
+        await _usersRepository.RegisterLastActivity(Context.User.GetUsername());
+        await _usersRepository.SaveAllAsync();
     }
 
     public override async Task OnDisconnectedAsync(Exception exception)
     {
-        await _tracker.UserDisconnected(Context.User.GetUsername(), Context.ConnectionId);
-        await Clients.Others.SendAsync("UserIsOffline", Context.User.GetUsername());
+        var isOffline = await PresenceTracker
+            .UserDisconnected(Context.User.GetUsername(), Context.ConnectionId);
 
-        var currentUsers = await _tracker.GetOnlineUsers();
-        await Clients.All.SendAsync("GetOnlineUsers", currentUsers);
+        if (isOffline)
+        {
+            await Clients.Others.SendAsync("UserIsOffline", Context.User.GetUsername());
+        }
+
+        await _usersRepository.RegisterLastActivity(Context.User.GetUsername());
+        await _usersRepository.SaveAllAsync();
 
         await base.OnDisconnectedAsync(exception);
     }

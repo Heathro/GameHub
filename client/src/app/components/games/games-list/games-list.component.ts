@@ -4,8 +4,8 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { GamesService } from 'src/app/services/games.service';
 import { Game } from 'src/app/models/game';
 import { Pagination } from 'src/app/helpers/pagination';
-import { OrderType } from 'src/app/helpers/orderType';
-import { deepEqual } from 'src/app/helpers/compareHelper';
+import { OrderType } from 'src/app/enums/orderType';
+import { deepEqual } from 'src/app/helpers/basicFunctions';
 
 @Component({
   selector: 'app-store',

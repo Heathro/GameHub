@@ -2,10 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { environment } from 'src/environments/environment';
-import { getPaginatedResult, getPaginationHeaders } from '../helpers/paginationHelper';
+import { getPaginatedResult, getPaginationHeaders } from '../helpers/pagination';
 import { PaginationParams } from '../helpers/pagination';
 import { User } from '../models/user';
-import { OrderType } from '../helpers/orderType';
+import { OrderType } from '../enums/orderType';
 import { ReviewForModeration } from '../models/review';
 import { Game } from '../models/game';
 

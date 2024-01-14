@@ -5,8 +5,8 @@ import { delay, map, of } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 import { PaginatedResult, PaginationParams } from '../helpers/pagination';
-import { getPaginatedResult, getPaginationHeaders } from '../helpers/paginationHelper';
-import { OrderType } from '../helpers/orderType';
+import { getPaginatedResult, getPaginationHeaders } from '../helpers/pagination';
+import { OrderType } from '../enums/orderType';
 import { Review, ReviewMenu } from '../models/review';
 
 @Injectable({

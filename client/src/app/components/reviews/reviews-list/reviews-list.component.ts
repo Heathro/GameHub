@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { OrderType } from 'src/app/helpers/orderType';
-import { Pagination } from 'src/app/helpers/pagination';
-import { Review } from 'src/app/models/review';
+
 import { ReviewsService } from 'src/app/services/reviews.service';
+import { Pagination } from 'src/app/helpers/pagination';
+import { OrderType } from 'src/app/enums/orderType';
+import { Review } from 'src/app/models/review';
 
 @Component({
   selector: 'app-reviews-list',

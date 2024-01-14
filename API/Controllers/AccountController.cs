@@ -64,13 +64,6 @@ public class AccountController : BaseApiController
         var result = await _userManager.CheckPasswordAsync(user, loginDto.Password);
         if (!result) return Unauthorized("Invalid password");
 
-        user.LastActive = DateTime.UtcNow;
-        var updateResult = await _userManager.UpdateAsync(user);
-        if (!updateResult.Succeeded)
-        {
-            return StatusCode(500, "Error updating LastActive");
-        }
-
         return new UserDto
         {
             Id = user.Id,

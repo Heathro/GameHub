@@ -1,5 +1,5 @@
-import { FriendRequestType } from "../helpers/friendRequestType";
-import { FriendStatus } from "../helpers/friendStatus";
+import { FriendRequestType } from "../enums/friendRequestType";
+import { FriendStatus } from "../enums/friendStatus";
 import { Avatar } from "./avatar";
 import { Game } from "./game";
 

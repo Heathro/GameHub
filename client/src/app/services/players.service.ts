@@ -4,12 +4,12 @@ import { Injectable } from '@angular/core';
 import { delay, map, of } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
-import { getPaginatedResult, getPaginationHeaders } from '../helpers/paginationHelper';
+import { getPaginatedResult, getPaginationHeaders } from '../helpers/pagination';
 import { PaginationParams } from '../helpers/pagination';
 import { Player } from '../models/player';
-import { FriendStatus } from '../helpers/friendStatus';
-import { FriendRequestType } from '../helpers/friendRequestType';
-import { OrderType } from '../helpers/orderType';
+import { FriendStatus } from '../enums/friendStatus';
+import { FriendRequestType } from '../enums/friendRequestType';
+import { OrderType } from '../enums/orderType';
 
 @Injectable({
   providedIn: 'root'

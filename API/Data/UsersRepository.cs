@@ -128,6 +128,12 @@ public class UsersRepository : IUsersRepository
         return players;
     }
 
+    public async Task RegisterLastActivity(string username)
+    {
+        var user = await GetUserByUsernameAsync(username);
+        user.LastActive = DateTime.UtcNow;
+    }
+
     public async Task<bool> SaveAllAsync()
     {
         return await _context.SaveChangesAsync() > 0;

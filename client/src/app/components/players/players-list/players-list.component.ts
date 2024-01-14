@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { PlayersService } from 'src/app/services/players.service';
 import { Pagination } from 'src/app/helpers/pagination';
 import { Player } from 'src/app/models/player';
-import { OrderType } from 'src/app/helpers/orderType';
+import { OrderType } from 'src/app/enums/orderType';
 
 @Component({
   selector: 'app-players-list',

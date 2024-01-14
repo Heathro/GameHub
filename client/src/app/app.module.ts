@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
+import { RouteReuseStrategy } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -10,6 +11,10 @@ import { SharedModule } from './modules/shared.module';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
 import { LoadingInterceptor } from './interceptors/loading.interceptor';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
+import { HasRoleDirective } from './directives/has-role.directive';
+import { TextInputComponent } from './forms/text-input/text-input.component';
+import { CheckboxInputComponent } from './forms/checkbox-input/checkbox-input.component';
+import { TextareaInputComponent } from './forms/textarea-input/textarea-input.component';
 import { NavComponent } from './components/basic/nav/nav.component';
 import { HomeComponent } from './components/basic/home/home.component';
 import { RegisterComponent } from './components/authorization/register/register.component';
@@ -25,14 +30,10 @@ import { PlayerProfileComponent } from './components/players/player-profile/play
 import { PlayerEditComponent } from './components/players/player-edit/player-edit.component';
 import { GameEditComponent } from './components/games/game-edit/game-edit.component';
 import { ScreenshotEditorComponent } from './components/games/screenshot-editor/screenshot-editor.component';
-import { TextInputComponent } from './forms/text-input/text-input.component';
-import { CheckboxInputComponent } from './forms/checkbox-input/checkbox-input.component';
-import { TextareaInputComponent } from './forms/textarea-input/textarea-input.component';
 import { MessengerComponent } from './components/messages/messenger/messenger.component';
 import { MessageComponent } from './components/messages/message/message.component';
 import { ContactCardComponent } from './components/messages/contact-card/contact-card.component';
 import { AdminPanelComponent } from './components/admin/admin-panel/admin-panel.component';
-import { HasRoleDirective } from './directives/has-role.directive';
 import { UserManagementComponent } from './components/admin/user-management/user-management.component';
 import { GameManagementComponent } from './components/admin/game-management/game-management.component';
 import { RoleCardComponent } from './components/admin/role-card/role-card.component';
@@ -52,6 +53,7 @@ import { GameEditReviewsComponent } from './components/reviews/game-edit-review/
 import { ReviewManagementComponent } from './components/admin/review-management/review-management.component';
 import { ReviewForModerationComponent } from './components/admin/review-for-moderation/review-for-moderation.component';
 import { GameForModerationComponent } from './components/admin/game-for-moderation/game-for-moderation.component';
+
 
 @NgModule({
   declarations: [

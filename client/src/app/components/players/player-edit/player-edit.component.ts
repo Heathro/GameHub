@@ -10,7 +10,7 @@ import { environment } from 'src/environments/environment';
 import { AccountService } from 'src/app/services/account.service';
 import { PlayersService } from 'src/app/services/players.service';
 import { EditComponent } from 'src/app/interfaces/edit-component';
-import { deepEqual } from 'src/app/helpers/compareHelper';
+import { deepEqual } from 'src/app/helpers/basicFunctions';
 import { Player } from 'src/app/models/player';
 import { User } from 'src/app/models/user';
 import { Review } from 'src/app/models/review';

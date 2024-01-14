@@ -68,6 +68,14 @@ public class FriendsRepository : IFriendsRepository
         return friends;
     }
 
+    public async Task<List<int>> GetActiveFriendsAsync(int userId)
+    {
+        return await _context.Friendships
+            .Where(f => (f.InviterId == userId || f.InviteeId == userId) && f.Status == FriendStatus.Active)
+            .Select(f => f.InviterId == userId ? f.InviteeId : f.InviterId)
+            .ToListAsync();
+    }
+
     public async Task<bool> SaveAllAsync()
     {
         return await _context.SaveChangesAsync() > 0;

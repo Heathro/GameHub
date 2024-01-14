@@ -8,6 +8,7 @@ import { environment } from 'src/environments/environment';
 import { Message } from '../models/message';
 import { Player } from '../models/player';
 import { User } from '../models/user';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,7 @@ export class MessagesService {
   companions: Player[] = [];
   companionsLoaded = false;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   createHubConnection(currentUser: User, otherUserName: string) {
     this.lastCompanion = otherUserName;
@@ -41,6 +42,16 @@ export class MessagesService {
 
     this.hubConnection.on('RecieveMessageThread', messages => {
       this.messageThreadSource.next(messages);
+    });
+    
+    this.hubConnection.on('ConversantJoined', () => {
+      this.messageThread$.pipe(take(1)).subscribe({
+        next: messages => {
+          messages.forEach(message => {
+            if (!message.messageRead) message.messageRead = new Date(Date.now());
+          });
+        }
+      });
     });
 
     this.hubConnection.on('NewMessage', message => {
@@ -101,6 +112,7 @@ export class MessagesService {
 
   startChat(player: Player) {
     this.lastCompanion = player.userName;
+
     if (this.companionsLoaded) {
       if (!this.companions.find(c => c.userName === player.userName)) {
         this.companions.unshift(player);
