@@ -181,6 +181,7 @@ export class MessagesService {
   }
 
   clearPrivateData() {
+    this.messageThreadSource.next([]);
     //this.messagesCache = new Map();
     this.lastCompanion = '';
     this.companions.length = 0;
