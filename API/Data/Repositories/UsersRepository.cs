@@ -59,6 +59,7 @@ public class UsersRepository : IUsersRepository
         var player = await _context.Users
             .Where(u => u.UserName == requestedUserName)
             .ProjectTo<PlayerDto>(_mapper.ConfigurationProvider)
+            .AsSplitQuery()
             .SingleOrDefaultAsync();
 
         var friendship = await _context.Friendships
@@ -98,7 +99,7 @@ public class UsersRepository : IUsersRepository
 
         var players = await PagedList<PlayerDto>.CreateAsync
         (
-            query.ProjectTo<PlayerDto>(_mapper.ConfigurationProvider).AsNoTracking(), 
+            query.AsSplitQuery().AsNoTracking().ProjectTo<PlayerDto>(_mapper.ConfigurationProvider), 
             paginationParams.CurrentPage, 
             paginationParams.ItemsPerPage
         );

@@ -4,6 +4,7 @@ using AutoMapper.QueryableExtensions;
 using API.DTOs;
 using API.Entities;
 using API.Interfaces;
+using API.Extensions;
 
 namespace API.Data;
 
@@ -35,39 +36,34 @@ public class MessagesRepository : IMessagesRepository
 
     public async Task<IEnumerable<Message>> GetMessagesAsync(string currentUsername, string recipientUsername)
     {
-        return await _context.Messages.Where(m => 
-            m.RecipientUsername == currentUsername && m.SenderUsername == recipientUsername ||
-            m.RecipientUsername == recipientUsername && m.SenderUsername == currentUsername
-        ).ToListAsync();
+        return await _context.Messages
+            .Where(m => 
+                m.RecipientUsername == currentUsername && m.SenderUsername == recipientUsername ||
+                m.RecipientUsername == recipientUsername && m.SenderUsername == currentUsername
+            )
+            .AsNoTracking()
+            .AsSplitQuery()
+            .ToListAsync();
     }
 
     public async Task<IEnumerable<MessageDto>> GetMessageThreadAsync(
         string currentUsername, string recipientUsername)
     {
         var messages = await _context.Messages
-            .Include(m => m.Sender).ThenInclude(u => u.Avatar)
-            .Include(m => m.Recipient).ThenInclude(u => u.Avatar)
             .Where(m => 
                 m.RecipientUsername == currentUsername && !m.RecipientDeleted && 
                 m.SenderUsername == recipientUsername ||
                 m.RecipientUsername == recipientUsername && !m.SenderDeleted &&
                 m.SenderUsername == currentUsername
             )
+            .MarkUnreadAsRead(currentUsername)
             .OrderBy(m => m.MessageSent)
+            .AsNoTracking()
+            .AsSplitQuery()
+            .ProjectTo<MessageDto>(_mapper.ConfigurationProvider)
             .ToListAsync();
-
-        var unreadMessages = messages.Where(m =>
-            m.MessageRead == null && m.RecipientUsername == currentUsername).ToList();
-
-        if (unreadMessages.Any())
-        {
-            foreach (var message in unreadMessages)
-            {
-                message.MessageRead = DateTime.UtcNow;
-            }
-        }
-
-        return _mapper.Map<IEnumerable<MessageDto>>(messages);
+ 
+        return messages;
     }
 
     public async Task DeleteUserMessagesAsync(string username)
@@ -81,12 +77,14 @@ public class MessagesRepository : IMessagesRepository
 
     public async Task<IEnumerable<PlayerDto>> GetCompanionsAsync(string username)
     {        
-        var companions = await _context.Messages            
+        var companions = await _context.Messages
+                       
             .Where(m => 
                 (m.SenderUsername == username && !m.SenderDeleted) ||
                 (m.RecipientUsername == username && !m.RecipientDeleted)
             )
-            .OrderByDescending(m => m.MessageSent)
+            .AsNoTracking()
+            .AsSplitQuery()
             .Select(u => u.SenderUsername == username ? u.RecipientId : u.SenderId)
             .Distinct()
             .ToListAsync();
@@ -94,6 +92,8 @@ public class MessagesRepository : IMessagesRepository
         return await _context.Users
             .Include(u => u.Avatar)
             .Where(u => companions.Contains(u.Id))
+            .AsNoTracking()
+            .AsSplitQuery()
             .ProjectTo<PlayerDto>(_mapper.ConfigurationProvider)
             .ToListAsync();
     }
