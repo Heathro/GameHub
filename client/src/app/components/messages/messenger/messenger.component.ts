@@ -9,6 +9,7 @@ import { MessageComponent } from '../message/message.component';
 import { Message } from 'src/app/models/message';
 import { Player } from 'src/app/models/player';
 import { User } from 'src/app/models/user';
+import { ConfirmService } from 'src/app/services/confirm.service';
 
 @Component({
   selector: 'app-messenger',
@@ -26,7 +27,11 @@ export class MessengerComponent implements OnInit, OnDestroy {
   //loadingMessages = false;
   sending = false;
 
-  constructor(private accountService: AccountService, public messagesService: MessagesService) {
+  constructor(
+    private accountService: AccountService,
+    public messagesService: MessagesService,
+    private confirmService: ConfirmService
+  ) {
     this.accountService.currentUser$.pipe(take(1)).subscribe({
       next: user => this.user = user
     });
@@ -70,10 +75,25 @@ export class MessengerComponent implements OnInit, OnDestroy {
   }
 
   deleteCompanion() {
-    this.messagesService.deleteCompanion().then(() => {
-      this.messagesService.stopHubConnection();
-      this.loadCompanions();
+    this.confirmService.confirm(
+      'Delete Chat',
+      'Are you sure you want to delete chat with ' + this.getCurrentConversant() + '?',
+      'Delete',
+      'Cancel'
+    ).subscribe({
+      next: confirmed => {
+        if (confirmed) {
+          this.messagesService.deleteCompanion().then(() => {
+            this.messagesService.stopHubConnection();
+            this.loadCompanions();
+          });
+        }
+      }
     });
+    // this.messagesService.deleteCompanion().then(() => {
+    //   this.messagesService.stopHubConnection();
+    //   this.loadCompanions();
+    // });
     // this.messagesService.deleteCompanion(this.messages.length > 0).subscribe({
     //   next: () => {
     //     this.messages = [];
@@ -131,7 +151,19 @@ export class MessengerComponent implements OnInit, OnDestroy {
   }
 
   deleteMessages() {
-    this.messagesService.deleteMessages();
+    this.confirmService.confirm(
+      'Clear Chat',
+      'Are you sure you want to clear chat with ' + this.getCurrentConversant() + '?',
+      'Clear',
+      'Cancel'
+    ).subscribe({
+      next: confirmed => {
+        if (confirmed) {
+          this.messagesService.deleteMessages();
+        }
+      }
+    });
+    // this.messagesService.deleteMessages();
     // this.messagesService.deleteMessages().subscribe({
     //   next: () => this.messages.length = 0
     // });

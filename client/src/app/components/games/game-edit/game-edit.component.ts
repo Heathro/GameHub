@@ -16,6 +16,7 @@ import { Game } from 'src/app/models/game';
 import { User } from 'src/app/models/user';
 import { Review } from 'src/app/models/review';
 import { ReviewsService } from 'src/app/services/reviews.service';
+import { ConfirmService } from 'src/app/services/confirm.service';
 
 @Component({
   selector: 'app-game-edit',
@@ -46,7 +47,8 @@ export class GameEditComponent implements OnInit, EditComponent {
     private route: ActivatedRoute,
     private router: Router,
     private formBuilder: FormBuilder,
-    private location: Location
+    private location: Location,
+    private confirmService: ConfirmService
   ) {
     this.accountService.currentUser$.pipe(take(1)).subscribe({
       next: user => this.user = user
@@ -112,9 +114,20 @@ export class GameEditComponent implements OnInit, EditComponent {
   }
 
   deleteGame() {
-    if (!this.game) return;
-    this.gamesService.deleteGame(this.game.title).subscribe({
-      next: () => this.router.navigateByUrl('/games')
+    this.confirmService.confirm(
+      'Delete Game',
+      'Are you sure you want to delete this game?',
+      'Delete',
+      'Cancel'
+    ).subscribe({
+      next: confirmed => {
+        if (confirmed) {
+          if (!this.game) return;
+          this.gamesService.deleteGame(this.game.title).subscribe({
+            next: () => this.router.navigateByUrl('/games')
+          });
+        }
+      }
     });
   }
 

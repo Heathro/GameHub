@@ -60,6 +60,7 @@ public class UsersRepository : IUsersRepository
             .Where(u => u.UserName == requestedUserName)
             .ProjectTo<PlayerDto>(_mapper.ConfigurationProvider)
             .AsSplitQuery()
+            .AsNoTracking()
             .SingleOrDefaultAsync();
 
         var friendship = await _context.Friendships

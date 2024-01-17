@@ -41,8 +41,6 @@ public class MessagesRepository : IMessagesRepository
                 m.RecipientUsername == currentUsername && m.SenderUsername == recipientUsername ||
                 m.RecipientUsername == recipientUsername && m.SenderUsername == currentUsername
             )
-            .AsNoTracking()
-            .AsSplitQuery()
             .ToListAsync();
     }
 

@@ -53,6 +53,7 @@ import { GameEditReviewsComponent } from './components/reviews/game-edit-review/
 import { ReviewManagementComponent } from './components/admin/review-management/review-management.component';
 import { ReviewForModerationComponent } from './components/admin/review-for-moderation/review-for-moderation.component';
 import { GameForModerationComponent } from './components/admin/game-for-moderation/game-for-moderation.component';
+import { ConfirmDialogComponent } from './modals/confirm-dialog/confirm-dialog.component';
 
 
 @NgModule({
@@ -99,7 +100,8 @@ import { GameForModerationComponent } from './components/admin/game-for-moderati
     GameEditReviewsComponent,
     ReviewManagementComponent,
     ReviewForModerationComponent,
-    GameForModerationComponent
+    GameForModerationComponent,
+    ConfirmDialogComponent
   ],
   imports: [
     BrowserModule,

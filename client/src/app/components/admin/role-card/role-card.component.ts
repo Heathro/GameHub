@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { AdminService } from 'src/app/services/admin.service';
 import { deepEqual } from 'src/app/helpers/basicFunctions';
 import { User } from 'src/app/models/user';
+import { ConfirmService } from 'src/app/services/confirm.service';
 
 @Component({
   selector: 'app-role-card',
@@ -21,7 +22,8 @@ export class RoleCardComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder, 
     private adminService: AdminService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private confirmService: ConfirmService
   ) { }
 
   ngOnInit(): void {
@@ -49,8 +51,19 @@ export class RoleCardComponent implements OnInit {
     });
   }
 
-  deleteCurrentUser() {
-    if (this.user) this.deleteUser.next(this.user.userName);
+  deleteCurrentUser() {    
+    this.confirmService.confirm(
+      'Delete Account',
+      'Are you sure you want to delete ' + this.user?.userName +'?',
+      'Delete',
+      'Cancel'
+    ).subscribe({
+      next: confirmed => {
+        if (confirmed) {
+          if (this.user) this.deleteUser.next(this.user.userName);
+        }
+      }
+    });        
   }
 
   isDirty(): boolean {

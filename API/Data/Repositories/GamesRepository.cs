@@ -25,7 +25,6 @@ public class GamesRepository : IGamesRepository
         return await _context.Games
             .Where(g => g.Title == title)
             .AsSplitQuery()
-            .AsNoTracking()
             .ProjectTo<GameDto>(_mapper.ConfigurationProvider)
             .SingleOrDefaultAsync();
     }
@@ -112,6 +111,7 @@ public class GamesRepository : IGamesRepository
             paginationParams.ItemsPerPage
         );
     }
+    
     public async Task<PagedList<GameDto>> GetGamesForModerationAsync(PaginationParams paginationParams)
     {
         return await PagedList<GameDto>.CreateAsync

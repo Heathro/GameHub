@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { ToastrService } from 'ngx-toastr';
 
+import { ConfirmService } from 'src/app/services/confirm.service';
 import { EditComponent } from 'src/app/interfaces/edit-component';
 import { ReviewsService } from 'src/app/services/reviews.service';
 import { ReviewMenu } from 'src/app/models/review';
@@ -29,7 +30,8 @@ export class PostReviewComponent implements OnInit, EditComponent {
     private route: ActivatedRoute,
     private router: Router, 
     private toastr: ToastrService, 
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private confirmService: ConfirmService
   ) { }
 
   isDirty(): boolean {
@@ -65,7 +67,7 @@ export class PostReviewComponent implements OnInit, EditComponent {
         this.finished = true;
         this.posting = false;
         this.router.navigateByUrl('/games/' + this.reviewMenu?.game.title);
-        this.toastr.success('Review successful');
+        this.toastr.success('Review goes for moderation');
       },
       error: error => {
         this.finished = true;
@@ -76,18 +78,41 @@ export class PostReviewComponent implements OnInit, EditComponent {
   }
 
   deleteReview() {
-    if (!this.reviewMenu) return;
-    this.reviewsService.deleteReview(this.reviewMenu.id).subscribe({
-      next: () => {
-        if (!this.reviewMenu) return;
-        this.finished = true;
-        this.reviewMenu.posted = false;
-        this.reviewMenu.content = "";
-        this.router.navigateByUrl('/games/' + this.reviewMenu.game.title);
-        this.toastr.success('Delete successful');
-        this.posting = false;
+    this.confirmService.confirm(
+      'Delete Review',
+      'Are you sure you want to delete this review?',
+      'Delete',
+      'Cancel'
+    ).subscribe({
+      next: confirmed => {
+        if (confirmed) {
+          if (!this.reviewMenu) return;
+          this.reviewsService.deleteReview(this.reviewMenu.id).subscribe({
+            next: () => {
+              if (!this.reviewMenu) return;
+              this.finished = true;
+              this.reviewMenu.posted = false;
+              this.reviewMenu.content = "";
+              this.router.navigateByUrl('/games/' + this.reviewMenu.game.title);
+              this.toastr.success('Delete successful');
+              this.posting = false;
+            }
+          });
+        }
       }
     });
+    // if (!this.reviewMenu) return;
+    // this.reviewsService.deleteReview(this.reviewMenu.id).subscribe({
+    //   next: () => {
+    //     if (!this.reviewMenu) return;
+    //     this.finished = true;
+    //     this.reviewMenu.posted = false;
+    //     this.reviewMenu.content = "";
+    //     this.router.navigateByUrl('/games/' + this.reviewMenu.game.title);
+    //     this.toastr.success('Delete successful');
+    //     this.posting = false;
+    //   }
+    // });
   }
 
   initializeFrom() {

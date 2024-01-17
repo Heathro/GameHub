@@ -15,6 +15,7 @@ import { Player } from 'src/app/models/player';
 import { User } from 'src/app/models/user';
 import { Review } from 'src/app/models/review';
 import { ReviewsService } from 'src/app/services/reviews.service';
+import { ConfirmService } from 'src/app/services/confirm.service';
 
 @Component({
   selector: 'app-player-edit',
@@ -42,7 +43,8 @@ export class PlayerEditComponent implements OnInit, EditComponent {
     private reviewsService: ReviewsService,
     private toastr: ToastrService,
     private formBuilder: FormBuilder,
-    private router: Router
+    private router: Router,
+    private confirmService: ConfirmService
   ) {
     this.accountService.currentUser$.pipe(take(1)).subscribe({
       next: user => this.user = user
@@ -104,12 +106,23 @@ export class PlayerEditComponent implements OnInit, EditComponent {
   }
 
   deleteUser() {
-    this.playersService.deletePlayer().subscribe({
-      next: () => {
-        this.accountService.logout();
-        this.router.navigateByUrl('/');
+    this.confirmService.confirm(
+      'Delete Account',
+      'Are you sure you want to delete your account?',
+      'Delete',
+      'Cancel'
+    ).subscribe({
+      next: confirmed => {
+        if (confirmed) {
+          this.playersService.deletePlayer().subscribe({
+            next: () => {
+              this.accountService.logout();
+              this.router.navigateByUrl('/');
+            }
+          });
+        }
       }
-    })
+    });
   }
 
   resetForm() {
