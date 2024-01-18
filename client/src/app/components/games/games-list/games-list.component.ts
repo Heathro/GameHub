@@ -167,6 +167,7 @@ export class GamesListComponent implements OnInit {
     });
 
     this.currentFilter = this.filterForm.value;
+
     this.initialFilter = {
       categories: {
         published: false,

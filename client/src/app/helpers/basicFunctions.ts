@@ -24,4 +24,32 @@ export class BasicFunctions {
   
     return true;
   }
+  
+  static deepCopy<T>(obj: T, cache = new WeakMap()): T {
+    if (typeof obj !== 'object' || obj === null) {
+      return obj;
+    }
+  
+    if (cache.has(obj)) {
+      return cache.get(obj);
+    }
+  
+    if (Array.isArray(obj)) {
+      const newArray = obj.map((item) => this.deepCopy(item, cache));
+      cache.set(obj, newArray);
+      return newArray as any;
+    }
+  
+    const newObj: { [key: string]: any } = {};
+    cache.set(obj, newObj);
+  
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        newObj[key] = this.deepCopy(obj[key], cache);
+      }
+    }
+  
+    return newObj as T;
+  }
 }
+
