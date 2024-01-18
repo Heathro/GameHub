@@ -2,8 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { environment } from 'src/environments/environment';
-import { getPaginatedResult, getPaginationHeaders } from '../helpers/pagination';
-import { PaginationParams } from '../helpers/pagination';
+import { PaginationFunctions, PaginationParams } from '../helpers/pagination';
 import { User } from '../models/user';
 import { OrderType } from '../enums/orderType';
 import { ReviewForModeration } from '../models/review';
@@ -25,8 +24,10 @@ export class AdminService {
   }
 
   getUsersWithRoles() {
-    let params = getPaginationHeaders(this.usersPaginationParams);
-    return getPaginatedResult<User[]>(this.baseUrl + 'admin/users-with-roles', params, this.http);
+    let params = PaginationFunctions.getPaginationHeaders(this.usersPaginationParams);
+    return PaginationFunctions.getPaginatedResult<User[]>(
+      this.baseUrl + 'admin/users-with-roles', params, this.http
+    );
   }
 
   editRoles(userName: string, roles: string) {
@@ -38,13 +39,15 @@ export class AdminService {
   }
 
   getGamesForModeration() {
-    let params = getPaginationHeaders(this.gamesPaginationParams);
-    return getPaginatedResult<Game[]>(this.baseUrl + 'admin/games-for-moderation', params, this.http);
+    let params = PaginationFunctions.getPaginationHeaders(this.gamesPaginationParams);
+    return PaginationFunctions.getPaginatedResult<Game[]>(
+      this.baseUrl + 'admin/games-for-moderation', params, this.http
+    );
   }
 
   getReviewsForModeration() {
-    let params = getPaginationHeaders(this.reviewsPaginationParams);
-    return getPaginatedResult<ReviewForModeration[]>(
+    let params = PaginationFunctions.getPaginationHeaders(this.reviewsPaginationParams);
+    return PaginationFunctions.getPaginatedResult<ReviewForModeration[]>(
       this.baseUrl + 'admin/reviews-for-moderation', params, this.http
     );
   }
@@ -96,14 +99,14 @@ export class AdminService {
   }
 
   private initializeUsersPaginationParams() {
-    return new PaginationParams(7, OrderType.az);
+    return new PaginationParams(10, OrderType.az);
   }
 
   private initializeGamesPaginationParams() {
-    return new PaginationParams(7, OrderType.az);
+    return new PaginationParams(10, OrderType.az);
   }
 
   private initializeReviewsPaginationParams() {
-    return new PaginationParams(5, OrderType.az);
+    return new PaginationParams(10, OrderType.az);
   }
 }

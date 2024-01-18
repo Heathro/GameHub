@@ -4,8 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { delay, map, of } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
-import { PaginatedResult, PaginationParams } from '../helpers/pagination';
-import { getPaginatedResult, getPaginationHeaders } from '../helpers/pagination';
+import { PaginatedResult, PaginationFunctions, PaginationParams } from '../helpers/pagination';
 import { OrderType } from '../enums/orderType';
 import { Review, ReviewMenu } from '../models/review';
 
@@ -24,16 +23,17 @@ export class ReviewsService {
   getAllReviews() {
     const queryString = Object.values(this.paginationParams).join('-');
 
-    const reviews = this.reviewsCache.get(queryString);
-    if (reviews) return of(reviews).pipe(delay(10));
+    const response = this.reviewsCache.get(queryString);
+    if (response) return of(response);
 
-    let params = getPaginationHeaders(this.paginationParams);
-    return getPaginatedResult<Review[]>(this.baseUrl + 'reviews/list', params, this.http).pipe(
-      map(reviews => {
-        this.reviewsCache.set(queryString, reviews);
-        return reviews;
-      })
-    );
+    let params = PaginationFunctions.getPaginationHeaders(this.paginationParams);
+    return PaginationFunctions.getPaginatedResult<Review[]>(
+      this.baseUrl + 'reviews/list', params, this.http).pipe(
+        map(reviews => {
+          this.reviewsCache.set(queryString, reviews);
+          return reviews;
+        })
+      );
   }
 
   getReviewsForGame(title: string) {

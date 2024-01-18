@@ -1,17 +1,18 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { take } from 'rxjs';
 import { FileUploader } from 'ng2-file-upload';
 import { ToastrService } from 'ngx-toastr';
 
+import { BasicFunctions } from 'src/app/helpers/basicFunctions';
+import { CustomValidators } from 'src/app/forms/customValidators';
 import { environment } from 'src/environments/environment';
 import { GamesService } from 'src/app/services/games.service';
 import { AccountService } from 'src/app/services/account.service';
 import { EditComponent } from 'src/app/interfaces/edit-component';
-import { deepEqual } from 'src/app/helpers/basicFunctions';
 import { Game } from 'src/app/models/game';
 import { User } from 'src/app/models/user';
 import { Review } from 'src/app/models/review';
@@ -64,7 +65,7 @@ export class GameEditComponent implements OnInit, EditComponent {
   }
 
   isDirty(): boolean {
-    return !deepEqual(this.editForm.value, this.initialForm);
+    return !BasicFunctions.deepEqual(this.editForm.value, this.initialForm);
   }
 
   loadGame(title: string) {
@@ -141,11 +142,13 @@ export class GameEditComponent implements OnInit, EditComponent {
       id: this.game?.id,
       title: [this.game?.title, [
         Validators.required,
-        this.whiteSpace(),
-        this.alphaNumericSpaceColon(),
+        CustomValidators.whiteSpace(),
+        CustomValidators.alphaNumericSpaceColon(),
         Validators.maxLength(32)
       ]],
-      description: this.game?.description,
+      description: [this.game?.description, [
+        Validators.maxLength(800)
+      ]],
       platforms: this.formBuilder.group({
         windows: this.game?.platforms.windows,
         macos: this.game?.platforms.macos,
@@ -170,44 +173,48 @@ export class GameEditComponent implements OnInit, EditComponent {
         strategy: this.game?.genres.strategy,
         survival: this.game?.genres.survival
       }),
-      video: [this.game?.video, this.youtubeId()],
-    }, { validators: [this.atLeastOneSelected('genres'), this.atLeastOneSelected('platforms')] });
+      video: [this.game?.video, CustomValidators.youtubeId()],
+    }, 
+    { validators: [
+      CustomValidators.atLeastOneSelected('genres'),
+      CustomValidators.atLeastOneSelected('platforms')]
+    });
     
     this.initialForm = this.editForm.value;
   }
 
-  alphaNumericSpaceColon(): ValidatorFn {
-    return (control: AbstractControl) => {
-      return control.value.match('^[A-Za-z0-9: ]+$') ? null : {notAlphaNumericSpaceColon: true};
-    }
-  }
+  // alphaNumericSpaceColon(): ValidatorFn {
+  //   return (control: AbstractControl) => {
+  //     return control.value.match('^[A-Za-z0-9: ]+$') ? null : {notAlphaNumericSpaceColon: true};
+  //   }
+  // }
 
-  whiteSpace(): ValidatorFn {
-    return (control: AbstractControl) => {
-      const input: string = control.value;
-      return input[0] === ' ' || input[input.length - 1] === ' ' ? {whiteSpace: true} : null;
-    }
-  }
+  // whiteSpace(): ValidatorFn {
+  //   return (control: AbstractControl) => {
+  //     const input: string = control.value;
+  //     return input[0] === ' ' || input[input.length - 1] === ' ' ? {whiteSpace: true} : null;
+  //   }
+  // }
 
-  atLeastOneSelected(groupName: string): ValidatorFn {
-    return (control: AbstractControl) => {
-      const fg = control as FormGroup;
+  // atLeastOneSelected(groupName: string): ValidatorFn {
+  //   return (control: AbstractControl) => {
+  //     const fg = control as FormGroup;
   
-      if (fg && fg.controls && fg.controls[groupName]) {
-        const groupControl = fg.controls[groupName] as FormGroup;
-        const controls = Object.values(groupControl.controls);
-        return controls.every(c => c.value === false) ? {atLeastOneSelected: true} : null;
-      }  
-      return null;
-    };
-  }
+  //     if (fg && fg.controls && fg.controls[groupName]) {
+  //       const groupControl = fg.controls[groupName] as FormGroup;
+  //       const controls = Object.values(groupControl.controls);
+  //       return controls.every(c => c.value === false) ? {atLeastOneSelected: true} : null;
+  //     }  
+  //     return null;
+  //   };
+  // }
 
-  youtubeId(): ValidatorFn {
-    return (control: AbstractControl) => {
-      return control.value.length === 11 && control.value.match('^[A-Za-z0-9-_]+$')
-        ? null : {youtubeId: true};
-    }
-  }
+  // youtubeId(): ValidatorFn {
+  //   return (control: AbstractControl) => {
+  //     return control.value.length === 11 && control.value.match('^[A-Za-z0-9-_]+$')
+  //       ? null : {youtubeId: true};
+  //   }
+  // }
 
   initializeUploader() {
     this.uploader = new FileUploader({

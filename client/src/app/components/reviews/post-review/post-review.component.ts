@@ -1,9 +1,10 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { ToastrService } from 'ngx-toastr';
 
+import { CustomValidators } from 'src/app/forms/customValidators';
 import { ConfirmService } from 'src/app/services/confirm.service';
 import { EditComponent } from 'src/app/interfaces/edit-component';
 import { ReviewsService } from 'src/app/services/reviews.service';
@@ -101,34 +102,22 @@ export class PostReviewComponent implements OnInit, EditComponent {
         }
       }
     });
-    // if (!this.reviewMenu) return;
-    // this.reviewsService.deleteReview(this.reviewMenu.id).subscribe({
-    //   next: () => {
-    //     if (!this.reviewMenu) return;
-    //     this.finished = true;
-    //     this.reviewMenu.posted = false;
-    //     this.reviewMenu.content = "";
-    //     this.router.navigateByUrl('/games/' + this.reviewMenu.game.title);
-    //     this.toastr.success('Delete successful');
-    //     this.posting = false;
-    //   }
-    // });
   }
 
   initializeFrom() {
     if (!this.reviewMenu) return;
     this.reviewForm = this.formBuilder.group({
       content: [this.reviewMenu.content, [
-        Validators.required,        
+        Validators.required,
         Validators.maxLength(800),
-        this.onlyWhiteSpace()
+        CustomValidators.onlyWhiteSpace()
       ]]
     });
   }
 
-  onlyWhiteSpace(): ValidatorFn {
-    return (control: AbstractControl) => {
-      return /^[ \t\n]*$/.test(control.value as string) ? {onlyWhiteSpace: true} : null;
-    }
-  }
+  // onlyWhiteSpace(): ValidatorFn {
+  //   return (control: AbstractControl) => {
+  //     return /^[ \t\n]*$/.test(control.value as string) ? {onlyWhiteSpace: true} : null;
+  //   }
+  // }
 }

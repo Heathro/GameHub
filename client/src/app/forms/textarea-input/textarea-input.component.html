@@ -1,15 +1,23 @@
 <div class="mb-3">
+
     <textarea
         class="form-control"
         [formControl]="control"
+        [class.is-invalid]="control.touched && control.invalid"
         rows={{rows}}
         placeholder={{placeholder}}
     ></textarea>
 
     <div 
         class="invalid-feedback" 
-        *ngIf="!control.errors?.['onlyWhiteSpace']"
+        *ngIf="control.errors?.['onlyWhiteSpace']"
     >
         Review cannot be empty
+    </div>
+
+    <div 
+        class="invalid-feedback"
+        *ngIf="control.errors?.['maxlength']">
+        No more than {{control.errors?.['maxlength'].requiredLength}} characters
     </div>
 </div>

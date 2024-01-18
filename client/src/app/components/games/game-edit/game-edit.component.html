@@ -182,7 +182,12 @@
             </tab>
 
             <tab heading="Reviews">
-                <div *ngIf="!loadingReviews && reviews.length !== 0">
+                <div 
+                    *ngIf="!loadingReviews && reviews.length !== 0"
+                    #scrollMe
+                    style="height: 568px"
+                    class="mt-2 scrollbar-light" id="scrollbar-light-style"
+                >
                     <div *ngFor="let review of reviews">
                         <app-game-edit-review (deleteReview)="deleteReview($event)" [review]="review"></app-game-edit-review>
                     </div>

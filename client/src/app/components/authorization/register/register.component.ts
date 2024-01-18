@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { ToastrService } from 'ngx-toastr';
 
+import { CustomValidators } from 'src/app/forms/customValidators';
 import { AccountService } from 'src/app/services/account.service';
 
 @Component({
@@ -46,7 +47,7 @@ export class RegisterComponent implements OnInit {
     this.registerForm = this.formBuilder.group({
       username: ['', [
         Validators.required,
-        this.alphaNumeric(),
+        CustomValidators.alphaNumeric(),
         Validators.maxLength(24)
       ]],
       password: ['', [
@@ -56,7 +57,7 @@ export class RegisterComponent implements OnInit {
       ]],
       confirmPassword: ['', [
         Validators.required,
-        this.matchValues('password')
+        CustomValidators.matchValues('password')
       ]]
     });
 
@@ -65,15 +66,15 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-  alphaNumeric(): ValidatorFn {
-    return (control: AbstractControl) => {
-      return control.value.match('^[A-Za-z0-9]+$') ? null : {notAlphaNumeric: true};
-    }
-  }
+  // alphaNumeric(): ValidatorFn {
+  //   return (control: AbstractControl) => {
+  //     return control.value.match('^[A-Za-z0-9]+$') ? null : {notAlphaNumeric: true};
+  //   }
+  // }
 
-  matchValues(matchTo: string): ValidatorFn {
-    return (control: AbstractControl) => {
-      return control.value === control.parent?.get(matchTo)?.value ? null : {notMatching: true};
-    }
-  }
+  // matchValues(matchTo: string): ValidatorFn {
+  //   return (control: AbstractControl) => {
+  //     return control.value === control.parent?.get(matchTo)?.value ? null : {notMatching: true};
+  //   }
+  // }
 }

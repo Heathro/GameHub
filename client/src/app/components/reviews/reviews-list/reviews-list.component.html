@@ -58,7 +58,12 @@
     </div>
     
     <div class="col-10">
-        <div *ngIf="!loading && reviews.length !== 0">
+        <div     
+            *ngIf="!loading && reviews.length !== 0"
+            #scrollMe
+            style="height: 844px"
+            class="mb-2 scrollbar-dark" id="scrollbar-dark-style"
+        >
             <div *ngFor="let review of reviews">
                 <app-review [review]="review"></app-review>
             </div>

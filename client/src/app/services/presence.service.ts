@@ -10,7 +10,6 @@ import { MessagesService } from './messages.service';
 import { Player } from '../models/player';
 import { User } from '../models/user';
 import { PlayersService } from './players.service';
-import { FriendStatus } from '../enums/friendStatus';
 
 @Injectable({
   providedIn: 'root'

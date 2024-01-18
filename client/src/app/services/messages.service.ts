@@ -21,7 +21,6 @@ export class MessagesService {
   messageThread$ = this.messageThreadSource.asObservable();
   private newMessageSource = new Subject<Message>();
   newMessage$ = this.newMessageSource.asObservable();
-  //messagesCache = new Map();
   lastCompanion = '';
   companions: Player[] = [];
   companionsLoaded = false;
@@ -92,23 +91,6 @@ export class MessagesService {
       })
       .catch(error => console.log(error));
   }
-  //deleteCompanion(deleteMessages: boolean) {
-    // if (deleteMessages) {
-    //   return this.http.delete(this.baseUrl + 'messages/delete-messages/' + this.lastCompanion).pipe(
-    //     map(() => {
-    //       this.companions = this.companions.filter(c => c.userName !== this.lastCompanion);
-    //       this.messagesCache.delete(this.lastCompanion);
-    //       this.lastCompanion = this.companions.length > 0 ? this.companions[0].userName : '';
-    //     })
-    //   );
-    // }
-    // else {
-    //   this.companions = this.companions.filter(c => c.userName !== this.lastCompanion);
-    //   this.messagesCache.delete(this.lastCompanion);
-    //   this.lastCompanion = this.companions.length > 0 ? this.companions[0].userName : '';
-    //   return of(void 0);
-    // }
-  //}
 
   startChat(player: Player) {
     this.lastCompanion = player.userName;
@@ -132,20 +114,6 @@ export class MessagesService {
     }
   }
 
-  // getMessages(username: string) {
-  //   this.lastCompanion = username;
-
-  //   const response = this.messagesCache.get(username);
-  //   if (response) return of(response);
-
-  //   return this.http.get<Message[]>(this.baseUrl + 'messages/thread/' + username).pipe(
-  //     map(response => {
-  //       this.messagesCache.set(username, response);
-  //       return response;
-  //     })
-  //   );
-  // }
-
   getMessageIndex(id: number) {
     return this.messageThreadSource.value.findIndex(m => m.id === id);
   }
@@ -162,27 +130,22 @@ export class MessagesService {
   async sendMessage(content: string) {
     return this.hubConnection?.invoke('SendMessage', {recipientUsername: this.lastCompanion, content})
       .catch(error => console.log(error));
-    // const messageDto = { recipientUsername: this.lastCompanion, content };
-    // return this.http.post<Message>(this.baseUrl + 'messages/new', messageDto);
   }
 
   async deleteMessage(id: number) {
     return this.hubConnection?.invoke('DeleteMessage', id)
       .then(() => this.messageThreadSource.next(this.messageThreadSource.value.filter(m => m.id !== id)))
       .catch(error => console.log(error));
-    //return this.http.delete(this.baseUrl + 'messages/delete-message/' + id);
   }
 
   async deleteMessages() {
     return this.hubConnection?.invoke('DeleteMessages', this.lastCompanion)
       .then(() => this.messageThreadSource.next([]))
       .catch(error => console.log(error));
-    //return this.http.delete(this.baseUrl + 'messages/delete-messages/' + this.lastCompanion);
   }
 
   clearPrivateData() {
     this.messageThreadSource.next([]);
-    //this.messagesCache = new Map();
     this.lastCompanion = '';
     this.companions.length = 0;
     this.companionsLoaded = false;

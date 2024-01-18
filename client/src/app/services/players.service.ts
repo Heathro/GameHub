@@ -4,8 +4,7 @@ import { Injectable } from '@angular/core';
 import { delay, map, of } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
-import { getPaginatedResult, getPaginationHeaders } from '../helpers/pagination';
-import { PaginationParams } from '../helpers/pagination';
+import { PaginationFunctions, PaginationParams } from '../helpers/pagination';
 import { Player } from '../models/player';
 import { FriendStatus } from '../enums/friendStatus';
 import { FriendRequestType } from '../enums/friendRequestType';
@@ -30,16 +29,17 @@ export class PlayersService {
   getPlayers() {
     const queryString = Object.values(this.paginationParams).join('-');
     
-    const players = this.playersCache.get(queryString);
-    if (players) return of(players).pipe(delay(10));
+    const response = this.playersCache.get(queryString);
+    if (response) return of(response);
 
-    let params = getPaginationHeaders(this.paginationParams);
-    return getPaginatedResult<Player[]>(this.baseUrl + 'users/list', params, this.http).pipe(
-      map(players => {
-        this.playersCache.set(queryString, players);
-        return players;
-      })
-    );
+    let params = PaginationFunctions.getPaginationHeaders(this.paginationParams);
+    return PaginationFunctions.getPaginatedResult<Player[]>(
+      this.baseUrl + 'users/list', params, this.http).pipe(
+        map(players => {
+          this.playersCache.set(queryString, players);
+          return players;
+        })
+      );
   }
 
   getPlayer(userName: string) {
@@ -163,6 +163,6 @@ export class PlayersService {
   }
 
   private initializePaginationParams() {
-    return new PaginationParams(6, OrderType.az);
+    return new PaginationParams(18, OrderType.az);
   }
 }

@@ -1,4 +1,9 @@
-<div class="mt-2" *ngIf="!loading && reviews.length !== 0">
+<div  
+    *ngIf="!loading && reviews.length !== 0"
+    #scrollMe
+    style="height: 568px"
+    class="mt-2 scrollbar-light" id="scrollbar-light-style"
+>
     <div class="col-12" *ngFor="let review of reviews">
         <app-review-for-moderation
             (approveReview)="approveReview($event)"

@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+
 import { ToastrService } from 'ngx-toastr';
+
+import { CustomValidators } from 'src/app/forms/customValidators';
 import { GamesService } from 'src/app/services/games.service';
 
 @Component({
@@ -44,8 +47,8 @@ export class PublicationComponent implements OnInit {
     this.publishForm = this.formBuilder.group({
       title: ['', [
         Validators.required,
-        this.whiteSpace(),
-        this.alphaNumericSpaceColon(),
+        CustomValidators.whiteSpace(),
+        CustomValidators.alphaNumericSpaceColon(),
         Validators.maxLength(32)
       ]],
       description: ['', [
@@ -75,32 +78,36 @@ export class PublicationComponent implements OnInit {
         strategy: false,
         survival: false
       })
-    }, { validators: [this.atLeastOneSelected('genres'), this.atLeastOneSelected('platforms')] });
+    },
+    { validators: [
+      CustomValidators.atLeastOneSelected('genres'),
+      CustomValidators.atLeastOneSelected('platforms')]
+    });
   }
 
-  alphaNumericSpaceColon(): ValidatorFn {
-    return (control: AbstractControl) => {
-      return control.value.match('^[A-Za-z0-9: ]+$') ? null : {notAlphaNumericSpaceColon: true};
-    }
-  }
+  // alphaNumericSpaceColon(): ValidatorFn {
+  //   return (control: AbstractControl) => {
+  //     return control.value.match('^[A-Za-z0-9: ]+$') ? null : {notAlphaNumericSpaceColon: true};
+  //   }
+  // }
 
-  whiteSpace(): ValidatorFn {
-    return (control: AbstractControl) => {
-      const input: string = control.value;
-      return input[0] === ' ' || input[input.length - 1] === ' ' ? {whiteSpace: true} : null;
-    }
-  }
+  // whiteSpace(): ValidatorFn {
+  //   return (control: AbstractControl) => {
+  //     const input: string = control.value;
+  //     return input[0] === ' ' || input[input.length - 1] === ' ' ? {whiteSpace: true} : null;
+  //   }
+  // }
 
-  atLeastOneSelected(groupName: string): ValidatorFn {
-    return (control: AbstractControl) => {
-      const fg = control as FormGroup;
+  // atLeastOneSelected(groupName: string): ValidatorFn {
+  //   return (control: AbstractControl) => {
+  //     const fg = control as FormGroup;
   
-      if (fg && fg.controls && fg.controls[groupName]) {
-        const groupControl = fg.controls[groupName] as FormGroup;
-        const controls = Object.values(groupControl.controls);
-        return controls.every(c => c.value === false) ? {atLeastOneSelected: true} : null;
-      }  
-      return null;
-    };
-  }
+  //     if (fg && fg.controls && fg.controls[groupName]) {
+  //       const groupControl = fg.controls[groupName] as FormGroup;
+  //       const controls = Object.values(groupControl.controls);
+  //       return controls.every(c => c.value === false) ? {atLeastOneSelected: true} : null;
+  //     }  
+  //     return null;
+  //   };
+  // }
 }

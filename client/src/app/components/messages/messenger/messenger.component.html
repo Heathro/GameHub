@@ -1,6 +1,12 @@
 <div class="row">
 
-    <div class="col-4" *ngIf="companions.length > 0">
+    <div
+        *ngIf="companions.length > 0"
+        #scrollMe
+        style="height: 844px"
+        [scrollTop]="scrollMe.scrollHeight"
+        class="col-4 scrollbar-dark" id="scrollbar-dark-style"
+    >
         <div *ngFor="let companion of companions">
             <app-contact-card 
                 (loadMessages)="changeCompanion($event)"
@@ -9,8 +15,11 @@
         </div>
     </div>
 
-    <div class="col-4"*ngIf="companions.length === 0">
-        <div class="card me-2"[hidden]="loadingCompanions" >
+    <div 
+        *ngIf="companions.length === 0"
+        class="col-4"
+    >
+        <div class="card me-2" [hidden]="loadingCompanions">
             <h4 class="my-4 text-center text-warning">No Chats</h4>
 
             <button 
@@ -30,31 +39,7 @@
 
     <div class="col-8">
         <div>
-            <!-- 
-            <div class="row">
-                <h4 
-                    class="d-inline text-info ms-4 mt-2 col-7"
-                >   
-                    &nbsp;&nbsp;<i class="bi bi-chat-dots"></i>
-                    &nbsp;&nbsp;{{getCurrentConversant()}}
-                </h4>
-                <button 
-                    class="btn btn-outline-danger mb-2 col-2 me-1"
-                    [disabled]="messages.length === 0"
-                    (click)="deleteMessages()"
-                >
-                    Clear Chat&nbsp;&nbsp;&nbsp;<i class="bi bi-trash3"></i>
-                </button>
-                <button 
-                    class="btn btn-outline-danger mb-2 col-2"
-                    [disabled]="getCurrentConversant().length === 0"
-                    (click)="deleteCompanion()"
-                >   
-                    Delete Chat&nbsp;&nbsp;&nbsp;<i class="bi bi-trash3"></i>
-                </button>
-            </div>
-            -->
-
+            
             <div class="row">
                 <h4 
                     class="d-inline text-info ms-4 mt-2 col-7"
@@ -80,23 +65,12 @@
 
             <div class="card">
 
-                <!-- 
-                <div class="card-body" *ngIf="!loadingMessages && messages && messages.length !== 0">
-                    <div *ngFor="let message of messages; let i = index">
-                        <app-message
-                            (deleteMessage)="deleteMessage($event)"
-                            [previousMessage]="i === 0 ? undefined : messages[i-1]"
-                            [currentMessage]="messages[i]"
-                            [nextMessage]="i === messages.length ? undefined : messages[i+1]"
-                            [currentUser]="user?.userName"
-                        ></app-message>
-                    </div>
-                </div>
-                -->
-                
                 <div 
-                    class="card-body"
                     *ngIf="messagesService.messageThread$ | async as messageThread"
+                    #scrollMe
+                    style="height: 740px"
+                    [scrollTop]="scrollMe.scrollHeight"
+                    class="card-body scrollbar-light" id="scrollbar-light-style"
                 >
                     <div *ngFor="let message of messageThread; let i = index">
                         <app-message

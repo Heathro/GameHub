@@ -4,8 +4,7 @@ import { Injectable } from '@angular/core';
 import { delay, map, of } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
-import { getFilteredPaginatedResult, getPaginationHeaders } from '../helpers/pagination';
-import { PaginationParams } from '../helpers/pagination';
+import { PaginationFunctions, PaginationParams } from '../helpers/pagination';
 import { Game } from '../models/game';
 import { Filter } from '../models/filter';
 import { User } from '../models/user';
@@ -29,11 +28,11 @@ export class GamesService {
     const queryString = Object.values(this.paginationParams).join('-') + this.stringifyFilter(this.filter!);
     
     const response = this.gamesCache.get(queryString);
-    if (response) return of(response).pipe(delay(10));
+    if (response) return of(response);
 
-    let params = getPaginationHeaders(this.paginationParams);
-    return getFilteredPaginatedResult<Game[]>
-      (this.baseUrl + 'games/list', params, this.http, this.filter!).pipe(
+    let params = PaginationFunctions.getPaginationHeaders(this.paginationParams);
+    return PaginationFunctions.getFilteredPaginatedResult<Game[]>(
+      this.baseUrl + 'games/list', params, this.http, this.filter!).pipe(
         map(response => {
           this.gamesCache.set(queryString, response);
           return response;

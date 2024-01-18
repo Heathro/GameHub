@@ -1,11 +1,11 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
-import { GamesService } from 'src/app/services/games.service';
-import { Game } from 'src/app/models/game';
+import { BasicFunctions } from 'src/app/helpers/basicFunctions';
 import { Pagination } from 'src/app/helpers/pagination';
 import { OrderType } from 'src/app/enums/orderType';
-import { deepEqual } from 'src/app/helpers/basicFunctions';
+import { GamesService } from 'src/app/services/games.service';
+import { Game } from 'src/app/models/game';
 
 @Component({
   selector: 'app-store',
@@ -105,11 +105,11 @@ export class GamesListComponent implements OnInit {
   }
 
   isFilterChanged() {
-    return !deepEqual(this.currentFilter, this.filterForm.value);
+    return !BasicFunctions.deepEqual(this.currentFilter, this.filterForm.value);
   }
 
   isFilterInitial() {
-    return deepEqual(this.initialFilter, this.filterForm.value);
+    return BasicFunctions.deepEqual(this.initialFilter, this.filterForm.value);
   }
 
   applyFilters() {

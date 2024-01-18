@@ -7,12 +7,12 @@
 }
 
 .game-moderation-card-title {
-    margin-top: 9px;
+    margin-top: 12px;
 }
 
 .game-moderation-card-img {
-    width: 70px;
-    margin: 4px;
+    height: 40px;
+    margin: 5px;
     cursor: pointer;
 }
 

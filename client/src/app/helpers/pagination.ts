@@ -28,40 +28,43 @@ export class PaginationParams {
   }
 }
 
-export function getPaginationHeaders(paginationParams: PaginationParams) {
-	let params = new HttpParams();
-
-  params = params.append('currentPage', paginationParams.currentPage);
-  params = params.append('itemsPerPage', paginationParams.itemsPerPage);
-  params = params.append('orderType', paginationParams.orderType);
-
-  return params;
+export class PaginationFunctions {
+  static getPaginationHeaders(paginationParams: PaginationParams) {
+  	let params = new HttpParams();
+  
+    params = params.append('currentPage', paginationParams.currentPage);
+    params = params.append('itemsPerPage', paginationParams.itemsPerPage);
+    params = params.append('orderType', paginationParams.orderType);
+  
+    return params;
+  }
+  
+  static getPaginatedResult<T>(url: string, params: HttpParams, http: HttpClient) {
+  	const paginationResult: PaginatedResult<T> = new PaginatedResult<T>;
+  
+  	return http.get<T>(url, { observe: 'response', params }).pipe(
+      map(response => {
+        if (response.body) paginationResult.result = response.body;
+        const pagination = response.headers.get('Pagination');
+        if (pagination) paginationResult.pagination = JSON.parse(pagination);
+        return paginationResult;
+      })
+    );
+  }
+  
+  static getFilteredPaginatedResult<T>(
+      url: string, params: HttpParams, http: HttpClient, filter: Filter
+    ) {
+    const paginationResult: PaginatedResult<T> = new PaginatedResult<T>;
+    
+    return http.post<T>(url, filter, { observe: 'response', params }).pipe(
+      map(response => {
+        if (response.body) paginationResult.result = response.body;
+        const pagination = response.headers.get('Pagination');
+        if (pagination) paginationResult.pagination = JSON.parse(pagination);
+        return paginationResult;
+      })
+    );
+  }
 }
 
-export function getPaginatedResult<T>(url: string, params: HttpParams, http: HttpClient) {
-	const paginationResult: PaginatedResult<T> = new PaginatedResult<T>;
-
-	return http.get<T>(url, { observe: 'response', params }).pipe(
-    map(response => {
-      if (response.body) paginationResult.result = response.body;
-      const pagination = response.headers.get('Pagination');
-      if (pagination) paginationResult.pagination = JSON.parse(pagination);
-      return paginationResult;
-    })
-  );
-}
-
-export function getFilteredPaginatedResult<T>(
-    url: string, params: HttpParams, http: HttpClient, filter: Filter
-  ) {
-  const paginationResult: PaginatedResult<T> = new PaginatedResult<T>;
-
-  return http.post<T>(url, filter, { observe: 'response', params }).pipe(
-    map(response => {
-      if (response.body) paginationResult.result = response.body;
-      const pagination = response.headers.get('Pagination');
-      if (pagination) paginationResult.pagination = JSON.parse(pagination);
-      return paginationResult;
-    })
-  );
-}

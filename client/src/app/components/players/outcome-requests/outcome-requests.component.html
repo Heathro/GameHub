@@ -1,4 +1,9 @@
-<div *ngIf="!loading && players.length !== 0">
+<div 
+    *ngIf="!loading && players.length !== 0"
+    #scrollMe
+    style="height: 768px"
+    class="mt-2 scrollbar-light" id="scrollbar-light-style"
+>
     <div class="row">
         <div class="col-4" *ngFor="let player of players">
             <app-friend-card (deleteCard)="deleteCard($event)" [player]="player"></app-friend-card>

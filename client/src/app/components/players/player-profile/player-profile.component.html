@@ -104,7 +104,13 @@
             </tab>
 
             <tab heading="Games">
-                <div *ngIf="player.publications.length !== 0">
+                <div 
+                    *ngIf="player.publications.length !== 0"
+                    #scrollMe
+                    style="height: 568px"
+                    class="mt-2 scrollbar-light" id="scrollbar-light-style"
+                    
+                >
                     <div *ngFor="let game of player.publications">
                         <app-game-card-mini [game]="game"></app-game-card-mini>
                     </div>
@@ -115,7 +121,11 @@
             </tab>
 
             <tab heading="Reviews">
-                <div *ngIf="!loadingReviews && reviews.length !== 0">
+                <div 
+                    *ngIf="!loadingReviews && reviews.length !== 0"
+                    #scrollMe
+                    style="height: 568px"
+                    class="mt-2 scrollbar-light" id="scrollbar-light-style">
                     <div *ngFor="let review of reviews">
                         <app-player-review [review]="review"></app-player-review>
                     </div>

@@ -1,21 +1,21 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { ToastrService } from 'ngx-toastr';
 import { FileUploader } from 'ng2-file-upload';
 import { take } from 'rxjs';
 
+import { BasicFunctions } from 'src/app/helpers/basicFunctions';
 import { environment } from 'src/environments/environment';
+import { ConfirmService } from 'src/app/services/confirm.service';
 import { AccountService } from 'src/app/services/account.service';
 import { PlayersService } from 'src/app/services/players.service';
 import { EditComponent } from 'src/app/interfaces/edit-component';
-import { deepEqual } from 'src/app/helpers/basicFunctions';
 import { Player } from 'src/app/models/player';
 import { User } from 'src/app/models/user';
 import { Review } from 'src/app/models/review';
 import { ReviewsService } from 'src/app/services/reviews.service';
-import { ConfirmService } from 'src/app/services/confirm.service';
 
 @Component({
   selector: 'app-player-edit',
@@ -57,7 +57,7 @@ export class PlayerEditComponent implements OnInit, EditComponent {
   }
 
   isDirty(): boolean {
-    return !deepEqual(this.editForm.value, this.initialForm);
+    return !BasicFunctions.deepEqual(this.editForm.value, this.initialForm);
   }
 
   loadPlayer() {
@@ -134,7 +134,9 @@ export class PlayerEditComponent implements OnInit, EditComponent {
     this.editForm = this.formBuilder.group({
       id: this.player?.id,
       realname: this.player?.realname,
-      summary: this.player?.summary,
+      summary: [this.player?.summary, [
+        Validators.maxLength(800)
+      ]],
       country: this.player?.country,
       city: this.player?.city
     });

@@ -3,10 +3,10 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { ToastrService } from 'ngx-toastr';
 
-import { AdminService } from 'src/app/services/admin.service';
-import { deepEqual } from 'src/app/helpers/basicFunctions';
-import { User } from 'src/app/models/user';
+import { BasicFunctions } from 'src/app/helpers/basicFunctions';
 import { ConfirmService } from 'src/app/services/confirm.service';
+import { AdminService } from 'src/app/services/admin.service';
+import { User } from 'src/app/models/user';
 
 @Component({
   selector: 'app-role-card',
@@ -67,7 +67,7 @@ export class RoleCardComponent implements OnInit {
   }
 
   isDirty(): boolean {
-    return !deepEqual(this.roleForm.value, this.initialForm);
+    return !BasicFunctions.deepEqual(this.roleForm.value, this.initialForm);
   }
 
   resetForm() {
