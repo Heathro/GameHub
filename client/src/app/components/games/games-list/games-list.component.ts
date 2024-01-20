@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { BasicFunctions } from 'src/app/helpers/basicFunctions';
@@ -19,6 +19,7 @@ export class GamesListComponent implements OnInit {
   currentFilter: any;
   initialFilter: any;
   loading = false;
+  currentPage = 1;
 
   constructor(private gamesService: GamesService, private formBuilder: FormBuilder) { }
 
@@ -34,7 +35,7 @@ export class GamesListComponent implements OnInit {
       next: response => {
         if (response.result && response.pagination) {
           this.games = response.result;
-          this.pagination = response.pagination;
+          this.pagination = {...response.pagination};
           this.loading = false;
         }
       }

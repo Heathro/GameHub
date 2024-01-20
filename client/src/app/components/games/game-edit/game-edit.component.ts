@@ -8,7 +8,7 @@ import { FileUploader } from 'ng2-file-upload';
 import { ToastrService } from 'ngx-toastr';
 
 import { BasicFunctions } from 'src/app/helpers/basicFunctions';
-import { CustomValidators } from 'src/app/forms/customValidators';
+import { CustomValidators } from 'src/app/helpers/customValidators';
 import { environment } from 'src/environments/environment';
 import { GamesService } from 'src/app/services/games.service';
 import { AccountService } from 'src/app/services/account.service';

@@ -27,7 +27,7 @@ export class PlayersListComponent implements OnInit {
       next: response => {
         if (response.result && response.pagination) {
           this.players = response.result;
-          this.pagination = response.pagination;
+          this.pagination = {...response.pagination};
           this.loading = false;
         }
       }

@@ -13,7 +13,7 @@ import { Review, ReviewMenu } from '../models/review';
 })
 export class ReviewsService {  
   baseUrl = environment.apiUrl;
-  //reviewsCache = new Map();
+  reviewsCache = new Map();
   paginationParams: PaginationParams;
 
   constructor(private http: HttpClient) {
@@ -21,35 +21,35 @@ export class ReviewsService {
   }
   
   getAllReviews() {
-    // const queryString = Object.values(this.paginationParams).join('-');
+    const queryString = Object.values(this.paginationParams).join('-');
 
-    // const response = this.reviewsCache.get(queryString);
-    // if (response) return of(response);
+    const response = this.reviewsCache.get(queryString);
+    if (response) return of(response).pipe(delay(10));
 
     let params = PaginationFunctions.getPaginationHeaders(this.paginationParams);
-    return PaginationFunctions.getPaginatedResult<Review[]>(this.baseUrl + 'reviews/list', params, this.http);
-      // .pipe(
-      //   map(reviews => {
-      //     this.reviewsCache.set(queryString, reviews);
-      //     return reviews;
-      //   })
-      // );
+    return PaginationFunctions.getPaginatedResult<Review[]>(this.baseUrl + 'reviews/list', params, this.http)
+      .pipe(
+        map(reviews => {
+          this.reviewsCache.set(queryString, reviews);
+          return reviews;
+        })
+      );
   }
 
   getReviewsForGame(title: string) {
-    // const firstElement: PaginatedResult<Review[]> = this.reviewsCache.values().next().value;
-    // if (firstElement && firstElement.result) {
-    //   return of(firstElement.result.filter(r => r.gameTitle !== title));
-    // }
+    const firstElement: PaginatedResult<Review[]> = this.reviewsCache.values().next().value;
+    if (firstElement && firstElement.result) {
+      return of(firstElement.result.filter(r => r.gameTitle !== title));
+    }
 
     return this.http.get<Review[]>(this.baseUrl + 'reviews/game/' + title);
   }
 
   getReviewsForPlayer(username: string) {
-    // const firstElement: PaginatedResult<Review[]> = this.reviewsCache.values().next().value;
-    // if (firstElement && firstElement.result) {
-    //   return of(firstElement.result.filter(r => r.reviewerUsername !== username));
-    // }
+    const firstElement: PaginatedResult<Review[]> = this.reviewsCache.values().next().value;
+    if (firstElement && firstElement.result) {
+      return of(firstElement.result.filter(r => r.reviewerUsername !== username));
+    }
 
     return this.http.get<Review[]>(this.baseUrl + 'reviews/player/' + username);
   }
@@ -84,11 +84,11 @@ export class ReviewsService {
   }
 
   clearPrivateData() {
-    //this.reviewsCache = new Map();
+    this.reviewsCache = new Map();
     this.paginationParams = this.initializePaginationParams();
   }
 
   private initializePaginationParams() {
-    return new PaginationParams(5, OrderType.newest);
+    return new PaginationParams(10, OrderType.newest);
   }
 }

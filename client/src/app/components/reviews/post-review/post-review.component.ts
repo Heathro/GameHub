@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { ToastrService } from 'ngx-toastr';
 
-import { CustomValidators } from 'src/app/forms/customValidators';
+import { CustomValidators } from 'src/app/helpers/customValidators';
 import { ConfirmService } from 'src/app/services/confirm.service';
 import { EditComponent } from 'src/app/interfaces/edit-component';
 import { ReviewsService } from 'src/app/services/reviews.service';

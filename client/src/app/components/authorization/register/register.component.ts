@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { ToastrService } from 'ngx-toastr';
 
-import { CustomValidators } from 'src/app/forms/customValidators';
+import { CustomValidators } from 'src/app/helpers/customValidators';
 import { AccountService } from 'src/app/services/account.service';
 
 @Component({

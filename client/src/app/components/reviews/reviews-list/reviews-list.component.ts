@@ -27,7 +27,7 @@ export class ReviewsListComponent implements OnInit {
       next: response => {
         if (response.result && response.pagination) {
           this.reviews = response.result;
-          this.pagination = response.pagination;
+          this.pagination = {...response.pagination};
           this.loading = false;
         }
       }

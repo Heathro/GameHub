@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 
 import { ToastrService } from 'ngx-toastr';
 
-import { CustomValidators } from 'src/app/forms/customValidators';
+import { CustomValidators } from 'src/app/helpers/customValidators';
 import { GamesService } from 'src/app/services/games.service';
 
 @Component({

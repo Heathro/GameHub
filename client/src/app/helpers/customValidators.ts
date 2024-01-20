@@ -30,7 +30,7 @@ export class CustomValidators {
     return (control: AbstractControl) => {
       return /^[ \t\n]*$/.test(control.value as string) ? {onlyWhiteSpace: true} : null;
     }
-  } 
+  }
 
   static atLeastOneSelected(groupName: string): ValidatorFn {
     return (control: AbstractControl) => {
@@ -47,7 +47,8 @@ export class CustomValidators {
 
   static youtubeId(): ValidatorFn {
     return (control: AbstractControl) => {
-      return control.value.length === 11 && control.value.match('^[A-Za-z0-9-_]+$')
+      const input: string = control.value;
+      return input.length === 0 || (input.length === 11 && input.match('^[A-Za-z0-9-_]+$'))
         ? null : {youtubeId: true};
     }
   }

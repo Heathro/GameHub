@@ -15,7 +15,7 @@ import { OrderType } from '../enums/orderType';
 })
 export class PlayersService {
   baseUrl = environment.apiUrl;
-  //playersCache = new Map();
+  playersCache = new Map();
   activeFriends: Player[] = [];
   incomeRequests: Player[] = [];
   outcomeRequests: Player[] = [];
@@ -27,27 +27,27 @@ export class PlayersService {
   }
 
   getPlayers() {
-    // const queryString = Object.values(this.paginationParams).join('-');
+    const queryString = Object.values(this.paginationParams).join('-');
     
-    // const response = this.playersCache.get(queryString);
-    // if (response) return of(response);
+    const response = this.playersCache.get(queryString);
+    if (response) return of(response).pipe(delay(10));
 
     let params = PaginationFunctions.getPaginationHeaders(this.paginationParams);
-    return PaginationFunctions.getPaginatedResult<Player[]>(this.baseUrl + 'users/list', params, this.http);
-      // .pipe(
-      //   map(players => {
-      //     this.playersCache.set(queryString, players);
-      //     return players;
-      //   })
-      // );
+    return PaginationFunctions.getPaginatedResult<Player[]>(this.baseUrl + 'users/list', params, this.http)
+      .pipe(
+        map(players => {
+          this.playersCache.set(queryString, players);
+          return players;
+        })
+      );
   }
 
   getPlayer(userName: string) {
-    // const player = [...this.playersCache.values()]
-    //   .reduce((array, element) => array.concat(element.result), [])
-    //   .find((player: Player) => player.userName === userName);
+    const player = [...this.playersCache.values()]
+      .reduce((array, element) => array.concat(element.result), [])
+      .find((player: Player) => player.userName === userName);
 
-    // if (player) return of(player);
+    if (player) return of(player);
 
     return this.http.get<Player>(this.baseUrl + 'users/' + userName);
   }
@@ -154,7 +154,7 @@ export class PlayersService {
   }
 
   clearPrivateData() {
-    //this.playersCache = new Map();
+    this.playersCache = new Map();
     this.activeFriends = [];
     this.incomeRequests = [];
     this.outcomeRequests = [];
@@ -163,6 +163,6 @@ export class PlayersService {
   }
 
   private initializePaginationParams() {
-    return new PaginationParams(3, OrderType.az);
+    return new PaginationParams(18, OrderType.az);
   }
 }
