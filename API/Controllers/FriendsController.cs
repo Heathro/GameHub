@@ -14,11 +14,13 @@ public class FriendsController : BaseApiController
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly INotificationCenter _notificationCenter;
 
-    public FriendsController(IUnitOfWork unitOfWork, IMapper mapper)
+    public FriendsController(IUnitOfWork unitOfWork, IMapper mapper, INotificationCenter notificationCenter)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _notificationCenter = notificationCenter;
     }
 
     [HttpPost("add-friend/{username}")]
@@ -42,11 +44,19 @@ public class FriendsController : BaseApiController
         };
         currentUser.Invitees.Add(friendship);
             
-        var player = _mapper.Map<PlayerDto>(userToAdd);        
-        player.Status = friendship.Status;
-        player.Type = FriendRequestType.Outcome;
+        var target = _mapper.Map<PlayerDto>(userToAdd);
+        target.Status = friendship.Status;
+        target.Type = FriendRequestType.Outcome;
 
-        if (await _unitOfWork.Complete()) return Ok(player);
+        if (await _unitOfWork.Complete())
+        {
+            var initiator = _mapper.Map<PlayerDto>(currentUser);
+            initiator.Status = friendship.Status;
+            initiator.Type = FriendRequestType.Income;
+            _notificationCenter.FriendshipRequested(initiator, target.UserName);
+
+            return Ok(target);
+        }
 
         return BadRequest("Failed to add friend");
     }
@@ -74,11 +84,19 @@ public class FriendsController : BaseApiController
             currentUser.Inviters.Remove(friendship);
         }
 
-        var player = _mapper.Map<PlayerDto>(userToDelete);
-        player.Status = FriendStatus.None;
-        player.Type = FriendRequestType.All;
+        var target = _mapper.Map<PlayerDto>(userToDelete);
+        target.Status = FriendStatus.None;
+        target.Type = FriendRequestType.All;
 
-        if (await _unitOfWork.Complete()) return Ok(player);
+        if (await _unitOfWork.Complete())
+        {
+            var initiator = _mapper.Map<PlayerDto>(currentUser);
+            initiator.Status = FriendStatus.None;
+            initiator.Type = FriendRequestType.All;
+            _notificationCenter.FriendshipCancelled(initiator, target.UserName);
+
+            return Ok(target);
+        }
 
         return BadRequest("Failed to delete friend");
     }
@@ -110,11 +128,22 @@ public class FriendsController : BaseApiController
         currentUser.Inviters.Remove(currentFriendship);
         currentUser.Inviters.Add(updatedFriendship);
 
-        var player = _mapper.Map<PlayerDto>(userToUpdate);
-        player.Status = status;        
-        player.Type = FriendRequestType.All;
+        var target = _mapper.Map<PlayerDto>(userToUpdate);
+        target.Status = status;        
+        target.Type = FriendRequestType.All;
 
-        if (await _unitOfWork.Complete()) return Ok(player);
+        if (await _unitOfWork.Complete())
+        {   
+            if (status == FriendStatus.Active)
+            {
+                var initiator = _mapper.Map<PlayerDto>(currentUser);
+                initiator.Status = status;
+                initiator.Type = FriendRequestType.All;
+                _notificationCenter.FriendshipAccepted(initiator, target.UserName);
+            }
+            
+            return Ok(target);
+        }
 
         return BadRequest("Failed to update status");
     }

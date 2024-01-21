@@ -8,7 +8,7 @@ public interface IUnitOfWork
     public IGamesRepository GamesRepository { get; }
     public IReviewsRepository ReviewsRepository { get; }
     public IBookmarksRepository BookmarksRepository { get; }
-    public ILikesRepository LikesRepository { get; }    
+    public ILikesRepository LikesRepository { get; }
     bool HasChanges();
     Task<bool> Complete();
 }

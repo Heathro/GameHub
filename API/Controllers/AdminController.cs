@@ -18,14 +18,16 @@ public class AdminController : BaseApiController
     private readonly IImageService _imageService;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly INotificationCenter _notificationCenter;
 
     public AdminController(UserManager<AppUser> userManager, IImageService imageService,
-        IUnitOfWork unitOfWork, IMapper mapper)
+        IUnitOfWork unitOfWork, IMapper mapper, INotificationCenter notificationCenter)
     {
         _userManager = userManager;
         _imageService = imageService;
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _notificationCenter = notificationCenter;
     }
 
     [Authorize(Policy = "AdminRole")]
@@ -89,6 +91,8 @@ public class AdminController : BaseApiController
 
         await _userManager.DeleteAsync(user);
 
+        _notificationCenter.UserDeleted(User.GetUsername(), username);
+
         return Ok();       
     }
 
@@ -130,9 +134,13 @@ public class AdminController : BaseApiController
     [HttpPut("approve-review/{id}")]
     public async Task<ActionResult> ApproveReview(int id)
     {
-        _unitOfWork.ReviewsRepository.ApproveReview(id);
+        var review = await _unitOfWork.ReviewsRepository.ApproveReview(id);
 
-        if (await _unitOfWork.Complete()) return Ok();
+        if (await _unitOfWork.Complete())
+        {
+            _notificationCenter.ReviewPosted(User.GetUsername(), review);
+            return Ok();
+        }
 
         return BadRequest("Failed to approve review");
     }

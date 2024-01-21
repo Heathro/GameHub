@@ -33,9 +33,9 @@
     </div>
 </div>
 
-<div class="row" *ngIf="game">
-    <div *ngIf="game.screenshots.length > 0">
-        <div class="col-4" *ngFor="let screenshot of game.screenshots">
+<div *ngIf="game">
+    <div class="row" *ngIf="game.screenshots.length > 0">
+        <div class="col-3" *ngFor="let screenshot of game.screenshots">
             <img src="{{screenshot.url}}" alt="screenshot" class="img-thumbnail mb-1">
             <div class="text-center">
                 <div class="btn btn-outline-danger btn-sm mb-3" (click)="deleteScreenshot(screenshot.id)">

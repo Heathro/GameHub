@@ -15,12 +15,15 @@ public class GamesController : BaseApiController
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly IImageService _imageService;
+    private readonly INotificationCenter _notificationCenter;
 
-    public GamesController(IUnitOfWork unitOfWork, IMapper mapper, IImageService imageService)
+    public GamesController(IUnitOfWork unitOfWork, IMapper mapper, IImageService imageService,
+        INotificationCenter notificationCenter)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _imageService = imageService;
+        _notificationCenter = notificationCenter;
     }
 
     [HttpPost("list")]
@@ -61,9 +64,15 @@ public class GamesController : BaseApiController
             return BadRequest("You are not publisher");
         }
         
-        _mapper.Map(gameEditDto, game);
+        var updatedGame = _mapper.Map(gameEditDto, game);
 
-        if (await _unitOfWork.Complete()) return NoContent();
+        if (await _unitOfWork.Complete())
+        {
+            var updatedGameDto = _mapper.Map<GameDto>(updatedGame);
+            _notificationCenter.GameUpdated(User.GetUsername(), updatedGameDto);
+
+            return NoContent();
+        }
 
         return BadRequest("No changes were detected");
     }
@@ -72,11 +81,9 @@ public class GamesController : BaseApiController
     public async Task<ActionResult<PosterDto>> UpdatePoster([FromRoute]string title, IFormFile file)
     {
         var game = await _unitOfWork.GamesRepository.GetGameByTitleAsync(title);
-
         if (game == null) return NotFound();
 
         var result = await _imageService.AddImageAsync(file);
-
         if (result.Error != null) return BadRequest(result.Error.Message);
 
         var oldPublicId = game.Poster.PublicId;
@@ -90,7 +97,13 @@ public class GamesController : BaseApiController
             if (deletingResult.Error != null) return BadRequest(deletingResult.Error.Message);
         }
 
-        if (await _unitOfWork.Complete()) return _mapper.Map<PosterDto>(game.Poster);
+        if (await _unitOfWork.Complete())
+        {
+            var updatedPoster = _mapper.Map<PosterDto>(game.Poster);
+            _notificationCenter.PosterUpdated(User.GetUsername(), game.Id, updatedPoster);
+
+            return updatedPoster;
+        }
 
         return BadRequest("Failed to update poster");
     }
@@ -99,11 +112,9 @@ public class GamesController : BaseApiController
     public async Task<ActionResult<ScreenshotDto>> AddScreenshot([FromRoute]string title, IFormFile file)
     {
         var game = await _unitOfWork.GamesRepository.GetGameByTitleAsync(title);
-
         if (game == null) return NotFound();
 
         var result = await _imageService.AddImageAsync(file);
-
         if (result.Error != null) return BadRequest(result.Error.Message);
 
         var screenshot = new Screenshot
@@ -116,11 +127,14 @@ public class GamesController : BaseApiController
 
         if (await _unitOfWork.Complete())
         {
+            var newScreenshot = _mapper.Map<ScreenshotDto>(screenshot);
+            _notificationCenter.ScreenshotAdded(User.GetUsername(), game.Id, newScreenshot);
+
             return CreatedAtAction
             (
                 nameof(GetGame),
                 new { title = game.Title },
-                _mapper.Map<ScreenshotDto>(screenshot)
+                newScreenshot
             );
         }
 
@@ -131,11 +145,9 @@ public class GamesController : BaseApiController
     public async Task<ActionResult> DeleteScreenshot(string title, int screenshotId)
     {
         var game = await _unitOfWork.GamesRepository.GetGameByTitleAsync(title);
-
         if (game == null) return NotFound();
 
         var screenshot = game.Screenshots.FirstOrDefault(s => s.Id == screenshotId);
-
         if (screenshot == null) return NotFound();
 
         if (screenshot.PublicId != null)
@@ -146,7 +158,12 @@ public class GamesController : BaseApiController
 
         game.Screenshots.Remove(screenshot);
 
-        if (await _unitOfWork.Complete()) return Ok();
+        if (await _unitOfWork.Complete())
+        {
+            _notificationCenter.ScreenshotDeleted(User.GetUsername(), game.Id, screenshotId);
+            
+            return Ok();
+        }
 
         return BadRequest("Failed to delete screenshot");
     }
@@ -155,10 +172,35 @@ public class GamesController : BaseApiController
     public async Task<ActionResult> DeleteGame(string title)
     {
         var game = await _unitOfWork.GamesRepository.GetGameByTitleAsync(title);
+        if (game == null) return NotFound();
+
+        var posterPublicId = game.Poster.PublicId;
+        if (posterPublicId != null)
+        {
+            var deletingResult = await _imageService.DeleteImageAsync(posterPublicId);
+            if (deletingResult.Error != null) return BadRequest(deletingResult.Error.Message);
+            game.Poster.Url = "";
+            game.Poster.PublicId = null;
+        }
+
+        foreach (var screenshot in game.Screenshots)
+        {
+            if (screenshot.PublicId != null)
+            {
+                var result = await _imageService.DeleteImageAsync(screenshot.PublicId);
+                if (result.Error != null) return BadRequest(result.Error.Message);
+            }
+        }
+        game.Screenshots.Clear();
 
         _unitOfWork.GamesRepository.DeleteGame(game);
 
-        if (await _unitOfWork.Complete()) return Ok();
+        if (await _unitOfWork.Complete())
+        {
+            _notificationCenter.GameDeleted(User.GetUsername(), game.Id);
+
+            return Ok();
+        }
 
         return BadRequest("Failed to delete game");
     }

@@ -51,7 +51,10 @@ public class ReviewsController : BaseApiController
             _unitOfWork.ReviewsRepository.AddReview(review);
         }
 
-        if (await _unitOfWork.Complete()) return Ok(_mapper.Map<ReviewDto>(review));
+        if (await _unitOfWork.Complete())
+        {
+            return Ok(_mapper.Map<ReviewDto>(review));
+        } 
 
         return BadRequest("Failed to create review");
     }

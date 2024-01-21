@@ -68,7 +68,7 @@ export class PostReviewComponent implements OnInit, EditComponent {
         this.finished = true;
         this.posting = false;
         this.router.navigateByUrl('/games/' + this.reviewMenu?.game.title);
-        this.toastr.success('Review goes for moderation');
+        this.toastr.success('Review awaiting moderation');
       },
       error: error => {
         this.finished = true;

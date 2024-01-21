@@ -8,7 +8,7 @@ public interface IReviewsRepository
 {
     void AddReview(Review review);
     void DeleteReview(int id);
-    void ApproveReview(int id);
+    Task<ReviewDto> ApproveReview(int id);
     Task<Review> GetReviewAsync(int reviewerId, int gameId);
     Task<PagedList<ReviewDto>> GetAllReviews(PaginationParams paginationParams);
     Task<PagedList<ReviewModerationDto>> GetReviewsForModeration(PaginationParams paginationParams);

@@ -34,6 +34,8 @@ public static class ApplicationServiceExtension
 
         services.AddSignalR();
         services.AddSingleton<PresenceTracker>();
+        services.AddScoped<INotificationCenter, NotificationCenter>();
+        
         services.AddScoped<LogUserActivity>();
 
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

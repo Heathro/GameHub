@@ -34,13 +34,15 @@ public class ReviewsRepository : IReviewsRepository
         if (review != null) _context.Reviews.Remove(review);
     }
 
-    public void ApproveReview(int id)
+    public async Task<ReviewDto> ApproveReview(int id)
     {
-        var review = _context.Reviews
+        var review = await _context.Reviews
             .IgnoreQueryFilters()
-            .FirstOrDefault(r => r.Id == id);
+            .FirstOrDefaultAsync(r => r.Id == id);
         
         if (review != null) review.IsApproved = true;
+
+        return _mapper.Map<ReviewDto>(review);
     }
 
     public async Task<Review> GetReviewAsync(int reviewerId, int gameId)

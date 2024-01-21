@@ -10,6 +10,10 @@ import { MessagesService } from './messages.service';
 import { Player } from '../models/player';
 import { User } from '../models/user';
 import { PlayersService } from './players.service';
+import { Review } from '../models/review';
+import { FriendStatus } from '../enums/friendStatus';
+import { FriendRequestType } from '../enums/friendRequestType';
+import { Game } from '../models/game';
 
 @Injectable({
   providedIn: 'root'
@@ -75,6 +79,61 @@ export class PresenceService {
           }
         });
       }
+    });
+
+    this.hubConnection.on('UserDeleted', username => {
+      this.toastr.error(username + ' account deleted');
+    });
+
+    this.hubConnection.on('ReviewPosted', (review: Review) => {
+      this.toastr.success(review.reviewerUsername + ' posted review');
+    });
+
+    this.hubConnection.on('FriendshipRequested', (initiator: Player) => {
+      this.toastr.warning(
+        initiator.userName + ' ' + FriendStatus[initiator.status] + ' ' + FriendRequestType[initiator.type]);
+    });
+
+    this.hubConnection.on('FriendshipCancelled', (initiator: Player) => {
+      this.toastr.error(
+        initiator.userName + ' ' + FriendStatus[initiator.status] + ' ' + FriendRequestType[initiator.type]);
+    });
+
+    this.hubConnection.on('FriendshipAccepted', (initiator: Player) => {
+      this.toastr.success(
+        initiator.userName + ' ' + FriendStatus[initiator.status] + ' ' + FriendRequestType[initiator.type]);
+    });
+
+    this.hubConnection.on('GameUpdated', (game: Game) => {
+      this.toastr.success(game.title + ' updated');
+    });
+
+    this.hubConnection.on('PosterUpdated', ({gameId, poster}) => {
+      this.toastr.success(gameId + ' poster ' + poster.url);
+    });
+
+    this.hubConnection.on('ScreenshotAdded', ({gameId, screenshot}) => {
+      this.toastr.success(gameId + ' screenshot added ' + screenshot.id);
+    });
+
+    this.hubConnection.on('ScreenshotDeleted', ({gameId, screenshotId}) => {
+      this.toastr.error(gameId + ' screenshot deleted ' + screenshotId);
+    });
+
+    this.hubConnection.on('GameDeleted', gameId => {
+      this.toastr.error(gameId + ' game deleted');
+    });
+
+    this.hubConnection.on('===NOTIFICATION===', notification => {
+      
+    });
+
+    this.hubConnection.on('===NOTIFICATION===', notification => {
+      
+    });
+
+    this.hubConnection.on('===NOTIFICATION===', notification => {
+      
     });
   }
 
