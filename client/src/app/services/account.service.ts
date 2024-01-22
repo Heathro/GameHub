@@ -4,12 +4,13 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, map } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
-import { GamesService } from './games.service';
-import { User } from '../models/user';
+import { PresenceService } from './presence.service';
+import { AdminService } from './admin.service';
 import { MessagesService } from './messages.service';
 import { PlayersService } from './players.service';
-import { AdminService } from './admin.service';
-import { PresenceService } from './presence.service';
+import { ReviewsService } from './reviews.service';
+import { GamesService } from './games.service';
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,8 @@ export class AccountService {
     private gamesService: GamesService,
     private messagesService: MessagesService,
     private playerService: PlayersService,
-    private adminService: AdminService
+    private adminService: AdminService,
+    private reviewsService: ReviewsService
   ) { }
 
   login(model: any) {
@@ -64,11 +66,16 @@ export class AccountService {
     this.presenceService.createHubConnection(user);
   }
 
+  isLoggedIn(): boolean {
+    return !!localStorage.getItem('user');
+  }
+
   clearPrivateData() {
     this.gamesService.clearPrivateData();
     this.messagesService.clearPrivateData();
     this.playerService.clearPrivateData();
     this.adminService.clearPrivateData();
+    this.reviewsService.clearPrivateData();
   }
 
   private getDecodetToken(token: string) {
