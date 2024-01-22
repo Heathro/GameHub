@@ -17,14 +17,16 @@ public class UsersController : BaseApiController
     private readonly IImageService _imageService;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly INotificationCenter _notificationCenter;
 
     public UsersController(UserManager<AppUser> userManager, IImageService imageService, 
-        IUnitOfWork unitOfWork, IMapper mapper)
+        IUnitOfWork unitOfWork, IMapper mapper, INotificationCenter notificationCenter)
     {
         _userManager = userManager;
         _imageService = imageService;
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _notificationCenter = notificationCenter;
     }    
 
     [HttpGet("list")]
@@ -54,13 +56,19 @@ public class UsersController : BaseApiController
     [HttpPut("edit-profile")]
     public async Task<ActionResult> UpdateUser(PlayerEditDto playerEditDto)
     {
-        var user = await _unitOfWork.UsersRepository.GetUserByUsernameAsync(User.GetUsername());
+        var username = User.GetUsername();
 
+        var user = await _unitOfWork.UsersRepository.GetUserByUsernameAsync(username);
         if (user == null) return NotFound();
 
-        _mapper.Map(playerEditDto, user);
+        var updatedUser = _mapper.Map(playerEditDto, user);
 
-        if (await _unitOfWork.Complete()) return NoContent();
+        if (await _unitOfWork.Complete())
+        {
+            _notificationCenter.UserUpdated(username, _mapper.Map<PlayerDto>(updatedUser));
+
+            return NoContent();
+        }
 
         return BadRequest("No changes were detected");
     }
@@ -68,12 +76,12 @@ public class UsersController : BaseApiController
     [HttpPut("update-avatar")]
     public async Task<ActionResult<AvatarDto>> UpdateAvatar(IFormFile file)
     {
-        var user = await _unitOfWork.UsersRepository.GetUserByUsernameAsync(User.GetUsername());
+        var username = User.GetUsername();
 
+        var user = await _unitOfWork.UsersRepository.GetUserByUsernameAsync(username);
         if (user == null) return NotFound();
 
         var result = await _imageService.AddImageAsync(file);
-
         if (result.Error != null) return BadRequest(result.Error.Message);
 
         var oldPublicId = user.Avatar.PublicId;
@@ -87,7 +95,13 @@ public class UsersController : BaseApiController
             if (deletingResult.Error != null) return BadRequest(deletingResult.Error.Message);
         }
 
-        if (await _unitOfWork.Complete()) return _mapper.Map<AvatarDto>(user.Avatar);
+        if (await _unitOfWork.Complete())
+        {
+            var updatedAvatar = _mapper.Map<AvatarDto>(user.Avatar);
+            _notificationCenter.AvatarUpdated(username, user.Id, updatedAvatar);
+
+            return _mapper.Map<AvatarDto>(user.Avatar);
+        }
 
         return BadRequest("Failed to update photo");
     }
@@ -103,9 +117,39 @@ public class UsersController : BaseApiController
         if (avatarPublicId != null) await _imageService.DeleteImageAsync(avatarPublicId);
 
         await _unitOfWork.MessagesRepository.DeleteUserMessagesAsync(username);
-        await _unitOfWork.Complete();
 
+        var games = await _unitOfWork.GamesRepository.GetGamesForUserAsync(User.GetUserId());
+        foreach (var game in games)
+        {
+            var posterPublicId = game.Poster.PublicId;
+            if (posterPublicId != null)
+            {
+                var result = await _imageService.DeleteImageAsync(posterPublicId);
+                if (result.Error != null) return BadRequest(result.Error.Message);
+                game.Poster.Url = "";
+                game.Poster.PublicId = null;
+            }
+
+            foreach (var screenshot in game.Screenshots)
+            {
+                if (screenshot.PublicId != null)
+                {
+                    var result = await _imageService.DeleteImageAsync(screenshot.PublicId);
+                    if (result.Error != null) return BadRequest(result.Error.Message);
+                }
+            }
+            game.Screenshots.Clear();
+
+            _unitOfWork.GamesRepository.DeleteGame(game);
+
+            _notificationCenter.GameDeleted(username, game.Id);
+        }
+
+        await _unitOfWork.Complete();
+      
         await _userManager.DeleteAsync(user);
+        
+        _notificationCenter.UserDeleted(username, username);
 
         return Ok();
     }

@@ -43,6 +43,10 @@ export class AdminService {
     return PaginationFunctions.getPaginatedResult<Game[]>(
       this.baseUrl + 'admin/games-for-moderation', params, this.http
     );
+  } 
+  
+  deleteGame(userName: string) {
+    return this.http.delete(this.baseUrl + 'admin/delete-game/' + userName);
   }
 
   getReviewsForModeration() {
@@ -54,6 +58,10 @@ export class AdminService {
 
   approveReview(reviewId: number) {
     return this.http.put(this.baseUrl + 'admin/approve-review/' + reviewId, {});
+  }  
+  
+  rejectReview(reviewId: number) {
+    return this.http.delete(this.baseUrl + 'admin/reject-review/' + reviewId);
   }
 
   setUsersPaginationPage(currentPage: number) {

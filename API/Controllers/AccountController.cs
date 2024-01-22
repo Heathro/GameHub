@@ -13,12 +13,15 @@ public class AccountController : BaseApiController
     private readonly UserManager<AppUser> _userManager;
     private readonly ITokenService _tokenService;
     private readonly IMapper _mapper;
+    private readonly INotificationCenter _notificationCenter;
 
-    public AccountController(UserManager<AppUser> userManager, ITokenService tokenService, IMapper mapper)
+    public AccountController(UserManager<AppUser> userManager, ITokenService tokenService,
+        IMapper mapper, INotificationCenter notificationCenter)
     {
         _userManager = userManager;
         _tokenService = tokenService;
         _mapper = mapper;
+        _notificationCenter = notificationCenter;
     }
 
     [HttpPost("register")]
@@ -42,6 +45,8 @@ public class AccountController : BaseApiController
 
         var roleResult = await _userManager.AddToRoleAsync(user, "Player");
         if (!roleResult.Succeeded) return BadRequest(result.Errors);
+
+        _notificationCenter.UserRegisted(_mapper.Map<PlayerDto>(user));
 
         return new UserDto
         {

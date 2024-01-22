@@ -12,11 +12,13 @@ public class ReviewsController : BaseApiController
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly INotificationCenter _notificationCenter;
 
-    public ReviewsController(IUnitOfWork unitOfWork, IMapper mapper)
+    public ReviewsController(IUnitOfWork unitOfWork, IMapper mapper, INotificationCenter notificationCenter)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _notificationCenter = notificationCenter;
     }
 
     [HttpPost("new")]
@@ -25,8 +27,13 @@ public class ReviewsController : BaseApiController
         var game = await _unitOfWork.GamesRepository.GetGameByTitleAsync(createReviewDto.GameTitle);
         if (game == null) return NotFound();
 
-        var username = User.GetUsername();
         var userId = User.GetUserId();
+        if (game.Publication.PublisherId == userId)
+        {
+            return BadRequest("You can not review own game");
+        }
+
+        var username = User.GetUsername();
         var reviewer = await _unitOfWork.UsersRepository.GetUserByUsernameAsync(username);
 
         var review = await _unitOfWork.ReviewsRepository.GetReviewAsync(userId, game.Id);
@@ -51,10 +58,7 @@ public class ReviewsController : BaseApiController
             _unitOfWork.ReviewsRepository.AddReview(review);
         }
 
-        if (await _unitOfWork.Complete())
-        {
-            return Ok(_mapper.Map<ReviewDto>(review));
-        } 
+        if (await _unitOfWork.Complete()) return Ok(_mapper.Map<ReviewDto>(review));
 
         return BadRequest("Failed to create review");
     }
@@ -116,11 +120,24 @@ public class ReviewsController : BaseApiController
     }
 
     [HttpDelete("delete/{id}")]
-    public async Task<ActionResult> DeleteUser(int id)
+    public async Task<ActionResult> DeleteReview(int id)
     {
-        _unitOfWork.ReviewsRepository.DeleteReview(id);
+        var review = await _unitOfWork.ReviewsRepository.GetReviewByIdAsync(id);
+        if (review == null) return NotFound();
 
-        if (await _unitOfWork.Complete()) return Ok();
+        if (review.ReviewerId != User.GetUserId())
+        {
+            return BadRequest("This is not your review");
+        }
+
+        _unitOfWork.ReviewsRepository.DeleteReview(review);
+
+        if (await _unitOfWork.Complete())
+        {
+            _notificationCenter.ReviewDeleted(User.GetUsername(), id);
+            
+            return Ok();
+        }
         
         return BadRequest("Failed to delete review");
     }

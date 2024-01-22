@@ -151,8 +151,6 @@ public class FriendsController : BaseApiController
     [HttpGet("list")]
     public async Task<ActionResult<PlayerDto>> GetFriendsAsync()
     {
-        var friends = await _unitOfWork.FriendsRepository.GetFriendsAsync(User.GetUserId());
-
-        return Ok(friends);
+        return Ok(await _unitOfWork.FriendsRepository.GetFriendsAsync(User.GetUserId()));
     }
 }

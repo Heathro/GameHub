@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
 import { AdminService } from 'src/app/services/admin.service';
-import { GamesService } from 'src/app/services/games.service';
 import { Pagination } from 'src/app/helpers/pagination';
 import { Game } from 'src/app/models/game';
 
@@ -15,7 +14,7 @@ export class GameManagementComponent implements OnInit {
   pagination: Pagination | undefined;
   loading = false;
   
-  constructor(private adminService: AdminService, private gamesService: GamesService) { }
+  constructor(private adminService: AdminService) { }
 
   ngOnInit(): void {
     this.loadGames();
@@ -35,7 +34,7 @@ export class GameManagementComponent implements OnInit {
   }
 
   deleteGame(title: string) {
-    this.gamesService.deleteGame(title).subscribe({
+    this.adminService.deleteGame(title).subscribe({
       next: () => this.games = this.games.filter(g => g.title != title)
     });
   }

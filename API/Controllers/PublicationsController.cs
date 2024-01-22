@@ -11,11 +11,14 @@ public class PublicationsController : BaseApiController
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly INotificationCenter _notificationCenter;
 
-    public PublicationsController(IUnitOfWork unitOfWork, IMapper mapper)
+    public PublicationsController(IUnitOfWork unitOfWork, IMapper mapper, 
+        INotificationCenter notificationCenter)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _notificationCenter = notificationCenter;
     }
 
     [HttpPost("new")]
@@ -36,7 +39,12 @@ public class PublicationsController : BaseApiController
 
         publisher.Publications.Add(publication);
 
-        if (await _unitOfWork.Complete()) return Ok();
+        if (await _unitOfWork.Complete())
+        {
+            _notificationCenter.GamePublished(User.GetUsername(), _mapper.Map<GameDto>(game));
+
+            return Ok();
+        }
 
         return BadRequest("Failed to publish game");
     }

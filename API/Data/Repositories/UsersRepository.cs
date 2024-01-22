@@ -34,25 +34,6 @@ public class UsersRepository : IUsersRepository
             .Include(u => u.Publications)
             .SingleOrDefaultAsync(user => user.UserName == userName);
     }
-
-    // public async Task DeleteUserAsync(string userName)
-    // {
-    //     var user = await GetUserByUsernameAsync(userName);
-
-    //     var avatarPublicId = user.Avatar.PublicId;
-    //     if (avatarPublicId != null) await _imageService.DeleteImageAsync(avatarPublicId);
-
-    //     var messages = await _context.Messages
-    //         .Where(m => m.SenderUsername == userName || m.RecipientUsername == userName)
-    //         .ToListAsync();
-
-    //     _context.Messages.RemoveRange(messages);
-
-    //     await _messagesRepository.DeleteUserMessagesAsync(userName);
-    //     await _messagesRepository.SaveAllAsync();
-
-    //     await _userManager.DeleteAsync(user);
-    // }
     
     public async Task<PlayerDto> GetPlayerAsync(int currentUserId, string requestedUserName)
     {

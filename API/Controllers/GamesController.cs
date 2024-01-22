@@ -52,16 +52,17 @@ public class GamesController : BaseApiController
     [HttpPut("update-game/{title}")]
     public async Task<ActionResult> UpdateGame(string title, [FromBody]GameEditDto gameEditDto)
     {
+        var game = await _unitOfWork.GamesRepository.GetGameByTitleAsync(title);
+        if (game == null) return NotFound();
+
+        if (game.Publication.PublisherId != User.GetUserId())
+        {
+            return BadRequest("This is not your game");
+        }
+
         if (await _unitOfWork.GamesRepository.TitleExistsAsync(gameEditDto.Title, gameEditDto.Id))
         {
             return BadRequest("Title is already taken");
-        }
-        
-        var game = await _unitOfWork.GamesRepository.GetGameByTitleAsync(title);
-        if (game == null) return NotFound();
-        if (game.Publication.PublisherId != User.GetUserId())
-        {
-            return BadRequest("You are not publisher");
         }
         
         var updatedGame = _mapper.Map(gameEditDto, game);
@@ -82,6 +83,11 @@ public class GamesController : BaseApiController
     {
         var game = await _unitOfWork.GamesRepository.GetGameByTitleAsync(title);
         if (game == null) return NotFound();
+        
+        if (game.Publication.PublisherId != User.GetUserId())
+        {
+            return BadRequest("This is not your game");
+        }
 
         var result = await _imageService.AddImageAsync(file);
         if (result.Error != null) return BadRequest(result.Error.Message);
@@ -113,6 +119,11 @@ public class GamesController : BaseApiController
     {
         var game = await _unitOfWork.GamesRepository.GetGameByTitleAsync(title);
         if (game == null) return NotFound();
+
+        if (game.Publication.PublisherId != User.GetUserId())
+        {
+            return BadRequest("This is not your game");
+        }
 
         var result = await _imageService.AddImageAsync(file);
         if (result.Error != null) return BadRequest(result.Error.Message);
@@ -147,6 +158,11 @@ public class GamesController : BaseApiController
         var game = await _unitOfWork.GamesRepository.GetGameByTitleAsync(title);
         if (game == null) return NotFound();
 
+        if (game.Publication.PublisherId != User.GetUserId())
+        {
+            return BadRequest("This is not your game");
+        }
+
         var screenshot = game.Screenshots.FirstOrDefault(s => s.Id == screenshotId);
         if (screenshot == null) return NotFound();
 
@@ -173,6 +189,11 @@ public class GamesController : BaseApiController
     {
         var game = await _unitOfWork.GamesRepository.GetGameByTitleAsync(title);
         if (game == null) return NotFound();
+
+        if (game.Publication.PublisherId != User.GetUserId())
+        {
+            return BadRequest("This is not your game");
+        }
 
         var posterPublicId = game.Poster.PublicId;
         if (posterPublicId != null)

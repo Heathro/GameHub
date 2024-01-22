@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
 import { AdminService } from 'src/app/services/admin.service';
-import { ReviewsService } from 'src/app/services/reviews.service';
 import { Pagination } from 'src/app/helpers/pagination';
 import { ReviewForModeration } from 'src/app/models/review';
 
@@ -15,7 +14,7 @@ export class ReviewManagementComponent implements OnInit {
   pagination: Pagination | undefined;
   loading = false;
 
-  constructor(private adminService: AdminService, private reviewsService: ReviewsService) { }
+  constructor(private adminService: AdminService) { }
 
   ngOnInit(): void {
     this.loadReviewsForModeration();
@@ -41,7 +40,7 @@ export class ReviewManagementComponent implements OnInit {
   }
 
   rejectReview(reviewId: number) {
-    this.reviewsService.deleteReview(reviewId).subscribe({
+    this.adminService.rejectReview(reviewId).subscribe({
       next: () => this.reviews = this.reviews.filter(r => r.id != reviewId)
     });
   }

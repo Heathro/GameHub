@@ -97,4 +97,51 @@ public class NotificationCenter : INotificationCenter
         await _presenceHub.Clients.AllExcept(currentUserConnections)
             .SendAsync("GameDeleted", gameId);
     }
+
+    public async void GameLiked(string currentUsername, int gameId)
+    {
+        var currentUserConnections = await PresenceTracker.GetConnectionsForUser(currentUsername);
+        if (currentUserConnections == null) return;
+        
+        await _presenceHub.Clients.AllExcept(currentUserConnections)
+            .SendAsync("GameLiked", gameId);
+    }
+
+    public async void GamePublished(string currentUsername, GameDto game)
+    {
+        var currentUserConnections = await PresenceTracker.GetConnectionsForUser(currentUsername);
+        if (currentUserConnections == null) return;
+
+        await _presenceHub.Clients.AllExcept(currentUserConnections).SendAsync("GamePublished", game);
+    }
+    
+    public async void ReviewDeleted(string currentUsername, int reviewId)
+    {
+        var currentUserConnections = await PresenceTracker.GetConnectionsForUser(currentUsername);
+        if (currentUserConnections == null) return;
+
+        await _presenceHub.Clients.AllExcept(currentUserConnections).SendAsync("ReviewDeleted", reviewId);
+    }
+    
+    public async void UserUpdated(string currentUsername, PlayerDto player)
+    {
+        var currentUserConnections = await PresenceTracker.GetConnectionsForUser(currentUsername);
+        if (currentUserConnections == null) return;
+
+        await _presenceHub.Clients.AllExcept(currentUserConnections).SendAsync("UserUpdated", player);
+    }
+
+    public async void AvatarUpdated(string currentUsername, int userId, AvatarDto avatar)
+    {
+        var currentUserConnections = await PresenceTracker.GetConnectionsForUser(currentUsername);
+        if (currentUserConnections == null) return;
+
+        await _presenceHub.Clients.AllExcept(currentUserConnections)
+            .SendAsync("AvatarUpdated", new { userId, avatar});
+    }
+
+    public async void UserRegisted(PlayerDto player)
+    {
+        await _presenceHub.Clients.All.SendAsync("UserRegisted", player);
+    }
 }

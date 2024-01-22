@@ -25,24 +25,16 @@ public class ReviewsRepository : IReviewsRepository
         _context.Reviews.Add(review);
     }
 
-    public void DeleteReview(int id)
+    public void DeleteReview(Review review)
     {
-        var review = _context.Reviews
-            .IgnoreQueryFilters()
-            .FirstOrDefault(r => r.Id == id);
-
-        if (review != null) _context.Reviews.Remove(review);
+        _context.Reviews.Remove(review);
     }
 
-    public async Task<ReviewDto> ApproveReview(int id)
+    public async Task<Review> GetReviewByIdAsync(int id)
     {
-        var review = await _context.Reviews
+        return await _context.Reviews
             .IgnoreQueryFilters()
             .FirstOrDefaultAsync(r => r.Id == id);
-        
-        if (review != null) review.IsApproved = true;
-
-        return _mapper.Map<ReviewDto>(review);
     }
 
     public async Task<Review> GetReviewAsync(int reviewerId, int gameId)

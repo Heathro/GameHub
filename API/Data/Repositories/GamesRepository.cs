@@ -139,6 +139,18 @@ public class GamesRepository : IGamesRepository
             .SingleOrDefaultAsync(game => game.Title == title);
     }
 
+    public async Task<List<Game>> GetGamesForUserAsync(int userId)
+    {
+        return await _context.Games
+            .Include(g => g.Platforms)
+            .Include(g => g.Genres)
+            .Include(g => g.Poster)
+            .Include(g => g.Screenshots)
+            .Include(g => g.Publication)
+            .Where(game => game.Publication.PublisherId == userId)
+            .ToListAsync();
+    }
+
     public async Task<bool> TitleExistsAsync(string title, int id = 0)
     {
         return await _context.Games.AnyAsync(g => g.Id != id && g.Title.ToLower() == title.ToLower());

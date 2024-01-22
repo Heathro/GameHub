@@ -10,10 +10,12 @@ namespace API.Controllers;
 public class LikesController : BaseApiController
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly INotificationCenter _notificationCenter;
 
-    public LikesController(IUnitOfWork unitOfWork)
+    public LikesController(IUnitOfWork unitOfWork, INotificationCenter notificationCenter)
     {
         _unitOfWork = unitOfWork;
+        _notificationCenter = notificationCenter;
     }
 
     [HttpPost("{gameId}")]
@@ -40,7 +42,12 @@ public class LikesController : BaseApiController
             sourceUser.LikedGames.Add(like);
         }
         
-        if (await _unitOfWork.Complete()) return Ok();
+        if (await _unitOfWork.Complete())
+        {
+            _notificationCenter.GameLiked(User.GetUsername(), gameId);
+
+            return Ok();
+        }
 
         return BadRequest("Failed to like game");
     }
