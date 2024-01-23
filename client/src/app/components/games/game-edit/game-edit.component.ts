@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -24,7 +24,7 @@ import { ConfirmService } from 'src/app/services/confirm.service';
   templateUrl: './game-edit.component.html',
   styleUrls: ['./game-edit.component.css']
 })
-export class GameEditComponent implements OnInit, EditComponent {
+export class GameEditComponent implements OnInit, OnDestroy, EditComponent {
   @HostListener('window:beforeunload', ['$event']) unloadNotification($event: any) {
     if (this.isDirty()) { $event.returnValue = true; }
   }
@@ -39,6 +39,7 @@ export class GameEditComponent implements OnInit, EditComponent {
   updating = false;
   reviews: Review[] = [];
   loadingReviews = false;
+  playerDeletedSubscription;
 
   constructor(
     private accountService: AccountService,
@@ -51,6 +52,9 @@ export class GameEditComponent implements OnInit, EditComponent {
     private location: Location,
     private confirmService: ConfirmService
   ) {
+    this.playerDeletedSubscription = this.gamesService.playerDeleted$.subscribe(
+      username => this.playerDeleted(username)
+    );
     this.accountService.currentUser$.pipe(take(1)).subscribe({
       next: user => this.user = user
     });
@@ -62,6 +66,10 @@ export class GameEditComponent implements OnInit, EditComponent {
 
     this.loadGame(title);
     this.loadReviews(title);
+  }
+
+  ngOnDestroy(): void {
+    this.playerDeletedSubscription.unsubscribe();
   }
 
   isDirty(): boolean {
@@ -183,39 +191,6 @@ export class GameEditComponent implements OnInit, EditComponent {
     this.initialForm = this.editForm.value;
   }
 
-  // alphaNumericSpaceColon(): ValidatorFn {
-  //   return (control: AbstractControl) => {
-  //     return control.value.match('^[A-Za-z0-9: ]+$') ? null : {notAlphaNumericSpaceColon: true};
-  //   }
-  // }
-
-  // whiteSpace(): ValidatorFn {
-  //   return (control: AbstractControl) => {
-  //     const input: string = control.value;
-  //     return input[0] === ' ' || input[input.length - 1] === ' ' ? {whiteSpace: true} : null;
-  //   }
-  // }
-
-  // atLeastOneSelected(groupName: string): ValidatorFn {
-  //   return (control: AbstractControl) => {
-  //     const fg = control as FormGroup;
-  
-  //     if (fg && fg.controls && fg.controls[groupName]) {
-  //       const groupControl = fg.controls[groupName] as FormGroup;
-  //       const controls = Object.values(groupControl.controls);
-  //       return controls.every(c => c.value === false) ? {atLeastOneSelected: true} : null;
-  //     }  
-  //     return null;
-  //   };
-  // }
-
-  // youtubeId(): ValidatorFn {
-  //   return (control: AbstractControl) => {
-  //     return control.value.length === 11 && control.value.match('^[A-Za-z0-9-_]+$')
-  //       ? null : {youtubeId: true};
-  //   }
-  // }
-
   initializeUploader() {
     this.uploader = new FileUploader({
       method: 'PUT',
@@ -244,5 +219,9 @@ export class GameEditComponent implements OnInit, EditComponent {
         this.uploader.removeFromQueue(this.uploader.queue[0]);
       }
     };
+  }
+
+  private playerDeleted(username: string) {
+    this.reviews = this.reviews.filter(r => r.reviewerUsername !== username);
   }
 }

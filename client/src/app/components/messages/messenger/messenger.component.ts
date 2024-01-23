@@ -1,6 +1,7 @@
 import { 
-  ChangeDetectionStrategy, Component, OnDestroy,
-  OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+  Component, OnDestroy, OnInit,
+  QueryList, ViewChild, ViewChildren
+} from '@angular/core';
 import { NgForm } from '@angular/forms';
 
 import { take } from 'rxjs';
@@ -12,6 +13,7 @@ import { Message } from 'src/app/models/message';
 import { Player } from 'src/app/models/player';
 import { User } from 'src/app/models/user';
 import { ConfirmService } from 'src/app/services/confirm.service';
+import { PlayersService } from 'src/app/services/players.service';
 
 @Component({
   selector: 'app-messenger',
@@ -26,12 +28,16 @@ export class MessengerComponent implements OnInit, OnDestroy {
   loadingCompanions = false;
   content = '';
   sending = false;
+  playerDeletedSubscription;
 
   constructor(
     private accountService: AccountService,
     public messagesService: MessagesService,
     private confirmService: ConfirmService
   ) {
+    this.playerDeletedSubscription = this.messagesService.playerDeleted$.subscribe(
+      username => this.playerDeleted(username)
+    );
     this.accountService.currentUser$.pipe(take(1)).subscribe({
       next: user => this.user = user
     });
@@ -44,6 +50,7 @@ export class MessengerComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.messagesService.stopHubConnection();
+    this.playerDeletedSubscription.unsubscribe();
   }
 
   loadCompanions() {
@@ -154,5 +161,12 @@ export class MessengerComponent implements OnInit, OnDestroy {
     const previousMessage = this.messagesService.getPreviousMessage(index);
 
     if (messagesArray[index]) messagesArray[index].updatePreviousMessage(previousMessage);
+  }
+  
+  private playerDeleted(username: string) {
+    this.companions = this.companions.filter(c => c.userName !== username);
+    if (this.getCurrentConversant() === username && this.companions.length > 0) {
+      this.changeCompanion(this.companions[0].userName);
+    }
   }
 }

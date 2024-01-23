@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { delay, map, of } from 'rxjs';
+import { Subject, delay, map, of } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 import { PaginationFunctions, PaginationParams } from '../helpers/pagination';
@@ -19,6 +19,8 @@ export class GamesService {
   paginationParams: PaginationParams;
   filter: Filter | undefined;
   user: User | undefined;
+  private playerDeletedSource = new Subject<string>();
+  playerDeleted$ = this.playerDeletedSource.asObservable();
 
   constructor(private http: HttpClient) {
     this.paginationParams = this.initializePaginationParams();
@@ -202,6 +204,15 @@ export class GamesService {
     this.paginationParams = this.initializePaginationParams();
     this.filter = undefined;
     this.user = undefined;
+  }  
+  
+  playerDeleted(username: string) {
+    this.gamesCache.forEach(q => {
+      q.result = q.result.filter((g: Game) => g.publisher !== username);
+
+      //q.result.forEach((g: Game) => g.likes.) TODO: remove likes from deleted user
+    });
+    this.playerDeletedSource.next(username);
   }
 
   private stringifyFilter(filter: Filter): string {

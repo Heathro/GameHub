@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { PlayersService } from 'src/app/services/players.service';
 import { Player } from 'src/app/models/player';
@@ -8,16 +8,25 @@ import { Player } from 'src/app/models/player';
   templateUrl: './friends-panel.component.html',
   styleUrls: ['./friends-panel.component.css']
 })
-export class FriendsPanelComponent implements OnInit {  
+export class FriendsPanelComponent implements OnInit, OnDestroy {  
   activeFriends: Player[] = [];
   incomeRequests: Player[] = [];
   outcomeRequests: Player[] = [];
   loading = false;
+  playerDeletedSubscription;
 
-  constructor(private playersService: PlayersService) { }
+  constructor(private playersService: PlayersService) {
+    this.playerDeletedSubscription = this.playersService.playerDeleted$.subscribe(
+      username => this.playerDeleted(username)
+    );
+  }
 
   ngOnInit(): void {
     this.loadFriends();
+  }
+
+  ngOnDestroy(): void {
+    this.playerDeletedSubscription.unsubscribe();
   }
 
   loadFriends() {
@@ -42,5 +51,11 @@ export class FriendsPanelComponent implements OnInit {
 
   deleteOutcomeRequest(id: number) {
     this.outcomeRequests = this.outcomeRequests.filter(f => f.id !== id);
+  }
+
+  private playerDeleted(username: string) {
+    this.activeFriends = this.activeFriends.filter(f => f.userName !== username);
+    this.incomeRequests = this.incomeRequests.filter(f => f.userName !== username);
+    this.outcomeRequests = this.outcomeRequests.filter(f => f.userName !== username);
   }
 }

@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { ToastrService } from 'ngx-toastr';
 import { take } from 'rxjs';
 
 import { AccountService } from 'src/app/services/account.service';
@@ -9,19 +10,20 @@ import { ReviewsService } from 'src/app/services/reviews.service';
 import { MessagesService } from 'src/app/services/messages.service';
 import { PlayersService } from 'src/app/services/players.service';
 import { Player } from 'src/app/models/player';
-import { User } from 'src/app/models/user';
 import { Review } from 'src/app/models/review';
+import { User } from 'src/app/models/user';
 
 @Component({
   selector: 'app-player-profile',
   templateUrl: './player-profile.component.html',
   styleUrls: ['./player-profile.component.css']
 })
-export class PlayerProfileComponent implements OnInit {
+export class PlayerProfileComponent implements OnInit, OnDestroy {
   player: Player | undefined;
   reviews: Review[] = [];
   user: User | null = null;
   loadingReviews = false;
+  playerDeletedSubscription;
 
   constructor(
     private accountService: AccountService,
@@ -29,9 +31,13 @@ export class PlayerProfileComponent implements OnInit {
     private playersService: PlayersService,
     private messagesService: MessagesService,
     private reviewsService: ReviewsService,
+    private toastr: ToastrService,
     private route: ActivatedRoute, 
     private router: Router
   ) { 
+    this.playerDeletedSubscription = this.playersService.playerDeleted$.subscribe(
+      username => this.playerDeleted(username)
+    );
     this.accountService.currentUser$.pipe(take(1)).subscribe({
       next: user => this.user = user
     });
@@ -43,6 +49,10 @@ export class PlayerProfileComponent implements OnInit {
 
     this.loadPlayer(username);
     this.loadReviews(username);
+  }
+  
+  ngOnDestroy(): void {
+    this.playerDeletedSubscription.unsubscribe();
   }
 
   loadPlayer(username: string) {
@@ -105,5 +115,13 @@ export class PlayerProfileComponent implements OnInit {
     this.messagesService.startChat(this.player).subscribe({
       next: () => this.router.navigateByUrl('/messenger')
     });
+  }
+
+  private playerDeleted(username: string) {
+    if (this.player && this.player.userName === username) {
+      this.toastr.warning(username + "'s account deleted");
+      this.router.navigateByUrl('/players');
+    }
+    // TODO: players reviews for deleted user games
   }
 }

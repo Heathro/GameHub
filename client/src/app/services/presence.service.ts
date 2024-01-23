@@ -13,6 +13,9 @@ import { Review } from '../models/review';
 import { FriendStatus } from '../enums/friendStatus';
 import { FriendRequestType } from '../enums/friendRequestType';
 import { Game } from '../models/game';
+import { PlayersService } from './players.service';
+import { ReviewsService } from './reviews.service';
+import { GamesService } from './games.service';
 
 @Injectable({
   providedIn: 'root'
@@ -25,8 +28,11 @@ export class PresenceService {
 
   constructor(
     private messagesService: MessagesService,
+    private playersService: PlayersService,
+    private reviewsService: ReviewsService,
+    private gamesService: GamesService,
+    private toastr: ToastrService,
     private router: Router,
-    private toastr: ToastrService
   ) { }
 
   createHubConnection(user: User) {
@@ -80,8 +86,11 @@ export class PresenceService {
     });
 
     this.hubConnection.on('UserDeleted', username => {
-      this.toastr.error(username + ' account deleted');
-    }); // TODO
+      this.playersService.playerDeleted(username);
+      this.messagesService.playerDeleted(username);
+      this.reviewsService.playerDeleted(username);
+      this.gamesService.playerDeleted(username);
+    });
 
     this.hubConnection.on('ReviewPosted', (review: Review) => {
       this.toastr.success(review.reviewerUsername + ' posted review');

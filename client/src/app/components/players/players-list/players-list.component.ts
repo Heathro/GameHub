@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { PlayersService } from 'src/app/services/players.service';
 import { Pagination } from 'src/app/helpers/pagination';
@@ -10,15 +10,24 @@ import { OrderType } from 'src/app/enums/orderType';
   templateUrl: './players-list.component.html',
   styleUrls: ['./players-list.component.css']
 })
-export class PlayersListComponent implements OnInit {
+export class PlayersListComponent implements OnInit, OnDestroy {
   players: Player[] = [];
   pagination: Pagination | undefined;
   loading = false;
+  playerDeletedSubscription;
 
-  constructor(private playersService: PlayersService) { }
+  constructor(private playersService: PlayersService) {
+    this.playerDeletedSubscription = this.playersService.playerDeleted$.subscribe(
+      username => this.playerDeleted(username)
+    );
+  }
 
   ngOnInit(): void {
     this.loadPlayers();
+  }
+
+  ngOnDestroy(): void {
+    this.playerDeletedSubscription.unsubscribe();
   }
 
   loadPlayers() {
@@ -69,7 +78,7 @@ export class PlayersListComponent implements OnInit {
       this.playersService.setPaginationPage(event.page);
       this.loadPlayers();
     }
-  }  
+  }
 
   getSortingType() {
     switch (this.playersService.getPaginationParams().orderType) {
@@ -88,5 +97,9 @@ export class PlayersListComponent implements OnInit {
       case OrderType.za:             return 'Z&ensp;<i class="bi bi-arrow-right"></i>&ensp;A';
       default:                       return 'A&ensp;<i class="bi bi-arrow-right"></i>&ensp;Z';
     }
+  }
+
+  private playerDeleted(username: string) {
+    this.players = this.players.filter(p => p.userName !== username);
   }
 }

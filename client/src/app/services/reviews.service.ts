@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { delay, map, of } from 'rxjs';
+import { Subject, delay, map, of } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 import { PaginatedResult, PaginationFunctions, PaginationParams } from '../helpers/pagination';
@@ -15,6 +15,8 @@ export class ReviewsService {
   baseUrl = environment.apiUrl;
   reviewsCache = new Map();
   paginationParams: PaginationParams;
+  private playerDeletedSource = new Subject<string>();
+  playerDeleted$ = this.playerDeletedSource.asObservable();
 
   constructor(private http: HttpClient) {
     this.paginationParams = this.initializePaginationParams();
@@ -86,6 +88,13 @@ export class ReviewsService {
   clearPrivateData() {
     this.reviewsCache = new Map();
     this.paginationParams = this.initializePaginationParams();
+  }
+  
+  playerDeleted(username: string) {
+    this.reviewsCache.forEach(q => {
+      q.result = q.result.filter((r: Review) => r.reviewerUsername !== username);
+    });
+    this.playerDeletedSource.next(username);
   }
 
   private initializePaginationParams() {

@@ -1,14 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 
+import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { BehaviorSubject, Subject, map, of, take } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 import { Message } from '../models/message';
 import { Player } from '../models/player';
 import { User } from '../models/user';
-import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -24,8 +23,10 @@ export class MessagesService {
   lastCompanion = '';
   companions: Player[] = [];
   companionsLoaded = false;
+  private playerDeletedSource = new Subject<string>();
+  playerDeleted$ = this.playerDeletedSource.asObservable();
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient) { }
 
   createHubConnection(currentUser: User, otherUserName: string) {
     this.lastCompanion = otherUserName;
@@ -149,5 +150,14 @@ export class MessagesService {
     this.lastCompanion = '';
     this.companions.length = 0;
     this.companionsLoaded = false;
+  }
+  
+  playerDeleted(username: string) {
+    this.companions = this.companions.filter(c => c.userName !== username);
+    if (this.companions.length === 0) {
+      this.messageThreadSource.next([]);
+      this.lastCompanion = '';
+    }
+    this.playerDeletedSource.next(username);
   }
 }

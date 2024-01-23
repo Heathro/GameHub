@@ -1,14 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { delay, map, of } from 'rxjs';
+import { Subject, delay, map, of } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 import { PaginationFunctions, PaginationParams } from '../helpers/pagination';
-import { Player } from '../models/player';
-import { FriendStatus } from '../enums/friendStatus';
 import { FriendRequestType } from '../enums/friendRequestType';
+import { FriendStatus } from '../enums/friendStatus';
 import { OrderType } from '../enums/orderType';
+import { Player } from '../models/player';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +21,8 @@ export class PlayersService {
   outcomeRequests: Player[] = [];
   friendsLoaded = false;
   paginationParams: PaginationParams;
+  private playerDeletedSource = new Subject<string>();
+  playerDeleted$ = this.playerDeletedSource.asObservable();
 
   constructor(private http: HttpClient) {
     this.paginationParams = this.initializePaginationParams();
@@ -58,6 +60,16 @@ export class PlayersService {
 
   deletePlayer() {
     return this.http.delete(this.baseUrl + 'users/delete-user');
+  }
+
+  playerDeleted(username: string) {
+    this.activeFriends = this.activeFriends.filter(f => f.userName !== username);
+    this.incomeRequests = this.incomeRequests.filter(f => f.userName !== username);
+    this.outcomeRequests = this.outcomeRequests.filter(f => f.userName !== username);
+    this.playersCache.forEach(q => {
+      q.result = q.result.filter((p: Player) => p.userName !== username);
+    });
+    this.playerDeletedSource.next(username);
   }
 
   getFriends() {

@@ -36,7 +36,7 @@ import { AdminPanelComponent } from './components/admin/admin-panel/admin-panel.
 import { UserManagementComponent } from './components/admin/user-management/user-management.component';
 import { GameManagementComponent } from './components/admin/game-management/game-management.component';
 import { RoleCardComponent } from './components/admin/role-card/role-card.component';
-import { FriendsListComponent } from './components/players/friends-list/friends-list.component';
+import { ActiveFriendsComponent } from './components/players/active-friends/active-friends.component';
 import { FriendsPanelComponent } from './components/players/friends-panel/friends-panel.component';
 import { IncomeRequestsComponent } from './components/players/income-requests/income-requests.component';
 import { OutcomeRequestsComponent } from './components/players/outcome-requests/outcome-requests.component';
@@ -84,7 +84,7 @@ import { ConfirmDialogComponent } from './modals/confirm-dialog/confirm-dialog.c
     UserManagementComponent,
     GameManagementComponent,
     RoleCardComponent,
-    FriendsListComponent,
+    ActiveFriendsComponent,
     FriendsPanelComponent,
     IncomeRequestsComponent,
     OutcomeRequestsComponent,

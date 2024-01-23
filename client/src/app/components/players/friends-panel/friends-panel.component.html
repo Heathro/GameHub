@@ -3,11 +3,11 @@
 
         <tab heading="Active Friends">
             <div class="container">
-                <app-friends-list 
+                <app-active-friends 
                     (deleteCards)="deleteActiveFriend($event)" 
                     [players]="activeFriends"
                     [loading]="loading"
-                ></app-friends-list>
+                ></app-active-friends>
             </div>
         </tab>
 

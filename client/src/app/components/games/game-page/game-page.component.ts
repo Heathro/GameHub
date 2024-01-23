@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
@@ -12,6 +12,7 @@ import { Review } from 'src/app/models/review';
 import { ReviewsService } from 'src/app/services/reviews.service';
 import { GameReviewComponent } from '../../reviews/game-review/game-review.component';
 import { environment } from 'src/environments/environment';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-game-page',
@@ -20,7 +21,7 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./game-page.component.css'],
   imports: [ CommonModule, TabsModule, GalleryModule, RouterModule, GameReviewComponent ]
 })
-export class GamePageComponent implements OnInit {
+export class GamePageComponent implements OnInit, OnDestroy {
   game: Game | undefined;
   screenshots: GalleryItem[] = [];
   reviews: Review[] = [];
@@ -28,14 +29,20 @@ export class GamePageComponent implements OnInit {
   isPublished = false;
   isBookmarked = false;
   loadingReviews = false;
+  playerDeletedSubscription;
 
   constructor(
     private gamesService: GamesService,
     private reviewsService: ReviewsService,
+    private toastr: ToastrService,
     private route: ActivatedRoute, 
     private router: Router,
     private sanitizer: DomSanitizer
-  ) { }
+  ) {
+    this.playerDeletedSubscription = this.gamesService.playerDeleted$.subscribe(
+      username => this.playerDeleted(username)
+    );
+  }
 
   ngOnInit(): void {
     const title = this.route.snapshot.paramMap.get('title');
@@ -43,6 +50,10 @@ export class GamePageComponent implements OnInit {
 
     this.loadGame(title);
     this.loadReviews(title);
+  }
+
+  ngOnDestroy(): void {
+    this.playerDeletedSubscription.unsubscribe();
   }
 
   getVideo(): string {
@@ -110,5 +121,15 @@ export class GamePageComponent implements OnInit {
 
   checkBookmarks() {
     if (this.game) this.isBookmarked = this.gamesService.isGameBookmarked(this.game);
+  }
+
+  private playerDeleted(username: string) {
+    if (this.game && this.game.publisher === username) {
+      this.toastr.warning("Publisher's account deleted");
+      this.router.navigateByUrl('/games');
+    }
+    else {
+      this.reviews = this.reviews.filter(r => r.reviewerUsername !== username);
+    }
   }
 }

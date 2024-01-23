@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { ReviewsService } from 'src/app/services/reviews.service';
 import { Pagination } from 'src/app/helpers/pagination';
@@ -10,15 +10,24 @@ import { Review } from 'src/app/models/review';
   templateUrl: './reviews-list.component.html',
   styleUrls: ['./reviews-list.component.css']
 })
-export class ReviewsListComponent implements OnInit {
+export class ReviewsListComponent implements OnInit, OnDestroy {
   reviews: Review[] = [];
   pagination: Pagination | undefined;
   loading = false;
+  playerDeletedSubscription;
 
-  constructor(private reviewsService: ReviewsService) { }
+  constructor(private reviewsService: ReviewsService) {
+    this.playerDeletedSubscription = this.reviewsService.playerDeleted$.subscribe(
+      username => this.playerDeleted(username)
+    );
+  }
 
   ngOnInit(): void {
     this.loadReviews();
+  }
+
+  ngOnDestroy(): void {
+    this.playerDeletedSubscription.unsubscribe();
   }
 
   loadReviews() {
@@ -78,5 +87,9 @@ export class ReviewsListComponent implements OnInit {
                                        '<i class="bi bi-arrow-right"></i>&ensp;' + 
                                        '<i class="bi bi-hourglass-split"></i>';
     }
+  }
+
+  private playerDeleted(username: string) {
+    this.reviews = this.reviews.filter(r => r.reviewerUsername !== username);
   }
 }

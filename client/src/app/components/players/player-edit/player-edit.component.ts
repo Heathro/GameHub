@@ -178,5 +178,6 @@ export class PlayerEditComponent implements OnInit, EditComponent {
         this.uploader.removeFromQueue(this.uploader.queue[0]);
       }
     };
+    // TODO: delete reviews for deleted games
   }
 }

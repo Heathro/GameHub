@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { BasicFunctions } from 'src/app/helpers/basicFunctions';
@@ -12,7 +12,7 @@ import { Game } from 'src/app/models/game';
   templateUrl: './games-list.component.html',
   styleUrls: ['./games-list.component.css']
 })
-export class GamesListComponent implements OnInit {
+export class GamesListComponent implements OnInit, OnDestroy {
   games: Game[] = [];
   pagination: Pagination | undefined;
   filterForm: FormGroup = new FormGroup({});
@@ -20,13 +20,22 @@ export class GamesListComponent implements OnInit {
   initialFilter: any;
   loading = false;
   currentPage = 1;
+  playerDeletedSubscription;
 
-  constructor(private gamesService: GamesService, private formBuilder: FormBuilder) { }
+  constructor(private gamesService: GamesService, private formBuilder: FormBuilder) {
+    this.playerDeletedSubscription = this.gamesService.playerDeleted$.subscribe(
+      username => this.playerDeleted(username)
+    );
+  }
 
   ngOnInit(): void {
     this.initializeFrom(true);
     this.gamesService.setFilter(this.filterForm.value);
     this.loadGames();
+  }
+
+  ngOnDestroy(): void {
+    this.playerDeletedSubscription.unsubscribe();
   }
 
   loadGames() {
@@ -200,5 +209,9 @@ export class GamesListComponent implements OnInit {
         survival: false
       }
     };
+  }
+
+  private playerDeleted(username: string) {
+    this.games = this.games.filter(g => g.publisher !== username);
   }
 }
