@@ -9,6 +9,7 @@ import { FriendRequestType } from '../enums/friendRequestType';
 import { FriendStatus } from '../enums/friendStatus';
 import { OrderType } from '../enums/orderType';
 import { Player } from '../models/player';
+import { Game } from '../models/game';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +24,10 @@ export class PlayersService {
   paginationParams: PaginationParams;
   private playerDeletedSource = new Subject<string>();
   playerDeleted$ = this.playerDeletedSource.asObservable();
+  private gameDeletedSource = new Subject<number>();
+  gameDeleted$ = this.gameDeletedSource.asObservable();
+  private reviewDeletedSource = new Subject<number>();
+  reviewDeleted$ = this.reviewDeletedSource.asObservable();
 
   constructor(private http: HttpClient) {
     this.paginationParams = this.initializePaginationParams();
@@ -60,16 +65,6 @@ export class PlayersService {
 
   deletePlayer() {
     return this.http.delete(this.baseUrl + 'users/delete-user');
-  }
-
-  playerDeleted(username: string) {
-    this.activeFriends = this.activeFriends.filter(f => f.userName !== username);
-    this.incomeRequests = this.incomeRequests.filter(f => f.userName !== username);
-    this.outcomeRequests = this.outcomeRequests.filter(f => f.userName !== username);
-    this.playersCache.forEach(q => {
-      q.result = q.result.filter((p: Player) => p.userName !== username);
-    });
-    this.playerDeletedSource.next(username);
   }
 
   getFriends() {
@@ -172,6 +167,38 @@ export class PlayersService {
     this.outcomeRequests = [];
     this.friendsLoaded = false;
     this.paginationParams = this.initializePaginationParams();
+  }
+
+  playerDeleted(username: string) {
+    this.activeFriends = this.activeFriends.filter(f => f.userName !== username);
+    this.incomeRequests = this.incomeRequests.filter(f => f.userName !== username);
+    this.outcomeRequests = this.outcomeRequests.filter(f => f.userName !== username);
+    this.playersCache.forEach(q => {
+      q.result = q.result.filter((p: Player) => p.userName !== username);
+    });
+    this.playerDeletedSource.next(username);
+  }
+
+  gameDeleted(gameId: number) {
+    this.activeFriends.forEach(f => {
+      f.publications = f.publications.filter((p: Game) => p.id !== gameId);
+    });
+    this.incomeRequests.forEach(f => {
+      f.publications = f.publications.filter((p: Game) => p.id !== gameId);
+    });
+    this.outcomeRequests.forEach(f => {
+      f.publications = f.publications.filter((p: Game) => p.id !== gameId);
+    });
+    this.playersCache.forEach(q => {
+      q.result.forEach((p: Player) => {
+        p.publications = p.publications.filter((p: Game) => p.id !== gameId);
+      });
+    });
+    this.gameDeletedSource.next(gameId);
+  }
+
+  reviewDeleted(reviewId: number) {
+    this.reviewDeletedSource.next(reviewId);
   }
 
   private initializePaginationParams() {

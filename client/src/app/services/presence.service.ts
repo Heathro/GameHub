@@ -16,6 +16,7 @@ import { Game } from '../models/game';
 import { PlayersService } from './players.service';
 import { ReviewsService } from './reviews.service';
 import { GamesService } from './games.service';
+import { AdminService } from './admin.service';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +28,7 @@ export class PresenceService {
   onlineUsers$ = this.onlineUsersSource.asObservable();
 
   constructor(
+    private adminService: AdminService,
     private messagesService: MessagesService,
     private playersService: PlayersService,
     private reviewsService: ReviewsService,
@@ -86,6 +88,7 @@ export class PresenceService {
     });
 
     this.hubConnection.on('UserDeleted', username => {
+      this.adminService.playerDeleted(username);
       this.playersService.playerDeleted(username);
       this.messagesService.playerDeleted(username);
       this.reviewsService.playerDeleted(username);
@@ -128,8 +131,11 @@ export class PresenceService {
     }); // TODO
 
     this.hubConnection.on('GameDeleted', gameId => {
-      this.toastr.error(gameId + ' game deleted');
-    }); // TODO
+      this.adminService.gameDeleted(gameId);
+      this.playersService.gameDeleted(gameId);
+      this.reviewsService.gameDeleted(gameId);
+      this.gamesService.gameDeleted(gameId);
+    });
 
     this.hubConnection.on('GameLiked', gameId => {
       this.toastr.success(gameId + ' game liked');
@@ -140,8 +146,11 @@ export class PresenceService {
     }); // TODO
 
     this.hubConnection.on('ReviewDeleted', reviewId => {
-      this.toastr.error(reviewId + ' review deleted');
-    }); // TODO
+      this.adminService.reviewDeleted(reviewId);
+      this.playersService.reviewDeleted(reviewId);
+      this.reviewsService.reviewDeleted(reviewId);
+      this.gamesService.reviewDeleted(reviewId);
+    });
 
     this.hubConnection.on('UserUpdated', (player: Player) => {
       this.toastr.success(player.userName + ' updated');

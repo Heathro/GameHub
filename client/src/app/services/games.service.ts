@@ -20,7 +20,11 @@ export class GamesService {
   filter: Filter | undefined;
   user: User | undefined;
   private playerDeletedSource = new Subject<string>();
-  playerDeleted$ = this.playerDeletedSource.asObservable();
+  playerDeleted$ = this.playerDeletedSource.asObservable();  
+  private gameDeletedSource = new Subject<number>();
+  gameDeleted$ = this.gameDeletedSource.asObservable();
+  private reviewDeletedSource = new Subject<number>();
+  reviewDeleted$ = this.reviewDeletedSource.asObservable();
 
   constructor(private http: HttpClient) {
     this.paginationParams = this.initializePaginationParams();
@@ -208,11 +212,22 @@ export class GamesService {
   
   playerDeleted(username: string) {
     this.gamesCache.forEach(q => {
-      q.result = q.result.filter((g: Game) => g.publisher !== username);
-
-      //q.result.forEach((g: Game) => g.likes.) TODO: remove likes from deleted user
+      q.result = q.result.filter((g: Game) => {
+        // TODO: likes and bookmarks
+      });
     });
     this.playerDeletedSource.next(username);
+  }
+
+  gameDeleted(gameId: number) {
+    this.gamesCache.forEach(q => {
+      q.result = q.result.filter((g: Game) => g.id !== gameId);
+    });
+    this.gameDeletedSource.next(gameId);
+  }
+
+  reviewDeleted(reviewId: number) {
+    this.reviewDeletedSource.next(reviewId);
   }
 
   private stringifyFilter(filter: Filter): string {

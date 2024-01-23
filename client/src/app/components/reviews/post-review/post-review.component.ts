@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -9,13 +9,14 @@ import { ConfirmService } from 'src/app/services/confirm.service';
 import { EditComponent } from 'src/app/interfaces/edit-component';
 import { ReviewsService } from 'src/app/services/reviews.service';
 import { ReviewMenu } from 'src/app/models/review';
+import { GamesService } from 'src/app/services/games.service';
 
 @Component({
   selector: 'app-post-review',
   templateUrl: './post-review.component.html',
   styleUrls: ['./post-review.component.css']
 })
-export class PostReviewComponent implements OnInit, EditComponent {
+export class PostReviewComponent implements OnInit, OnDestroy, EditComponent {
   @HostListener('window:beforeunload', ['$event']) unloadNotification($event: any) {
     if (this.isDirty()) { $event.returnValue = true; }
   }
@@ -25,15 +26,24 @@ export class PostReviewComponent implements OnInit, EditComponent {
   initialContent = "";
   posting = false;
   finished = false;
+  gameDeletedSubscription;
+  reviewDeletedSubscription;
 
   constructor(
-    private reviewsService: ReviewsService,
-    private route: ActivatedRoute,
-    private router: Router, 
-    private toastr: ToastrService, 
     private formBuilder: FormBuilder,
-    private confirmService: ConfirmService
-  ) { }
+    private toastr: ToastrService,
+    private route: ActivatedRoute,
+    private router: Router,  
+    private confirmService: ConfirmService,
+    private reviewsService: ReviewsService
+  ) {
+    this.gameDeletedSubscription = this.reviewsService.gameDeleted$.subscribe(
+      gameId => this.gameDeleted(gameId)
+    );
+    this.reviewDeletedSubscription = this.reviewsService.reviewDeleted$.subscribe(
+      reviewId => this.reviewDeleted(reviewId)
+    );
+  }
 
   isDirty(): boolean {
     if (this.finished) return false;
@@ -45,6 +55,11 @@ export class PostReviewComponent implements OnInit, EditComponent {
 
   ngOnInit(): void {
     this.loadReview();
+  }
+
+  ngOnDestroy(): void {
+    this.gameDeletedSubscription.unsubscribe();
+    this.reviewDeletedSubscription.unsubscribe();
   }
 
   loadReview() {
@@ -115,9 +130,17 @@ export class PostReviewComponent implements OnInit, EditComponent {
     });
   }
 
-  // onlyWhiteSpace(): ValidatorFn {
-  //   return (control: AbstractControl) => {
-  //     return /^[ \t\n]*$/.test(control.value as string) ? {onlyWhiteSpace: true} : null;
-  //   }
-  // }
+  private gameDeleted(gameId: number) {
+    if (this.reviewMenu && this.reviewMenu.game.id === gameId) {
+      this.toastr.warning("Game was deleted");
+      this.router.navigateByUrl('/games');
+    }
+  } 
+  
+  private reviewDeleted(reviewId: number) {
+    if (this.reviewMenu && this.reviewMenu.id === reviewId) {
+      this.toastr.warning("Review was deleted");
+      this.loadReview();
+    }
+  }
 }

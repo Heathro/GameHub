@@ -13,8 +13,13 @@ export class UserManagementComponent implements OnInit {
   users: User[] = [];
   pagination: Pagination | undefined;
   loading = false;
+  playerDeletedSubscription;
 
-  constructor(private adminService: AdminService) { }
+  constructor(private adminService: AdminService) {
+    this.playerDeletedSubscription = this.adminService.playerDeleted$.subscribe(
+      username => this.playerDeleted(username)
+    );
+  }
 
   ngOnInit(): void {
     this.loadUsersWithRoles();
@@ -44,5 +49,9 @@ export class UserManagementComponent implements OnInit {
       this.adminService.setUsersPaginationPage(event.page);
       this.loadUsersWithRoles();
     }
-  }  
+  }
+
+  private playerDeleted(username: string) {
+    this.users = this.users.filter(u => u.userName !== username);
+  }
 }

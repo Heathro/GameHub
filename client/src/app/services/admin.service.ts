@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
+import { Subject } from 'rxjs';
+
 import { environment } from 'src/environments/environment';
 import { PaginationFunctions, PaginationParams } from '../helpers/pagination';
 import { User } from '../models/user';
@@ -16,6 +18,12 @@ export class AdminService {
   usersPaginationParams: PaginationParams;  
   gamesPaginationParams: PaginationParams;
   reviewsPaginationParams: PaginationParams;
+  private playerDeletedSource = new Subject<string>();
+  playerDeleted$ = this.playerDeletedSource.asObservable();
+  private gameDeletedSource = new Subject<number>();
+  gameDeleted$ = this.gameDeletedSource.asObservable();
+  private reviewDeletedSource = new Subject<number>();
+  reviewDeleted$ = this.reviewDeletedSource.asObservable();
 
   constructor(private http: HttpClient) {
     this.usersPaginationParams = this.initializeUsersPaginationParams();
@@ -104,6 +112,18 @@ export class AdminService {
     this.usersPaginationParams = this.initializeUsersPaginationParams();
     this.gamesPaginationParams = this.initializeGamesPaginationParams();
     this.reviewsPaginationParams = this.initializeReviewsPaginationParams();
+  }
+  
+  playerDeleted(username: string) {
+    this.playerDeletedSource.next(username);
+  }
+
+  gameDeleted(gameId: number) {
+    this.gameDeletedSource.next(gameId);
+  }
+
+  reviewDeleted(reviewId: number) {
+    this.reviewDeletedSource.next(reviewId);
   }
 
   private initializeUsersPaginationParams() {
