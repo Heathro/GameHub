@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { PlayersService } from 'src/app/services/players.service';
 import { Player } from 'src/app/models/player';
+import { Game } from 'src/app/models/game';
 
 @Component({
   selector: 'app-friends-panel',
@@ -14,10 +15,14 @@ export class FriendsPanelComponent implements OnInit, OnDestroy {
   outcomeRequests: Player[] = [];
   loading = false;
   playerDeletedSubscription;
+  gameDeletedSubscription;
 
   constructor(private playersService: PlayersService) {
     this.playerDeletedSubscription = this.playersService.playerDeleted$.subscribe(
       username => this.playerDeleted(username)
+    );
+    this.gameDeletedSubscription = this.playersService.gameDeleted$.subscribe(
+      gameId => this.gameDeleted(gameId)
     );
   }
 
@@ -57,5 +62,17 @@ export class FriendsPanelComponent implements OnInit, OnDestroy {
     this.activeFriends = this.activeFriends.filter(f => f.userName !== username);
     this.incomeRequests = this.incomeRequests.filter(f => f.userName !== username);
     this.outcomeRequests = this.outcomeRequests.filter(f => f.userName !== username);
+  }
+  
+  private gameDeleted(gameId: number) {
+    this.activeFriends.forEach(f => {
+      f.publications = f.publications.filter((p: Game) => p.id !== gameId);
+    });
+    this.incomeRequests.forEach(f => {
+      f.publications = f.publications.filter((p: Game) => p.id !== gameId);
+    });
+    this.outcomeRequests.forEach(f => {
+      f.publications = f.publications.filter((p: Game) => p.id !== gameId);
+    });
   }
 }

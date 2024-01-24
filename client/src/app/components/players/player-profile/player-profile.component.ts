@@ -24,6 +24,8 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
   user: User | null = null;
   loadingReviews = false;
   playerDeletedSubscription;
+  gameDeletedSubscription;
+  reviewDeletedSubscription;
 
   constructor(
     private accountService: AccountService,
@@ -37,6 +39,12 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
   ) { 
     this.playerDeletedSubscription = this.playersService.playerDeleted$.subscribe(
       username => this.playerDeleted(username)
+    );
+    this.gameDeletedSubscription = this.playersService.gameDeleted$.subscribe(
+      gameId => this.gameDeleted(gameId)
+    );
+    this.reviewDeletedSubscription = this.playersService.reviewDeleted$.subscribe(
+      reviewId => this.reviewDeleted(reviewId)
     );
     this.accountService.currentUser$.pipe(take(1)).subscribe({
       next: user => this.user = user
@@ -53,6 +61,8 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
   
   ngOnDestroy(): void {
     this.playerDeletedSubscription.unsubscribe();
+    this.gameDeletedSubscription.unsubscribe();
+    this.reviewDeletedSubscription.unsubscribe();
   }
 
   loadPlayer(username: string) {
@@ -122,6 +132,16 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
       this.toastr.warning(username + "'s account deleted");
       this.router.navigateByUrl('/players');
     }
-    // TODO: players reviews for deleted user games
+  } 
+  
+  private gameDeleted(gameId: number) {
+    if (this.player) {
+      this.player.publications = this.player.publications.filter(g => g.id !== gameId);
+    }
+    this.reviews = this.reviews.filter(r => r.gameId !== gameId);
+  }
+
+  private reviewDeleted(reviewId: number) {
+    this.reviews = this.reviews.filter(r => r.id !== reviewId);
   }
 }

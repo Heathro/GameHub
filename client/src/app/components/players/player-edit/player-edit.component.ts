@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -22,7 +22,7 @@ import { ReviewsService } from 'src/app/services/reviews.service';
   templateUrl: './player-edit.component.html',
   styleUrls: ['./player-edit.component.css']
 })
-export class PlayerEditComponent implements OnInit, EditComponent {
+export class PlayerEditComponent implements OnInit, OnDestroy, EditComponent {
   @HostListener('window:beforeunload', ['$event']) unloadNotification($event: any) {
     if (this.isDirty()) { $event.returnValue = true; }
   }
@@ -36,6 +36,8 @@ export class PlayerEditComponent implements OnInit, EditComponent {
   updating = false;
   reviews: Review[] = [];
   loadingReviews = false;
+  gameDeletedSubscription;
+  reviewDeletedSubscription;
 
   constructor(
     private accountService: AccountService, 
@@ -46,6 +48,12 @@ export class PlayerEditComponent implements OnInit, EditComponent {
     private router: Router,
     private confirmService: ConfirmService
   ) {
+    this.gameDeletedSubscription = this.playersService.gameDeleted$.subscribe(
+      gameId => this.gameDeleted(gameId)
+    );
+    this.reviewDeletedSubscription = this.playersService.reviewDeleted$.subscribe(
+      reviewId => this.reviewDeleted(reviewId)
+    );
     this.accountService.currentUser$.pipe(take(1)).subscribe({
       next: user => this.user = user
     });
@@ -54,6 +62,11 @@ export class PlayerEditComponent implements OnInit, EditComponent {
   ngOnInit(): void {
     this.loadPlayer();
     this.loadReviews();
+  }
+  
+  ngOnDestroy(): void {
+    this.gameDeletedSubscription.unsubscribe();
+    this.reviewDeletedSubscription.unsubscribe();
   }
 
   isDirty(): boolean {
@@ -178,6 +191,16 @@ export class PlayerEditComponent implements OnInit, EditComponent {
         this.uploader.removeFromQueue(this.uploader.queue[0]);
       }
     };
-    // TODO: delete reviews for deleted games
+  }
+  
+  private gameDeleted(gameId: number) {
+    if (this.player) {
+      this.player.publications = this.player.publications.filter(g => g.id !== gameId);
+    }
+    this.reviews = this.reviews.filter(r => r.gameId !== gameId);
+  }
+
+  private reviewDeleted(reviewId: number) {
+    this.reviews = this.reviews.filter(r => r.id !== reviewId);
   }
 }

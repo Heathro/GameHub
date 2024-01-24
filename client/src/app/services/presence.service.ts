@@ -88,6 +88,7 @@ export class PresenceService {
     });
 
     this.hubConnection.on('UserDeleted', username => {
+      // TODO: if this user is me
       this.adminService.playerDeleted(username);
       this.playersService.playerDeleted(username);
       this.messagesService.playerDeleted(username);
