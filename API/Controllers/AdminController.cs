@@ -208,7 +208,7 @@ public class AdminController : BaseApiController
 
         if (await _unitOfWork.Complete())
         {
-            _notificationCenter.ReviewPosted(User.GetUsername(), _mapper.Map<ReviewDto>(review));
+            _notificationCenter.ReviewApproved(User.GetUsername(), _mapper.Map<ReviewDto>(review));
 
             return Ok();
         }

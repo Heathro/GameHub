@@ -28,6 +28,12 @@ export class PlayersService {
   gameDeleted$ = this.gameDeletedSource.asObservable();
   private reviewDeletedSource = new Subject<number>();
   reviewDeleted$ = this.reviewDeletedSource.asObservable();
+  private friendshipRequestedSource = new Subject<Player>();
+  friendshipRequested$ = this.friendshipRequestedSource.asObservable();
+  private friendshipCancelledSource = new Subject<Player>();
+  friendshipCancelled$ = this.friendshipCancelledSource.asObservable();
+  private friendshipAcceptedSource = new Subject<Player>();
+  friendshipAccepted$ = this.friendshipAcceptedSource.asObservable();
 
   constructor(private http: HttpClient) {
     this.paginationParams = this.initializePaginationParams();
@@ -77,7 +83,11 @@ export class PlayersService {
     );
  
     return this.http.get<Player[]>(this.baseUrl + 'friends/list').pipe(
-      map(friends => {        
+      map(friends => {
+        this.activeFriends = [];
+        this.incomeRequests = [];
+        this.outcomeRequests = [];
+
         friends.forEach(f => {
           if (f.status === FriendStatus.active) {
             this.activeFriends.push(f);
@@ -199,6 +209,35 @@ export class PlayersService {
 
   reviewDeleted(reviewId: number) {
     this.reviewDeletedSource.next(reviewId);
+  }
+
+  friendshipRequested(player: Player) {
+    this.incomeRequests.push(player);
+    this.updateFriendData(player);
+    this.friendshipRequestedSource.next(player);
+  }
+
+  friendshipCancelled(player: Player) {
+    this.activeFriends = this.activeFriends.filter(f => f.userName !== player.userName);
+    this.incomeRequests = this.incomeRequests.filter(f => f.userName !== player.userName);
+    this.updateFriendData(player);
+    this.friendshipCancelledSource.next(player);
+  }
+
+  friendshipAccepted(player: Player) {
+    this.outcomeRequests = this.outcomeRequests.filter(f => f.userName !== player.userName);
+    this.activeFriends.push(player);
+    this.updateFriendData(player);
+    this.friendshipAcceptedSource.next(player);
+  }
+
+  updateFriendData(player: Player) {
+    this.playersCache.forEach(q => {
+      q.result.forEach((p: Player) => {
+        p.status = player.status;
+        p.type = player.type;
+      });
+    });
   }
 
   private initializePaginationParams() {

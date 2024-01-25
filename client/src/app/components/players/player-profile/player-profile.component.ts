@@ -26,6 +26,9 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
   playerDeletedSubscription;
   gameDeletedSubscription;
   reviewDeletedSubscription;
+  friendshipRequestedSubscription;
+  friendshipCancelledSubscription;
+  friendshipAcceptedSubscription;
 
   constructor(
     private accountService: AccountService,
@@ -46,6 +49,15 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
     this.reviewDeletedSubscription = this.playersService.reviewDeleted$.subscribe(
       reviewId => this.reviewDeleted(reviewId)
     );
+    this.friendshipRequestedSubscription = this.playersService.friendshipRequested$.subscribe(
+      player => this.friendshipRequested(player)
+    );
+    this.friendshipCancelledSubscription = this.playersService.friendshipCancelled$.subscribe(
+      player => this.friendshipCancelled(player)
+    );
+    this.friendshipAcceptedSubscription = this.playersService.friendshipAccepted$.subscribe(
+      player => this.friendshipAccepted(player)
+    );
     this.accountService.currentUser$.pipe(take(1)).subscribe({
       next: user => this.user = user
     });
@@ -63,6 +75,9 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
     this.playerDeletedSubscription.unsubscribe();
     this.gameDeletedSubscription.unsubscribe();
     this.reviewDeletedSubscription.unsubscribe();
+    this.friendshipRequestedSubscription.unsubscribe();
+    this.friendshipCancelledSubscription.unsubscribe();
+    this.friendshipAcceptedSubscription.unsubscribe();
   }
 
   loadPlayer(username: string) {
@@ -143,5 +158,26 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
 
   private reviewDeleted(reviewId: number) {
     this.reviews = this.reviews.filter(r => r.id !== reviewId);
+  }
+
+  private friendshipRequested(player: Player) {
+    if (this.player && this.player.userName === player.userName) {
+      this.player.status = player.status;
+      this.player.type = player.type;
+    }
+  }
+
+  private friendshipCancelled(player: Player) {
+    if (this.player && this.player.userName === player.userName) {
+      this.player.status = player.status;
+      this.player.type = player.type;
+    }
+  }
+
+  private friendshipAccepted(player: Player) {
+    if (this.player && this.player.userName === player.userName) {
+      this.player.status = player.status;
+      this.player.type = player.type;
+    }
   }
 }

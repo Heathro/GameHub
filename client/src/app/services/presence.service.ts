@@ -89,6 +89,18 @@ export class PresenceService {
       }
     });
 
+    this.hubConnection.on('UserRegisted', (player: Player) => {
+      this.toastr.success(player.userName + ' registed');
+    }); // TODO
+
+    this.hubConnection.on('UserUpdated', (player: Player) => {
+      this.toastr.success(player.userName + ' updated');
+    }); // TODO
+
+    this.hubConnection.on('AvatarUpdated', ({userId, avatar}) => {
+      this.toastr.success(userId + ' avatar ' + avatar.url);
+    }); // TODO
+
     this.hubConnection.on('UserDeleted', username => {
       if (username === user.userName) {
         this.toastr.error('Your account was deleted');
@@ -103,23 +115,26 @@ export class PresenceService {
       }
     });
 
-    this.hubConnection.on('ReviewPosted', (review: Review) => {
-      this.toastr.success(review.reviewerUsername + ' posted review');
-    }); // TODO
+    this.hubConnection.on('FriendshipRequested', (player: Player) => {
+      this.toastr.warning(player.userName + ' sent a request').onTap.pipe(take(1)).subscribe({
+        next: () => this.router.navigateByUrl('/players/' + player.userName)
+      });
+      this.playersService.friendshipRequested(player);
+    });
 
-    this.hubConnection.on('FriendshipRequested', (initiator: Player) => {
-      this.toastr.warning(
-        initiator.userName + ' ' + FriendStatus[initiator.status] + ' ' + FriendRequestType[initiator.type]);
-    }); // TODO
+    this.hubConnection.on('FriendshipCancelled', (player: Player) => {
+      this.playersService.friendshipCancelled(player);
+    });
 
-    this.hubConnection.on('FriendshipCancelled', (initiator: Player) => {
-      this.toastr.error(
-        initiator.userName + ' ' + FriendStatus[initiator.status] + ' ' + FriendRequestType[initiator.type]);
-    }); // TODO
+    this.hubConnection.on('FriendshipAccepted', (player: Player) => {
+      this.toastr.success(player.userName + ' accepted the request').onTap.pipe(take(1)).subscribe({
+        next: () => this.router.navigateByUrl('/players/' + player.userName)
+      });
+      this.playersService.friendshipAccepted(player);
+    });
 
-    this.hubConnection.on('FriendshipAccepted', (initiator: Player) => {
-      this.toastr.success(
-        initiator.userName + ' ' + FriendStatus[initiator.status] + ' ' + FriendRequestType[initiator.type]);
+    this.hubConnection.on('GamePublished', (game: Game) => {
+      this.toastr.success(game.title + ' published');
     }); // TODO
 
     this.hubConnection.on('GameUpdated', (game: Game) => {
@@ -138,6 +153,10 @@ export class PresenceService {
       this.toastr.error(gameId + ' screenshot deleted ' + screenshotId);
     }); // TODO
 
+    this.hubConnection.on('GameLiked', gameId => {
+      this.toastr.success(gameId + ' game liked');
+    }); // TODO
+
     this.hubConnection.on('GameDeleted', gameId => {
       this.adminService.gameDeleted(gameId);
       this.playersService.gameDeleted(gameId);
@@ -145,12 +164,12 @@ export class PresenceService {
       this.gamesService.gameDeleted(gameId);
     });
 
-    this.hubConnection.on('GameLiked', gameId => {
-      this.toastr.success(gameId + ' game liked');
+    this.hubConnection.on('ReviewApproved', (review: Review) => {
+      this.toastr.success(review.reviewerUsername + ' approved review');
     }); // TODO
 
-    this.hubConnection.on('GamePublished', (game: Game) => {
-      this.toastr.success(game.title + ' published');
+    this.hubConnection.on('ReviewPosted', (review: Review) => {
+      this.toastr.success(review.reviewerUsername + ' posted review');
     }); // TODO
 
     this.hubConnection.on('ReviewDeleted', reviewId => {
@@ -159,22 +178,6 @@ export class PresenceService {
       this.reviewsService.reviewDeleted(reviewId);
       this.gamesService.reviewDeleted(reviewId);
     });
-
-    this.hubConnection.on('UserUpdated', (player: Player) => {
-      this.toastr.success(player.userName + ' updated');
-    }); // TODO
-
-    this.hubConnection.on('AvatarUpdated', ({userId, avatar}) => {
-      this.toastr.success(userId + ' avatar ' + avatar.url);
-    }); // TODO
-
-    this.hubConnection.on('UserRegisted', (player: Player) => {
-      this.toastr.success(player.userName + ' registed');
-    }); // TODO
-
-    this.hubConnection.on('===NOTIFICATION===', notification => {
-      
-    }); // TODO
   }
 
   stopHubConnection() {

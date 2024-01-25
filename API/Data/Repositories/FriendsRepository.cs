@@ -30,6 +30,7 @@ public class FriendsRepository : IFriendsRepository
     public async Task<AppUser> GetUserWithFriendsAsync(int userId)
     {
         return await _context.Users
+            .Include(u => u.Avatar)
             .Include(u => u.Inviters)
             .Include(u => u.Invitees)
             .FirstOrDefaultAsync(u => u.Id == userId);
@@ -40,7 +41,7 @@ public class FriendsRepository : IFriendsRepository
         var friendships = await _context.Friendships
             .Include(f => f.Invitee)
             .Include(f => f.Inviter.Avatar)
-            .Include(f => f.Inviter)            
+            .Include(f => f.Inviter)
             .Include(f => f.Invitee.Avatar)
             .Where(f => f.InviterId == userId || f.InviteeId == userId)
             .ToListAsync();

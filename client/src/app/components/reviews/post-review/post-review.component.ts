@@ -9,7 +9,6 @@ import { ConfirmService } from 'src/app/services/confirm.service';
 import { EditComponent } from 'src/app/interfaces/edit-component';
 import { ReviewsService } from 'src/app/services/reviews.service';
 import { ReviewMenu } from 'src/app/models/review';
-import { GamesService } from 'src/app/services/games.service';
 
 @Component({
   selector: 'app-post-review',
