@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { AdminService } from 'src/app/services/admin.service';
 import { Pagination } from 'src/app/helpers/pagination';
@@ -9,7 +9,7 @@ import { User } from 'src/app/models/user';
   templateUrl: './user-management.component.html',
   styleUrls: ['./user-management.component.css']
 })
-export class UserManagementComponent implements OnInit {
+export class UserManagementComponent implements OnInit, OnDestroy {
   users: User[] = [];
   pagination: Pagination | undefined;
   loading = false;
@@ -23,6 +23,10 @@ export class UserManagementComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadUsersWithRoles();
+  }
+
+  ngOnDestroy(): void {
+    this.playerDeletedSubscription.unsubscribe();
   }
 
   loadUsersWithRoles() {

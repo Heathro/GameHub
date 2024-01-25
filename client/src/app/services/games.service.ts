@@ -212,7 +212,7 @@ export class GamesService {
   
   playerDeleted(username: string) {
     this.gamesCache.forEach(q => {
-      q.result = q.result.filter((g: Game) => {
+      q.result = q.result.forEach((g: Game) => {
         // TODO: likes and bookmarks
       });
     });

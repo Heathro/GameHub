@@ -19,12 +19,15 @@ export class GamesListComponent implements OnInit, OnDestroy {
   currentFilter: any;
   initialFilter: any;
   loading = false;
-  currentPage = 1;
   playerDeletedSubscription;
+  gameDeletedSubscription;
 
   constructor(private gamesService: GamesService, private formBuilder: FormBuilder) {
     this.playerDeletedSubscription = this.gamesService.playerDeleted$.subscribe(
       username => this.playerDeleted(username)
+    );
+    this.gameDeletedSubscription = this.gamesService.gameDeleted$.subscribe(
+      gameId => this.gameDeleted(gameId)
     );
   }
 
@@ -36,6 +39,7 @@ export class GamesListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.playerDeletedSubscription.unsubscribe();
+    this.gameDeletedSubscription.unsubscribe();
   }
 
   loadGames() {
@@ -212,6 +216,10 @@ export class GamesListComponent implements OnInit, OnDestroy {
   }
 
   private playerDeleted(username: string) {
-    this.games = this.games.filter(g => g.publisher !== username);
+    // likes and bookmarks
+  }
+
+  private gameDeleted(gameId: number) {
+    this.games = this.games.filter(g => g.id !== gameId);
   }
 }

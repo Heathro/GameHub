@@ -110,6 +110,8 @@ export class PlayersListComponent implements OnInit, OnDestroy {
   }
 
   private gameDeleted(gameId: number) {
-    this.players.forEach(p => p.publications = p.publications.filter((p: Game) => p.id !== gameId));
+    this.players.forEach(
+      p => p.publications = p.publications.filter((p: Game) => p.id !== gameId)
+    );
   }
 }

@@ -30,6 +30,8 @@ export class GamePageComponent implements OnInit, OnDestroy {
   isBookmarked = false;
   loadingReviews = false;
   playerDeletedSubscription;
+  gameDeletedSubscription;
+  reviewDeletedSubscription;
 
   constructor(
     private gamesService: GamesService,
@@ -41,6 +43,12 @@ export class GamePageComponent implements OnInit, OnDestroy {
   ) {
     this.playerDeletedSubscription = this.gamesService.playerDeleted$.subscribe(
       username => this.playerDeleted(username)
+    );
+    this.gameDeletedSubscription = this.gamesService.gameDeleted$.subscribe(
+      gameId => this.gameDeleted(gameId)
+    );
+    this.reviewDeletedSubscription = this.gamesService.reviewDeleted$.subscribe(
+      reviewId => this.reviewDeleted(reviewId)
     );
   }
 
@@ -54,6 +62,8 @@ export class GamePageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.playerDeletedSubscription.unsubscribe();
+    this.gameDeletedSubscription.unsubscribe();
+    this.reviewDeletedSubscription.unsubscribe();
   }
 
   getVideo(): string {
@@ -125,11 +135,23 @@ export class GamePageComponent implements OnInit, OnDestroy {
 
   private playerDeleted(username: string) {
     if (this.game && this.game.publisher === username) {
-      this.toastr.warning("Publisher's account deleted");
+      this.toastr.warning("Publisher was deleted");
       this.router.navigateByUrl('/games');
     }
     else {
+      // likes and bookmarks
       this.reviews = this.reviews.filter(r => r.reviewerUsername !== username);
     }
+  }
+
+  private gameDeleted(gameId: number) {
+    if (this.game && this.game.id === gameId) {
+      this.toastr.warning(this.game.title + " was deleted");
+      this.router.navigateByUrl('/games');
+    }
+  }
+
+  private reviewDeleted(reviewId: number) {
+    this.reviews = this.reviews.filter(r => r.id !== reviewId);
   }
 }

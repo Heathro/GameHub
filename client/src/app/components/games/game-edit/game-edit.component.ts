@@ -40,6 +40,8 @@ export class GameEditComponent implements OnInit, OnDestroy, EditComponent {
   reviews: Review[] = [];
   loadingReviews = false;
   playerDeletedSubscription;
+  gameDeletedSubscription;
+  reviewDeletedSubscription;
 
   constructor(
     private accountService: AccountService,
@@ -54,6 +56,12 @@ export class GameEditComponent implements OnInit, OnDestroy, EditComponent {
   ) {
     this.playerDeletedSubscription = this.gamesService.playerDeleted$.subscribe(
       username => this.playerDeleted(username)
+    );
+    this.gameDeletedSubscription = this.gamesService.gameDeleted$.subscribe(
+      gameId => this.gameDeleted(gameId)
+    );
+    this.reviewDeletedSubscription = this.gamesService.reviewDeleted$.subscribe(
+      reviewId => this.reviewDeleted(reviewId)
     );
     this.accountService.currentUser$.pipe(take(1)).subscribe({
       next: user => this.user = user
@@ -70,6 +78,8 @@ export class GameEditComponent implements OnInit, OnDestroy, EditComponent {
 
   ngOnDestroy(): void {
     this.playerDeletedSubscription.unsubscribe();
+    this.gameDeletedSubscription.unsubscribe();
+    this.reviewDeletedSubscription.unsubscribe();
   }
 
   isDirty(): boolean {
@@ -133,7 +143,7 @@ export class GameEditComponent implements OnInit, OnDestroy, EditComponent {
         if (confirmed) {
           if (!this.game) return;
           this.gamesService.deleteGame(this.game.title).subscribe({
-            next: () => this.router.navigateByUrl('/games')
+            next: () => this.router.navigateByUrl('/edit-profile')
           });
         }
       }
@@ -222,6 +232,18 @@ export class GameEditComponent implements OnInit, OnDestroy, EditComponent {
   }
 
   private playerDeleted(username: string) {
+    // likes and bookmarks
     this.reviews = this.reviews.filter(r => r.reviewerUsername !== username);
+  }
+
+  private gameDeleted(gameId: number) {
+    if (this.game && this.game.id === gameId) {
+      this.toastr.warning(this.game.title + " was deleted");
+      this.router.navigateByUrl('/edit-profile');
+    }
+  }
+
+  private reviewDeleted(reviewId: number) {
+    this.reviews = this.reviews.filter(r => r.id !== reviewId);
   }
 }

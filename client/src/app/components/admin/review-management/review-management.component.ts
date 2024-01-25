@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { AdminService } from 'src/app/services/admin.service';
 import { Pagination } from 'src/app/helpers/pagination';
@@ -9,15 +9,24 @@ import { ReviewForModeration } from 'src/app/models/review';
   templateUrl: './review-management.component.html',
   styleUrls: ['./review-management.component.css']
 })
-export class ReviewManagementComponent implements OnInit {
+export class ReviewManagementComponent implements OnInit, OnDestroy {
   reviews: ReviewForModeration[] = [];
   pagination: Pagination | undefined;
   loading = false;
+  reviewDeletedSubscription;
 
-  constructor(private adminService: AdminService) { }
+  constructor(private adminService: AdminService) {
+    this.reviewDeletedSubscription = this.adminService.reviewDeleted$.subscribe(
+      reviewId => this.reviewDeleted(reviewId)
+    );
+  }
 
   ngOnInit(): void {
     this.loadReviewsForModeration();
+  }
+
+  ngOnDestroy(): void {
+    this.reviewDeletedSubscription.unsubscribe();
   }
 
   loadReviewsForModeration() {
@@ -50,5 +59,9 @@ export class ReviewManagementComponent implements OnInit {
       this.adminService.setReviewsPaginationPage(event.page);
       this.loadReviewsForModeration();
     }
+  }
+
+  private reviewDeleted(reviewId: number) {
+    this.reviews = this.reviews.filter(r => r.id !== reviewId);
   }
 }

@@ -6,6 +6,9 @@
         ></app-game-for-moderation>
     </div>
 </div>
+<div [hidden]="loading" *ngIf="games.length === 0">
+    <h5 class="text-center mt-2 mb-4">No games found</h5>
+</div>
 
 <div class="d-flex justify-content-center mt-4" *ngIf="!loading && games.length !== 0 && pagination">
     <pagination
