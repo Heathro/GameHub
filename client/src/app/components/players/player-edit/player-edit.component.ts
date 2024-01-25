@@ -130,7 +130,6 @@ export class PlayerEditComponent implements OnInit, OnDestroy, EditComponent {
           this.playersService.deletePlayer().subscribe({
             next: () => {
               this.accountService.logout();
-              this.router.navigateByUrl('/');
             }
           });
         }

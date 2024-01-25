@@ -197,7 +197,7 @@ export class GamesService {
 
   getFilter() {
     return this.filter;
-  }  
+  }
 
   setCurrentUser(user: User) {
     this.user = user;

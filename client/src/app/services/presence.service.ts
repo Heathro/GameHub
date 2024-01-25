@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
-import { BehaviorSubject, take } from 'rxjs';
+import { BehaviorSubject, Subject, take } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 
 import { environment } from 'src/environments/environment';
@@ -26,6 +26,8 @@ export class PresenceService {
   private hubConnection?: HubConnection;
   private onlineUsersSource = new BehaviorSubject<string[]>([]);
   onlineUsers$ = this.onlineUsersSource.asObservable();
+  private logoutRequiredSource = new Subject<string>();
+  logoutRequired$ = this.logoutRequiredSource.asObservable();
 
   constructor(
     private adminService: AdminService,
@@ -88,12 +90,17 @@ export class PresenceService {
     });
 
     this.hubConnection.on('UserDeleted', username => {
-      // TODO: if this user is me
-      this.adminService.playerDeleted(username);
-      this.playersService.playerDeleted(username);
-      this.messagesService.playerDeleted(username);
-      this.reviewsService.playerDeleted(username);
-      this.gamesService.playerDeleted(username);
+      if (username === user.userName) {
+        this.toastr.error('Your account was deleted');
+        this.logoutRequiredSource.next(username);
+      }
+      else {
+        this.adminService.playerDeleted(username);
+        this.playersService.playerDeleted(username);
+        this.messagesService.playerDeleted(username);
+        this.reviewsService.playerDeleted(username);
+        this.gamesService.playerDeleted(username);
+      }
     });
 
     this.hubConnection.on('ReviewPosted', (review: Review) => {

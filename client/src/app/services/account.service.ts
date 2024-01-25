@@ -1,15 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { BehaviorSubject, map } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 import { PresenceService } from './presence.service';
 import { AdminService } from './admin.service';
+import { GamesService } from './games.service';
 import { MessagesService } from './messages.service';
 import { PlayersService } from './players.service';
 import { ReviewsService } from './reviews.service';
-import { GamesService } from './games.service';
 import { User } from '../models/user';
 
 @Injectable({
@@ -23,12 +24,17 @@ export class AccountService {
   constructor(
     private http: HttpClient,
     private presenceService: PresenceService,
+    private adminService: AdminService,
     private gamesService: GamesService,
     private messagesService: MessagesService,
     private playerService: PlayersService,
-    private adminService: AdminService,
-    private reviewsService: ReviewsService
-  ) { }
+    private reviewsService: ReviewsService,
+    private router: Router
+  ) {
+    this.presenceService.logoutRequired$.subscribe(
+      username => this.logoutRequired(username)
+    );
+  }
 
   login(model: any) {
     this.clearPrivateData();
@@ -48,11 +54,18 @@ export class AccountService {
     );
   }
 
+  logoutRequired(username: string) {
+    if (this.currentUserSource.value && username === this.currentUserSource.value.userName) {
+      this.logout();
+    }
+  }
+
   logout() {
     this.clearPrivateData();
     localStorage.removeItem('user');
     this.currentUserSource.next(null);
     this.presenceService.stopHubConnection();
+    this.router.navigateByUrl('/');
   }
 
   setCurrentUser(user: User) {
