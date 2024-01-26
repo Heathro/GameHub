@@ -16,14 +16,10 @@ export class PlayersListComponent implements OnInit, OnDestroy {
   pagination: Pagination | undefined;
   loading = false;
   playerDeletedSubscription;
-  gameDeletedSubscription;
 
   constructor(private playersService: PlayersService) {
     this.playerDeletedSubscription = this.playersService.playerDeleted$.subscribe(
       username => this.playerDeleted(username)
-    );
-    this.gameDeletedSubscription = this.playersService.gameDeleted$.subscribe(
-      gameId => this.gameDeleted(gameId)
     );
   }
 
@@ -33,7 +29,6 @@ export class PlayersListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.playerDeletedSubscription.unsubscribe();
-    this.gameDeletedSubscription.unsubscribe();
   }
 
   loadPlayers() {
@@ -107,11 +102,5 @@ export class PlayersListComponent implements OnInit, OnDestroy {
 
   private playerDeleted(username: string) {
     this.players = this.players.filter(p => p.userName !== username);
-  }
-
-  private gameDeleted(gameId: number) {
-    this.players.forEach(
-      p => p.publications = p.publications.filter((p: Game) => p.id !== gameId)
-    );
   }
 }

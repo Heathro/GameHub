@@ -18,23 +18,39 @@ export class AdminService {
   usersPaginationParams: PaginationParams;  
   gamesPaginationParams: PaginationParams;
   reviewsPaginationParams: PaginationParams;
+
   private playerDeletedSource = new Subject<string>();
   playerDeleted$ = this.playerDeletedSource.asObservable();
+
   private gameDeletedSource = new Subject<number>();
   gameDeleted$ = this.gameDeletedSource.asObservable();
+
   private reviewDeletedSource = new Subject<number>();
   reviewDeleted$ = this.reviewDeletedSource.asObservable();
+
   private newReviewsCountSource = new Subject<number>();
   newReviewsCount$ = this.newReviewsCountSource.asObservable();
   newReviewsCount = 0;
   private refreshReviewsSource = new Subject();
   refreshReviews$ = this.refreshReviewsSource.asObservable();
+  
+  private newGameCountSource = new Subject<number>();
+  newGameCount$ = this.newGameCountSource.asObservable();
+  newGameCount = 0;
+  private refreshGamesSource = new Subject();
+  refreshGames$ = this.refreshGamesSource.asObservable();
 
   constructor(private http: HttpClient) {
     this.usersPaginationParams = this.initializeUsersPaginationParams();
     this.gamesPaginationParams = this.initializeGamesPaginationParams();
     this.reviewsPaginationParams = this.initializeReviewsPaginationParams();
     this.newReviewsCountSource.next(0);
+    this.newGameCountSource.next(0);
+  }
+
+  refresh() {
+    if (this.newReviewsCount > 0) this.refreshReviewsSource.next(null);
+    if (this.newGameCount > 0) this.refreshGamesSource.next(null);
   }
 
   getUsersWithRoles() {
@@ -56,8 +72,14 @@ export class AdminService {
     let params = PaginationFunctions.getPaginationHeaders(this.gamesPaginationParams);
     return PaginationFunctions.getPaginatedResult<Game[]>(
       this.baseUrl + 'admin/games-for-moderation', params, this.http
+    ).pipe(
+      map(response => {
+        this.newGameCount = 0;
+        this.newGameCountSource.next(0);
+        return response;
+      })
     );
-  } 
+  }
   
   deleteGame(userName: string) {
     return this.http.delete(this.baseUrl + 'admin/delete-game/' + userName);
@@ -74,12 +96,6 @@ export class AdminService {
         return response;
       })
     );
-  }
-
-  refreshReviews() {
-    if (this.newReviewsCount > 0) {
-      this.refreshReviewsSource.next(null);
-    }
   }
 
   approveReview(reviewId: number) {
@@ -134,6 +150,11 @@ export class AdminService {
   
   playerDeleted(username: string) {
     this.playerDeletedSource.next(username);
+  }
+
+  gamePublished() {
+    this.newGameCount++;
+    this.newGameCountSource.next(this.newGameCount);
   }
 
   gameDeleted(gameId: number) {

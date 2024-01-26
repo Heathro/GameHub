@@ -20,17 +20,27 @@ export class GamesService {
   paginationParams: PaginationParams;
   filter: Filter | undefined;
   user: User | undefined;
+
   private playerDeletedSource = new Subject<string>();
-  playerDeleted$ = this.playerDeletedSource.asObservable();  
+  playerDeleted$ = this.playerDeletedSource.asObservable();
+
   private gameDeletedSource = new Subject<number>();
   gameDeleted$ = this.gameDeletedSource.asObservable();
+
   private reviewAcceptedSource = new Subject<Review>();
   reviewAccepted$ = this.reviewAcceptedSource.asObservable();
   private reviewDeletedSource = new Subject<number>();
   reviewDeleted$ = this.reviewDeletedSource.asObservable();
+  
+  private newGamesCountSource = new Subject<number>();
+  newGamesCount$ = this.newGamesCountSource.asObservable();
+  newGamesCount = 0;
+  private refreshGamesSource = new Subject();
+  refreshGames$ = this.refreshGamesSource.asObservable();
 
   constructor(private http: HttpClient) {
     this.paginationParams = this.initializePaginationParams();
+    this.newGamesCountSource.next(0);
   }
   
   getGames() {
@@ -43,10 +53,19 @@ export class GamesService {
     return PaginationFunctions.getFilteredPaginatedResult<Game[]>(
       this.baseUrl + 'games/list', params, this.http, this.filter!).pipe(
         map(response => {
+          this.newGamesCount = 0;
+          this.newGamesCountSource.next(0);
           this.gamesCache.set(queryString, response);
           return response;
         })
       );
+  }
+
+  refreshGames() {
+    if (this.newGamesCount > 0) {
+      this.gamesCache = new Map();
+      this.refreshGamesSource.next(null);
+    }
   }
 
   getGame(title: string) {
@@ -61,9 +80,7 @@ export class GamesService {
 
   publishGame(publication: any) {
     return this.http.post(this.baseUrl + 'publications/new', publication).pipe(
-      map(() => {
-        this.gamesCache = new Map(); //TODO
-      })
+      map(() => this.gamesCache = new Map())
     );
   }
 
@@ -162,9 +179,7 @@ export class GamesService {
 
   deleteGame(title: string) {
     return this.http.delete(this.baseUrl + 'games/delete-game/' + title).pipe(
-      map(() => {
-        this.gamesCache = new Map(); //TODO
-      })
+      map(() => this.gamesCache = new Map())
     );
   }
 
@@ -220,6 +235,11 @@ export class GamesService {
       });
     });
     this.playerDeletedSource.next(username);
+  }
+
+  gamePublished() {
+    this.newGamesCount++;
+    this.newGamesCountSource.next(this.newGamesCount);
   }
 
   gameDeleted(gameId: number) {

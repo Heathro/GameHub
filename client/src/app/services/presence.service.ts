@@ -134,8 +134,10 @@ export class PresenceService {
     });
 
     this.hubConnection.on('GamePublished', (game: Game) => {
-      this.toastr.success(game.title + ' published');
-    }); // TODO
+      this.adminService.gamePublished();
+      this.playersService.gamePublished(game);
+      this.gamesService.gamePublished();
+    });
 
     this.hubConnection.on('GameUpdated', (game: Game) => {
       this.toastr.success(game.title + ' updated');

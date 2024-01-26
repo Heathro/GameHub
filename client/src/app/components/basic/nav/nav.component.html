@@ -8,7 +8,16 @@
 
             <ng-container *ngIf="accountService.currentUser$ | async">
                 <li class="nav-item">
-                    <a class="nav-link" routerLink="/games" routerLinkActive="active">Games</a>
+                    <a
+                        class="nav-link"
+                        routerLink="/games"
+                        routerLinkActive="active"
+                        style="position: relative;"
+                        (click)="gamesService.refreshGames()"
+                    >
+                        Games
+                        <span class="dot" *ngIf="(gamesService.newGamesCount$ | async)! > 0"></span>
+                    </a>
                 </li>
                 <li class="nav-item">
                     <a 
@@ -19,10 +28,7 @@
                         (click)="reviewsService.refreshReviews()"
                     >
                         Reviews
-                        <span 
-                            class="review-dot" 
-                            *ngIf="(reviewsService.newReviewsCount$ | async)! > 0"
-                        ></span>
+                        <span class="dot" *ngIf="(reviewsService.newReviewsCount$ | async)! > 0"></span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -40,12 +46,13 @@
                         routerLink="/admin"
                         routerLinkActive="active"
                         style="position: relative;"
-                        (click)="adminService.refreshReviews()"
+                        (click)="adminService.refresh()"
                     >
                         Admin                        
-                        <span 
-                            class="admin-dot" 
-                            *ngIf="(adminService.newReviewsCount$ | async)! > 0"
+                        <span
+                            class="dot"
+                            *ngIf="(adminService.newReviewsCount$ | async)! > 0 ||
+                                   (adminService.newGameCount$ | async)! > 0"
                         ></span>
                     </a>
                 </li>                

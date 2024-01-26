@@ -12,6 +12,7 @@ import { PlayersService } from 'src/app/services/players.service';
 import { Player } from 'src/app/models/player';
 import { Review } from 'src/app/models/review';
 import { User } from 'src/app/models/user';
+import { Game } from 'src/app/models/game';
 
 @Component({
   selector: 'app-player-profile',
@@ -24,6 +25,7 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
   user: User | null = null;
   loadingReviews = false;
   playerDeletedSubscription;
+  gamePublishedSubscription;
   gameDeletedSubscription;
   reviewAcceptedSubscription;
   reviewDeletedSubscription;
@@ -43,6 +45,9 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
   ) { 
     this.playerDeletedSubscription = this.playersService.playerDeleted$.subscribe(
       username => this.playerDeleted(username)
+    );
+    this.gamePublishedSubscription = this.playersService.gamePublished$.subscribe(
+      game => this.gamePublished(game)
     );
     this.gameDeletedSubscription = this.playersService.gameDeleted$.subscribe(
       gameId => this.gameDeleted(gameId)
@@ -77,6 +82,7 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
   
   ngOnDestroy(): void {
     this.playerDeletedSubscription.unsubscribe();
+    this.gamePublishedSubscription.unsubscribe();
     this.gameDeletedSubscription.unsubscribe();
     this.reviewAcceptedSubscription.unsubscribe();
     this.reviewDeletedSubscription.unsubscribe();
@@ -152,12 +158,14 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
       this.toastr.warning(username + " was deleted");
       this.router.navigateByUrl('/players');
     }
-  } 
+  }
+
+  private gamePublished(game: Game) {
+    if (this.player) this.player.publications.unshift(game);
+  }
   
   private gameDeleted(gameId: number) {
-    if (this.player) {
-      this.player.publications = this.player.publications.filter(g => g.id !== gameId);
-    }
+    if (this.player) this.player.publications = this.player.publications.filter(g => g.id !== gameId);
     this.reviews = this.reviews.filter(r => r.gameId !== gameId);
   }
 

@@ -9,7 +9,9 @@ public class AutoMapperProfiles : Profile
     public AutoMapperProfiles()
     {
         CreateMap<AppUser, PlayerDto>()
-            .ForMember(d => d.Publications, o => o.MapFrom(s => s.Publications.Select(p => p.Title)));
+            .ForMember(d => d.Publications, o => o.MapFrom(
+                s => s.Publications.Select(p => p.Title).OrderByDescending(p => p.Release)
+            ));
         CreateMap<PlayerEditDto, AppUser>();
         CreateMap<RegisterDto, AppUser>();
         CreateMap<AppUser, UserRoleDto>()

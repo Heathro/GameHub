@@ -21,6 +21,7 @@ export class GamesListComponent implements OnInit, OnDestroy {
   loading = false;
   playerDeletedSubscription;
   gameDeletedSubscription;
+  gamesRefreshSubscription;
 
   constructor(private gamesService: GamesService, private formBuilder: FormBuilder) {
     this.playerDeletedSubscription = this.gamesService.playerDeleted$.subscribe(
@@ -28,6 +29,9 @@ export class GamesListComponent implements OnInit, OnDestroy {
     );
     this.gameDeletedSubscription = this.gamesService.gameDeleted$.subscribe(
       gameId => this.gameDeleted(gameId)
+    );
+    this.gamesRefreshSubscription = this.gamesService.refreshGames$.subscribe(
+      () => this.loadGames()
     );
   }
 
@@ -40,6 +44,7 @@ export class GamesListComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.playerDeletedSubscription.unsubscribe();
     this.gameDeletedSubscription.unsubscribe();
+    this.gamesRefreshSubscription.unsubscribe();
   }
 
   loadGames() {

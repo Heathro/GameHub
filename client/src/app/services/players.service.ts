@@ -23,14 +23,20 @@ export class PlayersService {
   outcomeRequests: Player[] = [];
   friendsLoaded = false;
   paginationParams: PaginationParams;
+
   private playerDeletedSource = new Subject<string>();
   playerDeleted$ = this.playerDeletedSource.asObservable();
+
+  private gamePublishedSource = new Subject<Game>();
+  gamePublished$ = this.gamePublishedSource.asObservable();
   private gameDeletedSource = new Subject<number>();
   gameDeleted$ = this.gameDeletedSource.asObservable();
+
   private reviewAcceptedSource = new Subject<Review>();
   reviewAccepted$ = this.reviewAcceptedSource.asObservable();
   private reviewDeletedSource = new Subject<number>();
   reviewDeleted$ = this.reviewDeletedSource.asObservable();
+
   private friendshipRequestedSource = new Subject<Player>();
   friendshipRequested$ = this.friendshipRequestedSource.asObservable();
   private friendshipCancelledSource = new Subject<Player>();
@@ -190,6 +196,16 @@ export class PlayersService {
       q.result = q.result.filter((p: Player) => p.userName !== username);
     });
     this.playerDeletedSource.next(username);
+  }
+
+  gamePublished(game: Game) {
+    this.activeFriends.forEach(f => f.publications.unshift(game));
+    this.incomeRequests.forEach(f => f.publications.unshift(game));
+    this.outcomeRequests.forEach(f => f.publications.unshift(game));
+    this.playersCache.forEach(q => {
+      q.result.forEach((p: Player) => p.publications.unshift(game));
+    });
+    this.gamePublishedSource.next(game);
   }
 
   gameDeleted(gameId: number) {

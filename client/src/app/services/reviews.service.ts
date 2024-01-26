@@ -15,14 +15,18 @@ export class ReviewsService {
   baseUrl = environment.apiUrl;
   reviewsCache = new Map();
   paginationParams: PaginationParams;
+
   private playerDeletedSource = new Subject<string>();
   playerDeleted$ = this.playerDeletedSource.asObservable();
+
   private gameDeletedSource = new Subject<number>();
   gameDeleted$ = this.gameDeletedSource.asObservable();
+
   private reviewDeletedSource = new Subject<number>();
   reviewDeleted$ = this.reviewDeletedSource.asObservable();  
   private reviewApprovedSource = new Subject<Review>();
   reviewApproved$ = this.reviewApprovedSource.asObservable();
+  
   private newReviewsCountSource = new Subject<number>();
   newReviewsCount$ = this.newReviewsCountSource.asObservable();
   newReviewsCount = 0;
@@ -87,7 +91,9 @@ export class ReviewsService {
   }
 
   deleteReview(id: number) {
-    return this.http.delete(this.baseUrl + 'reviews/delete/' + id);
+    return this.http.delete(this.baseUrl + 'reviews/delete/' + id).pipe(
+      map(() => this.reviewsCache = new Map())
+    );
   }
 
   resetPagination() {
