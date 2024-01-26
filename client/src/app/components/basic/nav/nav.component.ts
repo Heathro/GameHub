@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { AccountService } from 'src/app/services/account.service';
+import { AdminService } from 'src/app/services/admin.service';
 import { ReviewsService } from 'src/app/services/reviews.service';
 
 @Component({
@@ -10,7 +11,11 @@ import { ReviewsService } from 'src/app/services/reviews.service';
 })
 export class NavComponent implements OnInit {
 
-  constructor(public accountService: AccountService, public reviewsService: ReviewsService) { }
+  constructor(
+    public accountService: AccountService,
+    public reviewsService: ReviewsService,
+    public adminService: AdminService
+  ) { }
 
   ngOnInit(): void {
   }

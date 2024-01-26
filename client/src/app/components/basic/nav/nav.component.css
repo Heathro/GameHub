@@ -28,3 +28,15 @@
     right: 0;
     margin-right: 28px;
 }
+
+.admin-dot {
+    background-color: rgba(255, 0, 0, 0.7);
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(80%);
+    right: 0;
+    margin-right: 23px;
+}

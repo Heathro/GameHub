@@ -1,13 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { Subject } from 'rxjs';
+import { Subject, map } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 import { PaginationFunctions, PaginationParams } from '../helpers/pagination';
 import { User } from '../models/user';
 import { OrderType } from '../enums/orderType';
-import { ReviewForModeration } from '../models/review';
+import { Review, ReviewForModeration } from '../models/review';
 import { Game } from '../models/game';
 
 @Injectable({
@@ -24,11 +24,17 @@ export class AdminService {
   gameDeleted$ = this.gameDeletedSource.asObservable();
   private reviewDeletedSource = new Subject<number>();
   reviewDeleted$ = this.reviewDeletedSource.asObservable();
+  private newReviewsCountSource = new Subject<number>();
+  newReviewsCount$ = this.newReviewsCountSource.asObservable();
+  newReviewsCount = 0;
+  private refreshReviewsSource = new Subject();
+  refreshReviews$ = this.refreshReviewsSource.asObservable();
 
   constructor(private http: HttpClient) {
     this.usersPaginationParams = this.initializeUsersPaginationParams();
     this.gamesPaginationParams = this.initializeGamesPaginationParams();
     this.reviewsPaginationParams = this.initializeReviewsPaginationParams();
+    this.newReviewsCountSource.next(0);
   }
 
   getUsersWithRoles() {
@@ -61,7 +67,19 @@ export class AdminService {
     let params = PaginationFunctions.getPaginationHeaders(this.reviewsPaginationParams);
     return PaginationFunctions.getPaginatedResult<ReviewForModeration[]>(
       this.baseUrl + 'admin/reviews-for-moderation', params, this.http
+    ).pipe(
+      map(response => {
+        this.newReviewsCount = 0;
+        this.newReviewsCountSource.next(0);
+        return response;
+      })
     );
+  }
+
+  refreshReviews() {
+    if (this.newReviewsCount > 0) {
+      this.refreshReviewsSource.next(null);
+    }
   }
 
   approveReview(reviewId: number) {
@@ -120,6 +138,11 @@ export class AdminService {
 
   gameDeleted(gameId: number) {
     this.gameDeletedSource.next(gameId);
+  }
+
+  reviewPosted() {
+    this.newReviewsCount++;
+    this.newReviewsCountSource.next(this.newReviewsCount);
   }
 
   reviewDeleted(reviewId: number) {

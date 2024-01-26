@@ -35,7 +35,19 @@
                     <a class="nav-link" routerLink="/messenger" routerLinkActive="active">Messenger</a>
                 </li>                
                 <li *HasRole="['Admin', 'Moderator']" class="nav-item">
-                    <a class="nav-link" routerLink="/admin" routerLinkActive="active">Admin</a>
+                    <a
+                        class="nav-link"
+                        routerLink="/admin"
+                        routerLinkActive="active"
+                        style="position: relative;"
+                        (click)="adminService.refreshReviews()"
+                    >
+                        Admin                        
+                        <span 
+                            class="admin-dot" 
+                            *ngIf="(adminService.newReviewsCount$ | async)! > 0"
+                        ></span>
+                    </a>
                 </li>                
             </ng-container>
             <li class="nav-item">

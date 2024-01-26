@@ -11,7 +11,8 @@ public interface IReviewsRepository
     Task<Review> GetReviewByIdAsync(int id);
     Task<Review> GetReviewAsync(int reviewerId, int gameId);
     Task<PagedList<ReviewDto>> GetAllReviews(PaginationParams paginationParams);
-    Task<PagedList<ReviewModerationDto>> GetReviewsForModeration(PaginationParams paginationParams);
+    Task<PagedList<ReviewModerationDto>> GetReviewsForModeration(
+        PaginationParams paginationParams, string currentUsername);
     Task<IEnumerable<ReviewDto>> GetReviewsForGame(int gameId);
     Task<IEnumerable<ReviewDto>> GetReviewsForUser(int userId);
 }

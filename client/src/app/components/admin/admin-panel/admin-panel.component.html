@@ -1,9 +1,9 @@
 <div class="tab-panel">
     <tabset class="custom-tabset">
 
-        <tab heading="Users" *HasRole="['Admin']">
+        <tab heading="Reviews" *HasRole="['Admin', 'Moderator']">
             <div class="container">
-                <app-user-management></app-user-management>
+                <app-review-management></app-review-management>
             </div>
         </tab>
 
@@ -13,9 +13,9 @@
             </div>
         </tab>
 
-        <tab heading="Reviews" *HasRole="['Admin', 'Moderator']">
+        <tab heading="Users" *HasRole="['Admin']">
             <div class="container">
-                <app-review-management></app-review-management>
+                <app-user-management></app-user-management>
             </div>
         </tab>
 

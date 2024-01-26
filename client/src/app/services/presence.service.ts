@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
 import { MessagesService } from './messages.service';
 import { Player } from '../models/player';
 import { User } from '../models/user';
-import { Review } from '../models/review';
+import { Review, ReviewForModeration } from '../models/review';
 import { FriendStatus } from '../enums/friendStatus';
 import { FriendRequestType } from '../enums/friendRequestType';
 import { Game } from '../models/game';
@@ -170,9 +170,11 @@ export class PresenceService {
       this.gamesService.reviewApproved(review);
     });
 
-    this.hubConnection.on('ReviewPosted', (review: Review) => {
-      this.toastr.success(review.reviewerUsername + ' posted review');
-    }); // TODO
+    if (user.roles.includes('Admin') || user.roles.includes('Moderator')) {
+      this.hubConnection.on('ReviewPosted', () => {
+        this.adminService.reviewPosted();
+      });
+    }    
 
     this.hubConnection.on('ReviewDeleted', reviewId => {
       this.adminService.reviewDeleted(reviewId);

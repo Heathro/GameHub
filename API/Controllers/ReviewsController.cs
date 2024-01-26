@@ -60,11 +60,9 @@ public class ReviewsController : BaseApiController
 
         if (await _unitOfWork.Complete())
         {
-            var reviewDto = _mapper.Map<ReviewDto>(review);
-
-            _notificationCenter.ReviewPosted(User.GetUsername(), reviewDto);
+            _notificationCenter.ReviewPosted(User.GetUsername());
             
-            return Ok(reviewDto);
+            return Ok(_mapper.Map<ReviewDto>(review));
         }
 
         return BadRequest("Failed to create review");

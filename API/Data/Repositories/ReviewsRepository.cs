@@ -36,7 +36,7 @@ public class ReviewsRepository : IReviewsRepository
             .IgnoreQueryFilters()
             .Include(r => r.Reviewer).ThenInclude(u => u.Avatar)
             .Include(r => r.Game).ThenInclude(g => g.Poster)
-            .FirstOrDefaultAsync(r => r.Id == id);
+            .SingleOrDefaultAsync(r => r.Id == id);
     }
 
     public async Task<Review> GetReviewAsync(int reviewerId, int gameId)
@@ -69,11 +69,11 @@ public class ReviewsRepository : IReviewsRepository
     }
 
     public async Task<PagedList<ReviewModerationDto>> GetReviewsForModeration(
-        PaginationParams paginationParams)
+        PaginationParams paginationParams, string currentUsername)
     {
         var query = _context.Reviews
             .IgnoreQueryFilters()
-            .Where(r => r.IsApproved == false)
+            .Where(r => r.IsApproved == false && r.ReviewerUsername != currentUsername)
             .AsQueryable();
         
         query = paginationParams.OrderType switch

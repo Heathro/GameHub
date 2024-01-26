@@ -90,7 +90,7 @@ public class NotificationCenter : INotificationCenter
         if (currentUserConnections == null) return;
 
         await _presenceHub.Clients.AllExcept(currentUserConnections)
-            .SendAsync("PosterUpdated", new { gameId, poster});
+            .SendAsync("PosterUpdated", new { gameId, poster });
     }
 
     public async void ScreenshotAdded(string currentUsername, int gameId, ScreenshotDto screenshot)
@@ -99,7 +99,7 @@ public class NotificationCenter : INotificationCenter
         if (currentUserConnections == null) return;
 
         await _presenceHub.Clients.AllExcept(currentUserConnections)
-            .SendAsync("ScreenshotAdded", new { gameId, screenshot});
+            .SendAsync("ScreenshotAdded", new { gameId, screenshot });
     }
 
     public async void ScreenshotDeleted(string currentUsername, int gameId, int screenshotId)
@@ -108,7 +108,7 @@ public class NotificationCenter : INotificationCenter
         if (currentUserConnections == null) return;
 
         await _presenceHub.Clients.AllExcept(currentUserConnections)
-            .SendAsync("ScreenshotDeleted", new { gameId, screenshotId});
+            .SendAsync("ScreenshotDeleted", new { gameId, screenshotId });
     }
 
     public async void GameLiked(string currentUsername, int gameId)
@@ -116,8 +116,7 @@ public class NotificationCenter : INotificationCenter
         var currentUserConnections = await PresenceTracker.GetConnectionsForUser(currentUsername);
         if (currentUserConnections == null) return;
         
-        await _presenceHub.Clients.AllExcept(currentUserConnections)
-            .SendAsync("GameLiked", gameId);
+        await _presenceHub.Clients.AllExcept(currentUserConnections).SendAsync("GameLiked", gameId);
     }
     
     public async void GameDeleted(string currentUsername, int gameId)
@@ -125,16 +124,20 @@ public class NotificationCenter : INotificationCenter
         var currentUserConnections = await PresenceTracker.GetConnectionsForUser(currentUsername);
         if (currentUserConnections == null) return;
         
-        await _presenceHub.Clients.AllExcept(currentUserConnections)
-            .SendAsync("GameDeleted", gameId);
+        await _presenceHub.Clients.AllExcept(currentUserConnections).SendAsync("GameDeleted", gameId);
     }
 
     public async void ReviewApproved(string currentUsername, ReviewDto review)
     {
-        var currentUserConnections = await PresenceTracker.GetConnectionsForUser(currentUsername);
-        if (currentUserConnections == null) return;
+        await _presenceHub.Clients.All.SendAsync("ReviewApproved", review);
+    }
+    
+    public async void ReviewPosted(string currentUsername)
+    {
+        var moderatorsConnections = await PresenceTracker.GetConnectionsForModerators(currentUsername);
+        if (moderatorsConnections == null) return;
 
-        await _presenceHub.Clients.AllExcept(currentUserConnections).SendAsync("ReviewApproved", review);
+        await _presenceHub.Clients.Clients(moderatorsConnections).SendAsync("ReviewPosted");
     }
     
     public async void ReviewDeleted(string currentUsername, int reviewId)
@@ -143,13 +146,5 @@ public class NotificationCenter : INotificationCenter
         if (currentUserConnections == null) return;
 
         await _presenceHub.Clients.AllExcept(currentUserConnections).SendAsync("ReviewDeleted", reviewId);
-    }
-    
-    public async void ReviewPosted(string currentUsername, ReviewDto review)
-    {
-        var currentUserConnections = await PresenceTracker.GetConnectionsForUser(currentUsername);
-        if (currentUserConnections == null) return;
-
-        await _presenceHub.Clients.AllExcept(currentUserConnections).SendAsync("ReviewPosted", review);
     }
 }

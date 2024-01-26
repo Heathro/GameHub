@@ -3,6 +3,7 @@
 public class PresenceTracker
 {
     private static readonly Dictionary<string, List<string>> OnlineUsers = new();
+    private static readonly Dictionary<string, List<string>> OnlineModerators = new();
 
     public static Task<bool> UserConnected(string username, string connectionId)
     {
@@ -69,5 +70,50 @@ public class PresenceTracker
         }
 
         return Task.FromResult(connectionIds);
+    }
+
+    public static void ModeratorConnected(string username, string connectionId)
+    {
+        lock(OnlineModerators)
+        {
+            if (OnlineModerators.ContainsKey(username))
+            {
+                OnlineModerators[username].Add(connectionId);
+            }
+            else
+            {
+                OnlineModerators.Add(username, new List<string>{connectionId});
+            }
+        }
+    }
+    
+    public static void ModeratorDisconnected(string username, string connectionId)
+    {
+        lock(OnlineModerators)
+        {
+            if (!OnlineModerators.ContainsKey(username)) return;
+
+            OnlineModerators[username].Remove(connectionId);
+
+            if (OnlineModerators[username].Count == 0)
+            {
+                OnlineModerators.Remove(username);
+            }
+        }
+    }
+
+    public static Task<List<string>> GetConnectionsForModerators(string username)
+    {
+        List<string> onlineModerators;
+
+        lock(OnlineModerators)
+        {
+            onlineModerators = OnlineModerators
+                .Where(k => k.Key != username)
+                .SelectMany(v => v.Value)
+                .ToList();
+        }
+
+        return Task.FromResult(onlineModerators);
     }
 }

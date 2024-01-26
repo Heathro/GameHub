@@ -19,6 +19,6 @@ public interface INotificationCenter
     void GameLiked(string currentUsername, int gameId);
     void GameDeleted(string currentUsername, int gameId);
     void ReviewApproved(string currentUsername, ReviewDto review);
+    void ReviewPosted(string currentUsername);
     void ReviewDeleted(string currentUsername, int reviewId);
-    void ReviewPosted(string currentUsername, ReviewDto review);
 }

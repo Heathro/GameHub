@@ -185,7 +185,8 @@ public class AdminController : BaseApiController
     public async Task<ActionResult<PagedList<ReviewModerationDto>>> GetReviewsForModeration(
         [FromQuery]PaginationParams paginationParams)
     {
-        var users = await _unitOfWork.ReviewsRepository.GetReviewsForModeration(paginationParams);
+        var users = await _unitOfWork.ReviewsRepository
+            .GetReviewsForModeration(paginationParams, User.GetUsername());
 
         Response.AddPaginationHeader(new PaginationHeader(
             users.CurrentPage,

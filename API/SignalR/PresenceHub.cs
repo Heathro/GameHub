@@ -15,6 +15,11 @@ public class PresenceHub : Hub
 
     public override async Task OnConnectedAsync()
     {
+        if (Context.User.IsInRole("Admin") || Context.User.IsInRole("Moderator"))
+        {
+            PresenceTracker.ModeratorConnected(Context.User.GetUsername(), Context.ConnectionId);
+        }
+
         var isOnline = await PresenceTracker.UserConnected(Context.User.GetUsername(), Context.ConnectionId);
         if (isOnline)
         {
@@ -33,7 +38,12 @@ public class PresenceHub : Hub
     }
 
     public override async Task OnDisconnectedAsync(Exception exception)
-    {
+    {   
+        if (Context.User.IsInRole("Admin") || Context.User.IsInRole("Moderator"))
+        {
+            PresenceTracker.ModeratorDisconnected(Context.User.GetUsername(), Context.ConnectionId);
+        }
+
         var isOffline = await PresenceTracker
             .UserDisconnected(Context.User.GetUsername(), Context.ConnectionId);
 

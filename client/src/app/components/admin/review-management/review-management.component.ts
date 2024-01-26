@@ -14,10 +14,14 @@ export class ReviewManagementComponent implements OnInit, OnDestroy {
   pagination: Pagination | undefined;
   loading = false;
   reviewDeletedSubscription;
+  reviewRefreshSubscription;
 
   constructor(private adminService: AdminService) {
     this.reviewDeletedSubscription = this.adminService.reviewDeleted$.subscribe(
       reviewId => this.reviewDeleted(reviewId)
+    );
+    this.reviewRefreshSubscription = this.adminService.refreshReviews$.subscribe(
+      () => this.loadReviewsForModeration()
     );
   }
 
@@ -27,6 +31,7 @@ export class ReviewManagementComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.reviewDeletedSubscription.unsubscribe();
+    this.reviewRefreshSubscription.unsubscribe();
   }
 
   loadReviewsForModeration() {
