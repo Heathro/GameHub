@@ -29,6 +29,8 @@ export class PlayersService {
 
   private gamePublishedSource = new Subject<Game>();
   gamePublished$ = this.gamePublishedSource.asObservable();
+  private gameUpdatedSource = new Subject<Game>();
+  gameUpdated$ = this.gameUpdatedSource.asObservable();
   private gameDeletedSource = new Subject<number>();
   gameDeleted$ = this.gameDeletedSource.asObservable();
 
@@ -125,7 +127,7 @@ export class PlayersService {
       map(friend => {
         if (this.friendsLoaded) {
           this.outcomeRequests.push(friend);
-        } 
+        }
         return friend;
       })
     );
@@ -199,25 +201,50 @@ export class PlayersService {
   }
 
   gamePublished(game: Game) {
-    this.activeFriends.forEach(f => f.publications.unshift(game));
-    this.incomeRequests.forEach(f => f.publications.unshift(game));
-    this.outcomeRequests.forEach(f => f.publications.unshift(game));
     this.playersCache.forEach(q => {
       q.result.forEach((p: Player) => p.publications.unshift(game));
     });
     this.gamePublishedSource.next(game);
   }
 
+  gameUpdated(game: Game) {
+    this.playersCache.forEach(q => {
+      q.result.forEach((p: Player) => this.updateGames(p.publications, game));
+    });
+    this.gameUpdatedSource.next(game);
+  }
+
+  updateGames(games: Game[], game: Game) {
+    games.forEach((g: Game) => {
+      if (g.id === game.id) {
+        g.title = game.title;
+        g.description = game.description;
+        g.platforms.windows = game.platforms.windows;
+        g.platforms.macos = game.platforms.macos;
+        g.platforms.linux = game.platforms.linux;
+        g.genres.action = game.genres.action;
+        g.genres.adventure = game.genres.adventure;
+        g.genres.card = game.genres.card;
+        g.genres.educational = game.genres.educational;
+        g.genres.fighting = game.genres.fighting;
+        g.genres.horror = game.genres.horror;
+        g.genres.platformer = game.genres.platformer;
+        g.genres.puzzle = game.genres.puzzle;
+        g.genres.racing = game.genres.racing;
+        g.genres.rhythm = game.genres.rhythm;
+        g.genres.roleplay = game.genres.roleplay;
+        g.genres.shooter = game.genres.shooter;
+        g.genres.simulation = game.genres.simulation;
+        g.genres.sport = game.genres.sport;
+        g.genres.stealth = game.genres.stealth;
+        g.genres.strategy = game.genres.strategy;
+        g.genres.survival = game.genres.survival;
+        g.video = game.video;
+      }
+    });
+  }
+
   gameDeleted(gameId: number) {
-    this.activeFriends.forEach(f => {
-      f.publications = f.publications.filter((p: Game) => p.id !== gameId);
-    });
-    this.incomeRequests.forEach(f => {
-      f.publications = f.publications.filter((p: Game) => p.id !== gameId);
-    });
-    this.outcomeRequests.forEach(f => {
-      f.publications = f.publications.filter((p: Game) => p.id !== gameId);
-    });
     this.playersCache.forEach(q => {
       q.result.forEach((p: Player) => {
         p.publications = p.publications.filter((p: Game) => p.id !== gameId);

@@ -32,6 +32,17 @@ public class UsersRepository : IUsersRepository
         return await _context.Users
             .Include(u => u.Avatar)
             .Include(u => u.Publications)
+                .ThenInclude(p => p.Title)
+                    .ThenInclude(t => t.Platforms)            
+            .Include(u => u.Publications)
+                .ThenInclude(p => p.Title)
+                    .ThenInclude(t => t.Genres)
+            .Include(u => u.Publications)
+                .ThenInclude(p => p.Title)
+                    .ThenInclude(t => t.Poster)
+            .Include(u => u.Publications)
+                .ThenInclude(p => p.Title)
+                    .ThenInclude(t => t.Screenshots)
             .SingleOrDefaultAsync(user => user.UserName == userName);
     }
     
