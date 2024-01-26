@@ -165,8 +165,10 @@ export class PresenceService {
     });
 
     this.hubConnection.on('ReviewApproved', (review: Review) => {
-      this.toastr.success(review.reviewerUsername + ' approved review');
-    }); // TODO
+      this.reviewsService.reviewApproved(review);
+      this.playersService.reviewApproved(review);
+      this.gamesService.reviewApproved(review);
+    });
 
     this.hubConnection.on('ReviewPosted', (review: Review) => {
       this.toastr.success(review.reviewerUsername + ' posted review');

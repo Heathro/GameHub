@@ -20,10 +20,18 @@ export class ReviewsService {
   private gameDeletedSource = new Subject<number>();
   gameDeleted$ = this.gameDeletedSource.asObservable();
   private reviewDeletedSource = new Subject<number>();
-  reviewDeleted$ = this.reviewDeletedSource.asObservable();
+  reviewDeleted$ = this.reviewDeletedSource.asObservable();  
+  private reviewApprovedSource = new Subject<Review>();
+  reviewApproved$ = this.reviewApprovedSource.asObservable();
+  private newReviewsCountSource = new Subject<number>();
+  newReviewsCount$ = this.newReviewsCountSource.asObservable();
+  newReviewsCount = 0;
+  private refreshReviewsSource = new Subject();
+  refreshReviews$ = this.refreshReviewsSource.asObservable();
 
   constructor(private http: HttpClient) {
     this.paginationParams = this.initializePaginationParams();
+    this.newReviewsCountSource.next(0);
   }
   
   getAllReviews() {
@@ -36,10 +44,19 @@ export class ReviewsService {
     return PaginationFunctions.getPaginatedResult<Review[]>(this.baseUrl + 'reviews/list', params, this.http)
       .pipe(
         map(reviews => {
+          this.newReviewsCount = 0;
+          this.newReviewsCountSource.next(0);
           this.reviewsCache.set(queryString, reviews);
           return reviews;
         })
       );
+  }
+
+  refreshReviews() {
+    if (this.newReviewsCount > 0) {
+      this.reviewsCache = new Map();
+      this.refreshReviewsSource.next(null);
+    }
   }
 
   getReviewsForGame(title: string) {
@@ -106,6 +123,12 @@ export class ReviewsService {
       q.result = q.result.filter((r: Review) => r.gameId !== gameId);
     });
     this.gameDeletedSource.next(gameId);
+  }
+
+  reviewApproved(review: Review) {
+    this.newReviewsCount++;
+    this.newReviewsCountSource.next(this.newReviewsCount);
+    this.reviewApprovedSource.next(review);
   }
 
   reviewDeleted(reviewId: number) {

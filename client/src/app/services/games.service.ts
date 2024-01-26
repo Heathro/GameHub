@@ -9,6 +9,7 @@ import { Game } from '../models/game';
 import { Filter } from '../models/filter';
 import { User } from '../models/user';
 import { OrderType } from '../enums/orderType';
+import { Review } from '../models/review';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +24,8 @@ export class GamesService {
   playerDeleted$ = this.playerDeletedSource.asObservable();  
   private gameDeletedSource = new Subject<number>();
   gameDeleted$ = this.gameDeletedSource.asObservable();
+  private reviewAcceptedSource = new Subject<Review>();
+  reviewAccepted$ = this.reviewAcceptedSource.asObservable();
   private reviewDeletedSource = new Subject<number>();
   reviewDeleted$ = this.reviewDeletedSource.asObservable();
 
@@ -224,6 +227,10 @@ export class GamesService {
       q.result = q.result.filter((g: Game) => g.id !== gameId);
     });
     this.gameDeletedSource.next(gameId);
+  }
+
+  reviewApproved(review: Review) {
+    this.reviewAcceptedSource.next(review);
   }
 
   reviewDeleted(reviewId: number) {

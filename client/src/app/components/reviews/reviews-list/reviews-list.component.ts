@@ -4,7 +4,6 @@ import { ReviewsService } from 'src/app/services/reviews.service';
 import { Pagination } from 'src/app/helpers/pagination';
 import { OrderType } from 'src/app/enums/orderType';
 import { Review } from 'src/app/models/review';
-import { GamesService } from 'src/app/services/games.service';
 
 @Component({
   selector: 'app-reviews-list',
@@ -18,6 +17,7 @@ export class ReviewsListComponent implements OnInit, OnDestroy {
   playerDeletedSubscription;
   gameDeletedSubscription;
   reviewDeletedSubscription;
+  reviewRefreshSubscription;
 
   constructor(private reviewsService: ReviewsService) {
     this.playerDeletedSubscription = this.reviewsService.playerDeleted$.subscribe(
@@ -29,6 +29,9 @@ export class ReviewsListComponent implements OnInit, OnDestroy {
     this.reviewDeletedSubscription = this.reviewsService.reviewDeleted$.subscribe(
       reviewId => this.reviewDeleted(reviewId)
     );
+    this.reviewRefreshSubscription = this.reviewsService.refreshReviews$.subscribe(
+      () => this.loadReviews()
+    );
   }
 
   ngOnInit(): void {
@@ -39,6 +42,7 @@ export class ReviewsListComponent implements OnInit, OnDestroy {
     this.playerDeletedSubscription.unsubscribe();
     this.gameDeletedSubscription.unsubscribe();
     this.reviewDeletedSubscription.unsubscribe();
+    this.reviewRefreshSubscription.unsubscribe();
   }
 
   loadReviews() {

@@ -10,6 +10,7 @@ import { FriendStatus } from '../enums/friendStatus';
 import { OrderType } from '../enums/orderType';
 import { Player } from '../models/player';
 import { Game } from '../models/game';
+import { Review } from '../models/review';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,8 @@ export class PlayersService {
   playerDeleted$ = this.playerDeletedSource.asObservable();
   private gameDeletedSource = new Subject<number>();
   gameDeleted$ = this.gameDeletedSource.asObservable();
+  private reviewAcceptedSource = new Subject<Review>();
+  reviewAccepted$ = this.reviewAcceptedSource.asObservable();
   private reviewDeletedSource = new Subject<number>();
   reviewDeleted$ = this.reviewDeletedSource.asObservable();
   private friendshipRequestedSource = new Subject<Player>();
@@ -205,6 +208,10 @@ export class PlayersService {
       });
     });
     this.gameDeletedSource.next(gameId);
+  }
+
+  reviewApproved(review: Review) {
+    this.reviewAcceptedSource.next(review);
   }
 
   reviewDeleted(reviewId: number) {

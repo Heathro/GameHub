@@ -25,6 +25,7 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
   loadingReviews = false;
   playerDeletedSubscription;
   gameDeletedSubscription;
+  reviewAcceptedSubscription;
   reviewDeletedSubscription;
   friendshipRequestedSubscription;
   friendshipCancelledSubscription;
@@ -45,6 +46,9 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
     );
     this.gameDeletedSubscription = this.playersService.gameDeleted$.subscribe(
       gameId => this.gameDeleted(gameId)
+    );
+    this.reviewAcceptedSubscription = this.playersService.reviewAccepted$.subscribe(
+      review => this.reviewAccepted(review)
     );
     this.reviewDeletedSubscription = this.playersService.reviewDeleted$.subscribe(
       reviewId => this.reviewDeleted(reviewId)
@@ -74,6 +78,7 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.playerDeletedSubscription.unsubscribe();
     this.gameDeletedSubscription.unsubscribe();
+    this.reviewAcceptedSubscription.unsubscribe();
     this.reviewDeletedSubscription.unsubscribe();
     this.friendshipRequestedSubscription.unsubscribe();
     this.friendshipCancelledSubscription.unsubscribe();
@@ -154,6 +159,10 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
       this.player.publications = this.player.publications.filter(g => g.id !== gameId);
     }
     this.reviews = this.reviews.filter(r => r.gameId !== gameId);
+  }
+
+  private reviewAccepted(review: Review) {
+    this.reviews.unshift(review);
   }
 
   private reviewDeleted(reviewId: number) {

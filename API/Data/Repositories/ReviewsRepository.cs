@@ -34,6 +34,8 @@ public class ReviewsRepository : IReviewsRepository
     {
         return await _context.Reviews
             .IgnoreQueryFilters()
+            .Include(r => r.Reviewer).ThenInclude(u => u.Avatar)
+            .Include(r => r.Game).ThenInclude(g => g.Poster)
             .FirstOrDefaultAsync(r => r.Id == id);
     }
 
@@ -92,6 +94,7 @@ public class ReviewsRepository : IReviewsRepository
     {
         return await _context.Reviews
             .Where(r => r.GameId == gameId)
+            .OrderByDescending(r => r.ReviewPosted)
             .ProjectTo<ReviewDto>(_mapper.ConfigurationProvider)
             .ToListAsync();
     }
@@ -100,6 +103,7 @@ public class ReviewsRepository : IReviewsRepository
     {
         return await _context.Reviews
             .Where(r => r.ReviewerId == userId)
+            .OrderByDescending(r => r.ReviewPosted)
             .ProjectTo<ReviewDto>(_mapper.ConfigurationProvider)
             .ToListAsync();
     }

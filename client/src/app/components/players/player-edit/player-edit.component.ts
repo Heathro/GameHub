@@ -38,6 +38,7 @@ export class PlayerEditComponent implements OnInit, OnDestroy, EditComponent {
   loadingReviews = false;
   gameDeletedSubscription;
   reviewDeletedSubscription;
+  reviewAcceptedSubscription;
 
   constructor(
     private accountService: AccountService, 
@@ -50,6 +51,9 @@ export class PlayerEditComponent implements OnInit, OnDestroy, EditComponent {
   ) {
     this.gameDeletedSubscription = this.playersService.gameDeleted$.subscribe(
       gameId => this.gameDeleted(gameId)
+    );
+    this.reviewAcceptedSubscription = this.playersService.reviewAccepted$.subscribe(
+      review => this.reviewAccepted(review)
     );
     this.reviewDeletedSubscription = this.playersService.reviewDeleted$.subscribe(
       reviewId => this.reviewDeleted(reviewId)
@@ -66,6 +70,7 @@ export class PlayerEditComponent implements OnInit, OnDestroy, EditComponent {
   
   ngOnDestroy(): void {
     this.gameDeletedSubscription.unsubscribe();
+    this.reviewAcceptedSubscription.unsubscribe();
     this.reviewDeletedSubscription.unsubscribe();
   }
 
@@ -197,6 +202,10 @@ export class PlayerEditComponent implements OnInit, OnDestroy, EditComponent {
       this.player.publications = this.player.publications.filter(g => g.id !== gameId);
     }
     this.reviews = this.reviews.filter(r => r.gameId !== gameId);
+  }
+
+  private reviewAccepted(review: Review) {
+    this.reviews.unshift(review);
   }
 
   private reviewDeleted(reviewId: number) {

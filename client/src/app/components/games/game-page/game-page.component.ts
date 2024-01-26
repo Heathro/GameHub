@@ -31,6 +31,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
   loadingReviews = false;
   playerDeletedSubscription;
   gameDeletedSubscription;
+  reviewAcceptedSubscription;
   reviewDeletedSubscription;
 
   constructor(
@@ -46,6 +47,9 @@ export class GamePageComponent implements OnInit, OnDestroy {
     );
     this.gameDeletedSubscription = this.gamesService.gameDeleted$.subscribe(
       gameId => this.gameDeleted(gameId)
+    );
+    this.reviewAcceptedSubscription = this.gamesService.reviewAccepted$.subscribe(
+      review => this.reviewAccepted(review)
     );
     this.reviewDeletedSubscription = this.gamesService.reviewDeleted$.subscribe(
       reviewId => this.reviewDeleted(reviewId)
@@ -63,6 +67,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.playerDeletedSubscription.unsubscribe();
     this.gameDeletedSubscription.unsubscribe();
+    this.reviewAcceptedSubscription.unsubscribe();
     this.reviewDeletedSubscription.unsubscribe();
   }
 
@@ -149,6 +154,10 @@ export class GamePageComponent implements OnInit, OnDestroy {
       this.toastr.warning(this.game.title + " was deleted");
       this.router.navigateByUrl('/games');
     }
+  }
+
+  private reviewAccepted(review: Review) {
+    this.reviews.unshift(review);
   }
 
   private reviewDeleted(reviewId: number) {
