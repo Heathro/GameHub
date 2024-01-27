@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { PlayersService } from 'src/app/services/players.service';
 import { Player } from 'src/app/models/player';
-import { Game } from 'src/app/models/game';
 
 @Component({
   selector: 'app-friends-panel',

@@ -9,6 +9,7 @@ import { ConfirmService } from 'src/app/services/confirm.service';
 import { EditComponent } from 'src/app/interfaces/edit-component';
 import { ReviewsService } from 'src/app/services/reviews.service';
 import { ReviewMenu } from 'src/app/models/review';
+import { Game } from 'src/app/models/game';
 
 @Component({
   selector: 'app-post-review',
@@ -25,6 +26,7 @@ export class PostReviewComponent implements OnInit, OnDestroy, EditComponent {
   initialContent = "";
   posting = false;
   finished = false;
+  gameUpdatedSubscription;
   gameDeletedSubscription;
   reviewDeletedSubscription;
 
@@ -36,6 +38,9 @@ export class PostReviewComponent implements OnInit, OnDestroy, EditComponent {
     private confirmService: ConfirmService,
     private reviewsService: ReviewsService
   ) {
+    this.gameUpdatedSubscription = this.reviewsService.gameUpdated$.subscribe(
+      game => this.gameUpdated(game)
+    );
     this.gameDeletedSubscription = this.reviewsService.gameDeleted$.subscribe(
       gameId => this.gameDeleted(gameId)
     );
@@ -57,6 +62,7 @@ export class PostReviewComponent implements OnInit, OnDestroy, EditComponent {
   }
 
   ngOnDestroy(): void {
+    this.gameUpdatedSubscription.unsubscribe();
     this.gameDeletedSubscription.unsubscribe();
     this.reviewDeletedSubscription.unsubscribe();
   }
@@ -69,6 +75,7 @@ export class PostReviewComponent implements OnInit, OnDestroy, EditComponent {
         this.reviewMenu = reviewMenu;
         this.initialContent = this.reviewMenu.content;
         this.initializeFrom();
+        console.log(reviewMenu)
       }
     });
   }
@@ -127,6 +134,10 @@ export class PostReviewComponent implements OnInit, OnDestroy, EditComponent {
         CustomValidators.onlyWhiteSpace()
       ]]
     });
+  }
+
+  private gameUpdated(game: Game) {
+    if (this.reviewMenu) this.reviewsService.updateReviewMenuData(this.reviewMenu, game);
   }
 
   private gameDeleted(gameId: number) {

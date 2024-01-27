@@ -22,6 +22,8 @@ export class AdminService {
   private playerDeletedSource = new Subject<string>();
   playerDeleted$ = this.playerDeletedSource.asObservable();
 
+  private gameUpdatedSource = new Subject<Game>();
+  gameUpdated$ = this.gameUpdatedSource.asObservable();
   private gameDeletedSource = new Subject<number>();
   gameDeleted$ = this.gameDeletedSource.asObservable();
 
@@ -155,6 +157,10 @@ export class AdminService {
   gamePublished() {
     this.newGameCount++;
     this.newGameCountSource.next(this.newGameCount);
+  }
+
+  gameUpdated(game: Game) {
+    this.gameUpdatedSource.next(game);
   }
 
   gameDeleted(gameId: number) {

@@ -7,6 +7,7 @@ import { environment } from 'src/environments/environment';
 import { PaginatedResult, PaginationFunctions, PaginationParams } from '../helpers/pagination';
 import { OrderType } from '../enums/orderType';
 import { Review, ReviewMenu } from '../models/review';
+import { Game } from '../models/game';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +20,8 @@ export class ReviewsService {
   private playerDeletedSource = new Subject<string>();
   playerDeleted$ = this.playerDeletedSource.asObservable();
 
+  private gameUpdatedSource = new Subject<Game>();
+  gameUpdated$ = this.gameUpdatedSource.asObservable();
   private gameDeletedSource = new Subject<number>();
   gameDeleted$ = this.gameDeletedSource.asObservable();
 
@@ -124,6 +127,11 @@ export class ReviewsService {
     this.playerDeletedSource.next(username);
   }
 
+  gameUpdated(game: Game) {
+    this.reviewsCache.forEach(q => this.updateReviewsData(q.result, game));
+    this.gameUpdatedSource.next(game);
+  }
+
   gameDeleted(gameId: number) {
     this.reviewsCache.forEach(q => {
       q.result = q.result.filter((r: Review) => r.gameId !== gameId);
@@ -142,6 +150,18 @@ export class ReviewsService {
       q.result = q.result.filter((r: Review) => r.id !== reviewId);
     });
     this.reviewDeletedSource.next(reviewId);
+  }
+
+  updateReviewsData(reviews: Review[], game: Game) {
+    reviews.forEach(r => {
+      if (r.gameId === game.id) r.gameTitle = game.title;
+    });
+  }
+
+  updateReviewMenuData(reviewMenu: ReviewMenu, game: Game) {
+    if (reviewMenu.game.id === game.id) {
+      reviewMenu.game.title = game.title;
+    }
   }
 
   private initializePaginationParams() {

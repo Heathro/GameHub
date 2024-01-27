@@ -30,6 +30,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
   isBookmarked = false;
   loadingReviews = false;
   playerDeletedSubscription;
+  gameUpdatedSubscription;
   gameDeletedSubscription;
   reviewAcceptedSubscription;
   reviewDeletedSubscription;
@@ -44,6 +45,9 @@ export class GamePageComponent implements OnInit, OnDestroy {
   ) {
     this.playerDeletedSubscription = this.gamesService.playerDeleted$.subscribe(
       username => this.playerDeleted(username)
+    );
+    this.gameUpdatedSubscription = this.gamesService.gameUpdated$.subscribe(
+      game => this.gameUpdated(game)
     );
     this.gameDeletedSubscription = this.gamesService.gameDeleted$.subscribe(
       gameId => this.gameDeleted(gameId)
@@ -66,6 +70,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.playerDeletedSubscription.unsubscribe();
+    this.gameUpdatedSubscription.unsubscribe();
     this.gameDeletedSubscription.unsubscribe();
     this.reviewAcceptedSubscription.unsubscribe();
     this.reviewDeletedSubscription.unsubscribe();
@@ -146,6 +151,12 @@ export class GamePageComponent implements OnInit, OnDestroy {
     else {
       // likes and bookmarks
       this.reviews = this.reviews.filter(r => r.reviewerUsername !== username);
+    }
+  }
+
+  private gameUpdated(game: Game) {
+    if (this.game && this.game.id === game.id) {
+      this.gamesService.updateGameData(this.game, game);
     }
   }
 
