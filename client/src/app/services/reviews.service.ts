@@ -128,7 +128,11 @@ export class ReviewsService {
   }
 
   gameUpdated(game: Game) {
-    this.reviewsCache.forEach(q => this.updateReviewsData(q.result, game));
+    this.reviewsCache.forEach(q => {
+      q.result.forEach((r: Review) => {
+        if (r.gameId === game.id) this.updateReviewsData(r, game);
+      });
+    });
     this.gameUpdatedSource.next(game);
   }
 
@@ -152,16 +156,12 @@ export class ReviewsService {
     this.reviewDeletedSource.next(reviewId);
   }
 
-  updateReviewsData(reviews: Review[], game: Game) {
-    reviews.forEach(r => {
-      if (r.gameId === game.id) r.gameTitle = game.title;
-    });
+  updateReviewsData(review: Review, game: Game) {
+    review.gameTitle = game.title;
   }
 
   updateReviewMenuData(reviewMenu: ReviewMenu, game: Game) {
-    if (reviewMenu.game.id === game.id) {
-      reviewMenu.game.title = game.title;
-    }
+    reviewMenu.game.title = game.title;
   }
 
   private initializePaginationParams() {

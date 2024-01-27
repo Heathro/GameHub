@@ -137,7 +137,9 @@ export class PostReviewComponent implements OnInit, OnDestroy, EditComponent {
   }
 
   private gameUpdated(game: Game) {
-    if (this.reviewMenu) this.reviewsService.updateReviewMenuData(this.reviewMenu, game);
+    if (this.reviewMenu && this.reviewMenu.game.id === game.id) {
+      this.reviewsService.updateReviewMenuData(this.reviewMenu, game);
+    }
   }
 
   private gameDeleted(gameId: number) {

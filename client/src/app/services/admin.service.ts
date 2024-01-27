@@ -175,6 +175,36 @@ export class AdminService {
   reviewDeleted(reviewId: number) {
     this.reviewDeletedSource.next(reviewId);
   }
+  
+  updateGameData(currentGame: Game, updatedGame: Game) {
+    currentGame.title = updatedGame.title;
+    currentGame.description = updatedGame.description;
+    currentGame.platforms.windows = updatedGame.platforms.windows;
+    currentGame.platforms.macos = updatedGame.platforms.macos;
+    currentGame.platforms.linux = updatedGame.platforms.linux;
+    currentGame.genres.action = updatedGame.genres.action;
+    currentGame.genres.adventure = updatedGame.genres.adventure;
+    currentGame.genres.card = updatedGame.genres.card;
+    currentGame.genres.educational = updatedGame.genres.educational;
+    currentGame.genres.fighting = updatedGame.genres.fighting;
+    currentGame.genres.horror = updatedGame.genres.horror;
+    currentGame.genres.platformer = updatedGame.genres.platformer;
+    currentGame.genres.puzzle = updatedGame.genres.puzzle;
+    currentGame.genres.racing = updatedGame.genres.racing;
+    currentGame.genres.rhythm = updatedGame.genres.rhythm;
+    currentGame.genres.roleplay = updatedGame.genres.roleplay;
+    currentGame.genres.shooter = updatedGame.genres.shooter;
+    currentGame.genres.simulation = updatedGame.genres.simulation;
+    currentGame.genres.sport = updatedGame.genres.sport;
+    currentGame.genres.stealth = updatedGame.genres.stealth;
+    currentGame.genres.strategy = updatedGame.genres.strategy;
+    currentGame.genres.survival = updatedGame.genres.survival;
+    currentGame.video = updatedGame.video;
+  }
+
+  updateReviewForModerationData(review: ReviewForModeration, game: Game) {
+    review.gameTitle = game.title;
+  }
 
   private initializeUsersPaginationParams() {
     return new PaginationParams(10, OrderType.az);

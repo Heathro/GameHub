@@ -115,7 +115,9 @@ export class ReviewsListComponent implements OnInit, OnDestroy {
   }
 
   private gameUpdated(game: Game) {
-    this.reviewsService.updateReviewsData(this.reviews, game);
+    this.reviews.forEach(r => {
+      if (r.gameId === game.id) this.reviewsService.updateReviewsData(r, game);
+    });
   }
 
   private gameDeleted(gameId: number) {

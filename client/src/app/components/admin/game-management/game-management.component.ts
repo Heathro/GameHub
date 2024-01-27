@@ -13,10 +13,14 @@ export class GameManagementComponent implements OnInit, OnDestroy {
   games: Game[] = [];
   pagination: Pagination | undefined;
   loading = false;
+  gameUpdateSubscription;
   gameDeletedSubscription;
   gamesRefreshSubscription
   
   constructor(private adminService: AdminService) {
+    this.gameUpdateSubscription = this.adminService.gameUpdated$.subscribe(
+      game => this.gameUpdated(game)
+    );
     this.gameDeletedSubscription = this.adminService.gameDeleted$.subscribe(
       gameId => this.gameDeleted(gameId)
     );
@@ -30,6 +34,7 @@ export class GameManagementComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.gameUpdateSubscription.unsubscribe();
     this.gameDeletedSubscription.unsubscribe();
     this.gamesRefreshSubscription.unsubscribe();
   }
@@ -58,6 +63,12 @@ export class GameManagementComponent implements OnInit, OnDestroy {
       this.adminService.setGamesPaginationPage(event.page);
       this.loadGames();
     }
+  }
+
+  private gameUpdated(game: Game) {
+    this.games.forEach(g => {
+      if (g.id === game.id) this.adminService.updateGameData(g, game);
+    });
   }
 
   private gameDeleted(gameId: number) {
