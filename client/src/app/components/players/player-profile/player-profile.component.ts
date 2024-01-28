@@ -117,7 +117,6 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
       next: reviews => {
         this.reviews = reviews;
         this.loadingReviews = false;
-        console.log(reviews)
       }
     });
   }
