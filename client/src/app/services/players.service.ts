@@ -11,6 +11,7 @@ import { OrderType } from '../enums/orderType';
 import { Player } from '../models/player';
 import { Game } from '../models/game';
 import { Review } from '../models/review';
+import { Poster } from '../models/poster';
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +32,8 @@ export class PlayersService {
   gamePublished$ = this.gamePublishedSource.asObservable();
   private gameUpdatedSource = new Subject<Game>();
   gameUpdated$ = this.gameUpdatedSource.asObservable();
+  private posterUpdatedSource = new Subject<any>();
+  posterUpdated$ = this.posterUpdatedSource.asObservable();
   private gameDeletedSource = new Subject<number>();
   gameDeleted$ = this.gameDeletedSource.asObservable();
 
@@ -217,6 +220,17 @@ export class PlayersService {
     });      
 
     this.gameUpdatedSource.next(game);
+  }
+
+  posterUpdated(gameId: number, poster: Poster) {
+    this.playersCache.forEach(q => {
+      q.result.forEach((p: Player) => {
+        p.publications.forEach(g => {
+          if (g.id === gameId) g.poster = poster;
+        });
+      });
+    });
+    this.posterUpdatedSource.next({gameId, poster});
   }
 
   gameDeleted(gameId: number) {

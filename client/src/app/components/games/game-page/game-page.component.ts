@@ -13,6 +13,7 @@ import { ReviewsService } from 'src/app/services/reviews.service';
 import { GameReviewComponent } from '../../reviews/game-review/game-review.component';
 import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
+import { Poster } from 'src/app/models/poster';
 
 @Component({
   selector: 'app-game-page',
@@ -31,6 +32,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
   loadingReviews = false;
   playerDeletedSubscription;
   gameUpdatedSubscription;
+  posterUpdatedSubscription;
   gameDeletedSubscription;
   reviewAcceptedSubscription;
   reviewDeletedSubscription;
@@ -48,6 +50,9 @@ export class GamePageComponent implements OnInit, OnDestroy {
     );
     this.gameUpdatedSubscription = this.gamesService.gameUpdated$.subscribe(
       game => this.gameUpdated(game)
+    );
+    this.posterUpdatedSubscription = this.gamesService.posterUpdated$.subscribe(
+      ({gameId, poster}) => this.posterUpdated(gameId, poster)
     );
     this.gameDeletedSubscription = this.gamesService.gameDeleted$.subscribe(
       gameId => this.gameDeleted(gameId)
@@ -71,6 +76,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.playerDeletedSubscription.unsubscribe();
     this.gameUpdatedSubscription.unsubscribe();
+    this.posterUpdatedSubscription.unsubscribe();
     this.gameDeletedSubscription.unsubscribe();
     this.reviewAcceptedSubscription.unsubscribe();
     this.reviewDeletedSubscription.unsubscribe();
@@ -158,6 +164,10 @@ export class GamePageComponent implements OnInit, OnDestroy {
     if (this.game && this.game.id === game.id) {
       this.gamesService.updateGameData(this.game, game);
     }
+  }
+  
+  private posterUpdated(gameId: number, poster: Poster) {
+    if (this.game && this.game.id === gameId) this.game.poster = poster;
   }
 
   private gameDeleted(gameId: number) {

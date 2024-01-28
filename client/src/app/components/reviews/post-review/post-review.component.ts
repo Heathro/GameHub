@@ -10,6 +10,7 @@ import { EditComponent } from 'src/app/interfaces/edit-component';
 import { ReviewsService } from 'src/app/services/reviews.service';
 import { ReviewMenu } from 'src/app/models/review';
 import { Game } from 'src/app/models/game';
+import { Poster } from 'src/app/models/poster';
 
 @Component({
   selector: 'app-post-review',
@@ -27,6 +28,7 @@ export class PostReviewComponent implements OnInit, OnDestroy, EditComponent {
   posting = false;
   finished = false;
   gameUpdatedSubscription;
+  posterUpdatedSubscription;
   gameDeletedSubscription;
   reviewDeletedSubscription;
 
@@ -40,6 +42,9 @@ export class PostReviewComponent implements OnInit, OnDestroy, EditComponent {
   ) {
     this.gameUpdatedSubscription = this.reviewsService.gameUpdated$.subscribe(
       game => this.gameUpdated(game)
+    );
+    this.posterUpdatedSubscription = this.reviewsService.posterUpdated$.subscribe(
+      ({gameId, poster}) => this.posterUpdated(gameId, poster)
     );
     this.gameDeletedSubscription = this.reviewsService.gameDeleted$.subscribe(
       gameId => this.gameDeleted(gameId)
@@ -63,6 +68,7 @@ export class PostReviewComponent implements OnInit, OnDestroy, EditComponent {
 
   ngOnDestroy(): void {
     this.gameUpdatedSubscription.unsubscribe();
+    this.posterUpdatedSubscription.unsubscribe();
     this.gameDeletedSubscription.unsubscribe();
     this.reviewDeletedSubscription.unsubscribe();
   }
@@ -139,6 +145,12 @@ export class PostReviewComponent implements OnInit, OnDestroy, EditComponent {
   private gameUpdated(game: Game) {
     if (this.reviewMenu && this.reviewMenu.game.id === game.id) {
       this.reviewsService.updateReviewMenuData(this.reviewMenu, game);
+    }
+  }
+  
+  private posterUpdated(gameId: number, poster: Poster) {
+    if (this.reviewMenu && this.reviewMenu.game.id === gameId) {
+      this.reviewMenu.game.poster = poster;
     }
   }
 

@@ -16,6 +16,7 @@ import { Player } from 'src/app/models/player';
 import { User } from 'src/app/models/user';
 import { Review } from 'src/app/models/review';
 import { ReviewsService } from 'src/app/services/reviews.service';
+import { Poster } from 'src/app/models/poster';
 
 @Component({
   selector: 'app-player-edit',
@@ -36,6 +37,7 @@ export class PlayerEditComponent implements OnInit, OnDestroy, EditComponent {
   updating = false;
   reviews: Review[] = [];
   loadingReviews = false;
+  posterUpdatedSubscription;
   gameDeletedSubscription;
   reviewDeletedSubscription;
   reviewAcceptedSubscription;
@@ -49,6 +51,9 @@ export class PlayerEditComponent implements OnInit, OnDestroy, EditComponent {
     private router: Router,
     private confirmService: ConfirmService
   ) {
+    this.posterUpdatedSubscription = this.playersService.posterUpdated$.subscribe(
+      ({gameId, poster}) => this.posterUpdated(gameId, poster)
+    );
     this.gameDeletedSubscription = this.playersService.gameDeleted$.subscribe(
       gameId => this.gameDeleted(gameId)
     );
@@ -69,6 +74,7 @@ export class PlayerEditComponent implements OnInit, OnDestroy, EditComponent {
   }
   
   ngOnDestroy(): void {
+    this.posterUpdatedSubscription.unsubscribe();
     this.gameDeletedSubscription.unsubscribe();
     this.reviewAcceptedSubscription.unsubscribe();
     this.reviewDeletedSubscription.unsubscribe();
@@ -195,6 +201,14 @@ export class PlayerEditComponent implements OnInit, OnDestroy, EditComponent {
         this.uploader.removeFromQueue(this.uploader.queue[0]);
       }
     };
+  }
+  
+  private posterUpdated(gameId: number, poster: Poster) {
+    if (this.player) {
+      this.reviews.forEach(r => {
+        if (r.gameId === gameId) r.gamePoster = poster;
+      });
+    }
   }
   
   private gameDeleted(gameId: number) {

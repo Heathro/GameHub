@@ -13,6 +13,7 @@ import { Player } from 'src/app/models/player';
 import { Review } from 'src/app/models/review';
 import { User } from 'src/app/models/user';
 import { Game } from 'src/app/models/game';
+import { Poster } from 'src/app/models/poster';
 
 @Component({
   selector: 'app-player-profile',
@@ -27,6 +28,7 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
   playerDeletedSubscription;
   gamePublishedSubscription;
   gameUpdatedSubscription;
+  posterUpdatedSubscription;
   gameDeletedSubscription;
   reviewAcceptedSubscription;
   reviewDeletedSubscription;
@@ -52,6 +54,9 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
     );
     this.gameUpdatedSubscription = this.playersService.gameUpdated$.subscribe(
       game => this.gameUpdated(game)
+    );
+    this.posterUpdatedSubscription = this.playersService.posterUpdated$.subscribe(
+      ({gameId, poster}) => this.posterUpdated(gameId, poster)
     );
     this.gameDeletedSubscription = this.playersService.gameDeleted$.subscribe(
       gameId => this.gameDeleted(gameId)
@@ -88,6 +93,7 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
     this.playerDeletedSubscription.unsubscribe();
     this.gamePublishedSubscription.unsubscribe();
     this.gameUpdatedSubscription.unsubscribe();
+    this.posterUpdatedSubscription.unsubscribe();
     this.gameDeletedSubscription.unsubscribe();
     this.reviewAcceptedSubscription.unsubscribe();
     this.reviewDeletedSubscription.unsubscribe();
@@ -111,6 +117,7 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
       next: reviews => {
         this.reviews = reviews;
         this.loadingReviews = false;
+        console.log(reviews)
       }
     });
   }
@@ -173,6 +180,17 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
     if (this.player) {
       this.player.publications.forEach(g => {
         if (g.id === game.id) this.playersService.updateGameData(g, game);
+      });
+    }
+  }
+  
+  private posterUpdated(gameId: number, poster: Poster) {
+    if (this.player) {
+      this.player.publications.forEach(g => {
+        if (g.id === gameId) g.poster = poster;
+      });
+      this.reviews.forEach(r => {
+        if (r.gameId === gameId) r.gamePoster = poster;
       });
     }
   }

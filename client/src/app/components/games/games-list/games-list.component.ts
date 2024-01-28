@@ -6,6 +6,7 @@ import { Pagination } from 'src/app/helpers/pagination';
 import { OrderType } from 'src/app/enums/orderType';
 import { GamesService } from 'src/app/services/games.service';
 import { Game } from 'src/app/models/game';
+import { Poster } from 'src/app/models/poster';
 
 @Component({
   selector: 'app-store',
@@ -21,6 +22,7 @@ export class GamesListComponent implements OnInit, OnDestroy {
   loading = false;
   playerDeletedSubscription;
   gameUpdatedSubscription;
+  posterUpdatedSubscription;
   gameDeletedSubscription;
   gamesRefreshSubscription;
 
@@ -30,6 +32,9 @@ export class GamesListComponent implements OnInit, OnDestroy {
     );
     this.gameUpdatedSubscription = this.gamesService.gameUpdated$.subscribe(
       game => this.gameUpdated(game)
+    );
+    this.posterUpdatedSubscription = this.gamesService.posterUpdated$.subscribe(
+      ({gameId, poster}) => this.posterUpdated(gameId, poster)
     );
     this.gameDeletedSubscription = this.gamesService.gameDeleted$.subscribe(
       gameId => this.gameDeleted(gameId)
@@ -48,6 +53,7 @@ export class GamesListComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.playerDeletedSubscription.unsubscribe();
     this.gameUpdatedSubscription.unsubscribe();
+    this.posterUpdatedSubscription.unsubscribe();
     this.gameDeletedSubscription.unsubscribe();
     this.gamesRefreshSubscription.unsubscribe();
   }
@@ -232,6 +238,12 @@ export class GamesListComponent implements OnInit, OnDestroy {
   private gameUpdated(game: Game) {
     this.games.forEach(g => {
       if (g.id === game.id) this.gamesService.updateGameData(g, game);
+    });
+  }
+  
+  private posterUpdated(gameId: number, poster: Poster) {
+    this.games.forEach(g => {
+      if (g.id === gameId) g.poster = poster;
     });
   }
 

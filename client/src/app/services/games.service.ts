@@ -10,6 +10,7 @@ import { Filter } from '../models/filter';
 import { User } from '../models/user';
 import { OrderType } from '../enums/orderType';
 import { Review } from '../models/review';
+import { Poster } from '../models/poster';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,8 @@ export class GamesService {
 
   private gameUpdatedSource = new Subject<Game>();
   gameUpdated$ = this.gameUpdatedSource.asObservable();
+  private posterUpdatedSource = new Subject<any>();
+  posterUpdated$ = this.posterUpdatedSource.asObservable();
   private gameDeletedSource = new Subject<number>();
   gameDeleted$ = this.gameDeletedSource.asObservable();
 
@@ -224,9 +227,18 @@ export class GamesService {
     this.gamesCache.forEach(q => {
       q.result.forEach((g: Game) => {
         if (g.id === game.id) this.updateGameData(g, game);
-      })
+      });
     });
     this.gameUpdatedSource.next(game);
+  }
+
+  posterUpdated(gameId: number, poster: Poster) {
+    this.gamesCache.forEach(q => {
+      q.result.forEach((g: Game) => {
+        if (g.id === gameId) g.poster = poster;
+      });
+    });
+    this.posterUpdatedSource.next({gameId, poster});
   }
 
   gameDeleted(gameId: number) {

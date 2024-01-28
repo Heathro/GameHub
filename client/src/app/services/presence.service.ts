@@ -147,8 +147,11 @@ export class PresenceService {
     });
 
     this.hubConnection.on('PosterUpdated', ({gameId, poster}) => {
-      this.toastr.success(gameId + ' poster ' + poster.url);
-    }); // TODO
+      this.adminService.posterUpdated(gameId, poster);
+      this.playersService.posterUpdated(gameId, poster);
+      this.gamesService.posterUpdated(gameId, poster);
+      this.reviewsService.posterUpdated(gameId, poster);
+    });
 
     this.hubConnection.on('ScreenshotAdded', ({gameId, screenshot}) => {
       this.toastr.success(gameId + ' screenshot added ' + screenshot.id);

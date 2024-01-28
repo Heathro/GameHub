@@ -8,6 +8,7 @@ import { PaginatedResult, PaginationFunctions, PaginationParams } from '../helpe
 import { OrderType } from '../enums/orderType';
 import { Review, ReviewMenu } from '../models/review';
 import { Game } from '../models/game';
+import { Poster } from '../models/poster';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,8 @@ export class ReviewsService {
 
   private gameUpdatedSource = new Subject<Game>();
   gameUpdated$ = this.gameUpdatedSource.asObservable();
+  private posterUpdatedSource = new Subject<any>();
+  posterUpdated$ = this.posterUpdatedSource.asObservable();
   private gameDeletedSource = new Subject<number>();
   gameDeleted$ = this.gameDeletedSource.asObservable();
 
@@ -67,19 +70,19 @@ export class ReviewsService {
   }
 
   getReviewsForGame(title: string) {
-    const firstElement: PaginatedResult<Review[]> = this.reviewsCache.values().next().value;
-    if (firstElement && firstElement.result) {
-      return of(firstElement.result.filter(r => r.gameTitle !== title));
-    }
+    // const firstElement: PaginatedResult<Review[]> = this.reviewsCache.values().next().value;
+    // if (firstElement && firstElement.result) {
+    //   return of(firstElement.result.filter(r => r.gameTitle !== title));
+    // }
 
     return this.http.get<Review[]>(this.baseUrl + 'reviews/game/' + title);
   }
 
   getReviewsForPlayer(username: string) {
-    const firstElement: PaginatedResult<Review[]> = this.reviewsCache.values().next().value;
-    if (firstElement && firstElement.result) {
-      return of(firstElement.result.filter(r => r.reviewerUsername !== username));
-    }
+    // const firstElement: PaginatedResult<Review[]> = this.reviewsCache.values().next().value;
+    // if (firstElement && firstElement.result) {
+    //   return of(firstElement.result.filter(r => r.reviewerUsername !== username));
+    // }
 
     return this.http.get<Review[]>(this.baseUrl + 'reviews/player/' + username);
   }
@@ -134,6 +137,15 @@ export class ReviewsService {
       });
     });
     this.gameUpdatedSource.next(game);
+  }
+
+  posterUpdated(gameId: number, poster: Poster) {
+    this.reviewsCache.forEach(q => {
+      q.result.forEach((r: Review) => {
+        if (r.gameId === gameId) r.gamePoster = poster;
+      });
+    });
+    this.posterUpdatedSource.next({gameId, poster});
   }
 
   gameDeleted(gameId: number) {
