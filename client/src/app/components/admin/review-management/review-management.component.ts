@@ -65,13 +65,13 @@ export class ReviewManagementComponent implements OnInit, OnDestroy {
 
   approveReview(reviewId: number) {
     this.adminService.approveReview(reviewId).subscribe({
-      next: () => this.reviews = this.reviews.filter(r => r.id != reviewId)
+      next: () => this.reviews = this.reviews.filter(r => r.id !== reviewId)
     });
   }
 
   rejectReview(reviewId: number) {
     this.adminService.rejectReview(reviewId).subscribe({
-      next: () => this.reviews = this.reviews.filter(r => r.id != reviewId)
+      next: () => this.reviews = this.reviews.filter(r => r.id !== reviewId)
     });
   }
 

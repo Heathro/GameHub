@@ -44,7 +44,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
 
   deleteUser(userName: string) {
     this.adminService.deleteUser(userName).subscribe({
-      next: () => this.users = this.users.filter(u => u.userName != userName)
+      next: () => this.users = this.users.filter(u => u.userName !== userName)
     });
   }
 

@@ -35,7 +35,8 @@ export class GamePageComponent implements OnInit, OnDestroy {
   gameUpdatedSubscription;
   gameDeletedSubscription;
   posterUpdatedSubscription;
-  screenshotAddedSubscription;
+  screenshotAddedSubscription;  
+  screenshotDeletedSubscription;
   reviewAcceptedSubscription;
   reviewDeletedSubscription;
 
@@ -62,6 +63,9 @@ export class GamePageComponent implements OnInit, OnDestroy {
     this.screenshotAddedSubscription = this.gamesService.screenshotAdded$.subscribe(
       ({gameId, screenshot}) => this.screenshotAdded(gameId, screenshot)
     );
+    this.screenshotDeletedSubscription = this.gamesService.screenshotDeleted$.subscribe(
+      ({gameId, screenshotId}) => this.screenshotDeleted(gameId, screenshotId)
+    );
     this.reviewAcceptedSubscription = this.gamesService.reviewAccepted$.subscribe(
       review => this.reviewAccepted(review)
     );
@@ -84,6 +88,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
     this.gameDeletedSubscription.unsubscribe();
     this.posterUpdatedSubscription.unsubscribe();
     this.screenshotAddedSubscription.unsubscribe();
+    this.screenshotDeletedSubscription.unsubscribe();
     this.reviewAcceptedSubscription.unsubscribe();
     this.reviewDeletedSubscription.unsubscribe();
   }
@@ -185,7 +190,17 @@ export class GamePageComponent implements OnInit, OnDestroy {
 
   private screenshotAdded(gameId: number, screenshot: Screenshot) {
     if (this.game && this.game.id === gameId) {
-      this.game.screenshots.push(screenshot);
+      if (!this.game.screenshots.some(s => s.id === screenshot.id)) {
+        this.game.screenshots.push(screenshot);
+      }
+      this.screenshots = [];
+      this.getScreenshots();
+    }
+  }
+
+  private screenshotDeleted(gameId: number, screenshotId: number) {
+    if (this.game && this.game.id === gameId) {
+      this.game.screenshots = this.game.screenshots.filter(s => s.id !== screenshotId);
       this.screenshots = [];
       this.getScreenshots();
     }

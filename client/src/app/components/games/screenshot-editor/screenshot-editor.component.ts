@@ -58,7 +58,7 @@ export class ScreenshotEditorComponent implements OnInit {
     this.gamesService.deleteScreenshot(this.game, screenshotId).subscribe({
       next: () => {
         if (this.game) {
-          this.game.screenshots = this.game?.screenshots.filter(s => s.id !== screenshotId);
+          this.game.screenshots = this.game.screenshots.filter(s => s.id !== screenshotId);
         }
       }
     });

@@ -32,9 +32,11 @@ export class GamesService {
   gameDeleted$ = this.gameDeletedSource.asObservable();
 
   private posterUpdatedSource = new Subject<any>();
-  posterUpdated$ = this.posterUpdatedSource.asObservable();  
+  posterUpdated$ = this.posterUpdatedSource.asObservable();
   private screenshotAddedSource = new Subject<any>();
   screenshotAdded$ = this.screenshotAddedSource.asObservable();
+  private screenshotDeletedSource = new Subject<any>();
+  screenshotDeleted$ = this.screenshotDeletedSource.asObservable();
 
   private reviewAcceptedSource = new Subject<Review>();
   reviewAccepted$ = this.reviewAcceptedSource.asObservable();
@@ -174,7 +176,7 @@ export class GamesService {
         this.gamesCache.forEach(q => {
           q.result.forEach((g: Game) => {
             if (g.id === game.id) {
-              g.screenshots = g.screenshots.filter(s => s.id === screenshotId);
+              g.screenshots = g.screenshots.filter(s => s.id !== screenshotId);
             }
           });
         });
@@ -259,6 +261,17 @@ export class GamesService {
       });
     });
     this.screenshotAddedSource.next({gameId, screenshot});
+  }
+  
+  screenshotDeleted(gameId: number, screenshotId: number) {
+    this.gamesCache.forEach(q => {
+      q.result.forEach((g: Game) => {
+        if (g.id === gameId) {
+          g.screenshots = g.screenshots.filter(s => s.id !== screenshotId);
+        }
+      });
+    });
+    this.screenshotDeletedSource.next({gameId, screenshotId});
   }
 
   reviewApproved(review: Review) {

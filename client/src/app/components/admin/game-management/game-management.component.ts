@@ -60,7 +60,7 @@ export class GameManagementComponent implements OnInit, OnDestroy {
 
   deleteGame(title: string) {
     this.adminService.deleteGame(title).subscribe({
-      next: () => this.games = this.games.filter(g => g.title != title)
+      next: () => this.games = this.games.filter(g => g.title !== title)
     });
   }
 
