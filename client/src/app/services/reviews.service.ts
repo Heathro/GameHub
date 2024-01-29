@@ -70,38 +70,10 @@ export class ReviewsService {
   }
 
   getReviewsForGame(title: string) {
-    if (this.reviewsCache.size > 0) {
-      const reviews: Review[] = [];
-
-      this.reviewsCache.forEach(q => {
-        q.result.forEach((r: Review) => {
-          if (r.gameTitle === title && !reviews.some(e => e.id === r.id)) {
-            reviews.push(r);
-          }
-        });
-      });
-
-      return of(reviews);
-    }
-
     return this.http.get<Review[]>(this.baseUrl + 'reviews/game/' + title);
   }
 
   getReviewsForPlayer(username: string) {
-    if (this.reviewsCache.size > 0) {
-      const reviews: Review[] = [];
-
-      this.reviewsCache.forEach(q => {
-        q.result.forEach((r: Review) => {
-          if (r.reviewerUsername === username && !reviews.some(e => e.id === r.id)) {
-            reviews.push(r);
-          }
-        });
-      });
-
-      return of(reviews);
-    }
-
     return this.http.get<Review[]>(this.baseUrl + 'reviews/player/' + username);
   }
 
