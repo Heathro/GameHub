@@ -119,7 +119,10 @@ public class ReviewsController : BaseApiController
         {
             Id = review == null ? 0 : review.Id,
             Posted = review != null,
-            Game = game,
+            GameId = game.Id,
+            GameTitle = game.Title,
+            GamePlatforms = game.Platforms,
+            GamePoster = game.Poster,
             Content = review == null ? "" : review.Content
         });
     }

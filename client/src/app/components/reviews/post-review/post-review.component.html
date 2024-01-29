@@ -6,17 +6,17 @@
     <div class="row mb-4">
         <div class="col-5">
             <img 
-                src="{{reviewMenu.game.poster.url || './assets/poster.png'}}"
-                alt="{{reviewMenu.game.title}}"
+                src="{{reviewMenu.gamePoster.url || './assets/poster.png'}}"
+                alt="{{reviewMenu.gameTitle}}"
                 class="card-img-top img-thumbnail"
             >
         </div>
         <div class="col-7">
-            <h3 class="m-3 m text-end">{{reviewMenu.game.title}}</h3>
+            <h3 class="m-3 m text-end">{{reviewMenu.gameTitle}}</h3>
             <h5 class="my-3 text-end">
-                <i class="bi bi-windows me-3" *ngIf="reviewMenu.game.platforms.windows"></i>
-                <i class="bi bi-apple me-3" *ngIf="reviewMenu.game.platforms.macos"></i>
-                <i class="bi bi-ubuntu me-3" *ngIf="reviewMenu.game.platforms.linux"></i>
+                <i class="bi bi-windows me-3" *ngIf="reviewMenu.gamePlatforms.windows"></i>
+                <i class="bi bi-apple me-3" *ngIf="reviewMenu.gamePlatforms.macos"></i>
+                <i class="bi bi-ubuntu me-3" *ngIf="reviewMenu.gamePlatforms.linux"></i>
             </h5>
         </div>
     </div>

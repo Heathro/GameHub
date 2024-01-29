@@ -88,12 +88,12 @@ export class PostReviewComponent implements OnInit, OnDestroy, EditComponent {
   postReview() {
     if (!this.reviewMenu) return;
     this.posting = true;
-    this.reviewsService.postReview(this.reviewMenu.game.title, this.reviewForm.value.content).subscribe({
+    this.reviewsService.postReview(this.reviewMenu.gameTitle, this.reviewForm.value.content).subscribe({
       next: () => {
         if (!this.reviewMenu) return;
         this.finished = true;
         this.posting = false;
-        this.router.navigateByUrl('/games/' + this.reviewMenu?.game.title);
+        this.router.navigateByUrl('/games/' + this.reviewMenu?.gameTitle);
         this.toastr.success('Review awaiting moderation');
       },
       error: error => {
@@ -120,7 +120,7 @@ export class PostReviewComponent implements OnInit, OnDestroy, EditComponent {
               this.finished = true;
               this.reviewMenu.posted = false;
               this.reviewMenu.content = "";
-              this.router.navigateByUrl('/games/' + this.reviewMenu.game.title);
+              this.router.navigateByUrl('/games/' + this.reviewMenu.gameTitle);
               this.toastr.success('Delete successful');
               this.posting = false;
             }
@@ -142,21 +142,21 @@ export class PostReviewComponent implements OnInit, OnDestroy, EditComponent {
   }
 
   private gameUpdated(game: Game) {
-    if (this.reviewMenu && this.reviewMenu.game.id === game.id) {
+    if (this.reviewMenu && this.reviewMenu.gameId === game.id) {
       this.reviewsService.updateReviewMenuData(this.reviewMenu, game);
     }
   }
 
   private gameDeleted(gameId: number) {
-    if (this.reviewMenu && this.reviewMenu.game.id === gameId) {
+    if (this.reviewMenu && this.reviewMenu.gameId === gameId) {
       this.toastr.warning("Game was deleted");
       this.router.navigateByUrl('/games');
     }
   } 
   
   private posterUpdated(gameId: number, poster: Poster) {
-    if (this.reviewMenu && this.reviewMenu.game.id === gameId) {
-      this.reviewMenu.game.poster = poster;
+    if (this.reviewMenu && this.reviewMenu.gameId === gameId) {
+      this.reviewMenu.gamePoster = poster;
     }
   }
   

@@ -164,7 +164,7 @@ export class ReviewsService {
   }
 
   updateReviewMenuData(reviewMenu: ReviewMenu, game: Game) {
-    reviewMenu.game.title = game.title;
+    reviewMenu.gameTitle = game.title;
   }
 
   private initializePaginationParams() {

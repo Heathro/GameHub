@@ -1,5 +1,5 @@
 import { Avatar } from "./avatar"
-import { Game } from "./game";
+import { Platforms } from "./platforms";
 import { Poster } from "./poster";
 
 export interface Review {
@@ -17,7 +17,10 @@ export interface Review {
 export interface ReviewMenu {
   id: number;
   posted: boolean;
-  game: Game;
+  gameId: number;
+  gameTitle: string;
+  gamePlatforms: Platforms;
+  gamePoster: Poster;
   content: string;
 }
 
