@@ -154,8 +154,8 @@ export class PresenceService {
     });
 
     this.hubConnection.on('ScreenshotAdded', ({gameId, screenshot}) => {
-      this.toastr.success(gameId + ' screenshot added ' + screenshot.id);
-    }); // TODO
+      this.gamesService.screenshotAdded(gameId, screenshot);
+    });
 
     this.hubConnection.on('ScreenshotDeleted', ({gameId, screenshotId}) => {
       this.toastr.error(gameId + ' screenshot deleted ' + screenshotId);

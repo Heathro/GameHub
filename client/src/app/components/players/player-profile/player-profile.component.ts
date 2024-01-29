@@ -28,8 +28,8 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
   playerDeletedSubscription;
   gamePublishedSubscription;
   gameUpdatedSubscription;
-  posterUpdatedSubscription;
   gameDeletedSubscription;
+  posterUpdatedSubscription;
   reviewAcceptedSubscription;
   reviewDeletedSubscription;
   friendshipRequestedSubscription;
@@ -55,11 +55,11 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
     this.gameUpdatedSubscription = this.playersService.gameUpdated$.subscribe(
       game => this.gameUpdated(game)
     );
-    this.posterUpdatedSubscription = this.playersService.posterUpdated$.subscribe(
-      ({gameId, poster}) => this.posterUpdated(gameId, poster)
-    );
     this.gameDeletedSubscription = this.playersService.gameDeleted$.subscribe(
       gameId => this.gameDeleted(gameId)
+    );
+    this.posterUpdatedSubscription = this.playersService.posterUpdated$.subscribe(
+      ({gameId, poster}) => this.posterUpdated(gameId, poster)
     );
     this.reviewAcceptedSubscription = this.playersService.reviewAccepted$.subscribe(
       review => this.reviewAccepted(review)
@@ -93,8 +93,8 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
     this.playerDeletedSubscription.unsubscribe();
     this.gamePublishedSubscription.unsubscribe();
     this.gameUpdatedSubscription.unsubscribe();
-    this.posterUpdatedSubscription.unsubscribe();
     this.gameDeletedSubscription.unsubscribe();
+    this.posterUpdatedSubscription.unsubscribe();
     this.reviewAcceptedSubscription.unsubscribe();
     this.reviewDeletedSubscription.unsubscribe();
     this.friendshipRequestedSubscription.unsubscribe();
@@ -183,6 +183,11 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
     }
   }
   
+  private gameDeleted(gameId: number) {
+    if (this.player) this.player.publications = this.player.publications.filter(g => g.id !== gameId);
+    this.reviews = this.reviews.filter(r => r.gameId !== gameId);
+  }
+  
   private posterUpdated(gameId: number, poster: Poster) {
     if (this.player) {
       this.player.publications.forEach(g => {
@@ -192,11 +197,6 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
         if (r.gameId === gameId) r.gamePoster = poster;
       });
     }
-  }
-  
-  private gameDeleted(gameId: number) {
-    if (this.player) this.player.publications = this.player.publications.filter(g => g.id !== gameId);
-    this.reviews = this.reviews.filter(r => r.gameId !== gameId);
   }
 
   private reviewAccepted(review: Review) {

@@ -28,8 +28,8 @@ export class PostReviewComponent implements OnInit, OnDestroy, EditComponent {
   posting = false;
   finished = false;
   gameUpdatedSubscription;
-  posterUpdatedSubscription;
   gameDeletedSubscription;
+  posterUpdatedSubscription;
   reviewDeletedSubscription;
 
   constructor(
@@ -43,11 +43,11 @@ export class PostReviewComponent implements OnInit, OnDestroy, EditComponent {
     this.gameUpdatedSubscription = this.reviewsService.gameUpdated$.subscribe(
       game => this.gameUpdated(game)
     );
-    this.posterUpdatedSubscription = this.reviewsService.posterUpdated$.subscribe(
-      ({gameId, poster}) => this.posterUpdated(gameId, poster)
-    );
     this.gameDeletedSubscription = this.reviewsService.gameDeleted$.subscribe(
       gameId => this.gameDeleted(gameId)
+    );
+    this.posterUpdatedSubscription = this.reviewsService.posterUpdated$.subscribe(
+      ({gameId, poster}) => this.posterUpdated(gameId, poster)
     );
     this.reviewDeletedSubscription = this.reviewsService.reviewDeleted$.subscribe(
       reviewId => this.reviewDeleted(reviewId)
@@ -81,7 +81,6 @@ export class PostReviewComponent implements OnInit, OnDestroy, EditComponent {
         this.reviewMenu = reviewMenu;
         this.initialContent = this.reviewMenu.content;
         this.initializeFrom();
-        console.log(reviewMenu)
       }
     });
   }
@@ -147,12 +146,6 @@ export class PostReviewComponent implements OnInit, OnDestroy, EditComponent {
       this.reviewsService.updateReviewMenuData(this.reviewMenu, game);
     }
   }
-  
-  private posterUpdated(gameId: number, poster: Poster) {
-    if (this.reviewMenu && this.reviewMenu.game.id === gameId) {
-      this.reviewMenu.game.poster = poster;
-    }
-  }
 
   private gameDeleted(gameId: number) {
     if (this.reviewMenu && this.reviewMenu.game.id === gameId) {
@@ -160,6 +153,12 @@ export class PostReviewComponent implements OnInit, OnDestroy, EditComponent {
       this.router.navigateByUrl('/games');
     }
   } 
+  
+  private posterUpdated(gameId: number, poster: Poster) {
+    if (this.reviewMenu && this.reviewMenu.game.id === gameId) {
+      this.reviewMenu.game.poster = poster;
+    }
+  }
   
   private reviewDeleted(reviewId: number) {
     if (this.reviewMenu && this.reviewMenu.id === reviewId) {

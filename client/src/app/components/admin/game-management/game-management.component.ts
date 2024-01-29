@@ -15,19 +15,19 @@ export class GameManagementComponent implements OnInit, OnDestroy {
   pagination: Pagination | undefined;
   loading = false;
   gameUpdateSubscription;
-  posterUpdatedSubscription;
   gameDeletedSubscription;
+  posterUpdatedSubscription;
   gamesRefreshSubscription
   
   constructor(private adminService: AdminService) {
     this.gameUpdateSubscription = this.adminService.gameUpdated$.subscribe(
       game => this.gameUpdated(game)
     );
-    this.posterUpdatedSubscription = this.adminService.posterUpdated$.subscribe(
-      ({gameId, poster}) => this.posterUpdated(gameId, poster)
-    );
     this.gameDeletedSubscription = this.adminService.gameDeleted$.subscribe(
       gameId => this.gameDeleted(gameId)
+    );
+    this.posterUpdatedSubscription = this.adminService.posterUpdated$.subscribe(
+      ({gameId, poster}) => this.posterUpdated(gameId, poster)
     );
     this.gamesRefreshSubscription = this.adminService.refreshGames$.subscribe(
       () => this.loadGames()
@@ -40,8 +40,8 @@ export class GameManagementComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.gameUpdateSubscription.unsubscribe();
-    this.posterUpdatedSubscription.unsubscribe();
     this.gameDeletedSubscription.unsubscribe();
+    this.posterUpdatedSubscription.unsubscribe();
     this.gamesRefreshSubscription.unsubscribe();
   }
 
@@ -76,14 +76,14 @@ export class GameManagementComponent implements OnInit, OnDestroy {
       if (g.id === game.id) this.adminService.updateGameData(g, game);
     });
   }
+
+  private gameDeleted(gameId: number) {
+    this.games = this.games.filter(g => g.id !== gameId);
+  }
   
   private posterUpdated(gameId: number, poster: Poster) {
     this.games.forEach(g => {
       if (g.id === gameId) g.poster = poster;
     });
-  }
-
-  private gameDeleted(gameId: number) {
-    this.games = this.games.filter(g => g.id !== gameId);
   }
 }

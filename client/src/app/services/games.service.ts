@@ -11,6 +11,7 @@ import { User } from '../models/user';
 import { OrderType } from '../enums/orderType';
 import { Review } from '../models/review';
 import { Poster } from '../models/poster';
+import { Screenshot } from '../models/screenshot';
 
 @Injectable({
   providedIn: 'root'
@@ -27,10 +28,13 @@ export class GamesService {
 
   private gameUpdatedSource = new Subject<Game>();
   gameUpdated$ = this.gameUpdatedSource.asObservable();
-  private posterUpdatedSource = new Subject<any>();
-  posterUpdated$ = this.posterUpdatedSource.asObservable();
   private gameDeletedSource = new Subject<number>();
   gameDeleted$ = this.gameDeletedSource.asObservable();
+
+  private posterUpdatedSource = new Subject<any>();
+  posterUpdated$ = this.posterUpdatedSource.asObservable();  
+  private screenshotAddedSource = new Subject<any>();
+  screenshotAdded$ = this.screenshotAddedSource.asObservable();
 
   private reviewAcceptedSource = new Subject<Review>();
   reviewAccepted$ = this.reviewAcceptedSource.asObservable();
@@ -232,6 +236,13 @@ export class GamesService {
     this.gameUpdatedSource.next(game);
   }
 
+  gameDeleted(gameId: number) {
+    this.gamesCache.forEach(q => {
+      q.result = q.result.filter((g: Game) => g.id !== gameId);
+    });
+    this.gameDeletedSource.next(gameId);
+  }
+
   posterUpdated(gameId: number, poster: Poster) {
     this.gamesCache.forEach(q => {
       q.result.forEach((g: Game) => {
@@ -241,11 +252,13 @@ export class GamesService {
     this.posterUpdatedSource.next({gameId, poster});
   }
 
-  gameDeleted(gameId: number) {
+  screenshotAdded(gameId: number, screenshot: Screenshot) {
     this.gamesCache.forEach(q => {
-      q.result = q.result.filter((g: Game) => g.id !== gameId);
+      q.result.forEach((g: Game) => {
+        if (g.id === gameId) g.screenshots.push(screenshot);
+      });
     });
-    this.gameDeletedSource.next(gameId);
+    this.screenshotAddedSource.next({gameId, screenshot});
   }
 
   reviewApproved(review: Review) {

@@ -4,7 +4,6 @@ import { PlayersService } from 'src/app/services/players.service';
 import { Pagination } from 'src/app/helpers/pagination';
 import { Player } from 'src/app/models/player';
 import { OrderType } from 'src/app/enums/orderType';
-import { Game } from 'src/app/models/game';
 
 @Component({
   selector: 'app-players-list',

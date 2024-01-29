@@ -32,10 +32,11 @@ export class PlayersService {
   gamePublished$ = this.gamePublishedSource.asObservable();
   private gameUpdatedSource = new Subject<Game>();
   gameUpdated$ = this.gameUpdatedSource.asObservable();
-  private posterUpdatedSource = new Subject<any>();
-  posterUpdated$ = this.posterUpdatedSource.asObservable();
   private gameDeletedSource = new Subject<number>();
   gameDeleted$ = this.gameDeletedSource.asObservable();
+  
+  private posterUpdatedSource = new Subject<any>();
+  posterUpdated$ = this.posterUpdatedSource.asObservable();
 
   private reviewAcceptedSource = new Subject<Review>();
   reviewAccepted$ = this.reviewAcceptedSource.asObservable();

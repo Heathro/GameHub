@@ -18,8 +18,8 @@ export class ReviewsListComponent implements OnInit, OnDestroy {
   loading = false;
   playerDeletedSubscription;
   gameUpdatedSubscription;
-  posterUpdatedSubscription;
   gameDeletedSubscription;
+  posterUpdatedSubscription;
   reviewDeletedSubscription;
   reviewRefreshSubscription;
 
@@ -30,11 +30,11 @@ export class ReviewsListComponent implements OnInit, OnDestroy {
     this.gameUpdatedSubscription = this.reviewsService.gameUpdated$.subscribe(
       game => this.gameUpdated(game)
     );
-    this.posterUpdatedSubscription = this.reviewsService.posterUpdated$.subscribe(
-      ({gameId, poster}) => this.posterUpdated(gameId, poster)
-    );
     this.gameDeletedSubscription = this.reviewsService.gameDeleted$.subscribe(
       gameId => this.gameDeleted(gameId)
+    );
+    this.posterUpdatedSubscription = this.reviewsService.posterUpdated$.subscribe(
+      ({gameId, poster}) => this.posterUpdated(gameId, poster)
     );
     this.reviewDeletedSubscription = this.reviewsService.reviewDeleted$.subscribe(
       reviewId => this.reviewDeleted(reviewId)
@@ -51,8 +51,8 @@ export class ReviewsListComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.playerDeletedSubscription.unsubscribe();
     this.gameUpdatedSubscription.unsubscribe();
-    this.posterUpdatedSubscription.unsubscribe();
     this.gameDeletedSubscription.unsubscribe();
+    this.posterUpdatedSubscription.unsubscribe();
     this.reviewDeletedSubscription.unsubscribe();
     this.reviewRefreshSubscription.unsubscribe();
   }
@@ -126,14 +126,14 @@ export class ReviewsListComponent implements OnInit, OnDestroy {
     });
   }
 
+  private gameDeleted(gameId: number) {
+    this.reviews = this.reviews.filter(r => r.gameId !== gameId);
+  }
+
   private posterUpdated(gameId: number, poster: Poster) {
     this.reviews.forEach((r: Review) => {
       if (r.gameId === gameId) r.gamePoster = poster;
     });
-  }
-
-  private gameDeleted(gameId: number) {
-    this.reviews = this.reviews.filter(r => r.gameId !== gameId);
   }
 
   private reviewDeleted(reviewId: number) {

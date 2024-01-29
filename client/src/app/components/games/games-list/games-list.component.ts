@@ -22,8 +22,8 @@ export class GamesListComponent implements OnInit, OnDestroy {
   loading = false;
   playerDeletedSubscription;
   gameUpdatedSubscription;
-  posterUpdatedSubscription;
   gameDeletedSubscription;
+  posterUpdatedSubscription;
   gamesRefreshSubscription;
 
   constructor(private gamesService: GamesService, private formBuilder: FormBuilder) {
@@ -33,11 +33,11 @@ export class GamesListComponent implements OnInit, OnDestroy {
     this.gameUpdatedSubscription = this.gamesService.gameUpdated$.subscribe(
       game => this.gameUpdated(game)
     );
-    this.posterUpdatedSubscription = this.gamesService.posterUpdated$.subscribe(
-      ({gameId, poster}) => this.posterUpdated(gameId, poster)
-    );
     this.gameDeletedSubscription = this.gamesService.gameDeleted$.subscribe(
       gameId => this.gameDeleted(gameId)
+    );
+    this.posterUpdatedSubscription = this.gamesService.posterUpdated$.subscribe(
+      ({gameId, poster}) => this.posterUpdated(gameId, poster)
     );
     this.gamesRefreshSubscription = this.gamesService.refreshGames$.subscribe(
       () => this.loadGames()
@@ -53,8 +53,8 @@ export class GamesListComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.playerDeletedSubscription.unsubscribe();
     this.gameUpdatedSubscription.unsubscribe();
-    this.posterUpdatedSubscription.unsubscribe();
     this.gameDeletedSubscription.unsubscribe();
+    this.posterUpdatedSubscription.unsubscribe();
     this.gamesRefreshSubscription.unsubscribe();
   }
 
@@ -240,14 +240,14 @@ export class GamesListComponent implements OnInit, OnDestroy {
       if (g.id === game.id) this.gamesService.updateGameData(g, game);
     });
   }
+
+  private gameDeleted(gameId: number) {
+    this.games = this.games.filter(g => g.id !== gameId);
+  }
   
   private posterUpdated(gameId: number, poster: Poster) {
     this.games.forEach(g => {
       if (g.id === gameId) g.poster = poster;
     });
-  }
-
-  private gameDeleted(gameId: number) {
-    this.games = this.games.filter(g => g.id !== gameId);
   }
 }

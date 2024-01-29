@@ -14,6 +14,7 @@ import { GameReviewComponent } from '../../reviews/game-review/game-review.compo
 import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
 import { Poster } from 'src/app/models/poster';
+import { Screenshot } from 'src/app/models/screenshot';
 
 @Component({
   selector: 'app-game-page',
@@ -32,8 +33,9 @@ export class GamePageComponent implements OnInit, OnDestroy {
   loadingReviews = false;
   playerDeletedSubscription;
   gameUpdatedSubscription;
-  posterUpdatedSubscription;
   gameDeletedSubscription;
+  posterUpdatedSubscription;
+  screenshotAddedSubscription;
   reviewAcceptedSubscription;
   reviewDeletedSubscription;
 
@@ -51,11 +53,14 @@ export class GamePageComponent implements OnInit, OnDestroy {
     this.gameUpdatedSubscription = this.gamesService.gameUpdated$.subscribe(
       game => this.gameUpdated(game)
     );
+    this.gameDeletedSubscription = this.gamesService.gameDeleted$.subscribe(
+      gameId => this.gameDeleted(gameId)
+    );
     this.posterUpdatedSubscription = this.gamesService.posterUpdated$.subscribe(
       ({gameId, poster}) => this.posterUpdated(gameId, poster)
     );
-    this.gameDeletedSubscription = this.gamesService.gameDeleted$.subscribe(
-      gameId => this.gameDeleted(gameId)
+    this.screenshotAddedSubscription = this.gamesService.screenshotAdded$.subscribe(
+      ({gameId, screenshot}) => this.screenshotAdded(gameId, screenshot)
     );
     this.reviewAcceptedSubscription = this.gamesService.reviewAccepted$.subscribe(
       review => this.reviewAccepted(review)
@@ -76,8 +81,9 @@ export class GamePageComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.playerDeletedSubscription.unsubscribe();
     this.gameUpdatedSubscription.unsubscribe();
-    this.posterUpdatedSubscription.unsubscribe();
     this.gameDeletedSubscription.unsubscribe();
+    this.posterUpdatedSubscription.unsubscribe();
+    this.screenshotAddedSubscription.unsubscribe();
     this.reviewAcceptedSubscription.unsubscribe();
     this.reviewDeletedSubscription.unsubscribe();
   }
@@ -165,15 +171,23 @@ export class GamePageComponent implements OnInit, OnDestroy {
       this.gamesService.updateGameData(this.game, game);
     }
   }
-  
-  private posterUpdated(gameId: number, poster: Poster) {
-    if (this.game && this.game.id === gameId) this.game.poster = poster;
-  }
 
   private gameDeleted(gameId: number) {
     if (this.game && this.game.id === gameId) {
       this.toastr.warning(this.game.title + " was deleted");
       this.router.navigateByUrl('/games');
+    }
+  }
+  
+  private posterUpdated(gameId: number, poster: Poster) {
+    if (this.game && this.game.id === gameId) this.game.poster = poster;
+  }
+
+  private screenshotAdded(gameId: number, screenshot: Screenshot) {
+    if (this.game && this.game.id === gameId) {
+      this.game.screenshots.push(screenshot);
+      this.screenshots = [];
+      this.getScreenshots();
     }
   }
 
