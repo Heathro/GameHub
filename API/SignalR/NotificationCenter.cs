@@ -111,12 +111,22 @@ public class NotificationCenter : INotificationCenter
             .SendAsync("ScreenshotDeleted", new { gameId, screenshotId });
     }
 
-    public async void GameLiked(string currentUsername, int gameId)
+    public async void GameLiked(string currentUsername, int gameId, int userId)
     {
         var currentUserConnections = await PresenceTracker.GetConnectionsForUser(currentUsername);
         if (currentUserConnections == null) return;
         
-        await _presenceHub.Clients.AllExcept(currentUserConnections).SendAsync("GameLiked", gameId);
+        await _presenceHub.Clients.AllExcept(currentUserConnections)
+            .SendAsync("GameLiked", new { gameId, userId });
+    }
+    
+    public async void GameUnliked(string currentUsername, int gameId, int userId)
+    {
+        var currentUserConnections = await PresenceTracker.GetConnectionsForUser(currentUsername);
+        if (currentUserConnections == null) return;
+        
+        await _presenceHub.Clients.AllExcept(currentUserConnections)
+            .SendAsync("GameUnliked", new { gameId, userId });
     }
     
     public async void GameDeleted(string currentUsername, int gameId)

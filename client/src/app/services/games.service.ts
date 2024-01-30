@@ -30,6 +30,11 @@ export class GamesService {
   gameUpdated$ = this.gameUpdatedSource.asObservable();
   private gameDeletedSource = new Subject<number>();
   gameDeleted$ = this.gameDeletedSource.asObservable();
+  
+  private gameLikedSource = new Subject<any>();
+  gameLiked$ = this.gameLikedSource.asObservable();
+  private gameUnlikedSource = new Subject<any>();
+  gameUnliked$ = this.gameUnlikedSource.asObservable();
 
   private posterUpdatedSource = new Subject<any>();
   posterUpdated$ = this.posterUpdatedSource.asObservable();
@@ -243,6 +248,24 @@ export class GamesService {
       q.result = q.result.filter((g: Game) => g.id !== gameId);
     });
     this.gameDeletedSource.next(gameId);
+  }
+
+  gameLiked(gameId: number, playerId: number) {
+    this.gamesCache.forEach(q => {
+      q.result.forEach((g: Game) => {
+        if (g.id === gameId && !g.likes.includes(playerId)) g.likes.push(playerId);
+      });
+    });
+    this.gameLikedSource.next({gameId, playerId});
+  }
+  
+  gameUnliked(gameId: number, playerId: number) {
+    this.gamesCache.forEach(q => {
+      q.result.forEach((g: Game) => {
+        if (g.id === gameId) g.likes = g.likes.filter(l => l !== playerId);
+      });
+    });
+    this.gameUnlikedSource.next({gameId, playerId});
   }
 
   posterUpdated(gameId: number, poster: Poster) {

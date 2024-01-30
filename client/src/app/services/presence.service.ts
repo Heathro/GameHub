@@ -161,9 +161,13 @@ export class PresenceService {
       this.gamesService.screenshotDeleted(gameId, screenshotId);
     });
 
-    this.hubConnection.on('GameLiked', gameId => {
-      this.toastr.success(gameId + ' game liked');
-    }); // TODO
+    this.hubConnection.on('GameLiked', ({gameId, playerId}) => {
+      this.gamesService.gameLiked(gameId, playerId);
+    });
+
+    this.hubConnection.on('GameUnliked', ({gameId, playerId}) => {
+      this.gamesService.gameUnliked(gameId, playerId);
+    });
 
     this.hubConnection.on('GameDeleted', gameId => {
       this.adminService.gameDeleted(gameId);

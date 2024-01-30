@@ -23,6 +23,8 @@ export class GamesListComponent implements OnInit, OnDestroy {
   playerDeletedSubscription;
   gameUpdatedSubscription;
   gameDeletedSubscription;
+  gameLikedSubscription;
+  gameUnlikedSubscription;
   posterUpdatedSubscription;
   gamesRefreshSubscription;
 
@@ -35,6 +37,12 @@ export class GamesListComponent implements OnInit, OnDestroy {
     );
     this.gameDeletedSubscription = this.gamesService.gameDeleted$.subscribe(
       gameId => this.gameDeleted(gameId)
+    );
+    this.gameLikedSubscription = this.gamesService.gameLiked$.subscribe(
+      ({gameId, playerId}) => this.gameLiked(gameId, playerId)
+    );
+    this.gameUnlikedSubscription = this.gamesService.gameUnliked$.subscribe(
+      ({gameId, playerId}) => this.gameUnliked(gameId, playerId)
     );
     this.posterUpdatedSubscription = this.gamesService.posterUpdated$.subscribe(
       ({gameId, poster}) => this.posterUpdated(gameId, poster)
@@ -54,6 +62,8 @@ export class GamesListComponent implements OnInit, OnDestroy {
     this.playerDeletedSubscription.unsubscribe();
     this.gameUpdatedSubscription.unsubscribe();
     this.gameDeletedSubscription.unsubscribe();
+    this.gameLikedSubscription.unsubscribe();
+    this.gameUnlikedSubscription.unsubscribe();
     this.posterUpdatedSubscription.unsubscribe();
     this.gamesRefreshSubscription.unsubscribe();
   }
@@ -243,6 +253,18 @@ export class GamesListComponent implements OnInit, OnDestroy {
 
   private gameDeleted(gameId: number) {
     this.games = this.games.filter(g => g.id !== gameId);
+  }
+
+  private gameLiked(gameId: number, playerId: number) {
+    this.games.forEach((g: Game) => {
+      if (g.id === gameId && !g.likes.includes(playerId)) g.likes.push(playerId);
+    });
+  }
+  
+  private gameUnliked(gameId: number, playerId: number) {
+    this.games.forEach((g: Game) => {
+      if (g.id === gameId) g.likes = g.likes.filter(l => l !== playerId);
+    });
   }
   
   private posterUpdated(gameId: number, poster: Poster) {

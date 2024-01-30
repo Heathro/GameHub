@@ -34,6 +34,8 @@ export class GamePageComponent implements OnInit, OnDestroy {
   playerDeletedSubscription;
   gameUpdatedSubscription;
   gameDeletedSubscription;
+  gameLikedSubscription;
+  gameUnlikedSubscription;
   posterUpdatedSubscription;
   screenshotAddedSubscription;  
   screenshotDeletedSubscription;
@@ -56,6 +58,12 @@ export class GamePageComponent implements OnInit, OnDestroy {
     );
     this.gameDeletedSubscription = this.gamesService.gameDeleted$.subscribe(
       gameId => this.gameDeleted(gameId)
+    );
+    this.gameLikedSubscription = this.gamesService.gameLiked$.subscribe(
+      ({gameId, playerId}) => this.gameLiked(gameId, playerId)
+    );
+    this.gameUnlikedSubscription = this.gamesService.gameUnliked$.subscribe(
+      ({gameId, playerId}) => this.gameUnliked(gameId, playerId)
     );
     this.posterUpdatedSubscription = this.gamesService.posterUpdated$.subscribe(
       ({gameId, poster}) => this.posterUpdated(gameId, poster)
@@ -181,6 +189,18 @@ export class GamePageComponent implements OnInit, OnDestroy {
     if (this.game && this.game.id === gameId) {
       this.toastr.warning(this.game.title + " was deleted");
       this.router.navigateByUrl('/games');
+    }
+  }
+
+  private gameLiked(gameId: number, playerId: number) {
+    if (this.game && this.game.id === gameId && !this.game.likes.includes(playerId)) {
+      this.game.likes.push(playerId);
+    }
+  }
+  
+  private gameUnliked(gameId: number, playerId: number) {
+    if (this.game && this.game.id === gameId) {
+      this.game.likes = this.game.likes.filter(l => l !== playerId);
     }
   }
   

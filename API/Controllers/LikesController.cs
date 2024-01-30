@@ -27,6 +27,8 @@ public class LikesController : BaseApiController
         var targetGame = await _unitOfWork.GamesRepository.GetGameByIdAsync(gameId);        
         if (targetGame == null) return NotFound();
 
+        bool isLiked = false;
+
         var like = await _unitOfWork.LikesRepository.GetLikeAsync(sourceUserId, targetGame.Id);
         if (like != null)
         {
@@ -40,11 +42,19 @@ public class LikesController : BaseApiController
                 TargetGameId = targetGame.Id
             };
             sourceUser.LikedGames.Add(like);
+            isLiked = true;
         }
         
         if (await _unitOfWork.Complete())
         {
-            _notificationCenter.GameLiked(User.GetUsername(), gameId);
+            if (isLiked)
+            {
+                _notificationCenter.GameLiked(User.GetUsername(), gameId, sourceUserId);
+            }
+            else
+            {
+                _notificationCenter.GameUnliked(User.GetUsername(), gameId, sourceUserId);
+            }
 
             return Ok();
         }

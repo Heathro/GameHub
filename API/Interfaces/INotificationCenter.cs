@@ -16,7 +16,8 @@ public interface INotificationCenter
     void PosterUpdated(string currentUsername, int gameId, PosterDto poster);
     void ScreenshotAdded(string currentUsername, int gameId, ScreenshotDto screenshot);
     void ScreenshotDeleted(string currentUsername, int gameId, int screenshotId);
-    void GameLiked(string currentUsername, int gameId);
+    void GameLiked(string currentUsername, int gameId, int userId);
+    void GameUnliked(string currentUsername, int gameId, int userId);
     void GameDeleted(string currentUsername, int gameId);
     void ReviewApproved(string currentUsername, ReviewDto review);
     void ReviewPosted(string currentUsername);
