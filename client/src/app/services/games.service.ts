@@ -122,6 +122,8 @@ export class GamesService {
             }
           });
         });
+
+        return userId;
       })
     );
   }

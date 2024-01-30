@@ -143,7 +143,18 @@ export class GamePageComponent implements OnInit, OnDestroy {
   likeGame() {
     if (this.game) {
       this.gamesService.likeGame(this.game.id).subscribe({
-        next: () => this.isLiked = !this.isLiked
+        next: userId => {
+          this.isLiked = !this.isLiked;
+
+          if (this.game && userId) {
+            if (this.isLiked) {
+              if (!this.game.likes.includes(userId)) this.game.likes.push(userId);
+            }
+            else {
+              this.game.likes = this.game.likes.filter(l => l !== userId);
+            }
+          }          
+        }
       });
     }
   }
