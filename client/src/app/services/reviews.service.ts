@@ -18,7 +18,7 @@ export class ReviewsService {
   reviewsCache = new Map();
   paginationParams: PaginationParams;
 
-  private playerDeletedSource = new Subject<string>();
+  private playerDeletedSource = new Subject<any>();
   playerDeleted$ = this.playerDeletedSource.asObservable();
 
   private gameUpdatedSource = new Subject<Game>();
@@ -114,11 +114,11 @@ export class ReviewsService {
     this.paginationParams = this.initializePaginationParams();
   }
   
-  playerDeleted(username: string) {
+  playerDeleted(userName: string, userId: number) {
     this.reviewsCache.forEach(q => {
-      q.result = q.result.filter((r: Review) => r.reviewerUsername !== username);
+      q.result = q.result.filter((r: Review) => r.reviewerId !== userId);
     });
-    this.playerDeletedSource.next(username);
+    this.playerDeletedSource.next({userName, userId});
   }
 
   gameUpdated(game: Game) {

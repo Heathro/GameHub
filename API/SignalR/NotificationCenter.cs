@@ -35,13 +35,13 @@ public class NotificationCenter : INotificationCenter
             .SendAsync("AvatarUpdated", new { userId, avatar});
     }
 
-    public async void UserDeleted(string currentUsername, string deletedUsername)
+    public async void UserDeleted(string currentUsername, string deletedUsername, int deletedId)
     {
         var currentUserConnections = await PresenceTracker.GetConnectionsForUser(currentUsername);
         if (currentUserConnections == null) return;
         
         await _presenceHub.Clients.AllExcept(currentUserConnections)
-            .SendAsync("UserDeleted", deletedUsername);
+            .SendAsync("UserDeleted", new { deletedUsername, deletedId });
     }
 
     public async void FriendshipRequested(PlayerDto initiator, string targetUsername)

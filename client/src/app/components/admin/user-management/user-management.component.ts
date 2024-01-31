@@ -17,7 +17,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
 
   constructor(private adminService: AdminService) {
     this.playerDeletedSubscription = this.adminService.playerDeleted$.subscribe(
-      username => this.playerDeleted(username)
+      ({userName, userId}) => this.playerDeleted(userName, userId)
     );
   }
 
@@ -55,7 +55,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
     }
   }
 
-  private playerDeleted(username: string) {
-    this.users = this.users.filter(u => u.userName !== username);
+  private playerDeleted(userName: string, userId: number) {
+    this.users = this.users.filter(u => u.id !== userId);
   }
 }

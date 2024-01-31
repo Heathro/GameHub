@@ -20,7 +20,7 @@ export class AdminService {
   gamesPaginationParams: PaginationParams;
   reviewsPaginationParams: PaginationParams;
 
-  private playerDeletedSource = new Subject<string>();
+  private playerDeletedSource = new Subject<any>();
   playerDeleted$ = this.playerDeletedSource.asObservable();
 
   private gameUpdatedSource = new Subject<Game>();
@@ -154,8 +154,8 @@ export class AdminService {
     this.reviewsPaginationParams = this.initializeReviewsPaginationParams();
   }
   
-  playerDeleted(username: string) {
-    this.playerDeletedSource.next(username);
+  playerDeleted(userName: string, userId: number) {
+    this.playerDeletedSource.next({userName, userId});
   }
 
   gamePublished() {

@@ -23,7 +23,7 @@ export class MessagesService {
   lastCompanion = '';
   companions: Player[] = [];
   companionsLoaded = false;
-  private playerDeletedSource = new Subject<string>();
+  private playerDeletedSource = new Subject<any>();
   playerDeleted$ = this.playerDeletedSource.asObservable();
 
   constructor(private http: HttpClient) { }
@@ -152,12 +152,12 @@ export class MessagesService {
     this.companionsLoaded = false;
   }
   
-  playerDeleted(username: string) {
-    this.companions = this.companions.filter(c => c.userName !== username);
+  playerDeleted(userName: string, userId: number) {
+    this.companions = this.companions.filter(c => c.id !== userId);
     if (this.companions.length === 0) {
       this.messageThreadSource.next([]);
       this.lastCompanion = '';
     }
-    this.playerDeletedSource.next(username);
+    this.playerDeletedSource.next({userName, userId});
   }
 }

@@ -32,7 +32,7 @@ export class AccountService {
     private router: Router
   ) {
     this.presenceService.logoutRequired$.subscribe(
-      username => this.logoutRequired(username)
+      userId => this.logoutRequired(userId)
     );
   }
 
@@ -54,8 +54,8 @@ export class AccountService {
     );
   }
 
-  logoutRequired(username: string) {
-    if (this.currentUserSource.value && username === this.currentUserSource.value.userName) {
+  logoutRequired(userId: number) {
+    if (this.currentUserSource.value && userId === this.currentUserSource.value.id) {
       this.logout();
     }
   }

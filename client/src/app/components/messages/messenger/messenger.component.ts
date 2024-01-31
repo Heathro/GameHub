@@ -36,7 +36,7 @@ export class MessengerComponent implements OnInit, OnDestroy {
     private confirmService: ConfirmService
   ) {
     this.playerDeletedSubscription = this.messagesService.playerDeleted$.subscribe(
-      username => this.playerDeleted(username)
+      ({userName, userId}) => this.playerDeleted(userName, userId)
     );
     this.accountService.currentUser$.pipe(take(1)).subscribe({
       next: user => this.user = user
@@ -163,9 +163,9 @@ export class MessengerComponent implements OnInit, OnDestroy {
     if (messagesArray[index]) messagesArray[index].updatePreviousMessage(previousMessage);
   }
   
-  private playerDeleted(username: string) {
-    this.companions = this.companions.filter(c => c.userName !== username);
-    if (this.getCurrentConversant() === username && this.companions.length > 0) {
+  private playerDeleted(userName: string, userId: number) {
+    this.companions = this.companions.filter(c => c.id !== userId);
+    if (this.getCurrentConversant() === userName && this.companions.length > 0) {
       this.changeCompanion(this.companions[0].userName);
     }
   }

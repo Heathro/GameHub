@@ -25,7 +25,7 @@ export class PlayersService {
   friendsLoaded = false;
   paginationParams: PaginationParams;
 
-  private playerDeletedSource = new Subject<string>();
+  private playerDeletedSource = new Subject<any>();
   playerDeleted$ = this.playerDeletedSource.asObservable();
 
   private gamePublishedSource = new Subject<Game>();
@@ -194,14 +194,14 @@ export class PlayersService {
     this.paginationParams = this.initializePaginationParams();
   }
 
-  playerDeleted(username: string) {
-    this.activeFriends = this.activeFriends.filter(f => f.userName !== username);
-    this.incomeRequests = this.incomeRequests.filter(f => f.userName !== username);
-    this.outcomeRequests = this.outcomeRequests.filter(f => f.userName !== username);
+  playerDeleted(userName: string, userId: number) {
+    this.activeFriends = this.activeFriends.filter(f => f.id !== userId);
+    this.incomeRequests = this.incomeRequests.filter(f => f.id !== userId);
+    this.outcomeRequests = this.outcomeRequests.filter(f => f.id !== userId);
     this.playersCache.forEach(q => {
-      q.result = q.result.filter((p: Player) => p.userName !== username);
+      q.result = q.result.filter((p: Player) => p.id !== userId);
     });
-    this.playerDeletedSource.next(username);
+    this.playerDeletedSource.next({userName, userId});
   }
 
   gamePublished(game: Game) {

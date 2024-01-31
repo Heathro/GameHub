@@ -56,7 +56,7 @@ export class GameEditComponent implements OnInit, OnDestroy, EditComponent {
     private confirmService: ConfirmService
   ) {
     this.playerDeletedSubscription = this.gamesService.playerDeleted$.subscribe(
-      username => this.playerDeleted(username)
+      ({userName, userId}) => this.playerDeleted(userName, userId)
     );
     this.gameDeletedSubscription = this.gamesService.gameDeleted$.subscribe(
       gameId => this.gameDeleted(gameId)
@@ -236,9 +236,11 @@ export class GameEditComponent implements OnInit, OnDestroy, EditComponent {
     };
   }
 
-  private playerDeleted(username: string) {
-    // likes and bookmarks
-    this.reviews = this.reviews.filter(r => r.reviewerUsername !== username);
+  private playerDeleted(userName: string, userId: number) {
+    if (this.game) {
+      this.game.likes = this.game.likes.filter(l => l !== userId);
+    }
+    this.reviews = this.reviews.filter(r => r.reviewerId !== userId);
   }
 
   private gameDeleted(gameId: number) {

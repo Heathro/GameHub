@@ -47,7 +47,7 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
     private router: Router
   ) { 
     this.playerDeletedSubscription = this.playersService.playerDeleted$.subscribe(
-      username => this.playerDeleted(username)
+      ({userName, userId}) => this.playerDeleted(userName, userId)
     );
     this.gamePublishedSubscription = this.playersService.gamePublished$.subscribe(
       game => this.gamePublished(game)
@@ -164,9 +164,9 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
     });
   }
 
-  private playerDeleted(username: string) {
-    if (this.player && this.player.userName === username) {
-      this.toastr.warning(username + " was deleted");
+  private playerDeleted(userName: string, userId: number) {
+    if (this.player && this.player.id === userId) {
+      this.toastr.warning(userName + " was deleted");
       this.router.navigateByUrl('/players');
     }
   }

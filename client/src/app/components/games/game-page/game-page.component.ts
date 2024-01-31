@@ -51,7 +51,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
     private sanitizer: DomSanitizer
   ) {
     this.playerDeletedSubscription = this.gamesService.playerDeleted$.subscribe(
-      username => this.playerDeleted(username)
+      ({userName, userId}) => this.playerDeleted(userName, userId)
     );
     this.gameUpdatedSubscription = this.gamesService.gameUpdated$.subscribe(
       game => this.gameUpdated(game)
@@ -179,15 +179,11 @@ export class GamePageComponent implements OnInit, OnDestroy {
     if (this.game) this.isBookmarked = this.gamesService.isGameBookmarked(this.game);
   }
 
-  private playerDeleted(username: string) {
-    if (this.game && this.game.publisher === username) {
-      this.toastr.warning("Publisher was deleted");
-      this.router.navigateByUrl('/games');
+  private playerDeleted(userName: string, userId: number) {
+    if (this.game) {
+      this.game.likes = this.game.likes.filter(l => l !== userId);
     }
-    else {
-      // likes and bookmarks
-      this.reviews = this.reviews.filter(r => r.reviewerUsername !== username);
-    }
+    this.reviews = this.reviews.filter(r => r.reviewerId !== userId);
   }
 
   private gameUpdated(game: Game) {

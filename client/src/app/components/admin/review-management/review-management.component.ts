@@ -22,7 +22,7 @@ export class ReviewManagementComponent implements OnInit, OnDestroy {
 
   constructor(private adminService: AdminService) {
     this.playerDeletedSubscription = this.adminService.playerDeleted$.subscribe(
-      username => this.playerDeleted(username)
+      ({userName, userId}) => this.playerDeleted(userName, userId)
     );
     this.gameUpdatedSubscription = this.adminService.gameUpdated$.subscribe(
       game => this.gameUpdated(game)
@@ -82,8 +82,8 @@ export class ReviewManagementComponent implements OnInit, OnDestroy {
     }
   }
 
-  private playerDeleted(username: string) {
-    this.reviews = this.reviews.filter(r => r.reviewerUsername !== username);
+  private playerDeleted(userName: string, userId: number) {
+    this.reviews = this.reviews.filter(r => r.reviewerId !== userId);
   }
 
   private gameUpdated(game: Game) {

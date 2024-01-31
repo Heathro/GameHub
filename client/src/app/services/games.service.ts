@@ -23,7 +23,7 @@ export class GamesService {
   filter: Filter | undefined;
   user: User | undefined;
 
-  private playerDeletedSource = new Subject<string>();
+  private playerDeletedSource = new Subject<any>();
   playerDeleted$ = this.playerDeletedSource.asObservable();
 
   private gameUpdatedSource = new Subject<Game>();
@@ -222,13 +222,13 @@ export class GamesService {
     this.user = undefined;
   }  
   
-  playerDeleted(username: string) {
+  playerDeleted(userName: string, userId: number) {
     this.gamesCache.forEach(q => {
       q.result = q.result.forEach((g: Game) => {
-        // TODO: likes and bookmarks
+        g.likes = g.likes.filter(l => l !== userId);
       });
     });
-    this.playerDeletedSource.next(username);
+    this.playerDeletedSource.next({userName, userId});
   }
 
   gamePublished() {

@@ -9,9 +9,7 @@ import { environment } from 'src/environments/environment';
 import { MessagesService } from './messages.service';
 import { Player } from '../models/player';
 import { User } from '../models/user';
-import { Review, ReviewForModeration } from '../models/review';
-import { FriendStatus } from '../enums/friendStatus';
-import { FriendRequestType } from '../enums/friendRequestType';
+import { Review } from '../models/review';
 import { Game } from '../models/game';
 import { PlayersService } from './players.service';
 import { ReviewsService } from './reviews.service';
@@ -26,7 +24,7 @@ export class PresenceService {
   private hubConnection?: HubConnection;
   private onlineUsersSource = new BehaviorSubject<string[]>([]);
   onlineUsers$ = this.onlineUsersSource.asObservable();
-  private logoutRequiredSource = new Subject<string>();
+  private logoutRequiredSource = new Subject<number>();
   logoutRequired$ = this.logoutRequiredSource.asObservable();
 
   constructor(
@@ -101,17 +99,17 @@ export class PresenceService {
       this.toastr.success(userId + ' avatar ' + avatar.url);
     }); // TODO
 
-    this.hubConnection.on('UserDeleted', username => {
-      if (username === user.userName) {
+    this.hubConnection.on('UserDeleted', ({userName, userId}) => {
+      if (userId === user.id) {
         this.toastr.error('Your account was deleted');
-        this.logoutRequiredSource.next(username);
+        this.logoutRequiredSource.next(userId);
       }
       else {
-        this.adminService.playerDeleted(username);
-        this.playersService.playerDeleted(username);
-        this.messagesService.playerDeleted(username);
-        this.reviewsService.playerDeleted(username);
-        this.gamesService.playerDeleted(username);
+        this.adminService.playerDeleted(userName, userId);
+        this.playersService.playerDeleted(userName, userId);
+        this.messagesService.playerDeleted(userName, userId);
+        this.reviewsService.playerDeleted(userName, userId);
+        this.gamesService.playerDeleted(userName, userId);
       }
     });
 

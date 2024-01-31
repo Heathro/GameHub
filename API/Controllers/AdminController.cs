@@ -120,7 +120,7 @@ public class AdminController : BaseApiController
 
         await _userManager.DeleteAsync(user);
 
-        _notificationCenter.UserDeleted(User.GetUsername(), username);
+        _notificationCenter.UserDeleted(User.GetUsername(), user.UserName, user.Id);
 
         return Ok();       
     }

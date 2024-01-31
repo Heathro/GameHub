@@ -7,7 +7,7 @@ public interface INotificationCenter
     void UserRegisted(PlayerDto player);
     void UserUpdated(string currentUsername, PlayerDto player);
     void AvatarUpdated(string currentUsername, int userId, AvatarDto avatar);
-    void UserDeleted(string currentUsername, string deletedUsername);
+    void UserDeleted(string currentUsername, string deletedUsername, int deletedId);
     void FriendshipRequested(PlayerDto initiator, string targetUsername);
     void FriendshipCancelled(PlayerDto initiator, string targetUsername);
     void FriendshipAccepted(PlayerDto initiator, string targetUsername);

@@ -20,7 +20,7 @@ export class FriendsPanelComponent implements OnInit, OnDestroy {
 
   constructor(private playersService: PlayersService) {
     this.playerDeletedSubscription = this.playersService.playerDeleted$.subscribe(
-      username => this.playerDeleted(username)
+      ({userName, userId}) => this.playerDeleted(userName, userId)
     );
     this.friendshipRequestedSubscription = this.playersService.friendshipRequested$.subscribe(
       player => this.friendshipRequested(player)
@@ -68,10 +68,10 @@ export class FriendsPanelComponent implements OnInit, OnDestroy {
     this.outcomeRequests = this.outcomeRequests.filter(f => f.id !== id);
   }
 
-  private playerDeleted(username: string) {
-    this.activeFriends = this.activeFriends.filter(f => f.userName !== username);
-    this.incomeRequests = this.incomeRequests.filter(f => f.userName !== username);
-    this.outcomeRequests = this.outcomeRequests.filter(f => f.userName !== username);
+  private playerDeleted(userName: string, userId: number) {
+    this.activeFriends = this.activeFriends.filter(f => f.id !== userId);
+    this.incomeRequests = this.incomeRequests.filter(f => f.id !== userId);
+    this.outcomeRequests = this.outcomeRequests.filter(f => f.id !== userId);
   }
 
   private friendshipRequested(player: Player) {
@@ -79,12 +79,12 @@ export class FriendsPanelComponent implements OnInit, OnDestroy {
   }
 
   private friendshipCancelled(player: Player) {
-    this.activeFriends = this.activeFriends.filter(f => f.userName !== player.userName);
-    this.incomeRequests = this.incomeRequests.filter(f => f.userName !== player.userName);
+    this.activeFriends = this.activeFriends.filter(f => f.id !== player.id);
+    this.incomeRequests = this.incomeRequests.filter(f => f.id !== player.id);
   }
 
   private friendshipAccepted(player: Player) {
-    this.outcomeRequests = this.outcomeRequests.filter(f => f.userName !== player.userName);
+    this.outcomeRequests = this.outcomeRequests.filter(f => f.id !== player.id);
     this.activeFriends.push(player);
   }
 }
