@@ -99,17 +99,17 @@ export class PresenceService {
       this.toastr.success(userId + ' avatar ' + avatar.url);
     }); // TODO
 
-    this.hubConnection.on('UserDeleted', ({userName, userId}) => {
-      if (userId === user.id) {
+    this.hubConnection.on('UserDeleted', ({deletedUsername, deletedId}) => {
+      if (deletedId === user.id) {
         this.toastr.error('Your account was deleted');
-        this.logoutRequiredSource.next(userId);
+        this.logoutRequiredSource.next(deletedId);
       }
       else {
-        this.adminService.playerDeleted(userName, userId);
-        this.playersService.playerDeleted(userName, userId);
-        this.messagesService.playerDeleted(userName, userId);
-        this.reviewsService.playerDeleted(userName, userId);
-        this.gamesService.playerDeleted(userName, userId);
+        this.adminService.playerDeleted(deletedUsername, deletedId);
+        this.playersService.playerDeleted(deletedUsername, deletedId);
+        this.messagesService.playerDeleted(deletedUsername, deletedId);
+        this.reviewsService.playerDeleted(deletedUsername, deletedId);
+        this.gamesService.playerDeleted(deletedUsername, deletedId);
       }
     });
 

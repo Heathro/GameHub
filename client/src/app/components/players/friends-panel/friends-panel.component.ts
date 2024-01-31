@@ -20,7 +20,7 @@ export class FriendsPanelComponent implements OnInit, OnDestroy {
 
   constructor(private playersService: PlayersService) {
     this.playerDeletedSubscription = this.playersService.playerDeleted$.subscribe(
-      ({userName, userId}) => this.playerDeleted(userName, userId)
+      ({userName, userId}) => this.playerDeleted(userId)
     );
     this.friendshipRequestedSubscription = this.playersService.friendshipRequested$.subscribe(
       player => this.friendshipRequested(player)
@@ -68,7 +68,7 @@ export class FriendsPanelComponent implements OnInit, OnDestroy {
     this.outcomeRequests = this.outcomeRequests.filter(f => f.id !== id);
   }
 
-  private playerDeleted(userName: string, userId: number) {
+  private playerDeleted(userId: number) {
     this.activeFriends = this.activeFriends.filter(f => f.id !== userId);
     this.incomeRequests = this.incomeRequests.filter(f => f.id !== userId);
     this.outcomeRequests = this.outcomeRequests.filter(f => f.id !== userId);

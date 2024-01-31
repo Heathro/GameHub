@@ -30,7 +30,7 @@ export class GamesListComponent implements OnInit, OnDestroy {
 
   constructor(private gamesService: GamesService, private formBuilder: FormBuilder) {
     this.playerDeletedSubscription = this.gamesService.playerDeleted$.subscribe(
-      ({userName, userId}) => this.playerDeleted(userName, userId)
+      ({userName, userId}) => this.playerDeleted(userId)
     );
     this.gameUpdatedSubscription = this.gamesService.gameUpdated$.subscribe(
       game => this.gameUpdated(game)
@@ -241,7 +241,7 @@ export class GamesListComponent implements OnInit, OnDestroy {
     };
   }
 
-  private playerDeleted(userName: string, userId: number) {
+  private playerDeleted(userId: number) {
     this.games.forEach(g => {
       g.likes = g.likes.filter(l => l !== userId);
     });

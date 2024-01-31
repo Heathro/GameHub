@@ -32,14 +32,14 @@ public class NotificationCenter : INotificationCenter
         if (currentUserConnections == null) return;
 
         await _presenceHub.Clients.AllExcept(currentUserConnections)
-            .SendAsync("AvatarUpdated", new { userId, avatar});
+            .SendAsync("AvatarUpdated", new { userId, avatar });
     }
 
     public async void UserDeleted(string currentUsername, string deletedUsername, int deletedId)
     {
         var currentUserConnections = await PresenceTracker.GetConnectionsForUser(currentUsername);
         if (currentUserConnections == null) return;
-        
+
         await _presenceHub.Clients.AllExcept(currentUserConnections)
             .SendAsync("UserDeleted", new { deletedUsername, deletedId });
     }

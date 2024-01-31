@@ -18,7 +18,7 @@ export class PlayersListComponent implements OnInit, OnDestroy {
 
   constructor(private playersService: PlayersService) {
     this.playerDeletedSubscription = this.playersService.playerDeleted$.subscribe(
-      ({userName, userId}) => this.playerDeleted(userName, userId)
+      ({userName, userId}) => this.playerDeleted(userId)
     );
   }
 
@@ -99,7 +99,7 @@ export class PlayersListComponent implements OnInit, OnDestroy {
     }
   }
 
-  private playerDeleted(userName: string, userId: number) {
+  private playerDeleted(userId: number) {
     this.players = this.players.filter(p => p.id !== userId);
   }
 }
