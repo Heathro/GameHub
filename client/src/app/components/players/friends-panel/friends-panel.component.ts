@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { PlayersService } from 'src/app/services/players.service';
 import { Player } from 'src/app/models/player';
+import { Avatar } from 'src/app/models/avatar';
 
 @Component({
   selector: 'app-friends-panel',
@@ -14,6 +15,7 @@ export class FriendsPanelComponent implements OnInit, OnDestroy {
   outcomeRequests: Player[] = [];
   loading = false;
   playerDeletedSubscription;
+  avatarUpdatedSubscription;
   friendshipRequestedSubscription;
   friendshipCancelledSubscription;
   friendshipAcceptedSubscription;
@@ -21,6 +23,9 @@ export class FriendsPanelComponent implements OnInit, OnDestroy {
   constructor(private playersService: PlayersService) {
     this.playerDeletedSubscription = this.playersService.playerDeleted$.subscribe(
       ({userName, userId}) => this.playerDeleted(userId)
+    );
+    this.avatarUpdatedSubscription = this.playersService.avatarUpdated$.subscribe(
+      ({userId, avatar}) => this.avatarUpdated(userId, avatar)
     );
     this.friendshipRequestedSubscription = this.playersService.friendshipRequested$.subscribe(
       player => this.friendshipRequested(player)
@@ -39,6 +44,7 @@ export class FriendsPanelComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.playerDeletedSubscription.unsubscribe();
+    this.avatarUpdatedSubscription.unsubscribe();
     this.friendshipRequestedSubscription.unsubscribe();
     this.friendshipCancelledSubscription.unsubscribe();
     this.friendshipAcceptedSubscription.unsubscribe();
@@ -72,6 +78,18 @@ export class FriendsPanelComponent implements OnInit, OnDestroy {
     this.activeFriends = this.activeFriends.filter(f => f.id !== userId);
     this.incomeRequests = this.incomeRequests.filter(f => f.id !== userId);
     this.outcomeRequests = this.outcomeRequests.filter(f => f.id !== userId);
+  }
+  
+  private avatarUpdated(userId: number, avatar: Avatar) {
+    this.activeFriends.forEach(p => {
+      if (p.id === userId) p.avatar = avatar;
+    });
+    this.incomeRequests.forEach(p => {
+      if (p.id === userId) p.avatar = avatar;
+    });
+    this.outcomeRequests.forEach(p => {
+      if (p.id === userId) p.avatar = avatar;
+    });
   }
 
   private friendshipRequested(player: Player) {

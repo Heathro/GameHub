@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Avatar } from 'src/app/models/avatar';
 
 import { Message } from 'src/app/models/message';
 
@@ -40,6 +41,12 @@ export class MessageComponent implements OnInit {
 
   deleteCurrentMessage() {
     if (this.currentMessage) this.deleteMessage.next(this.currentMessage.id);
+  }
+
+  changeAvatar(userId: number, avatar: Avatar) {
+    if (this.currentMessage && this.currentMessage.senderId === userId) {
+      this.currentMessage.senderAvatar = avatar;
+    }
   }
 
   isAvatarRequired() {

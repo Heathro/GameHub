@@ -6,6 +6,7 @@ import { OrderType } from 'src/app/enums/orderType';
 import { Review } from 'src/app/models/review';
 import { Game } from 'src/app/models/game';
 import { Poster } from 'src/app/models/poster';
+import { Avatar } from 'src/app/models/avatar';
 
 @Component({
   selector: 'app-reviews-list',
@@ -17,6 +18,7 @@ export class ReviewsListComponent implements OnInit, OnDestroy {
   pagination: Pagination | undefined;
   loading = false;
   playerDeletedSubscription;
+  avatarUpdatedSubscription;
   gameUpdatedSubscription;
   gameDeletedSubscription;
   posterUpdatedSubscription;
@@ -26,6 +28,9 @@ export class ReviewsListComponent implements OnInit, OnDestroy {
   constructor(private reviewsService: ReviewsService) {
     this.playerDeletedSubscription = this.reviewsService.playerDeleted$.subscribe(
       ({userName, userId}) => this.playerDeleted(userId)
+    );
+    this.avatarUpdatedSubscription = this.reviewsService.avatarUpdated$.subscribe(
+      ({userId, avatar}) => this.avatarUpdated(userId, avatar)
     );
     this.gameUpdatedSubscription = this.reviewsService.gameUpdated$.subscribe(
       game => this.gameUpdated(game)
@@ -50,6 +55,7 @@ export class ReviewsListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.playerDeletedSubscription.unsubscribe();
+    this.avatarUpdatedSubscription.unsubscribe();
     this.gameUpdatedSubscription.unsubscribe();
     this.gameDeletedSubscription.unsubscribe();
     this.posterUpdatedSubscription.unsubscribe();
@@ -118,6 +124,12 @@ export class ReviewsListComponent implements OnInit, OnDestroy {
 
   private playerDeleted(userId: number) {
     this.reviews = this.reviews.filter(r => r.reviewerId !== userId);
+  }
+  
+  private avatarUpdated(userId: number, avatar: Avatar) {
+    this.reviews.forEach(r => {
+      if (r.reviewerId === userId) r.reviewerAvatar = avatar;
+    });
   }
 
   private gameUpdated(game: Game) {

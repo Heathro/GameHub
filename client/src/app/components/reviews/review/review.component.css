@@ -3,6 +3,13 @@
     margin: 8px;
 }
 
+.review-avatar-img {
+    width: 24px;
+    border-radius: 50%;
+    margin-top: -3px;
+    margin-left: 5px;
+}
+
 .cursor-pointer-on {
     cursor: pointer;
 }

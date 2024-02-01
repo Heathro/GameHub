@@ -96,7 +96,10 @@ export class PresenceService {
     }); // TODO
 
     this.hubConnection.on('AvatarUpdated', ({userId, avatar}) => {
-      this.toastr.success(userId + ' avatar ' + avatar.url);
+      this.adminService.avatarUpdated(userId, avatar);
+      this.playersService.avatarUpdated(userId, avatar);
+      this.messagesService.avatarUpdated(userId, avatar);
+      this.reviewsService.avatarUpdated(userId, avatar);
     });
 
     this.hubConnection.on('UserDeleted', ({deletedUsername, deletedId}) => {

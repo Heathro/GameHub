@@ -4,6 +4,7 @@ import { PlayersService } from 'src/app/services/players.service';
 import { Pagination } from 'src/app/helpers/pagination';
 import { Player } from 'src/app/models/player';
 import { OrderType } from 'src/app/enums/orderType';
+import { Avatar } from 'src/app/models/avatar';
 
 @Component({
   selector: 'app-players-list',
@@ -15,10 +16,14 @@ export class PlayersListComponent implements OnInit, OnDestroy {
   pagination: Pagination | undefined;
   loading = false;
   playerDeletedSubscription;
+  avatarUpdatedSubscription;
 
   constructor(private playersService: PlayersService) {
     this.playerDeletedSubscription = this.playersService.playerDeleted$.subscribe(
       ({userName, userId}) => this.playerDeleted(userId)
+    );
+    this.avatarUpdatedSubscription = this.playersService.avatarUpdated$.subscribe(
+      ({userId, avatar}) => this.avatarUpdated(userId, avatar)
     );
   }
 
@@ -28,6 +33,7 @@ export class PlayersListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.playerDeletedSubscription.unsubscribe();
+    this.avatarUpdatedSubscription.unsubscribe();
   }
 
   loadPlayers() {
@@ -101,5 +107,11 @@ export class PlayersListComponent implements OnInit, OnDestroy {
 
   private playerDeleted(userId: number) {
     this.players = this.players.filter(p => p.id !== userId);
+  }
+  
+  private avatarUpdated(userId: number, avatar: Avatar) {
+    this.players.forEach(p => {
+      if (p.id === userId) p.avatar = avatar;
+    });
   }
 }

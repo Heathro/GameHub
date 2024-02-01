@@ -18,6 +18,8 @@ import { User } from 'src/app/models/user';
 import { Review } from 'src/app/models/review';
 import { ReviewsService } from 'src/app/services/reviews.service';
 import { ConfirmService } from 'src/app/services/confirm.service';
+import { Avatar } from 'src/app/models/avatar';
+import { PlayersService } from 'src/app/services/players.service';
 
 @Component({
   selector: 'app-game-edit',
@@ -40,6 +42,7 @@ export class GameEditComponent implements OnInit, OnDestroy, EditComponent {
   reviews: Review[] = [];
   loadingReviews = false;
   playerDeletedSubscription;
+  avatarUpdatedSubscription;
   gameDeletedSubscription;
   reviewAcceptedSubscription;
   reviewDeletedSubscription;
@@ -48,6 +51,7 @@ export class GameEditComponent implements OnInit, OnDestroy, EditComponent {
     private accountService: AccountService,
     private gamesService: GamesService, 
     private reviewsService: ReviewsService,
+    private playersService: PlayersService,
     private toastr: ToastrService, 
     private route: ActivatedRoute,
     private router: Router,
@@ -57,6 +61,9 @@ export class GameEditComponent implements OnInit, OnDestroy, EditComponent {
   ) {
     this.playerDeletedSubscription = this.gamesService.playerDeleted$.subscribe(
       ({userName, userId}) => this.playerDeleted(userId)
+    );
+    this.avatarUpdatedSubscription = this.playersService.avatarUpdated$.subscribe(
+      ({userId, avatar}) => this.avatarUpdated(userId, avatar)
     );
     this.gameDeletedSubscription = this.gamesService.gameDeleted$.subscribe(
       gameId => this.gameDeleted(gameId)
@@ -82,6 +89,7 @@ export class GameEditComponent implements OnInit, OnDestroy, EditComponent {
 
   ngOnDestroy(): void {
     this.playerDeletedSubscription.unsubscribe();
+    this.avatarUpdatedSubscription.unsubscribe();
     this.gameDeletedSubscription.unsubscribe();
     this.reviewAcceptedSubscription.unsubscribe();
     this.reviewDeletedSubscription.unsubscribe();
@@ -241,6 +249,12 @@ export class GameEditComponent implements OnInit, OnDestroy, EditComponent {
       this.game.likes = this.game.likes.filter(l => l !== userId);
     }
     this.reviews = this.reviews.filter(r => r.reviewerId !== userId);
+  }
+  
+  private avatarUpdated(userId: number, avatar: Avatar) {
+    this.reviews.forEach(r => {
+      if (r.reviewerId === userId) r.reviewerAvatar = avatar;
+    });
   }
 
   private gameDeleted(gameId: number) {

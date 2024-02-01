@@ -4,6 +4,7 @@ import { AdminService } from 'src/app/services/admin.service';
 import { Pagination } from 'src/app/helpers/pagination';
 import { ReviewForModeration } from 'src/app/models/review';
 import { Game } from 'src/app/models/game';
+import { Avatar } from 'src/app/models/avatar';
 
 @Component({
   selector: 'app-review-management',
@@ -15,6 +16,7 @@ export class ReviewManagementComponent implements OnInit, OnDestroy {
   pagination: Pagination | undefined;
   loading = false;
   playerDeletedSubscription;
+  avatarUpdatedSubscription;
   gameUpdatedSubscription;
   gameDeletedSubscription;
   reviewDeletedSubscription;
@@ -23,6 +25,9 @@ export class ReviewManagementComponent implements OnInit, OnDestroy {
   constructor(private adminService: AdminService) {
     this.playerDeletedSubscription = this.adminService.playerDeleted$.subscribe(
       ({userName, userId}) => this.playerDeleted(userId)
+    );
+    this.avatarUpdatedSubscription = this.adminService.avatarUpdated$.subscribe(
+      ({userId, avatar}) => this.avatarUpdated(userId, avatar)
     );
     this.gameUpdatedSubscription = this.adminService.gameUpdated$.subscribe(
       game => this.gameUpdated(game)
@@ -44,6 +49,7 @@ export class ReviewManagementComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.playerDeletedSubscription.unsubscribe();
+    this.avatarUpdatedSubscription.unsubscribe();
     this.gameUpdatedSubscription.unsubscribe();
     this.gameDeletedSubscription.unsubscribe();
     this.reviewDeletedSubscription.unsubscribe();
@@ -84,6 +90,12 @@ export class ReviewManagementComponent implements OnInit, OnDestroy {
 
   private playerDeleted(userId: number) {
     this.reviews = this.reviews.filter(r => r.reviewerId !== userId);
+  }
+  
+  private avatarUpdated(userId: number, avatar: Avatar) {
+    this.reviews.forEach(r => {
+      if (r.reviewerId === userId) r.reviewerAvatar = avatar;
+    });
   }
 
   private gameUpdated(game: Game) {

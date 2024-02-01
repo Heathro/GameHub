@@ -12,6 +12,7 @@ import { Player } from '../models/player';
 import { Game } from '../models/game';
 import { Review } from '../models/review';
 import { Poster } from '../models/poster';
+import { Avatar } from '../models/avatar';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +28,8 @@ export class PlayersService {
 
   private playerDeletedSource = new Subject<any>();
   playerDeleted$ = this.playerDeletedSource.asObservable();
+  private avatarUpdatedSource = new Subject<any>();
+  avatarUpdated$ = this.avatarUpdatedSource.asObservable();
 
   private gamePublishedSource = new Subject<Game>();
   gamePublished$ = this.gamePublishedSource.asObservable();
@@ -202,6 +205,24 @@ export class PlayersService {
       q.result = q.result.filter((p: Player) => p.id !== userId);
     });
     this.playerDeletedSource.next({userName, userId});
+  }
+  
+  avatarUpdated(userId: number, avatar: Avatar) {
+    this.activeFriends.forEach(f => {
+      if (f.id === userId) f.avatar = avatar;
+    });
+    this.incomeRequests.forEach(f => {
+      if (f.id === userId) f.avatar = avatar;
+    });
+    this.outcomeRequests.forEach(f => {
+      if (f.id === userId) f.avatar = avatar;
+    });
+    this.playersCache.forEach(q => {
+      q.result.forEach((p: Player) => {
+        if (p.id === userId) p.avatar = avatar;
+      });
+    });
+    this.avatarUpdatedSource.next({userId, avatar});
   }
 
   gamePublished(game: Game) {

@@ -15,6 +15,8 @@ import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
 import { Poster } from 'src/app/models/poster';
 import { Screenshot } from 'src/app/models/screenshot';
+import { Avatar } from 'src/app/models/avatar';
+import { PlayersService } from 'src/app/services/players.service';
 
 @Component({
   selector: 'app-game-page',
@@ -32,6 +34,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
   isBookmarked = false;
   loadingReviews = false;
   playerDeletedSubscription;
+  avatarUpdatedSubscription;
   gameUpdatedSubscription;
   gameDeletedSubscription;
   gameLikedSubscription;
@@ -45,6 +48,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
   constructor(
     private gamesService: GamesService,
     private reviewsService: ReviewsService,
+    private playersService: PlayersService,
     private toastr: ToastrService,
     private route: ActivatedRoute, 
     private router: Router,
@@ -52,6 +56,9 @@ export class GamePageComponent implements OnInit, OnDestroy {
   ) {
     this.playerDeletedSubscription = this.gamesService.playerDeleted$.subscribe(
       ({userName, userId}) => this.playerDeleted(userId)
+    );
+    this.avatarUpdatedSubscription = this.playersService.avatarUpdated$.subscribe(
+      ({userId, avatar}) => this.avatarUpdated(userId, avatar)
     );
     this.gameUpdatedSubscription = this.gamesService.gameUpdated$.subscribe(
       game => this.gameUpdated(game)
@@ -92,6 +99,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.playerDeletedSubscription.unsubscribe();
+    this.avatarUpdatedSubscription.unsubscribe();
     this.gameUpdatedSubscription.unsubscribe();
     this.gameDeletedSubscription.unsubscribe();
     this.posterUpdatedSubscription.unsubscribe();
@@ -184,6 +192,12 @@ export class GamePageComponent implements OnInit, OnDestroy {
       this.game.likes = this.game.likes.filter(l => l !== userId);
     }
     this.reviews = this.reviews.filter(r => r.reviewerId !== userId);
+  }
+  
+  private avatarUpdated(userId: number, avatar: Avatar) {
+    this.reviews.forEach(r => {
+      if (r.reviewerId === userId) r.reviewerAvatar = avatar;
+    });
   }
 
   private gameUpdated(game: Game) {

@@ -14,6 +14,7 @@ import { Review } from 'src/app/models/review';
 import { User } from 'src/app/models/user';
 import { Game } from 'src/app/models/game';
 import { Poster } from 'src/app/models/poster';
+import { Avatar } from 'src/app/models/avatar';
 
 @Component({
   selector: 'app-player-profile',
@@ -26,6 +27,7 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
   user: User | null = null;
   loadingReviews = false;
   playerDeletedSubscription;
+  avatarUpdatedSubscription;
   gamePublishedSubscription;
   gameUpdatedSubscription;
   gameDeletedSubscription;
@@ -48,6 +50,9 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
   ) { 
     this.playerDeletedSubscription = this.playersService.playerDeleted$.subscribe(
       ({userName, userId}) => this.playerDeleted(userName, userId)
+    );
+    this.avatarUpdatedSubscription = this.playersService.avatarUpdated$.subscribe(
+      ({userId, avatar}) => this.avatarUpdated(userId, avatar)
     );
     this.gamePublishedSubscription = this.playersService.gamePublished$.subscribe(
       game => this.gamePublished(game)
@@ -91,6 +96,7 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
   
   ngOnDestroy(): void {
     this.playerDeletedSubscription.unsubscribe();
+    this.avatarUpdatedSubscription.unsubscribe();
     this.gamePublishedSubscription.unsubscribe();
     this.gameUpdatedSubscription.unsubscribe();
     this.gameDeletedSubscription.unsubscribe();
@@ -169,6 +175,10 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
       this.toastr.warning('"' + this.player.userName + '" was deleted');
       this.router.navigateByUrl('/players');
     }
+  }
+  
+  private avatarUpdated(userId: number, avatar: Avatar) {
+    if (this.player && this.player.id === userId) this.player.avatar = avatar;
   }
 
   private gamePublished(game: Game) {

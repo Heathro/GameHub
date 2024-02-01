@@ -8,6 +8,7 @@ import { environment } from 'src/environments/environment';
 import { Message } from '../models/message';
 import { Player } from '../models/player';
 import { User } from '../models/user';
+import { Avatar } from '../models/avatar';
 
 @Injectable({
   providedIn: 'root'
@@ -23,8 +24,11 @@ export class MessagesService {
   lastCompanion = '';
   companions: Player[] = [];
   companionsLoaded = false;
+
   private playerDeletedSource = new Subject<any>();
   playerDeleted$ = this.playerDeletedSource.asObservable();
+  private avatarUpdatedSource = new Subject<any>();
+  avatarUpdated$ = this.avatarUpdatedSource.asObservable();
 
   constructor(private http: HttpClient) { }
 
@@ -159,5 +163,12 @@ export class MessagesService {
       this.lastCompanion = '';
     }
     this.playerDeletedSource.next({userName, userId});
+  }
+  
+  avatarUpdated(userId: number, avatar: Avatar) {
+    this.companions.forEach(c => {
+        if (c.id === userId) c.avatar = avatar;
+    });
+    this.avatarUpdatedSource.next({userId, avatar});
   }
 }

@@ -10,6 +10,7 @@ import { OrderType } from '../enums/orderType';
 import { ReviewForModeration } from '../models/review';
 import { Game } from '../models/game';
 import { Poster } from '../models/poster';
+import { Avatar } from '../models/avatar';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,8 @@ export class AdminService {
 
   private playerDeletedSource = new Subject<any>();
   playerDeleted$ = this.playerDeletedSource.asObservable();
+  private avatarUpdatedSource = new Subject<any>();
+  avatarUpdated$ = this.avatarUpdatedSource.asObservable();
 
   private gameUpdatedSource = new Subject<Game>();
   gameUpdated$ = this.gameUpdatedSource.asObservable();
@@ -156,6 +159,10 @@ export class AdminService {
   
   playerDeleted(userName: string, userId: number) {
     this.playerDeletedSource.next({userName, userId});
+  }
+  
+  avatarUpdated(userId: number, avatar: Avatar) {
+    this.avatarUpdatedSource.next({userId, avatar});
   }
 
   gamePublished() {

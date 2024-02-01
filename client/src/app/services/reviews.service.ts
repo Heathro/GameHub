@@ -9,6 +9,7 @@ import { OrderType } from '../enums/orderType';
 import { Review, ReviewMenu } from '../models/review';
 import { Game } from '../models/game';
 import { Poster } from '../models/poster';
+import { Avatar } from '../models/avatar';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,8 @@ export class ReviewsService {
 
   private playerDeletedSource = new Subject<any>();
   playerDeleted$ = this.playerDeletedSource.asObservable();
+  private avatarUpdatedSource = new Subject<any>();
+  avatarUpdated$ = this.avatarUpdatedSource.asObservable();
 
   private gameUpdatedSource = new Subject<Game>();
   gameUpdated$ = this.gameUpdatedSource.asObservable();
@@ -119,6 +122,15 @@ export class ReviewsService {
       q.result = q.result.filter((r: Review) => r.reviewerId !== userId);
     });
     this.playerDeletedSource.next({userName, userId});
+  }
+  
+  avatarUpdated(userId: number, avatar: Avatar) {
+    this.reviewsCache.forEach(q => {
+      q.result.forEach((r: Review) => {
+        if (r.reviewerId === userId) r.reviewerAvatar = avatar;
+      });
+    });
+    this.avatarUpdatedSource.next({userId, avatar});
   }
 
   gameUpdated(game: Game) {

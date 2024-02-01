@@ -3,6 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AdminService } from 'src/app/services/admin.service';
 import { Pagination } from 'src/app/helpers/pagination';
 import { User } from 'src/app/models/user';
+import { Avatar } from 'src/app/models/avatar';
 
 @Component({
   selector: 'app-user-management',
@@ -14,10 +15,14 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   pagination: Pagination | undefined;
   loading = false;
   playerDeletedSubscription;
+  avatarUpdatedSubscription;
 
   constructor(private adminService: AdminService) {
     this.playerDeletedSubscription = this.adminService.playerDeleted$.subscribe(
       ({userName, userId}) => this.playerDeleted(userId)
+    );
+    this.avatarUpdatedSubscription = this.adminService.avatarUpdated$.subscribe(
+      ({userId, avatar}) => this.avatarUpdated(userId, avatar)
     );
   }
 
@@ -27,6 +32,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.playerDeletedSubscription.unsubscribe();
+    this.avatarUpdatedSubscription.unsubscribe();
   }
 
   loadUsersWithRoles() {
@@ -57,5 +63,11 @@ export class UserManagementComponent implements OnInit, OnDestroy {
 
   private playerDeleted(userId: number) {
     this.users = this.users.filter(u => u.id !== userId);
+  }
+  
+  private avatarUpdated(userId: number, avatar: Avatar) {
+    this.users.forEach(p => {
+      if (p.id === userId) p.avatarUrl = avatar.url;
+    });
   }
 }

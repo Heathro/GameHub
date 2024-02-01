@@ -12,6 +12,7 @@ import { OrderType } from '../enums/orderType';
 import { Review } from '../models/review';
 import { Poster } from '../models/poster';
 import { Screenshot } from '../models/screenshot';
+import { Avatar } from '../models/avatar';
 
 @Injectable({
   providedIn: 'root'

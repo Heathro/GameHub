@@ -14,6 +14,7 @@ import { Player } from 'src/app/models/player';
 import { User } from 'src/app/models/user';
 import { ConfirmService } from 'src/app/services/confirm.service';
 import { PlayersService } from 'src/app/services/players.service';
+import { Avatar } from 'src/app/models/avatar';
 
 @Component({
   selector: 'app-messenger',
@@ -29,6 +30,7 @@ export class MessengerComponent implements OnInit, OnDestroy {
   content = '';
   sending = false;
   playerDeletedSubscription;
+  avatarUpdatedSubscription;
 
   constructor(
     private accountService: AccountService,
@@ -37,6 +39,9 @@ export class MessengerComponent implements OnInit, OnDestroy {
   ) {
     this.playerDeletedSubscription = this.messagesService.playerDeleted$.subscribe(
       ({userName, userId}) => this.playerDeleted(userName, userId)
+    );
+    this.avatarUpdatedSubscription = this.messagesService.avatarUpdated$.subscribe(
+      ({userId, avatar}) => this.avatarUpdated(userId, avatar)
     );
     this.accountService.currentUser$.pipe(take(1)).subscribe({
       next: user => this.user = user
@@ -51,6 +56,7 @@ export class MessengerComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.messagesService.stopHubConnection();
     this.playerDeletedSubscription.unsubscribe();
+    this.avatarUpdatedSubscription.unsubscribe();
   }
 
   loadCompanions() {
@@ -167,6 +173,16 @@ export class MessengerComponent implements OnInit, OnDestroy {
     this.companions = this.companions.filter(c => c.id !== userId);
     if (this.getCurrentConversant() === userName && this.companions.length > 0) {
       this.changeCompanion(this.companions[0].userName);
+    }
+  }
+  
+  private avatarUpdated(userId: number, avatar: Avatar) {
+    this.companions.forEach(c => {
+      if (c.id === userId) c.avatar = avatar;
+    });
+    if (this.messages) {
+      const messagesArray = this.messages.toArray();
+      messagesArray.forEach(m => m.changeAvatar(userId, avatar));
     }
   }
 }
