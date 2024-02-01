@@ -135,6 +135,7 @@ export class PlayersService {
         if (this.friendsLoaded) {
           this.outcomeRequests.push(friend);
         }
+        this.updateFriendsData(friend);
         return friend;
       })
     );
@@ -146,6 +147,7 @@ export class PlayersService {
         if (this.friendsLoaded) {
           this.activeFriends = this.activeFriends.filter((f: Player) => f.userName !== userName);
         }
+        this.updateFriendsData(friend);
         return friend;
       })
     );
@@ -160,6 +162,7 @@ export class PlayersService {
           this.incomeRequests = this.incomeRequests.filter((f: Player) => f.userName !== userName);
           this.activeFriends.push(friend);
         }
+        this.updateFriendsData(friend);
         return friend;
       })
     );
@@ -171,6 +174,7 @@ export class PlayersService {
         if (this.friendsLoaded) {
           this.outcomeRequests = this.outcomeRequests.filter((f: Player) => f.userName !== userName)
         }
+        this.updateFriendsData(friend);
         return friend;
       }
     ));
@@ -321,8 +325,10 @@ export class PlayersService {
   private updateFriendsData(player: Player) {
     this.playersCache.forEach(q => {
       q.result.forEach((p: Player) => {
-        p.status = player.status;
-        p.type = player.type;
+        if (p.id === player.id) {
+          p.status = player.status;
+          p.type = player.type;
+        }
       });
     });
   }
