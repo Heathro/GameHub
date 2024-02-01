@@ -44,7 +44,7 @@ export class GameEditComponent implements OnInit, OnDestroy, EditComponent {
   playerDeletedSubscription;
   avatarUpdatedSubscription;
   gameDeletedSubscription;
-  reviewAcceptedSubscription;
+  reviewApprovedSubscription;
   reviewDeletedSubscription;
 
   constructor(
@@ -68,8 +68,8 @@ export class GameEditComponent implements OnInit, OnDestroy, EditComponent {
     this.gameDeletedSubscription = this.gamesService.gameDeleted$.subscribe(
       gameId => this.gameDeleted(gameId)
     );
-    this.reviewAcceptedSubscription = this.gamesService.reviewAccepted$.subscribe(
-      review => this.reviewAccepted(review)
+    this.reviewApprovedSubscription = this.gamesService.reviewApproved$.subscribe(
+      review => this.reviewApproved(review)
     );
     this.reviewDeletedSubscription = this.gamesService.reviewDeleted$.subscribe(
       reviewId => this.reviewDeleted(reviewId)
@@ -91,7 +91,7 @@ export class GameEditComponent implements OnInit, OnDestroy, EditComponent {
     this.playerDeletedSubscription.unsubscribe();
     this.avatarUpdatedSubscription.unsubscribe();
     this.gameDeletedSubscription.unsubscribe();
-    this.reviewAcceptedSubscription.unsubscribe();
+    this.reviewApprovedSubscription.unsubscribe();
     this.reviewDeletedSubscription.unsubscribe();
   }
 
@@ -264,7 +264,7 @@ export class GameEditComponent implements OnInit, OnDestroy, EditComponent {
     }
   }
 
-  private reviewAccepted(review: Review) {
+  private reviewApproved(review: Review) {
     this.reviews.unshift(review);
   }
 

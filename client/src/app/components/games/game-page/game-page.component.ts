@@ -42,7 +42,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
   posterUpdatedSubscription;
   screenshotAddedSubscription;  
   screenshotDeletedSubscription;
-  reviewAcceptedSubscription;
+  reviewApprovedSubscription;
   reviewDeletedSubscription;
 
   constructor(
@@ -81,8 +81,8 @@ export class GamePageComponent implements OnInit, OnDestroy {
     this.screenshotDeletedSubscription = this.gamesService.screenshotDeleted$.subscribe(
       ({gameId, screenshotId}) => this.screenshotDeleted(gameId, screenshotId)
     );
-    this.reviewAcceptedSubscription = this.gamesService.reviewAccepted$.subscribe(
-      review => this.reviewAccepted(review)
+    this.reviewApprovedSubscription = this.gamesService.reviewApproved$.subscribe(
+      review => this.reviewApproved(review)
     );
     this.reviewDeletedSubscription = this.gamesService.reviewDeleted$.subscribe(
       reviewId => this.reviewDeleted(reviewId)
@@ -105,7 +105,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
     this.posterUpdatedSubscription.unsubscribe();
     this.screenshotAddedSubscription.unsubscribe();
     this.screenshotDeletedSubscription.unsubscribe();
-    this.reviewAcceptedSubscription.unsubscribe();
+    this.reviewApprovedSubscription.unsubscribe();
     this.reviewDeletedSubscription.unsubscribe();
   }
 
@@ -247,7 +247,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
     }
   }
 
-  private reviewAccepted(review: Review) {
+  private reviewApproved(review: Review) {
     this.reviews.unshift(review);
   }
 

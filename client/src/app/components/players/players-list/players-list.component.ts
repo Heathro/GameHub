@@ -17,6 +17,7 @@ export class PlayersListComponent implements OnInit, OnDestroy {
   loading = false;
   playerDeletedSubscription;
   avatarUpdatedSubscription;
+  playersRefreshSubscription;
 
   constructor(private playersService: PlayersService) {
     this.playerDeletedSubscription = this.playersService.playerDeleted$.subscribe(
@@ -24,6 +25,9 @@ export class PlayersListComponent implements OnInit, OnDestroy {
     );
     this.avatarUpdatedSubscription = this.playersService.avatarUpdated$.subscribe(
       ({userId, avatar}) => this.avatarUpdated(userId, avatar)
+    );
+    this.playersRefreshSubscription = this.playersService.refreshPlayers$.subscribe(
+      () => this.loadPlayers()
     );
   }
 
@@ -34,6 +38,7 @@ export class PlayersListComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.playerDeletedSubscription.unsubscribe();
     this.avatarUpdatedSubscription.unsubscribe();
+    this.playersRefreshSubscription.unsubscribe();
   }
 
   loadPlayers() {

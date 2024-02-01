@@ -32,7 +32,7 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
   gameUpdatedSubscription;
   gameDeletedSubscription;
   posterUpdatedSubscription;
-  reviewAcceptedSubscription;
+  reviewApprovedSubscription;
   reviewDeletedSubscription;
   friendshipRequestedSubscription;
   friendshipCancelledSubscription;
@@ -66,8 +66,8 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
     this.posterUpdatedSubscription = this.playersService.posterUpdated$.subscribe(
       ({gameId, poster}) => this.posterUpdated(gameId, poster)
     );
-    this.reviewAcceptedSubscription = this.playersService.reviewAccepted$.subscribe(
-      review => this.reviewAccepted(review)
+    this.reviewApprovedSubscription = this.playersService.reviewApproved$.subscribe(
+      review => this.reviewApproved(review)
     );
     this.reviewDeletedSubscription = this.playersService.reviewDeleted$.subscribe(
       reviewId => this.reviewDeleted(reviewId)
@@ -101,7 +101,7 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
     this.gameUpdatedSubscription.unsubscribe();
     this.gameDeletedSubscription.unsubscribe();
     this.posterUpdatedSubscription.unsubscribe();
-    this.reviewAcceptedSubscription.unsubscribe();
+    this.reviewApprovedSubscription.unsubscribe();
     this.reviewDeletedSubscription.unsubscribe();
     this.friendshipRequestedSubscription.unsubscribe();
     this.friendshipCancelledSubscription.unsubscribe();
@@ -209,7 +209,7 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
     }
   }
 
-  private reviewAccepted(review: Review) {
+  private reviewApproved(review: Review) {
     this.reviews.unshift(review);
   }
 

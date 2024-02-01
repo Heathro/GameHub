@@ -32,7 +32,16 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" routerLink="/players" routerLinkActive="active">Players</a>
+                    <a
+                        class="nav-link"
+                        routerLink="/players"
+                        routerLinkActive="active"
+                        style="position: relative;"
+                        (click)="playersService.refreshPlayers()"
+                    >
+                        Players
+                        <span class="dot" *ngIf="(playersService.newPlayersCount$ | async)! > 0"></span>
+                    </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" routerLink="/friends" routerLinkActive="active">Friends</a>
@@ -52,7 +61,8 @@
                         <span
                             class="dot"
                             *ngIf="(adminService.newReviewsCount$ | async)! > 0 ||
-                                   (adminService.newGameCount$ | async)! > 0"
+                                   (adminService.newGamesCount$ | async)! > 0 ||
+                                   (adminService.newPlayersCount$ | async)! > 0"
                         ></span>
                     </a>
                 </li>                

@@ -88,12 +88,13 @@ export class PresenceService {
     });
 
     this.hubConnection.on('UserRegisted', (player: Player) => {
-      this.toastr.success(player.userName + ' registed');
-    }); // TODO
+      this.adminService.playerRegisted();
+      this.playersService.playerRegisted();
+    });
 
     this.hubConnection.on('UserUpdated', (player: Player) => {
       this.toastr.success(player.userName + ' updated');
-    }); // TODO
+    });
 
     this.hubConnection.on('AvatarUpdated', ({userId, avatar}) => {
       this.adminService.avatarUpdated(userId, avatar);
@@ -183,7 +184,7 @@ export class PresenceService {
           next: () => this.router.navigateByUrl('/reviews/' + review.gameTitle)
         });
       }
-      this.reviewsService.reviewApproved(review);
+      this.reviewsService.reviewApproved();
       this.playersService.reviewApproved(review);
       this.gamesService.reviewApproved(review);
     });

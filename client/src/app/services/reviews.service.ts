@@ -33,9 +33,7 @@ export class ReviewsService {
   posterUpdated$ = this.posterUpdatedSource.asObservable();
 
   private reviewDeletedSource = new Subject<number>();
-  reviewDeleted$ = this.reviewDeletedSource.asObservable();  
-  private reviewApprovedSource = new Subject<Review>();
-  reviewApproved$ = this.reviewApprovedSource.asObservable();
+  reviewDeleted$ = this.reviewDeletedSource.asObservable();
   
   private newReviewsCountSource = new Subject<number>();
   newReviewsCount$ = this.newReviewsCountSource.asObservable();
@@ -158,10 +156,9 @@ export class ReviewsService {
     this.gameDeletedSource.next(gameId);
   }
 
-  reviewApproved(review: Review) {
+  reviewApproved() {
     this.newReviewsCount++;
     this.newReviewsCountSource.next(this.newReviewsCount);
-    this.reviewApprovedSource.next(review);
   }
 
   reviewDeleted(reviewId: number) {

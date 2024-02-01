@@ -16,6 +16,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   loading = false;
   playerDeletedSubscription;
   avatarUpdatedSubscription;
+  playersRefreshSubscription;
 
   constructor(private adminService: AdminService) {
     this.playerDeletedSubscription = this.adminService.playerDeleted$.subscribe(
@@ -23,6 +24,9 @@ export class UserManagementComponent implements OnInit, OnDestroy {
     );
     this.avatarUpdatedSubscription = this.adminService.avatarUpdated$.subscribe(
       ({userId, avatar}) => this.avatarUpdated(userId, avatar)
+    );
+    this.playersRefreshSubscription = this.adminService.refreshPlayers$.subscribe(
+      () => this.loadUsersWithRoles()
     );
   }
 
@@ -33,6 +37,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.playerDeletedSubscription.unsubscribe();
     this.avatarUpdatedSubscription.unsubscribe();
+    this.playersRefreshSubscription.unsubscribe();
   }
 
   loadUsersWithRoles() {

@@ -11,6 +11,7 @@ import { ReviewForModeration } from '../models/review';
 import { Game } from '../models/game';
 import { Poster } from '../models/poster';
 import { Avatar } from '../models/avatar';
+import { Player } from '../models/player';
 
 @Injectable({
   providedIn: 'root'
@@ -43,29 +44,43 @@ export class AdminService {
   private refreshReviewsSource = new Subject();
   refreshReviews$ = this.refreshReviewsSource.asObservable();
   
-  private newGameCountSource = new Subject<number>();
-  newGameCount$ = this.newGameCountSource.asObservable();
-  newGameCount = 0;
+  private newGamesCountSource = new Subject<number>();
+  newGamesCount$ = this.newGamesCountSource.asObservable();
+  newGamesCount = 0;
   private refreshGamesSource = new Subject();
   refreshGames$ = this.refreshGamesSource.asObservable();
+
+  private newPlayersCountSource = new Subject<number>();
+  newPlayersCount$ = this.newPlayersCountSource.asObservable();
+  newPlayersCount = 0;
+  private refreshPlayersSource = new Subject();
+  refreshPlayers$ = this.refreshPlayersSource.asObservable();
 
   constructor(private http: HttpClient) {
     this.usersPaginationParams = this.initializeUsersPaginationParams();
     this.gamesPaginationParams = this.initializeGamesPaginationParams();
     this.reviewsPaginationParams = this.initializeReviewsPaginationParams();
     this.newReviewsCountSource.next(0);
-    this.newGameCountSource.next(0);
+    this.newGamesCountSource.next(0);
+    this.newPlayersCountSource.next(0);
   }
 
   refresh() {
     if (this.newReviewsCount > 0) this.refreshReviewsSource.next(null);
-    if (this.newGameCount > 0) this.refreshGamesSource.next(null);
+    if (this.newGamesCount > 0) this.refreshGamesSource.next(null);
+    if (this.newPlayersCount > 0) this.refreshPlayersSource.next(null);
   }
 
   getUsersWithRoles() {
     let params = PaginationFunctions.getPaginationHeaders(this.usersPaginationParams);
     return PaginationFunctions.getPaginatedResult<User[]>(
       this.baseUrl + 'admin/users-with-roles', params, this.http
+    ).pipe(
+      map(response => {
+        this.newPlayersCount = 0;
+        this.newPlayersCountSource.next(0);
+        return response;
+      })
     );
   }
 
@@ -83,8 +98,8 @@ export class AdminService {
       this.baseUrl + 'admin/games-for-moderation', params, this.http
     ).pipe(
       map(response => {
-        this.newGameCount = 0;
-        this.newGameCountSource.next(0);
+        this.newGamesCount = 0;
+        this.newGamesCountSource.next(0);
         return response;
       })
     );
@@ -156,6 +171,11 @@ export class AdminService {
     this.gamesPaginationParams = this.initializeGamesPaginationParams();
     this.reviewsPaginationParams = this.initializeReviewsPaginationParams();
   }
+
+  playerRegisted() {
+    this.newPlayersCount++;
+    this.newPlayersCountSource.next(this.newPlayersCount);
+  }
   
   playerDeleted(userName: string, userId: number) {
     this.playerDeletedSource.next({userName, userId});
@@ -166,8 +186,8 @@ export class AdminService {
   }
 
   gamePublished() {
-    this.newGameCount++;
-    this.newGameCountSource.next(this.newGameCount);
+    this.newGamesCount++;
+    this.newGamesCountSource.next(this.newGamesCount);
   }
 
   gameUpdated(game: Game) {

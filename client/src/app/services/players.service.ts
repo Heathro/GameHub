@@ -41,8 +41,8 @@ export class PlayersService {
   private posterUpdatedSource = new Subject<any>();
   posterUpdated$ = this.posterUpdatedSource.asObservable();
 
-  private reviewAcceptedSource = new Subject<Review>();
-  reviewAccepted$ = this.reviewAcceptedSource.asObservable();
+  private reviewApprovedSource = new Subject<Review>();
+  reviewApproved$ = this.reviewApprovedSource.asObservable();
   private reviewDeletedSource = new Subject<number>();
   reviewDeleted$ = this.reviewDeletedSource.asObservable();
 
@@ -52,9 +52,16 @@ export class PlayersService {
   friendshipCancelled$ = this.friendshipCancelledSource.asObservable();
   private friendshipAcceptedSource = new Subject<Player>();
   friendshipAccepted$ = this.friendshipAcceptedSource.asObservable();
+  
+  private newPlayersCountSource = new Subject<number>();
+  newPlayersCount$ = this.newPlayersCountSource.asObservable();
+  newPlayersCount = 0;
+  private refreshPlayersSource = new Subject();
+  refreshPlayers$ = this.refreshPlayersSource.asObservable();
 
   constructor(private http: HttpClient) {
     this.paginationParams = this.initializePaginationParams();
+    this.newPlayersCountSource.next(0);
   }
 
   getPlayers() {
@@ -67,10 +74,19 @@ export class PlayersService {
     return PaginationFunctions.getPaginatedResult<Player[]>(this.baseUrl + 'users/list', params, this.http)
       .pipe(
         map(players => {
+          this.newPlayersCount = 0;
+          this.newPlayersCountSource.next(0);
           this.playersCache.set(queryString, players);
           return players;
         })
       );
+  }
+
+  refreshPlayers() {
+    if (this.newPlayersCount > 0) {
+      this.playersCache = new Map();
+      this.refreshPlayersSource.next(null);
+    }
   }
 
   getPlayer(userName: string) {
@@ -201,6 +217,11 @@ export class PlayersService {
     this.paginationParams = this.initializePaginationParams();
   }
 
+  playerRegisted() {
+    this.newPlayersCount++;
+    this.newPlayersCountSource.next(this.newPlayersCount);
+  }
+
   playerDeleted(userName: string, userId: number) {
     this.activeFriends = this.activeFriends.filter(f => f.id !== userId);
     this.incomeRequests = this.incomeRequests.filter(f => f.id !== userId);
@@ -269,7 +290,7 @@ export class PlayersService {
   }
 
   reviewApproved(review: Review) {
-    this.reviewAcceptedSource.next(review);
+    this.reviewApprovedSource.next(review);
   }
 
   reviewDeleted(reviewId: number) {

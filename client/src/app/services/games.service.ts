@@ -44,8 +44,8 @@ export class GamesService {
   private screenshotDeletedSource = new Subject<any>();
   screenshotDeleted$ = this.screenshotDeletedSource.asObservable();
 
-  private reviewAcceptedSource = new Subject<Review>();
-  reviewAccepted$ = this.reviewAcceptedSource.asObservable();
+  private reviewApprovedSource = new Subject<Review>();
+  reviewApproved$ = this.reviewApprovedSource.asObservable();
   private reviewDeletedSource = new Subject<number>();
   reviewDeleted$ = this.reviewDeletedSource.asObservable();
   
@@ -301,7 +301,7 @@ export class GamesService {
   }
 
   reviewApproved(review: Review) {
-    this.reviewAcceptedSource.next(review);
+    this.reviewApprovedSource.next(review);
   }
 
   reviewDeleted(reviewId: number) {
