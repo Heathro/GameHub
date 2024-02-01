@@ -96,6 +96,10 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
     const username = this.route.snapshot.paramMap.get('username');
     if (!username) return;
 
+    if (username === 'Admin' && this.user?.userName !== 'Admin') {
+      this.router.navigateByUrl('/not-found');
+    }
+
     this.loadPlayer(username);
     this.loadReviews(username);
   }
