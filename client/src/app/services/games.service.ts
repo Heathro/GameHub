@@ -122,7 +122,7 @@ export class GamesService {
             }
           });
         });
-
+        
         return userId;
       })
     );
@@ -224,7 +224,7 @@ export class GamesService {
   
   playerDeleted(userName: string, userId: number) {
     this.gamesCache.forEach(q => {
-      q.result = q.result.forEach((g: Game) => {
+      q.result.forEach((g: Game) => {
         g.likes = g.likes.filter(l => l !== userId);
       });
     });
