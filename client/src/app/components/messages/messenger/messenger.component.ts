@@ -6,14 +6,14 @@ import { NgForm } from '@angular/forms';
 
 import { take } from 'rxjs';
 
-import { AccountService } from 'src/app/services/account.service';
-import { MessagesService } from 'src/app/services/messages.service';
 import { MessageComponent } from '../message/message.component';
+import { ConfirmService } from 'src/app/services/confirm.service';
+import { AccountService } from 'src/app/services/account.service';
+import { PlayersService } from 'src/app/services/players.service';
+import { MessagesService } from 'src/app/services/messages.service';
 import { Message } from 'src/app/models/message';
 import { Player } from 'src/app/models/player';
 import { User } from 'src/app/models/user';
-import { ConfirmService } from 'src/app/services/confirm.service';
-import { PlayersService } from 'src/app/services/players.service';
 import { Avatar } from 'src/app/models/avatar';
 
 @Component({
@@ -35,12 +35,13 @@ export class MessengerComponent implements OnInit, OnDestroy {
   constructor(
     private accountService: AccountService,
     public messagesService: MessagesService,
-    private confirmService: ConfirmService
+    private confirmService: ConfirmService,
+    private playersService: PlayersService
   ) {
-    this.playerDeletedSubscription = this.messagesService.playerDeleted$.subscribe(
+    this.playerDeletedSubscription = this.playersService.playerDeleted$.subscribe(
       ({userName, userId}) => this.playerDeleted(userName, userId)
     );
-    this.avatarUpdatedSubscription = this.messagesService.avatarUpdated$.subscribe(
+    this.avatarUpdatedSubscription = this.playersService.avatarUpdated$.subscribe(
       ({userId, avatar}) => this.avatarUpdated(userId, avatar)
     );
     this.accountService.currentUser$.pipe(take(1)).subscribe({

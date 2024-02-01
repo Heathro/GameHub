@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { AdminService } from 'src/app/services/admin.service';
 import { Pagination } from 'src/app/helpers/pagination';
+import { AdminService } from 'src/app/services/admin.service';
+import { GamesService } from 'src/app/services/games.service';
 import { Game } from 'src/app/models/game';
 import { Poster } from 'src/app/models/poster';
 
@@ -19,14 +20,14 @@ export class GameManagementComponent implements OnInit, OnDestroy {
   posterUpdatedSubscription;
   gamesRefreshSubscription
   
-  constructor(private adminService: AdminService) {
-    this.gameUpdateSubscription = this.adminService.gameUpdated$.subscribe(
+  constructor(private adminService: AdminService, private gamesService: GamesService) {
+    this.gameUpdateSubscription = this.gamesService.gameUpdated$.subscribe(
       game => this.gameUpdated(game)
     );
-    this.gameDeletedSubscription = this.adminService.gameDeleted$.subscribe(
+    this.gameDeletedSubscription = this.gamesService.gameDeleted$.subscribe(
       gameId => this.gameDeleted(gameId)
     );
-    this.posterUpdatedSubscription = this.adminService.posterUpdated$.subscribe(
+    this.posterUpdatedSubscription = this.gamesService.posterUpdated$.subscribe(
       ({gameId, poster}) => this.posterUpdated(gameId, poster)
     );
     this.gamesRefreshSubscription = this.adminService.refreshGames$.subscribe(

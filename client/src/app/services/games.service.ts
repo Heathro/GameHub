@@ -24,14 +24,13 @@ export class GamesService {
   filter: Filter | undefined;
   user: User | undefined;
 
-  private playerDeletedSource = new Subject<any>();
-  playerDeleted$ = this.playerDeletedSource.asObservable();
-
   private gameUpdatedSource = new Subject<Game>();
   gameUpdated$ = this.gameUpdatedSource.asObservable();
   private gameDeletedSource = new Subject<number>();
   gameDeleted$ = this.gameDeletedSource.asObservable();
   
+  private gamePublishedSource = new Subject<Game>();
+  gamePublished$ = this.gamePublishedSource.asObservable();
   private gameLikedSource = new Subject<any>();
   gameLiked$ = this.gameLikedSource.asObservable();
   private gameUnlikedSource = new Subject<any>();
@@ -43,11 +42,6 @@ export class GamesService {
   screenshotAdded$ = this.screenshotAddedSource.asObservable();
   private screenshotDeletedSource = new Subject<any>();
   screenshotDeleted$ = this.screenshotDeletedSource.asObservable();
-
-  private reviewApprovedSource = new Subject<Review>();
-  reviewApproved$ = this.reviewApprovedSource.asObservable();
-  private reviewDeletedSource = new Subject<number>();
-  reviewDeleted$ = this.reviewDeletedSource.asObservable();
   
   private newGamesCountSource = new Subject<number>();
   newGamesCount$ = this.newGamesCountSource.asObservable();
@@ -229,12 +223,12 @@ export class GamesService {
         g.likes = g.likes.filter(l => l !== userId);
       });
     });
-    this.playerDeletedSource.next({userName, userId});
   }
 
-  gamePublished() {
+  gamePublished(game: Game) {
     this.newGamesCount++;
     this.newGamesCountSource.next(this.newGamesCount);
+    this.gamePublishedSource.next(game);
   }
 
   gameUpdated(game: Game) {
@@ -298,14 +292,6 @@ export class GamesService {
       });
     });
     this.screenshotDeletedSource.next({gameId, screenshotId});
-  }
-
-  reviewApproved(review: Review) {
-    this.reviewApprovedSource.next(review);
-  }
-
-  reviewDeleted(reviewId: number) {
-    this.reviewDeletedSource.next(reviewId);
   }
 
   updateGameData(currentGame: Game, updatedGame: Game) {

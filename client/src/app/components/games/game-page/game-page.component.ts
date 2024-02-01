@@ -5,18 +5,18 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { GalleryItem, GalleryModule, ImageItem } from 'ng-gallery';
+import { ToastrService } from 'ngx-toastr';
 
+import { environment } from 'src/environments/environment';
+import { GameReviewComponent } from '../../reviews/game-review/game-review.component';
 import { GamesService } from 'src/app/services/games.service';
+import { PlayersService } from 'src/app/services/players.service';
+import { ReviewsService } from 'src/app/services/reviews.service';
 import { Game } from 'src/app/models/game';
 import { Review } from 'src/app/models/review';
-import { ReviewsService } from 'src/app/services/reviews.service';
-import { GameReviewComponent } from '../../reviews/game-review/game-review.component';
-import { environment } from 'src/environments/environment';
-import { ToastrService } from 'ngx-toastr';
 import { Poster } from 'src/app/models/poster';
 import { Screenshot } from 'src/app/models/screenshot';
 import { Avatar } from 'src/app/models/avatar';
-import { PlayersService } from 'src/app/services/players.service';
 
 @Component({
   selector: 'app-game-page',
@@ -54,7 +54,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
     private router: Router,
     private sanitizer: DomSanitizer
   ) {
-    this.playerDeletedSubscription = this.gamesService.playerDeleted$.subscribe(
+    this.playerDeletedSubscription = this.playersService.playerDeleted$.subscribe(
       ({userName, userId}) => this.playerDeleted(userId)
     );
     this.avatarUpdatedSubscription = this.playersService.avatarUpdated$.subscribe(
@@ -81,10 +81,10 @@ export class GamePageComponent implements OnInit, OnDestroy {
     this.screenshotDeletedSubscription = this.gamesService.screenshotDeleted$.subscribe(
       ({gameId, screenshotId}) => this.screenshotDeleted(gameId, screenshotId)
     );
-    this.reviewApprovedSubscription = this.gamesService.reviewApproved$.subscribe(
+    this.reviewApprovedSubscription = this.reviewsService.reviewApproved$.subscribe(
       review => this.reviewApproved(review)
     );
-    this.reviewDeletedSubscription = this.gamesService.reviewDeleted$.subscribe(
+    this.reviewDeletedSubscription = this.reviewsService.reviewDeleted$.subscribe(
       reviewId => this.reviewDeleted(reviewId)
     );
   }

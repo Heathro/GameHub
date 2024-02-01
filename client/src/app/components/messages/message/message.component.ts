@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Avatar } from 'src/app/models/avatar';
 
 import { Message } from 'src/app/models/message';
+import { Avatar } from 'src/app/models/avatar';
 
 @Component({
   selector: 'app-message',

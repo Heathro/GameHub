@@ -9,6 +9,7 @@ import { PresenceService } from 'src/app/services/presence.service';
 import { ReviewsService } from 'src/app/services/reviews.service';
 import { MessagesService } from 'src/app/services/messages.service';
 import { PlayersService } from 'src/app/services/players.service';
+import { GamesService } from 'src/app/services/games.service';
 import { Player } from 'src/app/models/player';
 import { Review } from 'src/app/models/review';
 import { User } from 'src/app/models/user';
@@ -45,6 +46,7 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
     private playersService: PlayersService,
     private messagesService: MessagesService,
     private reviewsService: ReviewsService,
+    private gamesService: GamesService,
     private toastr: ToastrService,
     private route: ActivatedRoute, 
     private router: Router
@@ -58,22 +60,22 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
     this.avatarUpdatedSubscription = this.playersService.avatarUpdated$.subscribe(
       ({userId, avatar}) => this.avatarUpdated(userId, avatar)
     );
-    this.gamePublishedSubscription = this.playersService.gamePublished$.subscribe(
+    this.gamePublishedSubscription = this.gamesService.gamePublished$.subscribe(
       game => this.gamePublished(game)
     );
-    this.gameUpdatedSubscription = this.playersService.gameUpdated$.subscribe(
+    this.gameUpdatedSubscription = this.gamesService.gameUpdated$.subscribe(
       game => this.gameUpdated(game)
     );
-    this.gameDeletedSubscription = this.playersService.gameDeleted$.subscribe(
+    this.gameDeletedSubscription = this.gamesService.gameDeleted$.subscribe(
       gameId => this.gameDeleted(gameId)
     );
-    this.posterUpdatedSubscription = this.playersService.posterUpdated$.subscribe(
+    this.posterUpdatedSubscription = this.gamesService.posterUpdated$.subscribe(
       ({gameId, poster}) => this.posterUpdated(gameId, poster)
     );
-    this.reviewApprovedSubscription = this.playersService.reviewApproved$.subscribe(
+    this.reviewApprovedSubscription = this.reviewsService.reviewApproved$.subscribe(
       review => this.reviewApproved(review)
     );
-    this.reviewDeletedSubscription = this.playersService.reviewDeleted$.subscribe(
+    this.reviewDeletedSubscription = this.reviewsService.reviewDeleted$.subscribe(
       reviewId => this.reviewDeleted(reviewId)
     );
     this.friendshipRequestedSubscription = this.playersService.friendshipRequested$.subscribe(

@@ -22,22 +22,6 @@ export class AdminService {
   gamesPaginationParams: PaginationParams;
   reviewsPaginationParams: PaginationParams;
 
-  private playerDeletedSource = new Subject<any>();
-  playerDeleted$ = this.playerDeletedSource.asObservable();
-  private avatarUpdatedSource = new Subject<any>();
-  avatarUpdated$ = this.avatarUpdatedSource.asObservable();
-
-  private gameUpdatedSource = new Subject<Game>();
-  gameUpdated$ = this.gameUpdatedSource.asObservable();
-  private gameDeletedSource = new Subject<number>();
-  gameDeleted$ = this.gameDeletedSource.asObservable();
-  
-  private posterUpdatedSource = new Subject<any>();
-  posterUpdated$ = this.posterUpdatedSource.asObservable();
-
-  private reviewDeletedSource = new Subject<number>();
-  reviewDeleted$ = this.reviewDeletedSource.asObservable();
-
   private newReviewsCountSource = new Subject<number>();
   newReviewsCount$ = this.newReviewsCountSource.asObservable();
   newReviewsCount = 0;
@@ -176,39 +160,15 @@ export class AdminService {
     this.newPlayersCount++;
     this.newPlayersCountSource.next(this.newPlayersCount);
   }
-  
-  playerDeleted(userName: string, userId: number) {
-    this.playerDeletedSource.next({userName, userId});
-  }
-  
-  avatarUpdated(userId: number, avatar: Avatar) {
-    this.avatarUpdatedSource.next({userId, avatar});
-  }
 
   gamePublished() {
     this.newGamesCount++;
     this.newGamesCountSource.next(this.newGamesCount);
   }
 
-  gameUpdated(game: Game) {
-    this.gameUpdatedSource.next(game);
-  }
-
-  posterUpdated(gameId: number, poster: Poster) {
-    this.posterUpdatedSource.next({gameId, poster});
-  }
-
-  gameDeleted(gameId: number) {
-    this.gameDeletedSource.next(gameId);
-  }
-
   reviewPosted() {
     this.newReviewsCount++;
     this.newReviewsCountSource.next(this.newReviewsCount);
-  }
-
-  reviewDeleted(reviewId: number) {
-    this.reviewDeletedSource.next(reviewId);
   }
   
   updateGameData(currentGame: Game, updatedGame: Game) {

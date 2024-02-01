@@ -16,19 +16,15 @@ import { Avatar } from '../models/avatar';
 export class MessagesService {
   baseUrl = environment.apiUrl;
   hubUrl = environment.hubUrl;
+  lastCompanion = '';
+  companions: Player[] = [];
+  companionsLoaded = false;
   private hubConnection?: HubConnection;
+
   private messageThreadSource = new BehaviorSubject<Message[]>([]);
   messageThread$ = this.messageThreadSource.asObservable();
   private newMessageSource = new Subject<Message>();
   newMessage$ = this.newMessageSource.asObservable();
-  lastCompanion = '';
-  companions: Player[] = [];
-  companionsLoaded = false;
-
-  private playerDeletedSource = new Subject<any>();
-  playerDeleted$ = this.playerDeletedSource.asObservable();
-  private avatarUpdatedSource = new Subject<any>();
-  avatarUpdated$ = this.avatarUpdatedSource.asObservable();
 
   constructor(private http: HttpClient) { }
 
@@ -162,13 +158,11 @@ export class MessagesService {
       this.messageThreadSource.next([]);
       this.lastCompanion = '';
     }
-    this.playerDeletedSource.next({userName, userId});
   }
   
   avatarUpdated(userId: number, avatar: Avatar) {
     this.companions.forEach(c => {
         if (c.id === userId) c.avatar = avatar;
     });
-    this.avatarUpdatedSource.next({userId, avatar});
   }
 }

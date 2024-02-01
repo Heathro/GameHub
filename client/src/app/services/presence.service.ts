@@ -93,11 +93,10 @@ export class PresenceService {
     });
 
     this.hubConnection.on('UserUpdated', (player: Player) => {
-      this.playersService.userUpdated(player);
+      this.playersService.playerUpdated(player);
     });
 
     this.hubConnection.on('AvatarUpdated', ({userId, avatar}) => {
-      this.adminService.avatarUpdated(userId, avatar);
       this.playersService.avatarUpdated(userId, avatar);
       this.messagesService.avatarUpdated(userId, avatar);
       this.reviewsService.avatarUpdated(userId, avatar);
@@ -109,7 +108,6 @@ export class PresenceService {
         this.logoutRequiredSource.next(deletedId);
       }
       else {
-        this.adminService.playerDeleted(deletedUsername, deletedId);
         this.playersService.playerDeleted(deletedUsername, deletedId);
         this.messagesService.playerDeleted(deletedUsername, deletedId);
         this.reviewsService.playerDeleted(deletedUsername, deletedId);
@@ -138,18 +136,16 @@ export class PresenceService {
     this.hubConnection.on('GamePublished', (game: Game) => {
       this.adminService.gamePublished();
       this.playersService.gamePublished(game);
-      this.gamesService.gamePublished();
+      this.gamesService.gamePublished(game);
     });
 
     this.hubConnection.on('GameUpdated', (game: Game) => {
-      this.adminService.gameUpdated(game);
       this.playersService.gameUpdated(game);
       this.gamesService.gameUpdated(game);
       this.reviewsService.gameUpdated(game);
     });
 
     this.hubConnection.on('PosterUpdated', ({gameId, poster}) => {
-      this.adminService.posterUpdated(gameId, poster);
       this.playersService.posterUpdated(gameId, poster);
       this.gamesService.posterUpdated(gameId, poster);
       this.reviewsService.posterUpdated(gameId, poster);
@@ -172,7 +168,6 @@ export class PresenceService {
     });
 
     this.hubConnection.on('GameDeleted', gameId => {
-      this.adminService.gameDeleted(gameId);
       this.playersService.gameDeleted(gameId);
       this.reviewsService.gameDeleted(gameId);
       this.gamesService.gameDeleted(gameId);
@@ -184,9 +179,7 @@ export class PresenceService {
           next: () => this.router.navigateByUrl('/reviews/' + review.gameTitle)
         });
       }
-      this.reviewsService.reviewApproved();
-      this.playersService.reviewApproved(review);
-      this.gamesService.reviewApproved(review);
+      this.reviewsService.reviewApproved(review);
     });
 
     if (user.roles.includes('Admin') || user.roles.includes('Moderator')) {
@@ -196,10 +189,7 @@ export class PresenceService {
     }    
 
     this.hubConnection.on('ReviewDeleted', reviewId => {
-      this.adminService.reviewDeleted(reviewId);
-      this.playersService.reviewDeleted(reviewId);
       this.reviewsService.reviewDeleted(reviewId);
-      this.gamesService.reviewDeleted(reviewId);
     });
   }
 

@@ -33,21 +33,6 @@ export class PlayersService {
   private avatarUpdatedSource = new Subject<any>();
   avatarUpdated$ = this.avatarUpdatedSource.asObservable();
 
-  private gamePublishedSource = new Subject<Game>();
-  gamePublished$ = this.gamePublishedSource.asObservable();
-  private gameUpdatedSource = new Subject<Game>();
-  gameUpdated$ = this.gameUpdatedSource.asObservable();
-  private gameDeletedSource = new Subject<number>();
-  gameDeleted$ = this.gameDeletedSource.asObservable();
-  
-  private posterUpdatedSource = new Subject<any>();
-  posterUpdated$ = this.posterUpdatedSource.asObservable();
-
-  private reviewApprovedSource = new Subject<Review>();
-  reviewApproved$ = this.reviewApprovedSource.asObservable();
-  private reviewDeletedSource = new Subject<number>();
-  reviewDeleted$ = this.reviewDeletedSource.asObservable();
-
   private friendshipRequestedSource = new Subject<Player>();
   friendshipRequested$ = this.friendshipRequestedSource.asObservable();
   private friendshipCancelledSource = new Subject<Player>();
@@ -224,7 +209,7 @@ export class PlayersService {
     this.newPlayersCountSource.next(this.newPlayersCount);
   }
   
-  userUpdated(player: Player) {
+  playerUpdated(player: Player) {
     this.activeFriends.forEach(f => {
       if (f.id === player.id) this.updatePlayerData(f, player);
     });
@@ -274,7 +259,6 @@ export class PlayersService {
     this.playersCache.forEach(q => {
       q.result.forEach((p: Player) => p.publications.unshift(game));
     });
-    this.gamePublishedSource.next(game);
   }
 
   gameUpdated(game: Game) {
@@ -284,9 +268,7 @@ export class PlayersService {
           if (g.id === game.id) this.updateGameData(g, game);
         });
       });
-    });      
-
-    this.gameUpdatedSource.next(game);
+    });
   }
 
   posterUpdated(gameId: number, poster: Poster) {
@@ -297,7 +279,6 @@ export class PlayersService {
         });
       });
     });
-    this.posterUpdatedSource.next({gameId, poster});
   }
 
   gameDeleted(gameId: number) {
@@ -306,15 +287,6 @@ export class PlayersService {
         p.publications = p.publications.filter((p: Game) => p.id !== gameId);
       });
     });
-    this.gameDeletedSource.next(gameId);
-  }
-
-  reviewApproved(review: Review) {
-    this.reviewApprovedSource.next(review);
-  }
-
-  reviewDeleted(reviewId: number) {
-    this.reviewDeletedSource.next(reviewId);
   }
 
   friendshipRequested(player: Player) {

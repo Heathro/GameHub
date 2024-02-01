@@ -11,11 +11,12 @@ import { environment } from 'src/environments/environment';
 import { ConfirmService } from 'src/app/services/confirm.service';
 import { AccountService } from 'src/app/services/account.service';
 import { PlayersService } from 'src/app/services/players.service';
+import { ReviewsService } from 'src/app/services/reviews.service';
+import { GamesService } from 'src/app/services/games.service';
 import { EditComponent } from 'src/app/interfaces/edit-component';
 import { Player } from 'src/app/models/player';
 import { User } from 'src/app/models/user';
 import { Review } from 'src/app/models/review';
-import { ReviewsService } from 'src/app/services/reviews.service';
 import { Poster } from 'src/app/models/poster';
 
 @Component({
@@ -46,21 +47,22 @@ export class PlayerEditComponent implements OnInit, OnDestroy, EditComponent {
     private accountService: AccountService, 
     private playersService: PlayersService,
     private reviewsService: ReviewsService,
+    private gamesService: GamesService,
     private toastr: ToastrService,
     private formBuilder: FormBuilder,
     private router: Router,
     private confirmService: ConfirmService
   ) {
-    this.posterUpdatedSubscription = this.playersService.posterUpdated$.subscribe(
+    this.posterUpdatedSubscription = this.gamesService.posterUpdated$.subscribe(
       ({gameId, poster}) => this.posterUpdated(gameId, poster)
     );
-    this.gameDeletedSubscription = this.playersService.gameDeleted$.subscribe(
+    this.gameDeletedSubscription = this.gamesService.gameDeleted$.subscribe(
       gameId => this.gameDeleted(gameId)
     );
-    this.reviewApprovedSubscription = this.playersService.reviewApproved$.subscribe(
+    this.reviewApprovedSubscription = this.reviewsService.reviewApproved$.subscribe(
       review => this.reviewApproved(review)
     );
-    this.reviewDeletedSubscription = this.playersService.reviewDeleted$.subscribe(
+    this.reviewDeletedSubscription = this.reviewsService.reviewDeleted$.subscribe(
       reviewId => this.reviewDeleted(reviewId)
     );
     this.accountService.currentUser$.pipe(take(1)).subscribe({

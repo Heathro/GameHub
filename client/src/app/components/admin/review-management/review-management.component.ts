@@ -1,10 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { AdminService } from 'src/app/services/admin.service';
 import { Pagination } from 'src/app/helpers/pagination';
-import { ReviewForModeration } from 'src/app/models/review';
+import { AdminService } from 'src/app/services/admin.service';
+import { GamesService } from 'src/app/services/games.service';
+import { PlayersService } from 'src/app/services/players.service';
+import { ReviewsService } from 'src/app/services/reviews.service';
 import { Game } from 'src/app/models/game';
 import { Avatar } from 'src/app/models/avatar';
+import { ReviewForModeration } from 'src/app/models/review';
 
 @Component({
   selector: 'app-review-management',
@@ -22,20 +25,25 @@ export class ReviewManagementComponent implements OnInit, OnDestroy {
   reviewDeletedSubscription;
   reviewRefreshSubscription;
 
-  constructor(private adminService: AdminService) {
-    this.playerDeletedSubscription = this.adminService.playerDeleted$.subscribe(
+  constructor(
+    private adminService: AdminService,
+    private reviewsService: ReviewsService,
+    private gamesService: GamesService,
+    private playersService: PlayersService
+  ) {
+    this.playerDeletedSubscription = this.playersService.playerDeleted$.subscribe(
       ({userName, userId}) => this.playerDeleted(userId)
     );
-    this.avatarUpdatedSubscription = this.adminService.avatarUpdated$.subscribe(
+    this.avatarUpdatedSubscription = this.playersService.avatarUpdated$.subscribe(
       ({userId, avatar}) => this.avatarUpdated(userId, avatar)
     );
-    this.gameUpdatedSubscription = this.adminService.gameUpdated$.subscribe(
+    this.gameUpdatedSubscription = this.gamesService.gameUpdated$.subscribe(
       game => this.gameUpdated(game)
     );
-    this.gameDeletedSubscription = this.adminService.gameDeleted$.subscribe(
+    this.gameDeletedSubscription = this.gamesService.gameDeleted$.subscribe(
       gameId => this.gameDeleted(gameId)
     );
-    this.reviewDeletedSubscription = this.adminService.reviewDeleted$.subscribe(
+    this.reviewDeletedSubscription = this.reviewsService.reviewDeleted$.subscribe(
       reviewId => this.reviewDeleted(reviewId)
     );
     this.reviewRefreshSubscription = this.adminService.refreshReviews$.subscribe(

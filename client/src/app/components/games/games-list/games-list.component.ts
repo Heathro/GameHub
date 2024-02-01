@@ -5,6 +5,7 @@ import { BasicFunctions } from 'src/app/helpers/basicFunctions';
 import { Pagination } from 'src/app/helpers/pagination';
 import { OrderType } from 'src/app/enums/orderType';
 import { GamesService } from 'src/app/services/games.service';
+import { PlayersService } from 'src/app/services/players.service';
 import { Game } from 'src/app/models/game';
 import { Poster } from 'src/app/models/poster';
 
@@ -28,8 +29,12 @@ export class GamesListComponent implements OnInit, OnDestroy {
   posterUpdatedSubscription;
   gamesRefreshSubscription;
 
-  constructor(private gamesService: GamesService, private formBuilder: FormBuilder) {
-    this.playerDeletedSubscription = this.gamesService.playerDeleted$.subscribe(
+  constructor(
+    private gamesService: GamesService,
+    private playersService: PlayersService,
+    private formBuilder: FormBuilder
+  ) {
+    this.playerDeletedSubscription = this.playersService.playerDeleted$.subscribe(
       ({userName, userId}) => this.playerDeleted(userId)
     );
     this.gameUpdatedSubscription = this.gamesService.gameUpdated$.subscribe(

@@ -8,6 +8,7 @@ import { CustomValidators } from 'src/app/helpers/customValidators';
 import { ConfirmService } from 'src/app/services/confirm.service';
 import { EditComponent } from 'src/app/interfaces/edit-component';
 import { ReviewsService } from 'src/app/services/reviews.service';
+import { GamesService } from 'src/app/services/games.service';
 import { ReviewMenu } from 'src/app/models/review';
 import { Game } from 'src/app/models/game';
 import { Poster } from 'src/app/models/poster';
@@ -38,15 +39,16 @@ export class PostReviewComponent implements OnInit, OnDestroy, EditComponent {
     private route: ActivatedRoute,
     private router: Router,  
     private confirmService: ConfirmService,
-    private reviewsService: ReviewsService
+    private reviewsService: ReviewsService,
+    private gamesService: GamesService
   ) {
-    this.gameUpdatedSubscription = this.reviewsService.gameUpdated$.subscribe(
+    this.gameUpdatedSubscription = this.gamesService.gameUpdated$.subscribe(
       game => this.gameUpdated(game)
     );
-    this.gameDeletedSubscription = this.reviewsService.gameDeleted$.subscribe(
+    this.gameDeletedSubscription = this.gamesService.gameDeleted$.subscribe(
       gameId => this.gameDeleted(gameId)
     );
-    this.posterUpdatedSubscription = this.reviewsService.posterUpdated$.subscribe(
+    this.posterUpdatedSubscription = this.gamesService.posterUpdated$.subscribe(
       ({gameId, poster}) => this.posterUpdated(gameId, poster)
     );
     this.reviewDeletedSubscription = this.reviewsService.reviewDeleted$.subscribe(

@@ -19,19 +19,8 @@ export class ReviewsService {
   reviewsCache = new Map();
   paginationParams: PaginationParams;
 
-  private playerDeletedSource = new Subject<any>();
-  playerDeleted$ = this.playerDeletedSource.asObservable();
-  private avatarUpdatedSource = new Subject<any>();
-  avatarUpdated$ = this.avatarUpdatedSource.asObservable();
-
-  private gameUpdatedSource = new Subject<Game>();
-  gameUpdated$ = this.gameUpdatedSource.asObservable();
-  private gameDeletedSource = new Subject<number>();
-  gameDeleted$ = this.gameDeletedSource.asObservable();
-  
-  private posterUpdatedSource = new Subject<any>();
-  posterUpdated$ = this.posterUpdatedSource.asObservable();
-
+  private reviewApprovedSource = new Subject<Review>();
+  reviewApproved$ = this.reviewApprovedSource.asObservable();
   private reviewDeletedSource = new Subject<number>();
   reviewDeleted$ = this.reviewDeletedSource.asObservable();
   
@@ -119,7 +108,6 @@ export class ReviewsService {
     this.reviewsCache.forEach(q => {
       q.result = q.result.filter((r: Review) => r.reviewerId !== userId);
     });
-    this.playerDeletedSource.next({userName, userId});
   }
   
   avatarUpdated(userId: number, avatar: Avatar) {
@@ -128,7 +116,6 @@ export class ReviewsService {
         if (r.reviewerId === userId) r.reviewerAvatar = avatar;
       });
     });
-    this.avatarUpdatedSource.next({userId, avatar});
   }
 
   gameUpdated(game: Game) {
@@ -137,7 +124,6 @@ export class ReviewsService {
         if (r.gameId === game.id) this.updateReviewsData(r, game);
       });
     });
-    this.gameUpdatedSource.next(game);
   }
 
   posterUpdated(gameId: number, poster: Poster) {
@@ -146,26 +132,24 @@ export class ReviewsService {
         if (r.gameId === gameId) r.gamePoster = poster;
       });
     });
-    this.posterUpdatedSource.next({gameId, poster});
   }
 
   gameDeleted(gameId: number) {
     this.reviewsCache.forEach(q => {
       q.result = q.result.filter((r: Review) => r.gameId !== gameId);
     });
-    this.gameDeletedSource.next(gameId);
   }
 
-  reviewApproved() {
+  reviewApproved(review: Review) {
     this.newReviewsCount++;
     this.newReviewsCountSource.next(this.newReviewsCount);
+    this.reviewApprovedSource.next(review);
   }
 
   reviewDeleted(reviewId: number) {
     this.reviewsCache.forEach(q => {
       q.result = q.result.filter((r: Review) => r.id !== reviewId);
     });
-    this.reviewDeletedSource.next(reviewId);
   }
 
   updateReviewsData(review: Review, game: Game) {

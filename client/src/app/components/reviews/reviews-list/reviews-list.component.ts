@@ -1,7 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { ReviewsService } from 'src/app/services/reviews.service';
 import { Pagination } from 'src/app/helpers/pagination';
+import { ReviewsService } from 'src/app/services/reviews.service';
+import { GamesService } from 'src/app/services/games.service';
+import { PlayersService } from 'src/app/services/players.service';
 import { OrderType } from 'src/app/enums/orderType';
 import { Review } from 'src/app/models/review';
 import { Game } from 'src/app/models/game';
@@ -25,20 +27,24 @@ export class ReviewsListComponent implements OnInit, OnDestroy {
   reviewDeletedSubscription;
   reviewRefreshSubscription;
 
-  constructor(private reviewsService: ReviewsService) {
-    this.playerDeletedSubscription = this.reviewsService.playerDeleted$.subscribe(
+  constructor(
+    private reviewsService: ReviewsService,
+    private gamesService: GamesService,
+    private playersService: PlayersService
+  ) {
+    this.playerDeletedSubscription = this.playersService.playerDeleted$.subscribe(
       ({userName, userId}) => this.playerDeleted(userId)
     );
-    this.avatarUpdatedSubscription = this.reviewsService.avatarUpdated$.subscribe(
+    this.avatarUpdatedSubscription = this.playersService.avatarUpdated$.subscribe(
       ({userId, avatar}) => this.avatarUpdated(userId, avatar)
     );
-    this.gameUpdatedSubscription = this.reviewsService.gameUpdated$.subscribe(
+    this.gameUpdatedSubscription = this.gamesService.gameUpdated$.subscribe(
       game => this.gameUpdated(game)
     );
-    this.gameDeletedSubscription = this.reviewsService.gameDeleted$.subscribe(
+    this.gameDeletedSubscription = this.gamesService.gameDeleted$.subscribe(
       gameId => this.gameDeleted(gameId)
     );
-    this.posterUpdatedSubscription = this.reviewsService.posterUpdated$.subscribe(
+    this.posterUpdatedSubscription = this.gamesService.posterUpdated$.subscribe(
       ({gameId, poster}) => this.posterUpdated(gameId, poster)
     );
     this.reviewDeletedSubscription = this.reviewsService.reviewDeleted$.subscribe(

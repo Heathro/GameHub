@@ -1,25 +1,25 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { take } from 'rxjs';
 import { FileUploader } from 'ng2-file-upload';
 import { ToastrService } from 'ngx-toastr';
 
+import { environment } from 'src/environments/environment';
 import { BasicFunctions } from 'src/app/helpers/basicFunctions';
 import { CustomValidators } from 'src/app/helpers/customValidators';
-import { environment } from 'src/environments/environment';
+import { ConfirmService } from 'src/app/services/confirm.service';
 import { GamesService } from 'src/app/services/games.service';
+import { ReviewsService } from 'src/app/services/reviews.service';
+import { PlayersService } from 'src/app/services/players.service';
 import { AccountService } from 'src/app/services/account.service';
 import { EditComponent } from 'src/app/interfaces/edit-component';
 import { Game } from 'src/app/models/game';
 import { User } from 'src/app/models/user';
 import { Review } from 'src/app/models/review';
-import { ReviewsService } from 'src/app/services/reviews.service';
-import { ConfirmService } from 'src/app/services/confirm.service';
 import { Avatar } from 'src/app/models/avatar';
-import { PlayersService } from 'src/app/services/players.service';
 
 @Component({
   selector: 'app-game-edit',
@@ -59,7 +59,7 @@ export class GameEditComponent implements OnInit, OnDestroy, EditComponent {
     private location: Location,
     private confirmService: ConfirmService
   ) {
-    this.playerDeletedSubscription = this.gamesService.playerDeleted$.subscribe(
+    this.playerDeletedSubscription = this.playersService.playerDeleted$.subscribe(
       ({userName, userId}) => this.playerDeleted(userId)
     );
     this.avatarUpdatedSubscription = this.playersService.avatarUpdated$.subscribe(
@@ -68,10 +68,10 @@ export class GameEditComponent implements OnInit, OnDestroy, EditComponent {
     this.gameDeletedSubscription = this.gamesService.gameDeleted$.subscribe(
       gameId => this.gameDeleted(gameId)
     );
-    this.reviewApprovedSubscription = this.gamesService.reviewApproved$.subscribe(
+    this.reviewApprovedSubscription = this.reviewsService.reviewApproved$.subscribe(
       review => this.reviewApproved(review)
     );
-    this.reviewDeletedSubscription = this.gamesService.reviewDeleted$.subscribe(
+    this.reviewDeletedSubscription = this.reviewsService.reviewDeleted$.subscribe(
       reviewId => this.reviewDeleted(reviewId)
     );
     this.accountService.currentUser$.pipe(take(1)).subscribe({

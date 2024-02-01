@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
-import { Player } from 'src/app/models/player';
 import { PresenceService } from 'src/app/services/presence.service';
+import { Player } from 'src/app/models/player';
 
 @Component({
   selector: 'app-contact-card',

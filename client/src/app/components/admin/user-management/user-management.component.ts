@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { AdminService } from 'src/app/services/admin.service';
 import { Pagination } from 'src/app/helpers/pagination';
+import { AdminService } from 'src/app/services/admin.service';
+import { PlayersService } from 'src/app/services/players.service';
 import { User } from 'src/app/models/user';
 import { Avatar } from 'src/app/models/avatar';
 
@@ -18,11 +19,11 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   avatarUpdatedSubscription;
   playersRefreshSubscription;
 
-  constructor(private adminService: AdminService) {
-    this.playerDeletedSubscription = this.adminService.playerDeleted$.subscribe(
+  constructor(private adminService: AdminService, private playersService: PlayersService) {
+    this.playerDeletedSubscription = this.playersService.playerDeleted$.subscribe(
       ({userName, userId}) => this.playerDeleted(userId)
     );
-    this.avatarUpdatedSubscription = this.adminService.avatarUpdated$.subscribe(
+    this.avatarUpdatedSubscription = this.playersService.avatarUpdated$.subscribe(
       ({userId, avatar}) => this.avatarUpdated(userId, avatar)
     );
     this.playersRefreshSubscription = this.adminService.refreshPlayers$.subscribe(
