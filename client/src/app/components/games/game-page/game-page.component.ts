@@ -194,7 +194,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
 
   private gameDeleted(gameId: number) {
     if (this.game && this.game.id === gameId) {
-      this.toastr.warning(this.game.title + " was deleted");
+      this.toastr.warning('"' + this.game.title + '" was deleted');
       this.router.navigateByUrl('/games');
     }
   }

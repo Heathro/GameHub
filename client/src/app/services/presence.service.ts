@@ -97,11 +97,11 @@ export class PresenceService {
 
     this.hubConnection.on('AvatarUpdated', ({userId, avatar}) => {
       this.toastr.success(userId + ' avatar ' + avatar.url);
-    }); // TODO
+    });
 
     this.hubConnection.on('UserDeleted', ({deletedUsername, deletedId}) => {
       if (deletedId === user.id) {
-        this.toastr.error('Your account was deleted');
+        this.toastr.error('Your account deleted');
         this.logoutRequiredSource.next(deletedId);
       }
       else {
@@ -175,6 +175,11 @@ export class PresenceService {
     });
 
     this.hubConnection.on('ReviewApproved', (review: Review) => {
+      if (review.reviewerId === user.id) {
+        this.toastr.success('"' + review.gameTitle + '" review approved').onTap.pipe(take(1)).subscribe({
+          next: () => this.router.navigateByUrl('/reviews/' + review.gameTitle)
+        });
+      }
       this.reviewsService.reviewApproved(review);
       this.playersService.reviewApproved(review);
       this.gamesService.reviewApproved(review);

@@ -94,7 +94,7 @@ export class PostReviewComponent implements OnInit, OnDestroy, EditComponent {
         this.finished = true;
         this.posting = false;
         this.router.navigateByUrl('/games/' + this.reviewMenu?.gameTitle);
-        this.toastr.success('Review awaiting moderation');
+        this.toastr.warning('Review awaiting moderation');
       },
       error: error => {
         this.finished = true;

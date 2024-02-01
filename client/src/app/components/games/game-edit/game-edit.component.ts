@@ -245,7 +245,7 @@ export class GameEditComponent implements OnInit, OnDestroy, EditComponent {
 
   private gameDeleted(gameId: number) {
     if (this.game && this.game.id === gameId) {
-      this.toastr.warning(this.game.title + " was deleted");
+      this.toastr.error('"' + this.game.title + '" was deleted');
       this.router.navigateByUrl('/edit-profile');
     }
   }

@@ -166,7 +166,7 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
 
   private playerDeleted(userName: string, userId: number) {
     if (this.player && this.player.id === userId) {
-      this.toastr.warning(userName + " was deleted");
+      this.toastr.warning('"' + this.player.userName + '" was deleted');
       this.router.navigateByUrl('/players');
     }
   }
