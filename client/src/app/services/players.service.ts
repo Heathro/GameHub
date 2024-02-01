@@ -26,6 +26,8 @@ export class PlayersService {
   friendsLoaded = false;
   paginationParams: PaginationParams;
 
+  private playerUpdatedSource = new Subject<Player>();
+  playerUpdated$ = this.playerUpdatedSource.asObservable();
   private playerDeletedSource = new Subject<any>();
   playerDeleted$ = this.playerDeletedSource.asObservable();
   private avatarUpdatedSource = new Subject<any>();
@@ -221,6 +223,24 @@ export class PlayersService {
     this.newPlayersCount++;
     this.newPlayersCountSource.next(this.newPlayersCount);
   }
+  
+  userUpdated(player: Player) {
+    this.activeFriends.forEach(f => {
+      if (f.id === player.id) this.updatePlayerData(f, player);
+    });
+    this.incomeRequests.forEach(f => {
+      if (f.id === player.id) this.updatePlayerData(f, player);
+    });
+    this.outcomeRequests.forEach(f => {
+      if (f.id === player.id) this.updatePlayerData(f, player);
+    });
+    this.playersCache.forEach(q => {
+      q.result.forEach((p: Player) => {
+        if (p.id === player.id) this.updatePlayerData(p, player);
+      });
+    });
+    this.playerUpdatedSource.next(player);
+  }
 
   playerDeleted(userName: string, userId: number) {
     this.activeFriends = this.activeFriends.filter(f => f.id !== userId);
@@ -315,6 +335,13 @@ export class PlayersService {
     this.activeFriends.push(player);
     this.updateFriendsData(player);
     this.friendshipAcceptedSource.next(player);
+  }
+
+  updatePlayerData(currentPlayer: Player, updatedPlayer: Player) {
+    currentPlayer.realname = updatedPlayer.realname;
+    currentPlayer.summary = updatedPlayer.summary;
+    currentPlayer.country = updatedPlayer.country;
+    currentPlayer.city = updatedPlayer.city;
   }
 
   updateGameData(currentGame: Game, updatedGame: Game) {

@@ -26,6 +26,7 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
   reviews: Review[] = [];
   user: User | null = null;
   loadingReviews = false;
+  playerUpdatedSubscription;
   playerDeletedSubscription;
   avatarUpdatedSubscription;
   gamePublishedSubscription;
@@ -47,7 +48,10 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
     private toastr: ToastrService,
     private route: ActivatedRoute, 
     private router: Router
-  ) { 
+  ) {
+    this.playerUpdatedSubscription = this.playersService.playerUpdated$.subscribe(
+      player => this.playerUpdated(player)
+    );
     this.playerDeletedSubscription = this.playersService.playerDeleted$.subscribe(
       ({userName, userId}) => this.playerDeleted(userName, userId)
     );
@@ -95,6 +99,7 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
   }
   
   ngOnDestroy(): void {
+    this.playerUpdatedSubscription.unsubscribe();
     this.playerDeletedSubscription.unsubscribe();
     this.avatarUpdatedSubscription.unsubscribe();
     this.gamePublishedSubscription.unsubscribe();
@@ -168,6 +173,12 @@ export class PlayerProfileComponent implements OnInit, OnDestroy {
     this.messagesService.startChat(this.player).subscribe({
       next: () => this.router.navigateByUrl('/messenger')
     });
+  }
+
+  private playerUpdated(player: Player) {
+    if (this.player && this.player.id === player.id) {
+      this.playersService.updatePlayerData(this.player, player);
+    }
   }
 
   private playerDeleted(userName: string, userId: number) {

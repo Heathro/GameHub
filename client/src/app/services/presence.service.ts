@@ -93,7 +93,7 @@ export class PresenceService {
     });
 
     this.hubConnection.on('UserUpdated', (player: Player) => {
-      this.toastr.success(player.userName + ' updated');
+      this.playersService.userUpdated(player);
     });
 
     this.hubConnection.on('AvatarUpdated', ({userId, avatar}) => {
