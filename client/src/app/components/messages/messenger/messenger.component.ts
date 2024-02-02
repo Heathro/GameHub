@@ -31,6 +31,7 @@ export class MessengerComponent implements OnInit, OnDestroy {
   sending = false;
   playerDeletedSubscription;
   avatarUpdatedSubscription;
+  loadMessagesSubscription;
 
   constructor(
     private accountService: AccountService,
@@ -43,6 +44,9 @@ export class MessengerComponent implements OnInit, OnDestroy {
     );
     this.avatarUpdatedSubscription = this.playersService.avatarUpdated$.subscribe(
       ({userId, avatar}) => this.avatarUpdated(userId, avatar)
+    );
+    this.loadMessagesSubscription = this.messagesService.loadMessages$.subscribe(
+      companionUsername => this.loadMessages(companionUsername)
     );
     this.accountService.currentUser$.pipe(take(1)).subscribe({
       next: user => this.user = user

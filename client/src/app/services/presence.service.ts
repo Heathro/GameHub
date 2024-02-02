@@ -85,6 +85,9 @@ export class PresenceService {
           }
         });
       }
+      else {
+        this.messagesService.incomingMessage(sender);
+      }
     });
 
     this.hubConnection.on('UserRegisted', (player: Player) => {

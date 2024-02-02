@@ -25,6 +25,8 @@ export class MessagesService {
   messageThread$ = this.messageThreadSource.asObservable();
   private newMessageSource = new Subject<Message>();
   newMessage$ = this.newMessageSource.asObservable();
+  private loadMessagesSource = new Subject<string>();
+  loadMessages$ = this.loadMessagesSource.asObservable();
 
   constructor(private http: HttpClient) { }
 
@@ -91,6 +93,16 @@ export class MessagesService {
         this.lastCompanion = this.companions.length > 0 ? this.companions[0].userName : '';
       })
       .catch(error => console.log(error));
+  }
+
+  incomingMessage(player: Player) {
+    if (!this.companions.find(c => c.userName === player.userName)) {
+      this.companions.unshift(player);
+    }
+    if (this.lastCompanion === '') {
+      this.lastCompanion = player.userName;
+      this.loadMessagesSource.next(player.userName);
+    }
   }
 
   startChat(player: Player) {
