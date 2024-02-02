@@ -52,12 +52,12 @@ export class GameEditComponent implements OnInit, OnDestroy, EditComponent {
     private gamesService: GamesService, 
     private reviewsService: ReviewsService,
     private playersService: PlayersService,
-    private toastr: ToastrService, 
-    private route: ActivatedRoute,
-    private router: Router,
+    private confirmService: ConfirmService,
     private formBuilder: FormBuilder,
+    private toastr: ToastrService,
     private location: Location,
-    private confirmService: ConfirmService
+    private route: ActivatedRoute,
+    private router: Router
   ) {
     this.playerDeletedSubscription = this.playersService.playerDeleted$.subscribe(
       ({userName, userId}) => this.playerDeleted(userId)

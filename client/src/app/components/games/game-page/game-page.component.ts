@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { Location } from '@angular/common';
 
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { GalleryItem, GalleryModule, ImageItem } from 'ng-gallery';
@@ -50,6 +51,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
     private reviewsService: ReviewsService,
     private playersService: PlayersService,
     private toastr: ToastrService,
+    private location: Location,
     private route: ActivatedRoute, 
     private router: Router,
     private sanitizer: DomSanitizer
@@ -203,6 +205,10 @@ export class GamePageComponent implements OnInit, OnDestroy {
   private gameUpdated(game: Game) {
     if (this.game && this.game.id === game.id) {
       this.gamesService.updateGameData(this.game, game);
+      
+      if (this.route.snapshot.paramMap.get('title') !== game.title) {
+        this.location.replaceState('/games/' + game.title);
+      }
     }
   }
 
