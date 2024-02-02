@@ -19,7 +19,6 @@ import { HomeComponent } from './components/basic/home/home.component';
 import { RegisterComponent } from './components/authorization/register/register.component';
 import { LoginComponent } from './components/authorization/login/login.component';
 import { GamesListComponent } from './components/games/games-list/games-list.component';
-import { TestErrorComponent } from './components/errors/test-error/test-error.component';
 import { NotFoundComponent } from './components/errors/not-found/not-found.component';
 import { ServerErrorComponent } from './components/errors/server-error/server-error.component';
 import { PlayersListComponent } from './components/players/players-list/players-list.component';
@@ -63,7 +62,6 @@ import { ConfirmDialogComponent } from './modals/confirm-dialog/confirm-dialog.c
     RegisterComponent,
     LoginComponent,
     GamesListComponent,
-    TestErrorComponent,
     NotFoundComponent,
     ServerErrorComponent,
     PlayersListComponent,

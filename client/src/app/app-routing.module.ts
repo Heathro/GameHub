@@ -9,7 +9,6 @@ import { authGuard } from './guards/auth.guard';
 import { nonAuthGuard } from './guards/non-auth.guard';
 import { unsavedChangesGuard } from './guards/unsaved-changes.guard';
 import { adminGuard } from './guards/admin.guard';
-import { TestErrorComponent } from './components/errors/test-error/test-error.component';
 import { NotFoundComponent } from './components/errors/not-found/not-found.component';
 import { ServerErrorComponent } from './components/errors/server-error/server-error.component';
 import { PlayersListComponent } from './components/players/players-list/players-list.component';
@@ -62,7 +61,6 @@ const routes: Routes = [
       { path: 'register', component: RegisterComponent }, 
     ]
   },
-  { path: 'errors', component: TestErrorComponent },
   { path: 'not-found', component: NotFoundComponent },
   { path: 'server-error', component: ServerErrorComponent },
   { path: '**', component: NotFoundComponent, pathMatch: 'full' }
