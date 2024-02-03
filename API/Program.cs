@@ -13,6 +13,33 @@ builder.Services.AddControllers();
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddIdentityServices(builder.Configuration);
 
+var connectionString = "";
+if (builder.Environment.IsDevelopment())
+{
+    connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+}    
+else 
+{
+    var connectionUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+    connectionUrl = connectionUrl.Replace("postgres://", string.Empty);
+
+    var pgUserPass = connectionUrl.Split("@")[0];
+    var pgHostPortDb = connectionUrl.Split("@")[1];
+    var pgHostPort = pgHostPortDb.Split("/")[0];
+    var pgDb = pgHostPortDb.Split("/")[1];
+    var pgUser = pgUserPass.Split(":")[0];
+    var pgPass = pgUserPass.Split(":")[1];
+    var pgHost = pgHostPort.Split(":")[0];
+    var pgPort = pgHostPort.Split(":")[1];
+    var updatedHost = pgHost.Replace("flycast", "internal");
+
+    connectionString = $"Server={updatedHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};";
+}
+builder.Services.AddDbContext<DataContext>(opt =>
+{
+    opt.UseNpgsql(connectionString);
+});
+
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionMiddleware>();
@@ -49,7 +76,8 @@ try
     var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
 
     await context.Database.MigrateAsync();
-    await context.Database.ExecuteSqlRawAsync("DELETE FROM [Connections]");
+    
+    await Seed.ClearConnections(context);
 
     await Seed.SeedUsers(userManager, roleManager);
     await Seed.SeedGames(context);
@@ -57,7 +85,7 @@ try
 catch (Exception ex)
 {
     var logger = services.GetService<Logger<Program>>();
-    logger.LogError(ex, "An error occured during migration");
+    logger?.LogError(ex, "An error occured during migration");
 }
 
 app.Run();

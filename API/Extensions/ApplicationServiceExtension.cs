@@ -12,25 +12,12 @@ public static class ApplicationServiceExtension
     public static IServiceCollection AddApplicationServices(this IServiceCollection services, 
         IConfiguration config)
     {
-        services.AddDbContext<DataContext>(options =>
-        {
-            options.UseSqlite(config.GetConnectionString("DefaultConnection"));
-        });
-
         services.AddCors();
 
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IImageService, ImageService>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-        // services.AddScoped<IUsersRepository, UsersRepository>();
-        // services.AddScoped<IGamesRepository, GamesRepository>();
-        // services.AddScoped<ILikesRepository, LikesRepository>();
-        // services.AddScoped<IMessagesRepository, MessagesRepository>();
-        // services.AddScoped<IFriendsRepository, FriendsRepository>();
-        // services.AddScoped<IBookmarksRepository, BookmarksRepository>();
-        // services.AddScoped<IReviewsRepository, ReviewsRepository>();
 
         services.AddSignalR();
         services.AddSingleton<PresenceTracker>();
