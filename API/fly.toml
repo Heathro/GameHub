@@ -10,7 +10,7 @@ primary_region = "lhr"
   image = "heathroru/gamehub:latest"
 
 [env]
-  ASPNETCORE_URLS="http://+:8080"
+  ASPNETCORE_URLS="http://[::]:8080"
   CloudinarySettings__CloudName="dzretkk57"
   CloudinarySettings__ApiKey="394149496287184"
 
