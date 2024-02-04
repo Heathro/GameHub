@@ -5,6 +5,7 @@ import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { BehaviorSubject, Subject, map, of, take } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
+import { BusyService } from './busy.service';
 import { Message } from '../models/message';
 import { Player } from '../models/player';
 import { User } from '../models/user';
@@ -28,9 +29,11 @@ export class MessagesService {
   private loadMessagesSource = new Subject<string>();
   loadMessages$ = this.loadMessagesSource.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private busyService: BusyService) { }
 
   createHubConnection(currentUser: User, otherUserName: string) {
+    this.busyService.busy();
+
     this.lastCompanion = otherUserName;
 
     this.hubConnection = new HubConnectionBuilder()
@@ -40,7 +43,9 @@ export class MessagesService {
       .withAutomaticReconnect()
       .build();
 
-    this.hubConnection.start().catch(error => console.log(error));
+    this.hubConnection.start()
+      .catch(error => console.log(error))
+      .finally(() => this.busyService.idle());
 
     this.hubConnection.on('RecieveMessageThread', messages => {
       this.messageThreadSource.next(messages);
@@ -67,7 +72,10 @@ export class MessagesService {
   }
 
   stopHubConnection() {
-    if (this.hubConnection) this.hubConnection.stop();
+    if (this.hubConnection) {
+      this.messageThreadSource.next([]);
+      this.hubConnection.stop();
+    }
   }
 
   getCompanions() {

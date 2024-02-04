@@ -36,6 +36,7 @@ public class ReviewsRepository : IReviewsRepository
             .IgnoreQueryFilters()
             .Include(r => r.Reviewer).ThenInclude(u => u.Avatar)
             .Include(r => r.Game).ThenInclude(g => g.Poster)
+            .AsSplitQuery()
             .SingleOrDefaultAsync(r => r.Id == id);
     }
 
@@ -45,6 +46,7 @@ public class ReviewsRepository : IReviewsRepository
             .IgnoreQueryFilters()
             .Include(r => r.Reviewer).ThenInclude(u => u.Avatar)
             .Include(r => r.Game).ThenInclude(g => g.Poster)
+            .AsSplitQuery()
             .SingleOrDefaultAsync(r => r.ReviewerId == reviewerId && r.GameId == gameId);
     }
 

@@ -43,6 +43,7 @@ public class UsersRepository : IUsersRepository
             .Include(u => u.Publications)
                 .ThenInclude(p => p.Title)
                     .ThenInclude(t => t.Screenshots)
+            .AsSplitQuery()
             .SingleOrDefaultAsync(user => user.UserName == userName);
     }
     

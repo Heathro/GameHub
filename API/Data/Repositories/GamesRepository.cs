@@ -136,6 +136,7 @@ public class GamesRepository : IGamesRepository
             .Include(g => g.Poster)
             .Include(g => g.Screenshots)
             .Include(g => g.Publication)
+            .AsSplitQuery()
             .SingleOrDefaultAsync(game => game.Title == title);
     }
 
@@ -147,6 +148,7 @@ public class GamesRepository : IGamesRepository
             .Include(g => g.Poster)
             .Include(g => g.Screenshots)
             .Include(g => g.Publication)
+            .AsSplitQuery()
             .Where(game => game.Publication.PublisherId == userId)
             .ToListAsync();
     }

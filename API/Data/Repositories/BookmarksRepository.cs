@@ -22,6 +22,7 @@ public class BookmarksRepository : IBookmarksRepository
     {
         return await _context.Users
             .Include(u => u.Bookmarks)
+            .AsSplitQuery()
             .FirstOrDefaultAsync(u => u.Id == userId);
     }
 }

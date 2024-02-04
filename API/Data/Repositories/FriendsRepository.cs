@@ -33,6 +33,7 @@ public class FriendsRepository : IFriendsRepository
             .Include(u => u.Avatar)
             .Include(u => u.Inviters)
             .Include(u => u.Invitees)
+            .AsSplitQuery()
             .FirstOrDefaultAsync(u => u.Id == userId);
     }
 
@@ -43,6 +44,7 @@ public class FriendsRepository : IFriendsRepository
             .Include(f => f.Inviter.Avatar)
             .Include(f => f.Inviter)
             .Include(f => f.Invitee.Avatar)
+            .AsSplitQuery()
             .Where(f => f.InviterId == userId || f.InviteeId == userId)
             .ToListAsync();
 

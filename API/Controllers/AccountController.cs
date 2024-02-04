@@ -62,6 +62,7 @@ public class AccountController : BaseApiController
     {
         var user = await _userManager.Users
             .Include(a => a.Avatar)
+            .AsSplitQuery()
             .SingleOrDefaultAsync(user => user.UserName == loginDto.UserName);
             
         if (user == null) return Unauthorized("Invalid username");

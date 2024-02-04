@@ -115,6 +115,7 @@ public class MessagesRepository : IMessagesRepository
     {
         return await _context.Groups
             .Include(g => g.Connections)
+            .AsSplitQuery()
             .FirstOrDefaultAsync(g => g.Name == name);
     }
 }
