@@ -85,15 +85,15 @@ try
     
     await Seed.ClearConnections(context);
 
-    await Seed.SeedAdministration(userManager);
-
     if (builder.Environment.IsDevelopment())
     {
-        await Seed.SeedUsers(userManager, roleManager);
+        await Seed.CreateRoles(roleManager);
+        await Seed.SeedUsers(userManager);
         await Seed.SeedGames(context);
     }
     else
     {
+        await Seed.SeedAdmin(userManager);
     }
 }
 catch (Exception ex)

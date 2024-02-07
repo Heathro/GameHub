@@ -13,7 +13,23 @@ public class Seed
         await context.SaveChangesAsync();
     }
 
-    public static async Task SeedAdministration(UserManager<AppUser> userManager)
+    public static async Task CreateRoles(RoleManager<AppRole> roleManager)
+    {
+        if (await roleManager.Roles.AnyAsync()) return;
+
+        var roles = new List<AppRole>
+        {
+            new AppRole{ Name = "Admin" },
+            new AppRole{ Name = "Moderator" },
+            new AppRole{ Name = "Player" }
+        };
+        foreach (var role in roles)
+        {
+            await roleManager.CreateAsync(role);
+        } 
+    }
+
+    public static async Task SeedAdmin(UserManager<AppUser> userManager)
     {
         if (await userManager.Users.AnyAsync()) return;
 
@@ -31,14 +47,9 @@ public class Seed
         };
         await userManager.CreateAsync(admin, adminPassword);
         await userManager.AddToRolesAsync(admin, new[]{"Admin", "Moderator"});
-
-        Console.WriteLine("=========================");
-        Console.WriteLine("=========================");
-        Console.WriteLine("=========================");
-        Console.WriteLine("Creating Admin " + adminPassword);
     }
 
-    public static async Task SeedUsers(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager)
+    public static async Task SeedUsers(UserManager<AppUser> userManager)
     {
         if (await userManager.Users.AnyAsync()) return;
 
@@ -46,18 +57,7 @@ public class Seed
 
         var userData = await File.ReadAllTextAsync("Data/Seeding/UserSeedData.json");
 
-        var users = JsonSerializer.Deserialize<List<AppUser>>(userData, options);
-
-        var roles = new List<AppRole>
-        {
-            new AppRole{ Name = "Admin" },
-            new AppRole{ Name = "Moderator" },
-            new AppRole{ Name = "Player" }
-        };
-        foreach (var role in roles)
-        {
-            await roleManager.CreateAsync(role);
-        }    
+        var users = JsonSerializer.Deserialize<List<AppUser>>(userData, options);   
 
         foreach (var user in users)
         {
