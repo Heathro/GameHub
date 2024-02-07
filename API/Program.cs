@@ -87,7 +87,7 @@ try
 
     if (!builder.Environment.IsDevelopment())
     {
-        await Seed.SeedAdmin(userManager);
+        await Seed.SeedAdministration(userManager);
     }
     else
     {

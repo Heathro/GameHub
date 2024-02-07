@@ -296,6 +296,31 @@ namespace API.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Files",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    WindowsName = table.Column<string>(type: "text", nullable: true),
+                    WindowsSize = table.Column<long>(type: "bigint", nullable: false),
+                    MacosName = table.Column<string>(type: "text", nullable: true),
+                    MacosSize = table.Column<long>(type: "bigint", nullable: false),
+                    LinuxName = table.Column<string>(type: "text", nullable: true),
+                    LinuxSize = table.Column<long>(type: "bigint", nullable: false),
+                    GameId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Files", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Files_Games_GameId",
+                        column: x => x.GameId,
+                        principalTable: "Games",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Genres",
                 columns: table => new
                 {
@@ -546,6 +571,12 @@ namespace API.Data.Migrations
                 column: "GroupName");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Files_GameId",
+                table: "Files",
+                column: "GameId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Friendships_InviteeId",
                 table: "Friendships",
                 column: "InviteeId");
@@ -631,6 +662,9 @@ namespace API.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Connections");
+
+            migrationBuilder.DropTable(
+                name: "Files");
 
             migrationBuilder.DropTable(
                 name: "Friendships");

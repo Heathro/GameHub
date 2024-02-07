@@ -13,7 +13,7 @@ public class Seed
         await context.SaveChangesAsync();
     }
 
-    public static async Task SeedAdmin(UserManager<AppUser> userManager)
+    public static async Task SeedAdministration(UserManager<AppUser> userManager)
     {
         if (await userManager.Users.AnyAsync()) return;
 

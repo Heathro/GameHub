@@ -223,20 +223,20 @@ namespace API.Data.Migrations
                     b.Property<string>("LinuxName")
                         .HasColumnType("text");
 
-                    b.Property<int>("LinuxSize")
-                        .HasColumnType("integer");
+                    b.Property<long>("LinuxSize")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("MacosName")
                         .HasColumnType("text");
 
-                    b.Property<int>("MacosSize")
-                        .HasColumnType("integer");
+                    b.Property<long>("MacosSize")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("WindowsName")
                         .HasColumnType("text");
 
-                    b.Property<int>("WindowsSize")
-                        .HasColumnType("integer");
+                    b.Property<long>("WindowsSize")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 

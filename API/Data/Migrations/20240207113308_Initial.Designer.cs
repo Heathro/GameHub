@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240206120928_FilesAdded2")]
-    partial class FilesAdded2
+    [Migration("20240207113308_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -223,14 +223,23 @@ namespace API.Data.Migrations
                     b.Property<int>("GameId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Linux")
+                    b.Property<string>("LinuxName")
                         .HasColumnType("text");
 
-                    b.Property<string>("Macos")
+                    b.Property<long>("LinuxSize")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("MacosName")
                         .HasColumnType("text");
 
-                    b.Property<string>("Windows")
+                    b.Property<long>("MacosSize")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("WindowsName")
                         .HasColumnType("text");
+
+                    b.Property<long>("WindowsSize")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
