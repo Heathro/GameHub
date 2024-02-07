@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for game-hub on 2024-02-07T12:35:12Z
+# fly.toml app configuration file generated for game-hub on 2024-02-04T00:16:29Z
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -7,6 +7,7 @@ app = 'game-hub'
 primary_region = 'lhr'
 
 [build]
+  image = 'heathroru/gamehub:latest'
 
 [env]
   ASPNETCORE_URLS="http://[::]:8080"
