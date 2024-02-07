@@ -13,9 +13,13 @@ public class Seed
         await context.SaveChangesAsync();
     }
 
-    public static async Task CreateRoles(RoleManager<AppRole> roleManager)
+    public static async Task SeedUsers(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager)
     {
-        if (await roleManager.Roles.AnyAsync()) return;
+        if (await userManager.Users.AnyAsync()) return;
+
+        var options = new JsonSerializerOptions{PropertyNameCaseInsensitive = true};
+        var userData = await File.ReadAllTextAsync("Data/Seeding/UserSeedData.json");
+        var users = JsonSerializer.Deserialize<List<AppUser>>(userData, options);
 
         var roles = new List<AppRole>
         {
@@ -26,46 +30,6 @@ public class Seed
         foreach (var role in roles)
         {
             await roleManager.CreateAsync(role);
-        } 
-    }
-
-    public static async Task SeedAdmin(UserManager<AppUser> userManager)
-    {
-        if (await userManager.Users.AnyAsync()) return;
-
-        var adminPassword = Environment.GetEnvironmentVariable("ADMIN_PASSWORD");
-
-        var admin = new AppUser
-        { 
-            UserName = "Admin",
-            Avatar = new Avatar(),
-            Realname = string.Empty,
-            Summary = string.Empty,
-            Country = string.Empty,
-            City = string.Empty,
-            Created = DateTime.UtcNow
-        };
-        await userManager.CreateAsync(admin, adminPassword);
-        await userManager.AddToRolesAsync(admin, new[]{"Admin", "Moderator"});
-    }
-
-    public static async Task SeedUsers(UserManager<AppUser> userManager)
-    {
-        if (await userManager.Users.AnyAsync()) return;
-
-        var options = new JsonSerializerOptions{PropertyNameCaseInsensitive = true};
-
-        var userData = await File.ReadAllTextAsync("Data/Seeding/UserSeedData.json");
-
-        var users = JsonSerializer.Deserialize<List<AppUser>>(userData, options);   
-
-        foreach (var user in users)
-        {
-            user.Created = DateTime.SpecifyKind(user.Created, DateTimeKind.Utc);
-            user.LastActive = DateTime.SpecifyKind(user.LastActive, DateTimeKind.Utc);
-
-            await userManager.CreateAsync(user, "Pa$$w0rd");
-            await userManager.AddToRoleAsync(user, "Player");
         }
 
         var admin = new AppUser
@@ -80,6 +44,15 @@ public class Seed
         };
         await userManager.CreateAsync(admin, Environment.GetEnvironmentVariable("ADMIN_PASSWORD"));
         await userManager.AddToRolesAsync(admin, new[]{"Admin", "Moderator"});
+
+        foreach (var user in users)
+        {
+            user.Created = DateTime.SpecifyKind(user.Created, DateTimeKind.Utc);
+            user.LastActive = DateTime.SpecifyKind(user.LastActive, DateTimeKind.Utc);
+
+            await userManager.CreateAsync(user, "Pa$$w0rd");
+            await userManager.AddToRoleAsync(user, "Player");
+        }
     }
 
     public static async Task SeedGames(DataContext context)
