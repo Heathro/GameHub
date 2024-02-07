@@ -83,17 +83,16 @@ try
 
     await context.Database.MigrateAsync();
     
-    await Seed.ClearConnections(context);
-
+    await Seed.ClearConnections(context);    
+    await Seed.CreateRoles(roleManager);
+    
     if (builder.Environment.IsDevelopment())
     {
-        await Seed.CreateRoles(roleManager);
         await Seed.SeedUsers(userManager);
         await Seed.SeedGames(context);
     }
     else
     {
-        await Seed.CreateRoles(roleManager);
         await Seed.SeedAdmin(userManager);
     }
 }
