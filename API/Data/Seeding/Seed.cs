@@ -17,6 +17,8 @@ public class Seed
     {
         if (await userManager.Users.AnyAsync()) return;
 
+        var adminPassword = Environment.GetEnvironmentVariable("ADMIN_PASSWORD");
+
         var admin = new AppUser
         { 
             UserName = "Admin",
@@ -27,8 +29,13 @@ public class Seed
             City = string.Empty,
             Created = DateTime.UtcNow
         };
-        await userManager.CreateAsync(admin, Environment.GetEnvironmentVariable("ADMIN_PASSWORD"));
+        await userManager.CreateAsync(admin, adminPassword);
         await userManager.AddToRolesAsync(admin, new[]{"Admin", "Moderator"});
+
+        Console.WriteLine("=========================");
+        Console.WriteLine("=========================");
+        Console.WriteLine("=========================");
+        Console.WriteLine("Creating Admin");
     }
 
     public static async Task SeedUsers(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager)
