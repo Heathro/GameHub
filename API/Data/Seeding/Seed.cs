@@ -13,6 +13,24 @@ public class Seed
         await context.SaveChangesAsync();
     }
 
+    public static async Task SeedAdmin(UserManager<AppUser> userManager)
+    {
+        if (await userManager.Users.AnyAsync()) return;
+
+        var admin = new AppUser
+        { 
+            UserName = "Admin",
+            Avatar = new Avatar(),
+            Realname = string.Empty,
+            Summary = string.Empty,
+            Country = string.Empty,
+            City = string.Empty,
+            Created = DateTime.UtcNow
+        };
+        await userManager.CreateAsync(admin, Environment.GetEnvironmentVariable("ADMIN_PASSWORD"));
+        await userManager.AddToRolesAsync(admin, new[]{"Admin", "Moderator"});
+    }
+
     public static async Task SeedUsers(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager)
     {
         if (await userManager.Users.AnyAsync()) return;
@@ -47,13 +65,13 @@ public class Seed
         { 
             UserName = "Admin",
             Avatar = new Avatar(),
-            Realname = "",
-            Summary = "",
-            Country = "",
-            City = "",
+            Realname = string.Empty,
+            Summary = string.Empty,
+            Country = string.Empty,
+            City = string.Empty,
             Created = DateTime.UtcNow
         };
-        await userManager.CreateAsync(admin, "Pa$$w0rd");
+        await userManager.CreateAsync(admin, Environment.GetEnvironmentVariable("ADMIN_PASSWORD"));
         await userManager.AddToRolesAsync(admin, new[]{"Admin", "Moderator"});
     }
 
@@ -75,11 +93,11 @@ public class Seed
             };
             game.Files = new Files
             {
-                WindowsName = "",
+                WindowsName = string.Empty,
                 WindowsSize = 0,
-                MacosName = "",
+                MacosName = string.Empty,
                 MacosSize = 0,
-                LinuxName = "",
+                LinuxName = string.Empty,
                 LinuxSize = 0
             };
             context.Games.Add(game);
