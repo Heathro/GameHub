@@ -18,6 +18,7 @@ import { Review } from 'src/app/models/review';
 import { Poster } from 'src/app/models/poster';
 import { Screenshot } from 'src/app/models/screenshot';
 import { Avatar } from 'src/app/models/avatar';
+import { Platform } from 'src/app/enums/platform';
 
 @Component({
   selector: 'app-game-page',
@@ -187,6 +188,29 @@ export class GamePageComponent implements OnInit, OnDestroy {
 
   checkBookmarks() {
     if (this.game) this.isBookmarked = this.gamesService.isGameBookmarked(this.game);
+  }
+  
+  download(platform: Platform) {
+    if (this.game) {
+      this.gamesService.downloadFile(this.game.title, platform).subscribe(
+        (blob) => {
+          const link = document.createElement('a');
+          link.href = window.URL.createObjectURL(blob);
+          if (this.game) {
+            switch (platform) {
+              case Platform.windows: link.download = this.game.files.windowsName; break;
+              case Platform.macOS: link.download = this.game.files.macosName; break;
+              case Platform.linux: link.download = this.game.files.linuxName; break;
+            }
+          }          
+          link.click();
+        }
+      );
+    }
+  }
+
+  formatFileSize(bytes: number) {
+    return (bytes / (1024 * 1024)).toFixed(3);
   }
 
   private playerDeleted(userId: number) {

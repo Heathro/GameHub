@@ -3,6 +3,7 @@ using System;
 using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240206120419_FilesAdded")]
+    partial class FilesAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -207,43 +210,6 @@ namespace API.Data.Migrations
                     b.HasIndex("GroupName");
 
                     b.ToTable("Connections");
-                });
-
-            modelBuilder.Entity("API.Entities.Files", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("GameId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("LinuxName")
-                        .HasColumnType("text");
-
-                    b.Property<int>("LinuxSize")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("MacosName")
-                        .HasColumnType("text");
-
-                    b.Property<int>("MacosSize")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("WindowsName")
-                        .HasColumnType("text");
-
-                    b.Property<int>("WindowsSize")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GameId")
-                        .IsUnique();
-
-                    b.ToTable("Files");
                 });
 
             modelBuilder.Entity("API.Entities.Friendship", b =>
@@ -703,17 +669,6 @@ namespace API.Data.Migrations
                         .HasForeignKey("GroupName");
                 });
 
-            modelBuilder.Entity("API.Entities.Files", b =>
-                {
-                    b.HasOne("API.Entities.Game", "Game")
-                        .WithOne("Files")
-                        .HasForeignKey("API.Entities.Files", "GameId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Game");
-                });
-
             modelBuilder.Entity("API.Entities.Friendship", b =>
                 {
                     b.HasOne("API.Entities.AppUser", "Invitee")
@@ -920,8 +875,6 @@ namespace API.Data.Migrations
             modelBuilder.Entity("API.Entities.Game", b =>
                 {
                     b.Navigation("Bookmarks");
-
-                    b.Navigation("Files");
 
                     b.Navigation("Genres");
 

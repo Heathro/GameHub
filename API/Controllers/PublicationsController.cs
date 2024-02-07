@@ -34,6 +34,15 @@ public class PublicationsController : BaseApiController
         var game = _mapper.Map<Game>(gamePublishDto);
         game.Poster = new Poster{ Url = "" };
         game.Video = "";
+        game.Files = new Files
+        {
+            WindowsName = "",
+            WindowsSize = 0,
+            MacosName = "",
+            MacosSize = 0,
+            LinuxName = "",
+            LinuxSize = 0
+        };
 
         var publication = new Publication{ Title = game };
 

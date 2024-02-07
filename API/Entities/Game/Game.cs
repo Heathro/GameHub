@@ -9,6 +9,7 @@ public class Game
     public Genres Genres { get; set; }
     public Poster Poster { get; set; }
     public Publication Publication { get; set; }    
+    public Files Files { get; set; }
     public List<Bookmark> Bookmarks { get; set; } = new();
     public List<Screenshot> Screenshots { get; set; } = new();
     public List<Like> LikedUsers { get; set; } = new();

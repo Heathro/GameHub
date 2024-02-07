@@ -69,6 +69,50 @@
                 </div>
             </tab>
             
+            <tab heading="Downloads">                
+                <div *ngIf="game.files.windowsName.length === 0 && 
+                            game.files.macosName.length === 0 &&
+                            game.files.linuxName.length === 0">
+                    <h5 class="text-center my-4">No files uploaded</h5>
+                </div>
+
+                <div class="mx-3 my-4" *ngIf="game.files.windowsName.length > 0">
+                    <h4 class="text-warning">Windows</h4>
+                    <div class="d-flex">
+                        <button class="btn btn-outline-info" (click)="download(0)">
+                            Download&nbsp;&nbsp;&nbsp;<span class="fa fa-download"></span>
+                        </button>
+                        <h6 class="ms-4 mt-2">
+                            {{game.files.windowsName}}&nbsp;&nbsp;&nbsp;{{formatFileSize(game.files.windowsSize)}} mb
+                        </h6>
+                    </div>
+                </div>
+
+                <div class="mx-3 my-4" *ngIf="game.files.macosName.length > 0">
+                    <h4 class="text-warning">MacOS</h4>
+                    <div class="d-flex">
+                        <button class="btn btn-outline-info" (click)="download(1)">
+                            Download&nbsp;&nbsp;&nbsp;<span class="fa fa-download"></span>
+                        </button>
+                        <h6 class="ms-4 mt-2">
+                            {{game.files.macosName}}&nbsp;&nbsp;&nbsp;{{formatFileSize(game.files.macosSize)}} mb
+                        </h6>
+                    </div>
+                </div>
+
+                <div class="mx-3 my-4" *ngIf="game.files.linuxName.length > 0">
+                    <h4 class="text-warning">Linux</h4>
+                    <div class="d-flex">
+                        <button class="btn btn-outline-info" (click)="download(2)">
+                            Download&nbsp;&nbsp;&nbsp;<span class="fa fa-download"></span>
+                        </button>
+                        <h6 class="ms-4 mt-2">
+                            {{game.files.linuxName}}&nbsp;&nbsp;&nbsp;{{formatFileSize(game.files.linuxSize)}} mb
+                        </h6>
+                    </div>
+                </div>
+            </tab>
+            
         </tabset>
     </div>
     

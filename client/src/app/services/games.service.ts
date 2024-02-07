@@ -13,6 +13,7 @@ import { Review } from '../models/review';
 import { Poster } from '../models/poster';
 import { Screenshot } from '../models/screenshot';
 import { Avatar } from '../models/avatar';
+import { Platform } from '../enums/platform';
 
 @Injectable({
   providedIn: 'root'
@@ -318,6 +319,17 @@ export class GamesService {
     currentGame.genres.strategy = updatedGame.genres.strategy;
     currentGame.genres.survival = updatedGame.genres.survival;
     currentGame.video = updatedGame.video;
+  }
+
+  downloadFile(title: string, platform: Platform) {
+    return this.http.get(
+      this.baseUrl + 'files/download/' + title + '/' + platform,
+      { responseType: 'blob' }
+    );
+  }
+
+  deleteFile(title: string, platform: Platform) {
+    return this.http.delete(this.baseUrl + 'files/delete/' + title + '/' + platform);
   }
 
   private stringifyFilter(filter: Filter): string {

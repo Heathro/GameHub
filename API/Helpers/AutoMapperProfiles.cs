@@ -25,7 +25,9 @@ public class AutoMapperProfiles : Profile
             .ForMember(d => d.Likes, o => o.MapFrom(s => s.LikedUsers.Select(l => l.SourceUserId)))
             .ForMember(d => d.Publisher, o => o.MapFrom(s => s.Publication.Publisher.UserName));
         CreateMap<GameEditDto, Game>();
-        CreateMap<GamePublishDto, Game>();        
+        CreateMap<GamePublishDto, Game>();
+        
+        CreateMap<Files, FilesDto>();
 
         CreateMap<Platforms, PlatformsDto>();
         CreateMap<PlatformsDto, Platforms>();

@@ -3,6 +3,7 @@ using System;
 using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240206120928_FilesAdded2")]
+    partial class FilesAdded2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -220,23 +223,14 @@ namespace API.Data.Migrations
                     b.Property<int>("GameId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("LinuxName")
+                    b.Property<string>("Linux")
                         .HasColumnType("text");
 
-                    b.Property<int>("LinuxSize")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("MacosName")
+                    b.Property<string>("Macos")
                         .HasColumnType("text");
 
-                    b.Property<int>("MacosSize")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("WindowsName")
+                    b.Property<string>("Windows")
                         .HasColumnType("text");
-
-                    b.Property<int>("WindowsSize")
-                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 

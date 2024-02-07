@@ -1,0 +1,138 @@
+<h4 class="mt-4 text-warning">Windows</h4>
+<div class="d-flex">
+
+    <div class="row mb-4" *ngIf="uploaderWindows">
+        <div class="row">
+            <div class="col-4">
+                <div class="progress mb-2 custom-bar">
+                    <div 
+                        class="progress-bar" 
+                        role="progressbar" 
+                        [ngStyle]="{ 'width': uploaderWindows.progress + '%' }"
+                    ></div>
+                </div> 
+            </div>
+            <div class="col-3 custom-bytes">
+                <h6 class="text-end" *ngIf="uploaderWindows.queue.length > 0">
+                    {{uploaderWindows.queue[0].file.size/1024/1024 | number:'.2'}} mb
+                </h6>
+                <h6 class="text-end" *ngIf="uploaderWindows.queue.length === 0">
+                    0.000 mb
+                </h6>
+            </div>
+        </div>
+        <div class="row custom-input">
+            <div style="width: 120px;">
+                <input class="form-control-info" type="file" ng2FileSelect [uploader]="uploaderWindows">
+            </div>
+            <button type="button" class="btn btn-outline-success btn-sm uploader-button"
+                (click)="uploaderWindows.uploadAll()" [disabled]="!uploaderWindows.getNotUploadedItems().length">
+                Upload&nbsp;&nbsp;&nbsp;<span class="fa fa-upload"></span>
+            </button>
+        </div>
+    </div>
+
+    <div *ngIf="game && game.files.windowsName.length > 0" class="mt-2">
+        <h6 class="me-4 mt-2">
+            {{formatFileSize(game.files.windowsSize)}} mb
+        </h6>
+        <button type="button" class="btn btn-outline-danger btn-sm uploader-button"
+            (click)="deleteFile(0)">
+            Delete&nbsp;&nbsp;&nbsp;<span class="fa fa-trash3"></span>
+        </button>
+    </div>
+    
+</div>
+
+
+<h4 class="mt-4 text-warning">MacOS</h4>
+<div class="d-flex">
+
+    <div class="row mb-4" *ngIf="uploaderMacOS">
+        <div class="row">
+            <div class="col-4">
+                <div class="progress mb-2 custom-bar">
+                    <div 
+                        class="progress-bar" 
+                        role="progressbar" 
+                        [ngStyle]="{ 'width': uploaderMacOS.progress + '%' }"
+                    ></div>
+                </div> 
+            </div>
+            <div class="col-3 custom-bytes">
+                <h6 class="text-end" *ngIf="uploaderMacOS.queue.length > 0">
+                    {{uploaderMacOS.queue[0].file.size/1024/1024 | number:'.2'}} mb
+                </h6>
+                <h6 class="text-end" *ngIf="uploaderMacOS.queue.length === 0">
+                    0.000 mb
+                </h6>
+            </div>
+        </div>         
+        <div class="row custom-input">
+            <div style="width: 120px;">
+                <input class="form-control-info" type="file" ng2FileSelect [uploader]="uploaderMacOS">
+            </div>
+            <button type="button" class="btn btn-outline-success btn-sm uploader-button"
+                (click)="uploaderMacOS.uploadAll()" [disabled]="!uploaderMacOS.getNotUploadedItems().length">
+                Upload&nbsp;&nbsp;&nbsp;<span class="fa fa-upload"></span>
+            </button>
+        </div>
+    </div>
+
+    <div *ngIf="game && game.files.macosName.length > 0" class="mt-2">
+        <h6 class="me-4 mt-2">
+            {{formatFileSize(game.files.macosSize)}} mb
+        </h6>
+        <button type="button" class="btn btn-outline-danger btn-sm uploader-button"
+            (click)="deleteFile(1)">
+            Delete&nbsp;&nbsp;&nbsp;<span class="fa fa-trash3"></span>
+        </button>
+    </div>
+
+</div>
+
+<h4 class="mt-4 text-warning">Linux</h4>
+<div class="d-flex">
+
+    <div class="row mb-4" *ngIf="uploaderLinux">
+        <div class="row">
+            <div class="col-4">
+                <div class="progress mb-2 custom-bar">
+                    <div 
+                        class="progress-bar" 
+                        role="progressbar" 
+                        [ngStyle]="{ 'width': uploaderLinux.progress + '%' }"
+                    ></div>
+                </div> 
+            </div>
+            <div class="col-3 custom-bytes">
+                <h6 class="text-end" *ngIf="uploaderLinux.queue.length > 0">
+                    {{uploaderLinux.queue[0].file.size/1024/1024 | number:'.2'}} mb
+                </h6>
+                <h6 class="text-end" *ngIf="uploaderLinux.queue.length === 0">
+                    0.000 mb
+                </h6>
+            </div>
+        </div>
+        <div class="row custom-input">
+            <div style="width: 120px;">
+                <input class="form-control-info" type="file" ng2FileSelect [uploader]="uploaderLinux">
+            </div>
+            <button type="button" class="btn btn-outline-success btn-sm uploader-button"
+                (click)="uploaderLinux.uploadAll()" [disabled]="!uploaderLinux.getNotUploadedItems().length">
+                Upload&nbsp;&nbsp;&nbsp;<span class="fa fa-upload"></span>
+            </button>
+        </div>
+    </div>
+
+    <div *ngIf="game && game.files.linuxName.length > 0" class="mt-2">
+        <h6 class="me-4 mt-2">
+            {{formatFileSize(game.files.linuxSize)}} mb
+        </h6>
+        <button type="button" class="btn btn-outline-danger btn-sm uploader-button"
+            (click)="deleteFile(2)">
+            Delete&nbsp;&nbsp;&nbsp;<span class="fa fa-trash3"></span>
+        </button>
+    </div>
+
+</div>

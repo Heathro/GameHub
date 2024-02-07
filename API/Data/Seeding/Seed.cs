@@ -73,6 +73,15 @@ public class Seed
             {
                 PublisherId = 1
             };
+            game.Files = new Files
+            {
+                WindowsName = "",
+                WindowsSize = 0,
+                MacosName = "",
+                MacosSize = 0,
+                LinuxName = "",
+                LinuxSize = 0
+            };
             context.Games.Add(game);
         }
 
