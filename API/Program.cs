@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http.Features;
 using API.Data;
 using API.Data.Seeding;
 using API.Entities;
 using API.Extensions;
 using API.Middleware;
 using API.SignalR;
-using Microsoft.AspNetCore.Http.Features;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -85,14 +85,14 @@ try
     
     await Seed.ClearConnections(context);
 
-    if (!builder.Environment.IsDevelopment())
-    {
-        await Seed.SeedAdministration(userManager);
-    }
-    else
+    if (builder.Environment.IsDevelopment())
     {
         await Seed.SeedUsers(userManager, roleManager);
         await Seed.SeedGames(context);
+    }
+    else
+    {
+        await Seed.SeedAdministration(userManager);
     }
 }
 catch (Exception ex)
