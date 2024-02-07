@@ -35,7 +35,7 @@ public class Seed
         Console.WriteLine("=========================");
         Console.WriteLine("=========================");
         Console.WriteLine("=========================");
-        Console.WriteLine("Creating Admin");
+        Console.WriteLine("Creating Admin " + adminPassword);
     }
 
     public static async Task SeedUsers(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager)

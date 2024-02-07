@@ -85,6 +85,8 @@ try
     
     await Seed.ClearConnections(context);
 
+    await Seed.SeedAdministration(userManager);
+
     if (builder.Environment.IsDevelopment())
     {
         await Seed.SeedUsers(userManager, roleManager);
@@ -92,7 +94,6 @@ try
     }
     else
     {
-        await Seed.SeedAdministration(userManager);
     }
 }
 catch (Exception ex)
