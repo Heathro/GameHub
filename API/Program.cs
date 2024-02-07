@@ -93,6 +93,7 @@ try
     }
     else
     {
+        await Seed.CreateRoles(roleManager);
         await Seed.SeedAdmin(userManager);
     }
 }
