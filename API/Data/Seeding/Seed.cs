@@ -18,10 +18,6 @@ public class Seed
     {
         if (await userManager.Users.AnyAsync()) return;
 
-        var options = new JsonSerializerOptions{PropertyNameCaseInsensitive = true};
-        var userData = await File.ReadAllTextAsync("Data/Seeding/UserSeedData.json");
-        var users = JsonSerializer.Deserialize<List<AppUser>>(userData, options);
-
         var roles = new List<AppRole>
         {
             new AppRole{ Name = "Admin" },
@@ -46,6 +42,10 @@ public class Seed
         await userManager.CreateAsync(admin, password);
         await userManager.AddToRolesAsync(admin, new[]{"Admin", "Moderator"});
 
+        var userData = await File.ReadAllTextAsync("Data/Seeding/UserSeedData.json");
+        var options = new JsonSerializerOptions{PropertyNameCaseInsensitive = true};
+        var users = JsonSerializer.Deserialize<List<AppUser>>(userData, options);
+        
         foreach (var user in users)
         {
             user.Created = DateTime.SpecifyKind(user.Created, DateTimeKind.Utc);
@@ -60,10 +60,9 @@ public class Seed
     {
         if (await context.Games.AnyAsync()) return;
 
-        var options = new JsonSerializerOptions{PropertyNameCaseInsensitive = true};
 
         var gameData = await File.ReadAllTextAsync("Data/Seeding/GameSeedData.json");
-
+        var options = new JsonSerializerOptions{PropertyNameCaseInsensitive = true};
         var games = JsonSerializer.Deserialize<List<Game>>(gameData, options);
 
         foreach (var game in games) 
