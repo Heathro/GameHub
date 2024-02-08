@@ -3,11 +3,11 @@
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'game-hub'
-primary_region = 'lhr'
+app = "game-hub"
+primary_region = "lhr"
 
 [build]
-  image = 'heathroru/gamehub:latest'
+  image = "heathroru/gamehub:latest"
 
 [env]
   ASPNETCORE_URLS="http://[::]:8080"
@@ -20,9 +20,9 @@ primary_region = 'lhr'
   auto_stop_machines = true
   auto_start_machines = true
   min_machines_running = 0
-  processes = ['app']
+  processes = ["app"]
 
 [[vm]]
-  cpu_kind = 'shared'
+  cpu_kind = "shared"
   cpus = 1
   memory_mb = 256
