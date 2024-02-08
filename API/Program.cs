@@ -24,7 +24,7 @@ if (builder.Environment.IsDevelopment())
 }
 else 
 {
-    adminPassword = Environment.GetEnvironmentVariable("AdminPassword");
+    adminPassword = "AdminPassword";
 
     var connUrl = Environment.GetEnvironmentVariable("DATABASE_URL"); 
     connUrl = connUrl.Replace("postgres://", string.Empty);
