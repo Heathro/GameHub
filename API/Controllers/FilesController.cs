@@ -2,6 +2,8 @@
 using API.Enums;
 using API.Interfaces;
 using API.Extensions;
+using AutoMapper;
+using API.DTOs;
 
 namespace API.Controllers;
 
@@ -10,11 +12,13 @@ public class FilesController : BaseApiController
     private readonly string storagePath = "storage";
     private readonly IUnitOfWork _unitOfWork;
     private readonly INotificationCenter _notificationCenter;
+    private readonly IMapper _mapper;
 
-    public FilesController(IUnitOfWork unitOfWork, INotificationCenter notificationCenter)
+    public FilesController(IUnitOfWork unitOfWork, INotificationCenter notificationCenter, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _notificationCenter = notificationCenter;
+        _mapper = mapper;
     }
 
     [HttpPost("upload/{title}/{platform}")]
@@ -78,13 +82,11 @@ public class FilesController : BaseApiController
         
         if (await _unitOfWork.Complete() || oldFileName == file.FileName)
         {
-            _notificationCenter.FileUploaded
+            _notificationCenter.FilesUpdated
             (
                 User.GetUsername(),
                 game.Id,
-                platform,
-                file.FileName,
-                file.Length
+                _mapper.Map<FilesDto>(game.Files)
             );
             return Ok();
         }
@@ -156,7 +158,12 @@ public class FilesController : BaseApiController
                     break;
             }
 
-            _notificationCenter.FileDeleted(User.GetUsername(), game.Id, platform);
+            _notificationCenter.FilesUpdated
+            (
+                User.GetUsername(),
+                game.Id,
+                _mapper.Map<FilesDto>(game.Files)
+            );
 
             return Ok();
         }        

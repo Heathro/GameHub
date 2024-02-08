@@ -172,7 +172,7 @@ export class MessagesService {
     this.companionsLoaded = false;
   }
   
-  playerDeleted(userName: string, userId: number) {
+  playerDeleted(userId: number) {
     this.companions = this.companions.filter(c => c.id !== userId);
     if (this.companions.length === 0) {
       this.messageThreadSource.next([]);

@@ -138,23 +138,13 @@ public class NotificationCenter : INotificationCenter
         await _presenceHub.Clients.AllExcept(currentUserConnections).SendAsync("GameDeleted", gameId);
     }
     
-    public async void FileUploaded(string currentUsername, int gameId, Platform platform,
-        string fileName, long fileSize)
+    public async void FilesUpdated(string currentUsername, int gameId, FilesDto files)
     {
         var currentUserConnections = await PresenceTracker.GetConnectionsForUser(currentUsername);
         if (currentUserConnections == null) return;
         
         await _presenceHub.Clients.AllExcept(currentUserConnections)
-            .SendAsync("FileUploaded", new { gameId, platform, fileName, fileSize });
-    }   
-
-    public async void FileDeleted(string currentUsername, int gameId, Platform platform)
-    {
-        var currentUserConnections = await PresenceTracker.GetConnectionsForUser(currentUsername);
-        if (currentUserConnections == null) return;
-        
-        await _presenceHub.Clients.AllExcept(currentUserConnections)
-            .SendAsync("FileDeleted", new { gameId, platform });
+            .SendAsync("FilesUpdated", new { gameId, files });
     }
 
     public async void ReviewApproved(string currentUsername, ReviewDto review)

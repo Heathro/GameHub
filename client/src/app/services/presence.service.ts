@@ -112,9 +112,9 @@ export class PresenceService {
       }
       else {
         this.playersService.playerDeleted(deletedUsername, deletedId);
-        this.messagesService.playerDeleted(deletedUsername, deletedId);
-        this.reviewsService.playerDeleted(deletedUsername, deletedId);
-        this.gamesService.playerDeleted(deletedUsername, deletedId);
+        this.messagesService.playerDeleted(deletedId);
+        this.reviewsService.playerDeleted(deletedId);
+        this.gamesService.playerDeleted(deletedId);
       }
     });
 
@@ -174,6 +174,10 @@ export class PresenceService {
       this.playersService.gameDeleted(gameId);
       this.reviewsService.gameDeleted(gameId);
       this.gamesService.gameDeleted(gameId);
+    });
+
+    this.hubConnection.on('FilesUpdated', ({ gameId, files }) => {
+      this.gamesService.filesUpdated(gameId, files);
     });
 
     this.hubConnection.on('ReviewApproved', (review: Review) => {

@@ -19,6 +19,7 @@ import { Poster } from 'src/app/models/poster';
 import { Screenshot } from 'src/app/models/screenshot';
 import { Avatar } from 'src/app/models/avatar';
 import { Platform } from 'src/app/enums/platform';
+import { Files } from 'src/app/models/files';
 
 @Component({
   selector: 'app-game-page',
@@ -44,6 +45,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
   posterUpdatedSubscription;
   screenshotAddedSubscription;  
   screenshotDeletedSubscription;
+  filesUpdatedSubscription;
   reviewApprovedSubscription;
   reviewDeletedSubscription;
 
@@ -84,6 +86,9 @@ export class GamePageComponent implements OnInit, OnDestroy {
     this.screenshotDeletedSubscription = this.gamesService.screenshotDeleted$.subscribe(
       ({gameId, screenshotId}) => this.screenshotDeleted(gameId, screenshotId)
     );
+    this.filesUpdatedSubscription = this.gamesService.filesUpdated$.subscribe(
+      ({gameId, files}) => this.filesUpdated(gameId, files)
+    );
     this.reviewApprovedSubscription = this.reviewsService.reviewApproved$.subscribe(
       review => this.reviewApproved(review)
     );
@@ -108,6 +113,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
     this.posterUpdatedSubscription.unsubscribe();
     this.screenshotAddedSubscription.unsubscribe();
     this.screenshotDeletedSubscription.unsubscribe();
+    this.filesUpdatedSubscription.unsubscribe();
     this.reviewApprovedSubscription.unsubscribe();
     this.reviewDeletedSubscription.unsubscribe();
   }
@@ -274,6 +280,12 @@ export class GamePageComponent implements OnInit, OnDestroy {
       this.game.screenshots = this.game.screenshots.filter(s => s.id !== screenshotId);
       this.screenshots = [];
       this.getScreenshots();
+    }
+  }
+
+  private filesUpdated(gameId: number, files: Files) {
+    if (this.game && this.game.id === gameId) {
+      this.game.files = files;
     }
   }
 

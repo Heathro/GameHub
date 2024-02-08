@@ -104,7 +104,7 @@ export class ReviewsService {
     this.paginationParams = this.initializePaginationParams();
   }
   
-  playerDeleted(userName: string, userId: number) {
+  playerDeleted(userId: number) {
     this.reviewsCache.forEach(q => {
       q.result = q.result.filter((r: Review) => r.reviewerId !== userId);
     });

@@ -14,6 +14,7 @@ import { Poster } from '../models/poster';
 import { Screenshot } from '../models/screenshot';
 import { Avatar } from '../models/avatar';
 import { Platform } from '../enums/platform';
+import { Files } from '../models/files';
 
 @Injectable({
   providedIn: 'root'
@@ -43,6 +44,9 @@ export class GamesService {
   screenshotAdded$ = this.screenshotAddedSource.asObservable();
   private screenshotDeletedSource = new Subject<any>();
   screenshotDeleted$ = this.screenshotDeletedSource.asObservable();
+
+  private filesUpdatedSource = new Subject<any>();
+  filesUpdated$ = this.filesUpdatedSource.asObservable();
   
   private newGamesCountSource = new Subject<number>();
   newGamesCount$ = this.newGamesCountSource.asObservable();
@@ -187,6 +191,17 @@ export class GamesService {
     );
   }
 
+  downloadFile(title: string, platform: Platform) {
+    return this.http.get(
+      this.baseUrl + 'files/download/' + title + '/' + platform,
+      { responseType: 'blob' }
+    );
+  }
+
+  deleteFile(title: string, platform: Platform) {
+    return this.http.delete(this.baseUrl + 'files/delete/' + title + '/' + platform);
+  }
+
   setPaginationPage(currentPage: number) {
     this.paginationParams.currentPage = currentPage;
   }
@@ -218,7 +233,7 @@ export class GamesService {
     this.user = undefined;
   }  
   
-  playerDeleted(userName: string, userId: number) {
+  playerDeleted(userId: number) {
     this.gamesCache.forEach(q => {
       q.result.forEach((g: Game) => {
         g.likes = g.likes.filter(l => l !== userId);
@@ -295,6 +310,15 @@ export class GamesService {
     this.screenshotDeletedSource.next({gameId, screenshotId});
   }
 
+  filesUpdated(gameId: number, files: Files) {
+    this.gamesCache.forEach(q => {
+      q.result.forEach((g: Game) => {
+        if (g.id === gameId) g.files = files;
+      });
+    });
+    this.filesUpdatedSource.next({gameId, files});
+  }
+
   updateGameData(currentGame: Game, updatedGame: Game) {
     currentGame.title = updatedGame.title;
     currentGame.description = updatedGame.description;
@@ -319,17 +343,6 @@ export class GamesService {
     currentGame.genres.strategy = updatedGame.genres.strategy;
     currentGame.genres.survival = updatedGame.genres.survival;
     currentGame.video = updatedGame.video;
-  }
-
-  downloadFile(title: string, platform: Platform) {
-    return this.http.get(
-      this.baseUrl + 'files/download/' + title + '/' + platform,
-      { responseType: 'blob' }
-    );
-  }
-
-  deleteFile(title: string, platform: Platform) {
-    return this.http.delete(this.baseUrl + 'files/delete/' + title + '/' + platform);
   }
 
   private stringifyFilter(filter: Filter): string {
