@@ -9,7 +9,7 @@ namespace API.Controllers;
 
 public class FilesController : BaseApiController
 {
-    private readonly string storagePath = "api/storage";
+    private readonly string storagePath = "storage";
     private readonly IUnitOfWork _unitOfWork;
     private readonly INotificationCenter _notificationCenter;
     private readonly IMapper _mapper;
