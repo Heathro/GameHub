@@ -16,7 +16,7 @@ public class GamesController : BaseApiController
     private readonly IMapper _mapper;
     private readonly IImageService _imageService;
     private readonly INotificationCenter _notificationCenter;
-    private readonly string storagePath = "storage";
+    private readonly string storagePath = "api/storage";
 
     public GamesController(IUnitOfWork unitOfWork, IMapper mapper, IImageService imageService,
         INotificationCenter notificationCenter)
