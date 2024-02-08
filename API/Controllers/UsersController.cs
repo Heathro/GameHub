@@ -18,7 +18,7 @@ public class UsersController : BaseApiController
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly INotificationCenter _notificationCenter;
-    private readonly string storagePath = "storage";
+    private readonly string storagePath = "../storage";
 
     public UsersController(UserManager<AppUser> userManager, IImageService imageService, 
         IUnitOfWork unitOfWork, IMapper mapper, INotificationCenter notificationCenter)
