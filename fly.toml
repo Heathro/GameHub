@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for game-hub on 2024-02-08T20:51:16Z
+# fly.toml app configuration file generated for game-hub on 2024-02-08T20:59:15Z
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -10,9 +10,9 @@ primary_region = 'lhr'
   image = 'heathroru/gamehub:latest'
 
 [env]
-  ASPNETCORE_URLS = 'http://[::]:8080'
-  CloudinarySettings__ApiKey = '394149496287184'
-  CloudinarySettings__CloudName = 'dzretkk57'
+  ASPNETCORE_URLSD="http://[::]:8080"
+  CloudinarySettings__ApiKey="394149496287184"
+  CloudinarySettings__CloudName="dzretkk57"
 
 [[mounts]]
   source = 'storage'
