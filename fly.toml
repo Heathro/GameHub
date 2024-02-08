@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for game-hub on 2024-02-08T18:52:19Z
+# fly.toml app configuration file generated for game-hub on 2024-02-08T19:50:08Z
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -14,6 +14,10 @@ primary_region = 'lhr'
   CloudinarySettings__ApiKey = '394149496287184'
   CloudinarySettings__CloudName = 'dzretkk57'
 
+[[mounts]]
+  source = 'storage'
+  destination = '/storage'
+
 [http_service]
   internal_port = 8080
   force_https = true
@@ -26,7 +30,3 @@ primary_region = 'lhr'
   cpu_kind = 'shared'
   cpus = 1
   memory_mb = 256
-
-[mounts]
-  source="storage"
-  destination="/storage"

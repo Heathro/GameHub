@@ -90,6 +90,14 @@ try
     
     await Seed.ClearConnections(context);
 
+    Console.WriteLine("=================================");
+    Console.WriteLine("=================================");
+    Console.WriteLine("=================================");
+    Console.WriteLine(adminPassword);
+    Console.WriteLine("=================================");
+    Console.WriteLine("=================================");
+    Console.WriteLine("=================================");
+
     await Seed.SeedUsers(userManager, roleManager, adminPassword);
     await Seed.SeedGames(context);
 }
