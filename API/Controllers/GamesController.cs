@@ -16,6 +16,7 @@ public class GamesController : BaseApiController
     private readonly IMapper _mapper;
     private readonly IImageService _imageService;
     private readonly INotificationCenter _notificationCenter;
+    private readonly string storagePath = "storage";
 
     public GamesController(IUnitOfWork unitOfWork, IMapper mapper, IImageService imageService,
         INotificationCenter notificationCenter)
@@ -213,6 +214,22 @@ public class GamesController : BaseApiController
             }
         }
         game.Screenshots.Clear();
+
+        if (!string.IsNullOrEmpty(game.Files.WindowsName))
+        {
+            var windowsFilePath = Path.Combine(storagePath, game.Files.WindowsName);
+            if (System.IO.File.Exists(windowsFilePath)) System.IO.File.Delete(windowsFilePath);
+        }
+        if (!string.IsNullOrEmpty(game.Files.MacosName))
+        {
+            var macosFilePath = Path.Combine(storagePath, game.Files.MacosName);
+            if (System.IO.File.Exists(macosFilePath)) System.IO.File.Delete(macosFilePath);
+        }
+        if (!string.IsNullOrEmpty(game.Files.LinuxName))
+        {
+            var linuxNameFilePath = Path.Combine(storagePath, game.Files.LinuxName);
+            if (System.IO.File.Exists(linuxNameFilePath)) System.IO.File.Delete(linuxNameFilePath);
+        }
 
         _unitOfWork.GamesRepository.DeleteGame(game);
 

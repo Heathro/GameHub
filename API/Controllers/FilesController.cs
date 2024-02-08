@@ -103,7 +103,7 @@ public class FilesController : BaseApiController
         { 
             return File
             (
-                System.IO.File.OpenRead(filePath), 
+                System.IO.File.OpenRead(filePath),
                 "application/octet-stream",
                 Path.GetFileName(filePath)
             );
