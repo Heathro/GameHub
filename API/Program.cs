@@ -85,7 +85,9 @@ try
     
     await Seed.ClearConnections(context);
 
-    await Seed.SeedUsers(userManager, roleManager);
+    var password = Environment.GetEnvironmentVariable("ADMIN_PASSWORD");
+
+    await Seed.SeedUsers(userManager, roleManager, password);
     await Seed.SeedGames(context);
 }
 catch (Exception ex)
