@@ -19,10 +19,9 @@ var adminPassword = string.Empty;
 if (builder.Environment.IsDevelopment())
 {    
     connString = builder.Configuration.GetConnectionString("DefaultConnection");
-
     adminPassword = builder.Configuration["AdminPassword"];
 }
-else 
+else
 {
     var connUrl = Environment.GetEnvironmentVariable("DATABASE_URL"); 
 
@@ -39,7 +38,7 @@ else
 
     connString = $"Server={updatedHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};";
 
-    adminPassword = Environment.GetEnvironmentVariable("PASSWORD");
+    adminPassword = pgPass;
 }
 builder.Services.AddDbContext<DataContext>(opt =>
 {
