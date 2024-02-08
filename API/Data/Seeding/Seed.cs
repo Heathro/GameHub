@@ -60,7 +60,6 @@ public class Seed
     {
         if (await context.Games.AnyAsync()) return;
 
-
         var gameData = await File.ReadAllTextAsync("Data/Seeding/GameSeedData.json");
         var options = new JsonSerializerOptions{PropertyNameCaseInsensitive = true};
         var games = JsonSerializer.Deserialize<List<Game>>(gameData, options);
