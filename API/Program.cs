@@ -14,33 +14,30 @@ builder.Services.AddControllers();
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddIdentityServices(builder.Configuration);
 
-var connString = "";
-var adminPassword = "";
+var adminPassword = string.Empty;
+var connString = string.Empty;
 if (builder.Environment.IsDevelopment())
 {
-    connString = builder.Configuration.GetConnectionString("DefaultConnection");
     adminPassword = builder.Configuration["AdminPassword"];
+    
+    connString = builder.Configuration.GetConnectionString("DefaultConnection");
 }
 else 
 {
-    // var connUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
- 
-    // connUrl = connUrl.Replace("postgres://", string.Empty);
-    // var pgUserPass = connUrl.Split("@")[0];
-    // var pgHostPortDb = connUrl.Split("@")[1];
-    // var pgHostPort = pgHostPortDb.Split("/")[0];
-    // var pgDb = pgHostPortDb.Split("/")[1];
-    // var pgUser = pgUserPass.Split(":")[0];
-    // var pgPass = pgUserPass.Split(":")[1];
-    // var pgHost = pgHostPort.Split(":")[0];
-    // var pgPort = pgHostPort.Split(":")[1];
-    // var updatedHost = pgHost.Replace("flycast", "internal");
- 
-    // connString = $"Server={updatedHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};";
-    connString = builder.Configuration.GetConnectionString("DefaultConnection");
-
     adminPassword = Environment.GetEnvironmentVariable("AdminPassword");
-    //adminPassword = builder.Configuration["AdminPassword"];
+
+    var connUrl = Environment.GetEnvironmentVariable("DATABASE_URL"); 
+    connUrl = connUrl.Replace("postgres://", string.Empty);
+    var pgUserPass = connUrl.Split("@")[0];
+    var pgHostPortDb = connUrl.Split("@")[1];
+    var pgHostPort = pgHostPortDb.Split("/")[0];
+    var pgDb = pgHostPortDb.Split("/")[1];
+    var pgUser = pgUserPass.Split(":")[0];
+    var pgPass = pgUserPass.Split(":")[1];
+    var pgHost = pgHostPort.Split(":")[0];
+    var pgPort = pgHostPort.Split(":")[1];
+    var updatedHost = pgHost.Replace("flycast", "internal"); 
+    connString = $"Server={updatedHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};";
 }
 builder.Services.AddDbContext<DataContext>(opt =>
 {
