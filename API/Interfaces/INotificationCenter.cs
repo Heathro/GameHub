@@ -1,4 +1,5 @@
 ﻿using API.DTOs;
+using API.Enums;
 
 namespace API.Interfaces;
 
@@ -19,6 +20,8 @@ public interface INotificationCenter
     void GameLiked(string currentUsername, int gameId, int userId);
     void GameUnliked(string currentUsername, int gameId, int userId);
     void GameDeleted(string currentUsername, int gameId);
+    void FileUploaded(string currentUsername, int gameId, Platform platform, string fileName, long fileSize);    
+    void FileDeleted(string currentUsername, int gameId, Platform platform);
     void ReviewApproved(string currentUsername, ReviewDto review);
     void ReviewPosted(string currentUsername);
     void ReviewDeleted(string currentUsername, int reviewId);

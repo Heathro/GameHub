@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using API.Enums;
 using API.Interfaces;
+using API.Extensions;
 
 namespace API.Controllers;
 
@@ -8,10 +9,12 @@ public class FilesController : BaseApiController
 {
     private readonly string storagePath = "storage";
     private readonly IUnitOfWork _unitOfWork;
+    private readonly INotificationCenter _notificationCenter;
 
-    public FilesController(IUnitOfWork unitOfWork)
+    public FilesController(IUnitOfWork unitOfWork, INotificationCenter notificationCenter)
     {
         _unitOfWork = unitOfWork;
+        _notificationCenter = notificationCenter;
     }
 
     [HttpPost("upload/{title}/{platform}")]
@@ -75,7 +78,14 @@ public class FilesController : BaseApiController
         
         if (await _unitOfWork.Complete() || oldFileName == file.FileName)
         {
-            // TODO: notification
+            _notificationCenter.FileUploaded
+            (
+                User.GetUsername(),
+                game.Id,
+                platform,
+                file.FileName,
+                file.Length
+            );
             return Ok();
         }
 
@@ -145,6 +155,9 @@ public class FilesController : BaseApiController
                     game.Files.LinuxSize = 0;
                     break;
             }
+
+            _notificationCenter.FileDeleted(User.GetUsername(), game.Id, platform);
+
             return Ok();
         }        
         return NotFound();

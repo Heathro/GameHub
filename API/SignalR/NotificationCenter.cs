@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using API.Interfaces;
 using API.DTOs;
+using API.Enums;
 
 namespace API.SignalR;
 
@@ -135,6 +136,25 @@ public class NotificationCenter : INotificationCenter
         if (currentUserConnections == null) return;
         
         await _presenceHub.Clients.AllExcept(currentUserConnections).SendAsync("GameDeleted", gameId);
+    }
+    
+    public async void FileUploaded(string currentUsername, int gameId, Platform platform,
+        string fileName, long fileSize)
+    {
+        var currentUserConnections = await PresenceTracker.GetConnectionsForUser(currentUsername);
+        if (currentUserConnections == null) return;
+        
+        await _presenceHub.Clients.AllExcept(currentUserConnections)
+            .SendAsync("FileUploaded", new { gameId, platform, fileName, fileSize });
+    }   
+
+    public async void FileDeleted(string currentUsername, int gameId, Platform platform)
+    {
+        var currentUserConnections = await PresenceTracker.GetConnectionsForUser(currentUsername);
+        if (currentUserConnections == null) return;
+        
+        await _presenceHub.Clients.AllExcept(currentUserConnections)
+            .SendAsync("FileDeleted", new { gameId, platform });
     }
 
     public async void ReviewApproved(string currentUsername, ReviewDto review)
