@@ -16,7 +16,7 @@ public class Seed
     public static async Task SeedUsers(UserManager<AppUser> userManager, 
         RoleManager<AppRole> roleManager, string password)
     {
-        if (await userManager.Users.AnyAsync()) return;
+        //if (await userManager.Users.AnyAsync()) return;
 
         var roles = new List<AppRole>
         {
@@ -58,7 +58,7 @@ public class Seed
 
     public static async Task SeedGames(DataContext context)
     {
-        if (await context.Games.AnyAsync()) return;
+        //if (await context.Games.AnyAsync()) return;
 
         var gameData = await File.ReadAllTextAsync("Data/Seeding/GameSeedData.json");
         var options = new JsonSerializerOptions{PropertyNameCaseInsensitive = true};
