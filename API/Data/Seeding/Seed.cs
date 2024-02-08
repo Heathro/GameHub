@@ -42,7 +42,7 @@ public class Seed
             City = string.Empty,
             Created = DateTime.UtcNow
         };
-        await userManager.CreateAsync(admin, Environment.GetEnvironmentVariable("ADMIN_PASSWORD"));
+        await userManager.CreateAsync(admin, "Pa$$w0rd");
         await userManager.AddToRolesAsync(admin, new[]{"Admin", "Moderator"});
 
         foreach (var user in users)
