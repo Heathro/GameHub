@@ -59,9 +59,17 @@ public class FilesController : BaseApiController
                 game.Files.LinuxSize = file.Length;
                 break;
         }
-        using (var stream = new FileStream(newFilePath, FileMode.Create))
+
+        try
         {
-            await file.CopyToAsync(stream);
+            using (var stream = new FileStream(newFilePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+        }
+        catch
+        {
+            return BadRequest("Failed to upload file");
         }
 
         switch (platform)

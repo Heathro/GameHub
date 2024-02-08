@@ -15,9 +15,12 @@ builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddIdentityServices(builder.Configuration);
 
 var connString = string.Empty;
+var adminPassword = string.Empty;
 if (builder.Environment.IsDevelopment())
 {    
     connString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+    adminPassword = builder.Configuration["AdminPassword"];
 }
 else 
 {
@@ -35,6 +38,8 @@ else
     var updatedHost = pgHost.Replace("flycast", "internal"); 
 
     connString = $"Server={updatedHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};";
+
+    adminPassword = Environment.GetEnvironmentVariable("PASSWORD");
 }
 builder.Services.AddDbContext<DataContext>(opt =>
 {
@@ -85,7 +90,7 @@ try
     
     await Seed.ClearConnections(context);
 
-    await Seed.SeedUsers(userManager, roleManager);
+    await Seed.SeedUsers(userManager, roleManager, adminPassword);
     await Seed.SeedGames(context);
 }
 catch (Exception ex)

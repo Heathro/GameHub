@@ -13,7 +13,8 @@ public class Seed
         await context.SaveChangesAsync();
     }
 
-    public static async Task SeedUsers(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager)
+    public static async Task SeedUsers(UserManager<AppUser> userManager,
+        RoleManager<AppRole> roleManager, string adminPassword)
     {
         if (await userManager.Users.AnyAsync()) return;
 
@@ -38,7 +39,7 @@ public class Seed
             City = string.Empty,
             Created = DateTime.UtcNow
         };
-        await userManager.CreateAsync(admin, "Pa$$w0rd");
+        await userManager.CreateAsync(admin, adminPassword);
         await userManager.AddToRolesAsync(admin, new[]{"Admin", "Moderator"});
 
         var userData = await File.ReadAllTextAsync("Data/Seeding/UserSeedData.json");
