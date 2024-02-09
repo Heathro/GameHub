@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using API.Interfaces;
 using API.Extensions;
 using API.Entities;
 
 namespace API.Controllers;
 
+[Authorize]
 public class BookmarksController : BaseApiController
 {
     private readonly IUnitOfWork _unitOfWork;

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 using API.DTOs;
 using API.Entities;
@@ -8,6 +9,7 @@ using API.Helpers;
 
 namespace API.Controllers;
 
+[Authorize]
 public class ReviewsController : BaseApiController
 {
     private readonly IUnitOfWork _unitOfWork;

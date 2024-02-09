@@ -53,7 +53,11 @@ export class RegisterComponent implements OnInit {
       password: ['', [
         Validators.required,
         Validators.minLength(8),
-        Validators.maxLength(16)
+        Validators.maxLength(16),
+        CustomValidators.atLeastOneDigit(),
+        CustomValidators.atLeastOneLowercaseLetter(),
+        CustomValidators.atLeastOneUppercaseLetter(),
+        CustomValidators.atLeastOneSpecialCharacter()
       ]],
       confirmPassword: ['', [
         Validators.required,
@@ -65,16 +69,4 @@ export class RegisterComponent implements OnInit {
       next: () => this.registerForm.controls['confirmPassword'].updateValueAndValidity()
     });
   }
-
-  // alphaNumeric(): ValidatorFn {
-  //   return (control: AbstractControl) => {
-  //     return control.value.match('^[A-Za-z0-9]+$') ? null : {notAlphaNumeric: true};
-  //   }
-  // }
-
-  // matchValues(matchTo: string): ValidatorFn {
-  //   return (control: AbstractControl) => {
-  //     return control.value === control.parent?.get(matchTo)?.value ? null : {notMatching: true};
-  //   }
-  // }
 }

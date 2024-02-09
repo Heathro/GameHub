@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 using API.DTOs;
 using API.Entities;
 using API.Interfaces;
+using API.Extensions;
 
 namespace API.Controllers;
 
@@ -77,5 +79,19 @@ public class AccountController : BaseApiController
             Token = await _tokenService.CreateTokenAsync(user),
             AvatarUrl = user.Avatar.Url
         };
+    }
+
+    [Authorize]
+    [HttpPost("change-password")]
+    public async Task<ActionResult> ChangePassword(PasswordDto passwordDto)
+    {
+        var user = await _userManager.GetUserAsync(User);
+
+        var result = await _userManager
+            .ChangePasswordAsync(user, passwordDto.OldPassword, passwordDto.NewPassword);
+
+        if (!result.Succeeded) return Unauthorized("Failed to change password");
+
+        return Ok();
     }
 }

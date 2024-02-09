@@ -7,6 +7,30 @@ export class CustomValidators {
     }
   }
 
+  static atLeastOneDigit(): ValidatorFn {
+    return (control: AbstractControl) => {
+      return /[0-9]/.test(control.value) ? null : {oneDigit: true};
+    }
+  }
+
+  static atLeastOneUppercaseLetter(): ValidatorFn {
+    return (control: AbstractControl) => {
+      return /[A-Z]/.test(control.value) ? null : {oneUpperCase: true};
+    }
+  }
+
+  static atLeastOneLowercaseLetter(): ValidatorFn {
+    return (control: AbstractControl) => {
+      return /[a-z]/.test(control.value) ? null : {oneLowerCase: true};
+    }
+  }
+
+  static atLeastOneSpecialCharacter(): ValidatorFn {
+    return (control: AbstractControl) => {
+      return /[!@#$%^&*(),.?":{}|<>]/.test(control.value) ? null : {oneSpecialCharacter: true};
+    }
+  } 
+
   static alphaNumericSpaceColon(): ValidatorFn {
     return (control: AbstractControl) => {
       return control.value.match('^[A-Za-z0-9: ]+$') ? null : {notAlphaNumericSpaceColon: true};

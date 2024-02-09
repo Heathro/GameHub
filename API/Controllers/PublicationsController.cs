@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 using API.Interfaces;
 using API.Extensions;
@@ -7,6 +8,7 @@ using API.DTOs;
 
 namespace API.Controllers;
 
+[Authorize]
 public class PublicationsController : BaseApiController
 {
     private readonly IUnitOfWork _unitOfWork;

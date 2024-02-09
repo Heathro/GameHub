@@ -18,6 +18,7 @@ import { Player } from 'src/app/models/player';
 import { User } from 'src/app/models/user';
 import { Review } from 'src/app/models/review';
 import { Poster } from 'src/app/models/poster';
+import { CustomValidators } from 'src/app/helpers/customValidators';
 
 @Component({
   selector: 'app-player-edit',
@@ -34,6 +35,8 @@ export class PlayerEditComponent implements OnInit, OnDestroy, EditComponent {
   user: User | null = null;
   player: Player | undefined;
   uploader: FileUploader | undefined;
+  passwordForm: FormGroup = new FormGroup({});
+  changingPassword = false;
   baseUrl = environment.apiUrl;
   updating = false;
   reviews: Review[] = [];
@@ -93,7 +96,8 @@ export class PlayerEditComponent implements OnInit, OnDestroy, EditComponent {
         if (!player) this.router.navigateByUrl('/not-found');
         this.player = player;
         this.initializeUploader();
-        this.initializeFrom();
+        this.initializeEditFrom();
+        this.initializePasswordFrom();
       }
     });
   }  
@@ -155,7 +159,18 @@ export class PlayerEditComponent implements OnInit, OnDestroy, EditComponent {
     this.initialForm = this.editForm.value;
   }
   
-  initializeFrom() {
+  changePassword() {
+    this.changingPassword = true;
+    this.accountService.changePassword(this.passwordForm.value).subscribe({
+      next: () => {
+        this.toastr.success('Password updated');
+        this.changingPassword = false;
+        this.initializePasswordFrom();
+      }
+    });
+  }
+  
+  initializeEditFrom() {
     this.editForm = this.formBuilder.group({
       id: this.player?.id,
       realname: this.player?.realname,
@@ -203,6 +218,31 @@ export class PlayerEditComponent implements OnInit, OnDestroy, EditComponent {
         this.uploader.removeFromQueue(this.uploader.queue[0]);
       }
     };
+  }  
+
+  initializePasswordFrom() {
+    this.passwordForm = this.formBuilder.group({
+      currentPassword: ['', [
+        Validators.required
+      ]],
+      newPassword: ['', [
+        Validators.required,
+        Validators.minLength(8),
+        Validators.maxLength(16),
+        CustomValidators.atLeastOneDigit(),
+        CustomValidators.atLeastOneLowercaseLetter(),
+        CustomValidators.atLeastOneUppercaseLetter(),
+        CustomValidators.atLeastOneSpecialCharacter()
+      ]],
+      confirmPassword: ['', [
+        Validators.required,
+        CustomValidators.matchValues('newPassword')
+      ]]
+    });
+
+    this.passwordForm.controls['newPassword'].valueChanges.subscribe({
+      next: () => this.passwordForm.controls['confirmPassword'].updateValueAndValidity()
+    });
   }
   
   private posterUpdated(gameId: number, poster: Poster) {

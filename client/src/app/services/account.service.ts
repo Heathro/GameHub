@@ -54,6 +54,12 @@ export class AccountService {
     );
   }
 
+  changePassword(model: any) {
+    const oldPassword = model.currentPassword;
+    const newPassword = model.newPassword;
+    return this.http.post(this.baseUrl + 'account/change-password', {oldPassword, newPassword});
+  }
+
   logoutRequired(userId: number) {
     if (this.currentUserSource.value && userId === this.currentUserSource.value.id) {
       this.logout();

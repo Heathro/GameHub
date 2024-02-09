@@ -1,6 +1,6 @@
 <div class="row" *ngIf="player">
     
-    <div class="col-3 my-2">
+    <div class="col-3 my-2" id="profile-page">
         <h2 class="text-center text-info">Edit Profile</h2>
     </div>
     <div class="col-9">
@@ -165,6 +165,48 @@
                 <div [hidden]="loadingReviews" *ngIf="reviews.length === 0">
                     <h5 class="text-center my-4">No reviews posted</h5>
                 </div>
+            </tab>
+
+            <tab heading="Security">
+                <form
+                    class="col-3 m-4"
+                    [formGroup]="passwordForm"
+                    (ngSubmit)="passwordForm.valid && changePassword()"
+                    autocomplete="off"
+                >
+            
+                    <h4 class="text-center text-info mb-3">Change password</h4>
+            
+                    <app-text-input
+                        [formControl]="$any(passwordForm.controls['currentPassword'])"
+                        [label]="'Current password'"
+                        [placeholder]="'Current password'"
+                        [type]="'password'"
+                    ></app-text-input>
+            
+                    <app-text-input
+                        [formControl]="$any(passwordForm.controls['newPassword'])"
+                        [label]="'New password'"
+                        [placeholder]="'New password'"
+                        [type]="'password'"
+                    ></app-text-input>
+            
+                    <app-text-input
+                        [formControl]="$any(passwordForm.controls['confirmPassword'])"
+                        [label]="'Confirm password'"  
+                        [placeholder]="'Confirm password'"
+                        [type]="'password'"
+                    ></app-text-input>
+            
+                    <button 
+                        [disabled]="!passwordForm.valid || changingPassword"
+                        class="btn btn-outline-success d-block mx-auto"
+                        type="submit"
+                    >
+                        Change&nbsp;&nbsp;&nbsp;<i class="bi bi-repeat"></i>
+                    </button>
+            
+                </form>
             </tab>
             
         </tabset>

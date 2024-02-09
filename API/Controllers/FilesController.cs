@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using AutoMapper;
 using API.Enums;
 using API.Interfaces;
 using API.Extensions;
-using AutoMapper;
 using API.DTOs;
 
 namespace API.Controllers;
 
+[Authorize]
 public class FilesController : BaseApiController
 {
     private readonly string storagePath = "../storage";
