@@ -46,59 +46,43 @@ public class FilesController : BaseApiController
         }
 
         var newFilePath = Path.Combine(storagePath, file.FileName);
-        switch (platform)
-        {
-            case Platform.Windows:
-                game.Files.WindowsName = file.FileName;
-                game.Files.WindowsSize = file.Length;
-                break;
-            case Platform.MacOS:
-                game.Files.MacosName = file.FileName;
-                game.Files.MacosSize = file.Length;
-                break;
-            case Platform.Linux:
-                game.Files.LinuxName = file.FileName;
-                game.Files.LinuxSize = file.Length;
-                break;
-        }
-
         try
         {
             using (var stream = new FileStream(newFilePath, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
             }
+            
+            switch (platform)
+            {
+                case Platform.Windows:
+                    game.Files.WindowsName = file.FileName;
+                    game.Files.WindowsSize = file.Length;
+                    break;
+                case Platform.MacOS:
+                    game.Files.MacosName = file.FileName;
+                    game.Files.MacosSize = file.Length;
+                    break;
+                case Platform.Linux:
+                    game.Files.LinuxName = file.FileName;
+                    game.Files.LinuxSize = file.Length;
+                    break;
+            }
+        
+            if (await _unitOfWork.Complete() || oldFileName == file.FileName)
+            {
+                _notificationCenter.FilesUpdated
+                (
+                    User.GetUsername(),
+                    game.Id,
+                    _mapper.Map<FilesDto>(game.Files)
+                );
+                return Ok();
+            }
         }
         catch
         {
-            return BadRequest("Failed to upload file");
-        }
-
-        switch (platform)
-        {
-            case Platform.Windows:
-                game.Files.WindowsName = file.FileName;
-                game.Files.WindowsSize = file.Length;
-                break;
-            case Platform.MacOS:
-                game.Files.MacosName = file.FileName;
-                game.Files.MacosSize = file.Length;
-                break;
-            case Platform.Linux:
-                game.Files.LinuxName = file.FileName;
-                game.Files.LinuxSize = file.Length;
-                break;
-        }
-        
-        if (await _unitOfWork.Complete() || oldFileName == file.FileName)
-        {
-            _notificationCenter.FilesUpdated
-            (
-                User.GetUsername(),
-                game.Id,
-                _mapper.Map<FilesDto>(game.Files)
-            );
-            return Ok();
+            return BadRequest("Path not found");
         }
 
         return BadRequest("Failed to upload file");
@@ -152,31 +136,31 @@ public class FilesController : BaseApiController
         if (System.IO.File.Exists(filePath))
         { 
             System.IO.File.Delete(filePath);
-            switch (platform)
-            {
-                case Platform.Windows:
-                    game.Files.WindowsName = string.Empty;
-                    game.Files.WindowsSize = 0;
-                    break;
-                case Platform.MacOS:
-                    game.Files.MacosName = string.Empty;
-                    game.Files.MacosSize = 0;
-                    break;
-                case Platform.Linux:
-                    game.Files.LinuxName = string.Empty;
-                    game.Files.LinuxSize = 0;
-                    break;
-            }
+        }
+        
+        switch (platform)
+        {
+            case Platform.Windows:
+                game.Files.WindowsName = string.Empty;
+                game.Files.WindowsSize = 0;
+                break;
+            case Platform.MacOS:
+                game.Files.MacosName = string.Empty;
+                game.Files.MacosSize = 0;
+                break;
+            case Platform.Linux:
+                game.Files.LinuxName = string.Empty;
+                game.Files.LinuxSize = 0;
+                break;
+        }
 
-            _notificationCenter.FilesUpdated
-            (
-                User.GetUsername(),
-                game.Id,
-                _mapper.Map<FilesDto>(game.Files)
-            );
+        _notificationCenter.FilesUpdated
+        (
+            User.GetUsername(),
+            game.Id,
+            _mapper.Map<FilesDto>(game.Files)
+        );
 
-            return Ok();
-        }        
-        return NotFound();
+        return Ok();
     }
 }
