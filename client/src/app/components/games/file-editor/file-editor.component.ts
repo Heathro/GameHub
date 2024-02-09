@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 import { FileUploader } from 'ng2-file-upload';
+import { ToastrService } from 'ngx-toastr';
 import { take } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
@@ -24,7 +25,11 @@ export class FileEditorComponent {
   uploaderLinux: FileUploader | undefined;
   baseUrl = environment.apiUrl;
 
-  constructor(private accountService: AccountService, private gamesService: GamesService) {
+  constructor(
+    private accountService: AccountService, 
+    private gamesService: GamesService,
+    private toastr: ToastrService
+  ) {
     this.accountService.currentUser$.pipe(take(1)).subscribe({
       next: user => { if (user) this.user = user; }
     })
@@ -56,6 +61,19 @@ export class FileEditorComponent {
       if (this.game) {
         this.game.files.windowsName = item._file.name;
         this.game.files.windowsSize = item._file.size;
+        this.toastr.success('Upload succesful');
+      }
+    }
+
+    this.uploaderWindows.onErrorItem = (item, response, status, header) => {
+      if (response === 'Storage full') {
+        this.toastr.warning('Storage full');
+      }
+      else if (response === 'Path not found') {
+        this.toastr.error('Storage error');
+      }
+      else if (response === 'Failed to upload file') {
+        this.toastr.error('Unknown error');
       }
     }
     
@@ -86,6 +104,19 @@ export class FileEditorComponent {
       if (this.game) {
         this.game.files.macosName = item._file.name;
         this.game.files.macosSize = item._file.size;
+        this.toastr.success('Upload succesful');
+      }
+    }
+
+    this.uploaderMacOS.onErrorItem = (item, response, status, header) => {
+      if (response === 'Storage full') {
+        this.toastr.warning('Storage full');
+      }
+      else if (response === 'Path not found') {
+        this.toastr.error('Storage error');
+      }
+      else if (response === 'Failed to upload file') {
+        this.toastr.error('Unknown error');
       }
     }
     
@@ -116,6 +147,19 @@ export class FileEditorComponent {
       if (this.game) {
         this.game.files.linuxName = item._file.name;
         this.game.files.linuxSize = item._file.size;
+        this.toastr.success('Upload succesful');
+      }
+    }
+
+    this.uploaderLinux.onErrorItem = (item, response, status, header) => {
+      if (response === 'Storage full') {
+        this.toastr.warning('Storage full');
+      }
+      else if (response === 'Path not found') {
+        this.toastr.error('Storage error');
+      }
+      else if (response === 'Failed to upload file') {
+        this.toastr.error('Unknown error');
       }
     }
     
@@ -145,7 +189,8 @@ export class FileEditorComponent {
                 this.game.files.linuxSize = 0;
                 break;
             }
-          }
+          }          
+          this.toastr.success('File deleted');
         }
       });
     }

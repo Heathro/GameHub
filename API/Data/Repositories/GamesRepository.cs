@@ -155,6 +155,13 @@ public class GamesRepository : IGamesRepository
             .ToListAsync();
     }
 
+    public long GetTotalFilesSize()
+    {
+        return _context.Games
+            .Select(g => g.Files)
+            .Sum(f => f.WindowsSize + f.MacosSize + f.LinuxSize);
+    }
+
     public async Task<bool> TitleExistsAsync(string title, int id = 0)
     {
         return await _context.Games.AnyAsync(g => g.Id != id && g.Title.ToLower() == title.ToLower());

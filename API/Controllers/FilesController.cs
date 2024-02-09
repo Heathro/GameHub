@@ -41,11 +41,25 @@ public class FilesController : BaseApiController
         }
         if (!string.IsNullOrEmpty(oldFileName))
         {
-            var oldFilePath = Path.Combine(storagePath, oldFileName);
-            if (System.IO.File.Exists(oldFilePath)) System.IO.File.Delete(oldFilePath);
+            try
+            {
+                var oldFilePath = Path.Combine(storagePath, oldFileName);
+                if (System.IO.File.Exists(oldFilePath)) System.IO.File.Delete(oldFilePath);
+            }            
+            catch
+            {
+                return BadRequest("Path not found");
+            }
         }
 
         var newFilePath = Path.Combine(storagePath, file.FileName);
+        
+        var upcomingSize = _unitOfWork.GamesRepository.GetTotalFilesSize() + file.Length;
+        if (upcomingSize > 943718400)
+        {
+            return BadRequest("Storage full");
+        }
+
         try
         {
             using (var stream = new FileStream(newFilePath, FileMode.Create))
@@ -77,7 +91,8 @@ public class FilesController : BaseApiController
                     game.Id,
                     _mapper.Map<FilesDto>(game.Files)
                 );
-                return Ok();
+                
+                return Ok("Upload succesful");
             }
         }
         catch
