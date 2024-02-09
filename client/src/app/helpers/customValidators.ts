@@ -27,9 +27,9 @@ export class CustomValidators {
 
   static atLeastOneSpecialCharacter(): ValidatorFn {
     return (control: AbstractControl) => {
-      return /[!@#$%^&*(),.?":{}|<>]/.test(control.value) ? null : {oneSpecialCharacter: true};
+      return /[!@#$%^&*()-_=+[{}|;:'",.<>/?\\\]]/.test(control.value) ? null : {oneSpecialCharacter: true};
     }
-  } 
+  }
 
   static alphaNumericSpaceColon(): ValidatorFn {
     return (control: AbstractControl) => {
