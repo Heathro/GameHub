@@ -47,4 +47,8 @@ export class BasicFunctions {
   
     return newObj;
   }
+
+  static bytesToMegabytes(bytes: number, decimalPlaces: number) {
+    return (bytes / (1024 * 1024)).toFixed(decimalPlaces);
+  }
 }

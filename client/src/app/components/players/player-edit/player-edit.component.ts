@@ -244,6 +244,10 @@ export class PlayerEditComponent implements OnInit, OnDestroy, EditComponent {
       next: () => this.passwordForm.controls['confirmPassword'].updateValueAndValidity()
     });
   }
+
+  formatFileSize(bytes: number) {
+    return BasicFunctions.bytesToMegabytes(bytes, 2);
+  }
   
   private posterUpdated(gameId: number, poster: Poster) {
     if (this.player) {

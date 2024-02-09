@@ -47,6 +47,7 @@ input[type=file]::file-selector-button:hover {
 
 .custom-bytes {
     margin-top: -3px;
+    margin-left: 16px;
 }
 
 .custom-input {

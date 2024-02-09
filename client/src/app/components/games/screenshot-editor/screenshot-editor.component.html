@@ -13,21 +13,26 @@
                 <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': uploader.progress + '%' }"></div>
             </div>
             <div class="row">
-                <div style="width: 138px;" class="ms-2">
-                    <input class="form-control-info" type="file" ng2FileSelect [uploader]="uploader" multiple>
+                <div class="d-flex">                    
+                    <div style="width: 138px;" class="ms-2">
+                        <input class="form-control-info" type="file" ng2FileSelect [uploader]="uploader" multiple>
+                    </div>
+                    <button type="button" class="btn btn-outline-success btn-sm uploader-button me-1"
+                        (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">
+                        Upload&nbsp;&nbsp;&nbsp;<span class="fa fa-upload"></span>
+                    </button>
+                    <button type="button" class="btn btn-outline-warning btn-sm uploader-button me-1"
+                            (click)="uploader.cancelAll()" [disabled]="!uploader.isUploading">
+                        Cancel&nbsp;&nbsp;&nbsp;<span class="fa fa-ban"></span>
+                    </button>
+                    <button type="button" class="btn btn-outline-danger btn-sm uploader-button me-1"
+                            (click)="uploader.clearQueue()" [disabled]="!uploader.queue.length">
+                        Remove&nbsp;&nbsp;&nbsp;<span class="bi bi-trash3"></span>
+                    </button>
+                    <h6 class="ms-3" style="margin-top: 7px;">
+                        Max size 10 mb
+                    </h6>
                 </div>
-                <button type="button" class="btn btn-outline-success btn-sm uploader-button me-1"
-                    (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">
-                    Upload&nbsp;&nbsp;&nbsp;<span class="fa fa-upload"></span>
-                </button>
-                <button type="button" class="btn btn-outline-warning btn-sm uploader-button me-1"
-                        (click)="uploader.cancelAll()" [disabled]="!uploader.isUploading">
-                    Cancel&nbsp;&nbsp;&nbsp;<span class="fa fa-ban"></span>
-                </button>
-                <button type="button" class="btn btn-outline-danger btn-sm uploader-button me-1"
-                        (click)="uploader.clearQueue()" [disabled]="!uploader.queue.length">
-                    Remove&nbsp;&nbsp;&nbsp;<span class="bi bi-trash3"></span>
-                </button>
             </div>            
         </div>
     </div>

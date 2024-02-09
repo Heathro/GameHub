@@ -20,6 +20,7 @@ import { Screenshot } from 'src/app/models/screenshot';
 import { Avatar } from 'src/app/models/avatar';
 import { Platform } from 'src/app/enums/platform';
 import { Files } from 'src/app/models/files';
+import { BasicFunctions } from 'src/app/helpers/basicFunctions';
 
 @Component({
   selector: 'app-game-page',
@@ -216,7 +217,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
   }
 
   formatFileSize(bytes: number) {
-    return (bytes / (1024 * 1024)).toFixed(3);
+    return BasicFunctions.bytesToMegabytes(bytes, 1);
   }
 
   private playerDeleted(userId: number) {

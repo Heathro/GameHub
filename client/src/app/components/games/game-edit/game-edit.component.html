@@ -227,10 +227,10 @@
                     </div>
                     <div class="col-4 custom-bytes">
                         <h6 *ngIf="uploader.queue.length > 0">
-                            {{uploader.queue[0].file.size/1024/1024 | number:'.2'}} mb
+                            {{formatFileSize(uploader.queue[0].file.size)}}/10 mb
                         </h6>
                         <h6 *ngIf="uploader.queue.length === 0">
-                            0.000 mb
+                            0.00/10 mb
                         </h6>
                     </div>
                 </div>

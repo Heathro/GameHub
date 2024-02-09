@@ -22,12 +22,12 @@ input[type=file]::file-selector-button:hover {
 .custom-bar {
     margin-top: 20px;
     margin-left: 10px;
-    width: 190px;
+    width: 170px;
 }
 
 .custom-bytes {
     margin-top: 17px;
-    margin-left: -19px;
+    margin-left: -55px;
 }
 
 .custom-input {

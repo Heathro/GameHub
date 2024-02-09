@@ -9,6 +9,7 @@ import { GamesService } from 'src/app/services/games.service';
 import { Game } from 'src/app/models/game';
 import { User } from 'src/app/models/user';
 import { Platform } from 'src/app/enums/platform';
+import { BasicFunctions } from 'src/app/helpers/basicFunctions';
 
 @Component({
   selector: 'app-file-editor',
@@ -151,6 +152,6 @@ export class FileEditorComponent {
   }
 
   formatFileSize(bytes: number) {
-    return (bytes / (1024 * 1024)).toFixed(3);
+    return BasicFunctions.bytesToMegabytes(bytes, 1);
   }
 }

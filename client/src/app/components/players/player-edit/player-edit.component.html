@@ -19,7 +19,7 @@
       
             <div class="row mb-4" *ngIf="uploader">
                 <div class="row">
-                    <div class="col-8">
+                    <div class="col-7">
                         <div class="progress mb-2 custom-bar">
                             <div
                                 class="progress-bar"
@@ -28,12 +28,12 @@
                             ></div>
                         </div> 
                     </div>
-                    <div class="col-4 custom-bytes">
-                        <h6 *ngIf="uploader.queue.length > 0">
-                            {{uploader.queue[0].file.size/1024/1024 | number:'.2'}} mb
+                    <div class="col-5">
+                        <h6 *ngIf="uploader.queue.length > 0" class="custom-bytes">
+                            {{formatFileSize(uploader.queue[0].file.size)}}/10 mb
                         </h6>
-                        <h6 *ngIf="uploader.queue.length === 0">
-                            0.000 mb
+                        <h6 *ngIf="uploader.queue.length === 0" class="custom-bytes">
+                            0.00/10 mb
                         </h6>
                     </div>
                 </div>

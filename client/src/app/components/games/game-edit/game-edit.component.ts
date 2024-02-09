@@ -244,6 +244,10 @@ export class GameEditComponent implements OnInit, OnDestroy, EditComponent {
     };
   }
 
+  formatFileSize(bytes: number) {
+    return BasicFunctions.bytesToMegabytes(bytes, 2);
+  }
+
   private playerDeleted(userId: number) {
     if (this.game) {
       this.game.likes = this.game.likes.filter(l => l !== userId);

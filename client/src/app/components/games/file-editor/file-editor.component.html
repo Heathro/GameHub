@@ -12,12 +12,12 @@
                     ></div>
                 </div> 
             </div>
-            <div class="col-3 custom-bytes">
-                <h6 class="text-end" *ngIf="uploaderWindows.queue.length > 0">
-                    {{uploaderWindows.queue[0].file.size/1024/1024 | number:'.2'}} mb
+            <div class="col-3">
+                <h6 class="text-end custom-bytes" *ngIf="uploaderWindows.queue.length > 0">
+                    {{formatFileSize(uploaderWindows.queue[0].file.size)}}/256 mb
                 </h6>
-                <h6 class="text-end" *ngIf="uploaderWindows.queue.length === 0">
-                    0.000 mb
+                <h6 class="text-end custom-bytes" *ngIf="uploaderWindows.queue.length === 0">
+                    0.0/256 mb
                 </h6>
             </div>
         </div>
@@ -59,12 +59,12 @@
                     ></div>
                 </div> 
             </div>
-            <div class="col-3 custom-bytes">
-                <h6 class="text-end" *ngIf="uploaderMacOS.queue.length > 0">
-                    {{uploaderMacOS.queue[0].file.size/1024/1024 | number:'.2'}} mb
+            <div class="col-3">
+                <h6 class="text-end custom-bytes" *ngIf="uploaderMacOS.queue.length > 0">
+                    {{formatFileSize(uploaderMacOS.queue[0].file.size)}}/256 mb
                 </h6>
-                <h6 class="text-end" *ngIf="uploaderMacOS.queue.length === 0">
-                    0.000 mb
+                <h6 class="text-end custom-bytes" *ngIf="uploaderMacOS.queue.length === 0">
+                    0.0/256 mb
                 </h6>
             </div>
         </div>         
@@ -105,12 +105,12 @@
                     ></div>
                 </div> 
             </div>
-            <div class="col-3 custom-bytes">
-                <h6 class="text-end" *ngIf="uploaderLinux.queue.length > 0">
-                    {{uploaderLinux.queue[0].file.size/1024/1024 | number:'.2'}} mb
+            <div class="col-3">
+                <h6 class="text-end custom-bytes" *ngIf="uploaderLinux.queue.length > 0">
+                    {{formatFileSize(uploaderLinux.queue[0].file.size)}}/256 mb
                 </h6>
-                <h6 class="text-end" *ngIf="uploaderLinux.queue.length === 0">
-                    0.000 mb
+                <h6 class="text-end custom-bytes" *ngIf="uploaderLinux.queue.length === 0">
+                    0.0/256 mb
                 </h6>
             </div>
         </div>
