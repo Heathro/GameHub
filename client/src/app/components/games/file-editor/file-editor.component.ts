@@ -4,12 +4,12 @@ import { FileUploader } from 'ng2-file-upload';
 import { take } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
+import { BasicFunctions } from 'src/app/helpers/basicFunctions';
 import { AccountService } from 'src/app/services/account.service';
 import { GamesService } from 'src/app/services/games.service';
 import { Game } from 'src/app/models/game';
 import { User } from 'src/app/models/user';
 import { Platform } from 'src/app/enums/platform';
-import { BasicFunctions } from 'src/app/helpers/basicFunctions';
 
 @Component({
   selector: 'app-file-editor',

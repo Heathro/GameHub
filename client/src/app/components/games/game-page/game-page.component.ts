@@ -9,6 +9,7 @@ import { GalleryItem, GalleryModule, ImageItem } from 'ng-gallery';
 import { ToastrService } from 'ngx-toastr';
 
 import { environment } from 'src/environments/environment';
+import { BasicFunctions } from 'src/app/helpers/basicFunctions';
 import { GameReviewComponent } from '../../reviews/game-review/game-review.component';
 import { GamesService } from 'src/app/services/games.service';
 import { PlayersService } from 'src/app/services/players.service';
@@ -20,7 +21,6 @@ import { Screenshot } from 'src/app/models/screenshot';
 import { Avatar } from 'src/app/models/avatar';
 import { Platform } from 'src/app/enums/platform';
 import { Files } from 'src/app/models/files';
-import { BasicFunctions } from 'src/app/helpers/basicFunctions';
 
 @Component({
   selector: 'app-game-page',
