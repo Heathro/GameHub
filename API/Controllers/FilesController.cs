@@ -55,7 +55,7 @@ public class FilesController : BaseApiController
         var newFilePath = Path.Combine(storagePath, file.FileName);
         
         var upcomingSize = _unitOfWork.GamesRepository.GetTotalFilesSize() + file.Length;
-        if (upcomingSize > 943718400)
+        if (upcomingSize > 891289600)
         {
             return BadRequest("Storage full");
         }
