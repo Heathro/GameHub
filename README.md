@@ -4,5 +4,5 @@ connecting with like-minded individuals, communicate, write reviews, and message
 
 API - .Net, C#<br>
 Data - EntityFramework, Postgres<br>
-Storage - Cloudinary<br>
+Storage - Cloudinary, Fly volume<br>
 Client - Angular, TypeScript
