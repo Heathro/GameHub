@@ -76,7 +76,6 @@ public class MessagesRepository : IMessagesRepository
     public async Task<IEnumerable<PlayerDto>> GetCompanionsAsync(string username)
     {        
         var companions = await _context.Messages
-                       
             .Where(m => 
                 (m.SenderUsername == username && !m.SenderDeleted) ||
                 (m.RecipientUsername == username && !m.RecipientDeleted)

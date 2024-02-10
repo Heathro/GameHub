@@ -32,6 +32,7 @@ export class MessengerComponent implements OnInit, OnDestroy {
   playerDeletedSubscription;
   avatarUpdatedSubscription;
   loadMessagesSubscription;
+  incomingMessageSubscription;
 
   constructor(
     private accountService: AccountService,
@@ -48,6 +49,9 @@ export class MessengerComponent implements OnInit, OnDestroy {
     this.loadMessagesSubscription = this.messagesService.loadMessages$.subscribe(
       companionUsername => this.loadMessages(companionUsername)
     );
+    this.incomingMessageSubscription = messagesService.incomingMessage$.subscribe(
+      companion => this.incomingMessage(companion)
+    );
     this.accountService.currentUser$.pipe(take(1)).subscribe({
       next: user => this.user = user
     });
@@ -62,6 +66,7 @@ export class MessengerComponent implements OnInit, OnDestroy {
     this.messagesService.stopHubConnection();
     this.playerDeletedSubscription.unsubscribe();
     this.avatarUpdatedSubscription.unsubscribe();
+    this.incomingMessageSubscription.unsubscribe();
   }
 
   loadCompanions() {
@@ -189,5 +194,10 @@ export class MessengerComponent implements OnInit, OnDestroy {
       const messagesArray = this.messages.toArray();
       messagesArray.forEach(m => m.changeAvatar(userId, avatar));
     }
+  }
+
+  private incomingMessage(companion: Player) {
+    this.companions = this.companions.filter(c => c.userName !== companion.userName);
+    this.companions.unshift(companion);
   }
 }

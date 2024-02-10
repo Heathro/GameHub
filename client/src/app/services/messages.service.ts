@@ -28,6 +28,8 @@ export class MessagesService {
   newMessage$ = this.newMessageSource.asObservable();
   private loadMessagesSource = new Subject<string>();
   loadMessages$ = this.loadMessagesSource.asObservable();
+  private incomingMessageSource = new Subject<Player>();
+  incomingMessage$ = this.incomingMessageSource.asObservable();
 
   constructor(private http: HttpClient, private busyService: BusyService) { }
 
@@ -104,12 +106,15 @@ export class MessagesService {
   }
 
   incomingMessage(player: Player) {
-    if (!this.companions.find(c => c.userName === player.userName)) {
-      this.companions.unshift(player);
-    }
-    if (this.lastCompanion === '') {
+    if (this.companions.length === 0) {
       this.lastCompanion = player.userName;
+      this.companions.push(player);
       this.loadMessagesSource.next(player.userName);
+    }
+    else {
+      this.companions = this.companions.filter(c => c.userName !== player.userName);
+      this.companions.unshift(player);
+      this.incomingMessageSource.next(player);
     }
   }
 
@@ -117,9 +122,8 @@ export class MessagesService {
     this.lastCompanion = player.userName;
 
     if (this.companionsLoaded) {
-      if (!this.companions.find(c => c.userName === player.userName)) {
-        this.companions.unshift(player);
-      }
+      this.companions = this.companions.filter(c => c.userName !== player.userName);
+      this.companions.unshift(player);
       return of(void 0);
     }
     else {
@@ -127,9 +131,8 @@ export class MessagesService {
         map(companions => {
           this.companionsLoaded = true;
           this.companions = companions;
-          if (!this.companions.find(c => c.userName === player.userName)) {
-            this.companions.unshift(player);
-          }
+          this.companions = this.companions.filter(c => c.userName !== player.userName);
+          this.companions.unshift(player);
         })
       );
     }
