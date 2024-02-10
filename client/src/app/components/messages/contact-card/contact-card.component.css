@@ -9,3 +9,7 @@
   margin: 15px;
   border-radius: 50%;
 }
+
+.current-conversant {
+  box-shadow: 0 0 0 2px #3498D0;
+}
