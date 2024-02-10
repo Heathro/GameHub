@@ -1,10 +1,14 @@
 .review-game-img {
     width: 150px;
+    height: 84px;
+    object-fit: cover;
     margin: 8px;
 }
 
 .review-avatar-img {
     width: 24px;
+	height: 24px;
+    object-fit: cover;
     border-radius: 50%;
     margin-top: -3px;
     margin-left: 5px;

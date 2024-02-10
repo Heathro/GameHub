@@ -4,5 +4,7 @@
 
 .game-card-img {
     width: 350px;
+    height: 197px;
+    object-fit: cover;
     margin: 4px;
 }

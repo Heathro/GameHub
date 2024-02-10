@@ -11,7 +11,9 @@
 }
 
 .game-moderation-card-img {
+    width: 71px;
     height: 40px;
+    object-fit: cover;
     margin: 5px;
     cursor: pointer;
 }

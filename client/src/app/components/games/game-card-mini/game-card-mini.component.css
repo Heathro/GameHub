@@ -5,5 +5,7 @@
 
 .game-card-mini-img {
     width: 150px;
+    height: 84px;
+    object-fit: cover;
     margin: 4px;
 }

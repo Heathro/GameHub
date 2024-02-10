@@ -5,6 +5,8 @@
 
 .review-avatar-img {
     width: 24px;
+	height: 24px;
+    object-fit: cover;
     border-radius: 50%;
     margin-top: -3px;
     margin-left: 5px;
