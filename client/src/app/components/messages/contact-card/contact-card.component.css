@@ -13,3 +13,13 @@
 .current-conversant {
   box-shadow: 0 0 0 2px #3498D0;
 }
+
+.dot {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 14px;
+  height: 14px;
+  background-color: rgba(255, 0, 0, 0.7);
+  border-radius: 50%;
+}

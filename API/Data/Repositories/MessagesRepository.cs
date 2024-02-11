@@ -94,6 +94,15 @@ public class MessagesRepository : IMessagesRepository
             .ProjectTo<PlayerDto>(_mapper.ConfigurationProvider)
             .ToListAsync();
     }
+    
+    public async Task<IEnumerable<string>> GetUnreadCompanionsAsync(string username)
+    {
+        return await _context.Messages
+            .Where(m => m.RecipientUsername == username && m.MessageRead == null)
+            .Select(m => m.SenderUsername)
+            .Distinct()
+            .ToListAsync();
+    }
 
     public void AddGroup(Group group)
     {

@@ -25,4 +25,9 @@ export class ContactCardComponent implements OnInit {
   isCurrentConversant() {
     return this.player?.userName === this.messagesService.getLastCompanion();
   }
+
+  isUnread() {
+    if (!this.player) return false;
+    return this.messagesService.getUnreadCompanions().includes(this.player.userName);
+  }
 }

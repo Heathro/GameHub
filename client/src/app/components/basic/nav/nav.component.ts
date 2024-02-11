@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { AccountService } from 'src/app/services/account.service';
 import { AdminService } from 'src/app/services/admin.service';
 import { GamesService } from 'src/app/services/games.service';
+import { MessagesService } from 'src/app/services/messages.service';
 import { PlayersService } from 'src/app/services/players.service';
 import { ReviewsService } from 'src/app/services/reviews.service';
 
@@ -18,7 +19,8 @@ export class NavComponent implements OnInit {
     public reviewsService: ReviewsService,
     public adminService: AdminService,
     public gamesService: GamesService,
-    public playersService: PlayersService
+    public playersService: PlayersService,
+    public messagesService: MessagesService
   ) { }
 
   ngOnInit(): void {

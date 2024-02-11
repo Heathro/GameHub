@@ -47,7 +47,15 @@
                     <a class="nav-link" routerLink="/friends" routerLinkActive="active">Friends</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" routerLink="/messenger" routerLinkActive="active">Messenger</a>
+                    <a 
+                        class="nav-link"
+                        routerLink="/messenger"
+                        routerLinkActive="active"
+                        style="position: relative;"
+                    >
+                        Messenger
+                        <span class="dot" *ngIf="messagesService.getUnreadCompanions().length > 0"></span>
+                    </a>
                 </li>                
                 <li *HasRole="['Admin', 'Moderator']" class="nav-item">
                     <a

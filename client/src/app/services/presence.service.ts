@@ -71,11 +71,18 @@ export class PresenceService {
       this.onlineUsersSource.next(usernames);
     });
 
+    this.hubConnection.on('GetUnreadCompanions', unreadCompanions => {
+      this.messagesService.setUnreadCompanions(unreadCompanions);
+    });
+
     this.hubConnection.on('IncomingMessage', ({sender, content}) => {
       if (this.router.url !== '/messenger') {
         const player = sender as Player;
         const text = content as string;
         const message = text.length > 13 ? text.substring(0, 13) + '...' : text;
+
+        this.messagesService.addUnreadCompanion(sender.userName);
+        this.messagesService.addCompanion(sender);
 
         this.toastr.info('"' + message + '"', player.userName + ':').onTap.pipe(take(1)).subscribe({
           next: () => {

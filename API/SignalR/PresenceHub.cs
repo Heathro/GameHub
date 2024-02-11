@@ -15,17 +15,19 @@ public class PresenceHub : Hub
 
     public override async Task OnConnectedAsync()
     {
+        var currentUser = Context.User.GetUsername();
+
         if (Context.User.IsInRole("Admin") || Context.User.IsInRole("Moderator"))
         {
-            PresenceTracker.ModeratorConnected(Context.User.GetUsername(), Context.ConnectionId);
+            PresenceTracker.ModeratorConnected(currentUser, Context.ConnectionId);
         }
 
-        var isOnline = await PresenceTracker.UserConnected(Context.User.GetUsername(), Context.ConnectionId);
+        var isOnline = await PresenceTracker.UserConnected(currentUser, Context.ConnectionId);
         if (isOnline)
         {
             await Clients.Others.SendAsync("UserIsOnline", new
             {
-                username = Context.User.GetUsername(),
+                username = currentUser,
                 friends = await _unitOfWork.FriendsRepository.GetActiveFriendsAsync(Context.User.GetUserId())
             });
         }
@@ -33,26 +35,29 @@ public class PresenceHub : Hub
         var currentUsers = await PresenceTracker.GetOnlineUsers();
         await Clients.Caller.SendAsync("GetOnlineUsers", currentUsers);
 
-        await _unitOfWork.UsersRepository.RegisterLastActivity(Context.User.GetUsername());
+        var unreadCompanions = await _unitOfWork.MessagesRepository.GetUnreadCompanionsAsync(currentUser);
+        await Clients.Caller.SendAsync("GetUnreadCompanions", unreadCompanions);
+
+        await _unitOfWork.UsersRepository.RegisterLastActivity(currentUser);
         await _unitOfWork.Complete();
     }
 
     public override async Task OnDisconnectedAsync(Exception exception)
     {   
+        var currentUser = Context.User.GetUsername();
+
         if (Context.User.IsInRole("Admin") || Context.User.IsInRole("Moderator"))
         {
-            PresenceTracker.ModeratorDisconnected(Context.User.GetUsername(), Context.ConnectionId);
+            PresenceTracker.ModeratorDisconnected(currentUser, Context.ConnectionId);
         }
 
-        var isOffline = await PresenceTracker
-            .UserDisconnected(Context.User.GetUsername(), Context.ConnectionId);
-
+        var isOffline = await PresenceTracker.UserDisconnected(currentUser, Context.ConnectionId);
         if (isOffline)
         {
-            await Clients.Others.SendAsync("UserIsOffline", Context.User.GetUsername());
+            await Clients.Others.SendAsync("UserIsOffline", currentUser);
         }
 
-        await _unitOfWork.UsersRepository.RegisterLastActivity(Context.User.GetUsername());
+        await _unitOfWork.UsersRepository.RegisterLastActivity(currentUser);
         await _unitOfWork.Complete();
 
         await base.OnDisconnectedAsync(exception);

@@ -20,6 +20,7 @@ export class MessagesService {
   lastCompanion = '';
   companions: Player[] = [];
   companionsLoaded = false;
+  unreadCompanions: string[] = [];
   private hubConnection?: HubConnection;
 
   private messageThreadSource = new BehaviorSubject<Message[]>([]);
@@ -37,6 +38,7 @@ export class MessagesService {
     this.busyService.busy();
 
     this.lastCompanion = otherUserName;
+    this.unreadCompanions = this.unreadCompanions.filter(c => c !== otherUserName);
 
     this.hubConnection = new HubConnectionBuilder()
       .withUrl(this.hubUrl + 'message?user=' + otherUserName, {
@@ -90,6 +92,20 @@ export class MessagesService {
       })
     );
   }
+
+  setUnreadCompanions(unreadCompanions: string[]) {
+    this.unreadCompanions = unreadCompanions;
+  }
+
+  addUnreadCompanion(unreadCompanion: string) {
+    if (!this.unreadCompanions.includes(unreadCompanion)) {
+      this.unreadCompanions.push(unreadCompanion);
+    }
+  }
+
+  getUnreadCompanions() {
+    return this.unreadCompanions;
+  }
   
   getLastCompanion() {
     return this.lastCompanion;
@@ -108,14 +124,23 @@ export class MessagesService {
   incomingMessage(player: Player) {
     if (this.companions.length === 0) {
       this.lastCompanion = player.userName;
-      this.companions.push(player);
+      const index = this.companions.findIndex(c => c.userName === player.userName);
+      if (index === -1) this.companions.push(player);
       this.loadMessagesSource.next(player.userName);
     }
     else {
+      if (this.lastCompanion !== player.userName) {
+        this.addUnreadCompanion(player.userName);
+      }
       this.companions = this.companions.filter(c => c.userName !== player.userName);
       this.companions.unshift(player);
       this.incomingMessageSource.next(player);
     }
+  }
+
+  addCompanion(companion: Player) {
+    const index = this.companions.findIndex(c => c.userName === companion.userName);
+    if (index === -1) this.companions.push(companion);
   }
 
   startChat(player: Player) {
@@ -173,6 +198,7 @@ export class MessagesService {
     this.lastCompanion = '';
     this.companions.length = 0;
     this.companionsLoaded = false;
+    this.unreadCompanions.length = 0;
   }
   
   playerDeleted(userId: number) {

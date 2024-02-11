@@ -11,6 +11,7 @@
                 src="{{player.avatar.url || './assets/avatar.png'}}"
                 alt="{{player.userName}}"
             >
+            <div *ngIf="isUnread()" class="dot"></div>
         </div>
         <div class="col-9">
             <h5 class="text-right mt-3">

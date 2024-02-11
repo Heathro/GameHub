@@ -12,6 +12,7 @@ public interface IMessagesRepository
     Task<IEnumerable<MessageDto>> GetMessageThreadAsync(string currentUsername, string recipientUsername);
     Task DeleteUserMessagesAsync(string username);
     Task<IEnumerable<PlayerDto>> GetCompanionsAsync(string username);
+    Task<IEnumerable<string>> GetUnreadCompanionsAsync(string username);
     void AddGroup(Group group);
     void RemoveConnection(Connection connection);
     Task<Connection> GetConnection(string connectionId);
