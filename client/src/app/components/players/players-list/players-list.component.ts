@@ -54,6 +54,14 @@ export class PlayersListComponent implements OnInit, OnDestroy {
     });
   }
 
+  sortNewest() {
+    this.sortPlayers(OrderType.newest);
+  }
+
+  sortOldest() {
+    this.sortPlayers(OrderType.oldest);
+  }
+
   sortAZ() {
     this.sortPlayers(OrderType.az);
   }
@@ -93,6 +101,8 @@ export class PlayersListComponent implements OnInit, OnDestroy {
 
   getSortingType() {
     switch (this.playersService.getPaginationParams().orderType) {
+      case OrderType.za:             return 'Z&ensp;<i class="bi bi-arrow-right"></i>&ensp;A';
+      case OrderType.az:             return 'A&ensp;<i class="bi bi-arrow-right"></i>&ensp;Z';
       case OrderType.mostPublicated: return '<i class="bi bi-rocket-takeoff-fill"></i>&ensp;' + 
                                             '<i class="bi bi-arrow-right"></i>&ensp;' + 
                                             '<i class="bi bi-rocket-takeoff"></i>';
@@ -105,8 +115,12 @@ export class PlayersListComponent implements OnInit, OnDestroy {
       case OrderType.lessReviewed:   return '<i class="bi bi-pen"></i>&ensp;' + 
                                             '<i class="bi bi-arrow-right"></i>&ensp;' +
                                             '<i class="bi bi-pen-fill"></i>';
-      case OrderType.za:             return 'Z&ensp;<i class="bi bi-arrow-right"></i>&ensp;A';
-      default:                       return 'A&ensp;<i class="bi bi-arrow-right"></i>&ensp;Z';
+      case OrderType.oldest:         return '<i class="bi bi-hourglass-split"></i>&ensp;' + 
+                                            '<i class="bi bi-arrow-right"></i>&ensp;' +
+                                            '<i class="bi bi-hourglass"></i>';
+      default:                       return '<i class="bi bi-hourglass"></i>&ensp;' + 
+                                            '<i class="bi bi-arrow-right"></i>&ensp;' + 
+                                            '<i class="bi bi-hourglass-split"></i>';
     }
   }
 

@@ -83,6 +83,8 @@ public class UsersRepository : IUsersRepository
         query = query.Where(u => u.Id != currentUserId && u.UserName != "Admin");
         query = paginationParams.OrderType switch
         {
+            OrderType.Newest => query.OrderByDescending(u => u.LastActive),
+            OrderType.Oldest => query.OrderBy(u => u.LastActive),
             OrderType.MostPublicated => query.OrderByDescending(u => u.Publications.Count),
             OrderType.LessPublicated => query.OrderBy(u => u.Publications.Count),
             OrderType.MostReviewed => query.OrderByDescending(u => u.Reviews.Count),

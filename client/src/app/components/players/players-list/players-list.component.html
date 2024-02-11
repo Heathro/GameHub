@@ -10,6 +10,26 @@
             <div class="dropdown-menu dropdown-menu-left col-1" *dropdownMenu>
                 <a 
                     class="dropdown-item text-center"
+                    (click)="sortNewest()"
+                >
+                    <i class="bi bi-hourglass"></i>
+                    &nbsp;
+                    <i class="bi bi-arrow-right"></i>
+                    &nbsp;
+                    <i class="bi bi-hourglass-split"></i>
+                </a>
+                <a
+                    class="dropdown-item text-center" 
+                    (click)="sortOldest()"
+                >
+                    <i class="bi bi-hourglass-split"></i>
+                    &nbsp;
+                    <i class="bi bi-arrow-right"></i>
+                    &nbsp;
+                    <i class="bi bi-hourglass"></i>
+                </a>
+                <a 
+                    class="dropdown-item text-center"
                     (click)="sortAZ()"
                 >
                     A&nbsp;&nbsp;&nbsp;&nbsp;<i class="bi bi-arrow-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;Z
