@@ -1,28 +1,38 @@
-<div class="container col-3">
+<div class="container">
 
     <form [formGroup]="loginForm" (ngSubmit)="loginForm.valid && login()" autocomplete="off">
 
         <h2 class="text-center text-info mb-3">Login</h2>
 
-        <app-text-input
-            [formControl]="$any(loginForm.controls['username'])"
-            [label]="'Username'"
-            [placeholder]="'Username'"
-        ></app-text-input>
+        <div class="row">
+            <div class="col-md-4 offset-md-4">
+                <app-text-input
+                    [formControl]="$any(loginForm.controls['username'])"
+                    [label]="'Username'"
+                    [placeholder]="'Username'"
+                ></app-text-input>
+            </div>
+        </div>
 
-        <app-text-input
-            [formControl]="$any(loginForm.controls['password'])"
-            [label]="'Password'"
-            [placeholder]="'Password'"
-            [type]="'password'"
-        ></app-text-input>
+        <div class="row">
+            <div class="col-md-4 offset-md-4">
+                <app-text-input
+                    [formControl]="$any(loginForm.controls['password'])"
+                    [label]="'Password'"
+                    [placeholder]="'Password'"
+                    [type]="'password'"
+                ></app-text-input>
+            </div>
+        </div>
 
         <div class="row" *ngIf="validationErrors">
-            <ul class="text-danger">
-                <li *ngFor="let error of validationErrors">
-                    {{error}}
-                </li>
-            </ul>
+            <div class="col-md-4 offset-md-4">
+                <ul class="text-danger">
+                    <li *ngFor="let error of validationErrors">
+                        {{error}}
+                    </li>
+                </ul>
+            </div>
         </div>
 
         <div class="text-center">

@@ -1,114 +1,136 @@
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
 
     <div class="container">
+        
+        <img class="main-logo" src="assets/dice.png" alt="logo">
+        <a class="navbar-brand" routerLink="/">GameHub</a>
 
-        <ul class="navbar-nav me-auto mb-2 mb-md-0">
-            <img class="main-logo" src="assets/dice.png" alt="logo">
-            <a class="navbar-brand" routerLink="/">GameHub</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+            aria-label="Toggle navigation" (click)="toggleMenu()">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-            <ng-container *ngIf="accountService.currentUser$ | async">
-                <li class="nav-item">
-                    <a
-                        class="nav-link"
-                        routerLink="/games"
-                        routerLinkActive="active"
-                        style="position: relative;"
-                        (click)="gamesService.refreshGames()"
-                    >
-                        Games
-                        <span class="dot" *ngIf="(gamesService.newGamesCount$ | async)! > 0"></span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a 
-                        class="nav-link"
-                        routerLink="/reviews" 
-                        routerLinkActive="active" 
-                        style="position: relative;"
-                        (click)="reviewsService.refreshReviews()"
-                    >
-                        Reviews
-                        <span class="dot" *ngIf="(reviewsService.newReviewsCount$ | async)! > 0"></span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a
-                        class="nav-link"
-                        routerLink="/players"
-                        routerLinkActive="active"
-                        style="position: relative;"
-                        (click)="playersService.refreshPlayers()"
-                    >
-                        Players
-                        <span class="dot" *ngIf="(playersService.newPlayersCount$ | async)! > 0"></span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" routerLink="/friends" routerLinkActive="active">Friends</a>
-                </li>
-                <li class="nav-item">
-                    <a 
-                        class="nav-link"
-                        routerLink="/messenger"
-                        routerLinkActive="active"
-                        style="position: relative;"
-                    >
-                        Messenger
-                        <span class="dot" *ngIf="messagesService.getUnreadCompanions().length > 0"></span>
-                    </a>
-                </li>                
-                <li *HasRole="['Admin', 'Moderator']" class="nav-item">
-                    <a
-                        class="nav-link"
-                        routerLink="/admin"
-                        routerLinkActive="active"
-                        style="position: relative;"
-                        (click)="adminService.refresh()"
-                    >
-                        Admin                        
-                        <span
-                            class="dot"
-                            *ngIf="(adminService.newReviewsCount$ | async)! > 0 ||
-                                   (adminService.newGamesCount$ | async)! > 0 ||
-                                   (adminService.newPlayersCount$ | async)! > 0"
-                        ></span>
-                    </a>
-                </li>                
-            </ng-container>
-            
-        </ul>
-
-        <div class="dropdown" *ngIf="(accountService.currentUser$ | async) as user" dropdown>
-            <img class="avatar-img" src="{{user.avatarUrl || './assets/avatar.png'}}" alt="avatar">
-            <a class="dropdown-toggle text-success text-decoration-none username-text" dropdownToggle>
-                {{user.userName}}
-            </a>
-            <div class="dropdown-menu" *dropdownMenu>
-                <a class="dropdown-item" routerLink="/edit-profile">
-                    Edit Profile&nbsp;&nbsp;&nbsp;<i class="bi bi-pencil"></i>
+        <div class="collapse navbar-collapse" id="navbarNav" [class.show]="isMenuOpen">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                <ng-container *ngIf="accountService.currentUser$ | async">
+                    <li class="nav-item">
+                        <a
+                            class="nav-link"
+                            routerLink="/games"
+                            routerLinkActive="active"
+                            style="position: relative;"
+                            (click)="gamesClicked()"
+                        >
+                            Games
+                            <span class="dot" *ngIf="(gamesService.newGamesCount$ | async)! > 0"></span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a 
+                            class="nav-link"
+                            routerLink="/reviews" 
+                            routerLinkActive="active" 
+                            style="position: relative;"
+                            (click)="reviewsClicked()"
+                        >
+                            Reviews
+                            <span class="dot" *ngIf="(reviewsService.newReviewsCount$ | async)! > 0"></span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a
+                            class="nav-link"
+                            routerLink="/players"
+                            routerLinkActive="active"
+                            style="position: relative;"
+                            (click)="playersClicked()"
+                        >
+                            Players
+                            <span class="dot" *ngIf="(playersService.newPlayersCount$ | async)! > 0"></span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a
+                            class="nav-link" 
+                            routerLink="/friends" 
+                            routerLinkActive="active"                            
+                            (click)="toggleMenu()"
+                        >
+                            Friends
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a 
+                            class="nav-link"
+                            routerLink="/messenger"
+                            routerLinkActive="active"
+                            style="position: relative;"
+                            (click)="toggleMenu()"
+                        >
+                            Messenger
+                            <span class="dot" *ngIf="messagesService.getUnreadCompanions().length > 0"></span>
+                        </a>
+                    </li>                
+                    <li *HasRole="['Admin', 'Moderator']" class="nav-item">
+                        <a
+                            class="nav-link"
+                            routerLink="/admin"
+                            routerLinkActive="active"
+                            style="position: relative;"
+                            (click)="adminClicked()"
+                        >
+                            Admin                        
+                            <span
+                                class="dot"
+                                *ngIf="(adminService.newReviewsCount$ | async)! > 0 ||
+                                       (adminService.newGamesCount$ | async)! > 0 ||
+                                       (adminService.newPlayersCount$ | async)! > 0"
+                            ></span>
+                        </a>
+                    </li>                
+                </ng-container>
+                
+            </ul>
+    
+            <div class="dropdown" *ngIf="(accountService.currentUser$ | async) as user" dropdown>
+                <img class="avatar-img" src="{{user.avatarUrl || './assets/avatar.png'}}" alt="avatar">
+                <a class="dropdown-toggle text-success text-decoration-none username-text" dropdownToggle>
+                    {{user.userName}}
                 </a>
-                <a class="dropdown-item" routerLink="/publish">
-                    Publish Game&nbsp;&nbsp;&nbsp;<i class="bi bi-rocket-takeoff"></i>
-                </a>
-                <a class="dropdown-item" (click)="logout()">
-                    Logout&nbsp;&nbsp;&nbsp;<i class="bi bi-door-open"></i>
-                </a>
+                <div class="dropdown-menu" *dropdownMenu>
+                    <a class="dropdown-item" routerLink="/edit-profile" (click)="toggleMenu()">
+                        Edit Profile&nbsp;&nbsp;&nbsp;<i class="bi bi-pencil"></i>
+                    </a>
+                    <a class="dropdown-item" routerLink="/publish" (click)="toggleMenu()">
+                        Publish Game&nbsp;&nbsp;&nbsp;<i class="bi bi-rocket-takeoff"></i>
+                    </a>
+                    <a class="dropdown-item" (click)="logout()">
+                        Logout&nbsp;&nbsp;&nbsp;<i class="bi bi-door-open"></i>
+                    </a>
+                </div>
             </div>
-        </div>
-
-        <div class="g-flex">
-            <ng-container *ngIf="!(accountService.currentUser$ | async)">
-                <a 
-                    class="btn btn-outline-success me-2" 
-                    routerLink="/login"
-                    routerLinkActive="active"
-                >Login</a>
-                <a 
-                    class="btn btn-outline-success" 
-                    routerLink="/register" 
-                    routerLinkActive="active"
-                >Register</a>
-            </ng-container>
+    
+            <div class="g-flex">
+                <ng-container *ngIf="!(accountService.currentUser$ | async)">
+                    <a 
+                        class="btn btn-outline-success me-2" 
+                        routerLink="/login"
+                        routerLinkActive="active"
+                        (click)="toggleMenu()"
+                    >
+                        Login
+                    </a>
+                    <a 
+                        class="btn btn-outline-success" 
+                        routerLink="/register" 
+                        routerLinkActive="active"
+                        (click)="toggleMenu()"
+                    >
+                        Register
+                    </a>
+                </ng-container>
+            </div>
         </div>
 
     </div>
