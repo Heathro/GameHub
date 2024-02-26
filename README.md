@@ -10,7 +10,7 @@ Client - Angular 16, TypeScript<br><br>
 Data - EntityFramework, Postgres<br><br>
 Storage - Cloudinary.com (image cloud), Fly.io volume (downloads storage)<br><br>
 Deployment - Fly.io: <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- shared-cpu-1x@256MB - app (1gb volume)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- shared-cpu-1x@256MB - app (runs in Docker) (1gb volume)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- shared-cpu-1x@256MB - postgres (1gb volume)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* this is free tier, so time to time servers go to sleep mode or can cause some latency<br><br>
 
